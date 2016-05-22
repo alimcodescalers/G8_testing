@@ -23,11 +23,13 @@ class LoginLogoutPortalTests(BaseTest):
         self.lg('check the home page title, should succeed')
         self.assertEqual(self.driver.title, 'OpenvCloud - Decks')
         url = self.environment_url.replace('http:', 'https:')
+        self.assertTrue(self.wait_element("machines_pic"))
         self.assertEqual(self.get_text("machines_label"),
                          "Configure, launch and manage your Virtual Machines. "
                          "Automate using the simple API.")
         self.assertEqual(self.element_link("machines_link"),
                         "%swiki_gcb/MachineDeck" % url)
+        self.assertTrue(self.wait_element("defense_shield_pic"))
         self.assertEqual(self.get_text("defense_shield_label"),
                          "Your private Defense Shield providing privacy and secure "
                          "access to your Cloud Space.")

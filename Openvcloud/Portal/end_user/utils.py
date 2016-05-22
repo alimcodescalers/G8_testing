@@ -93,6 +93,7 @@ class BaseTest(unittest.TestCase):
 
     def wait_element(self, element):
         self.wait_until_element_located(self.elements[element])
+        return True
 
     def wait_unti_element_clickable(self, name):
         self.wait.until(EC.element_to_be_clickable((By.XPATH, name)))
