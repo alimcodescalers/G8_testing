@@ -13,7 +13,7 @@ ssh-add -l
 #chmod g-r /root/.ssh/id_awesomo
 echo -e "${GREEN}** Clone openvcloud_quality_testsuite $branch branch ...${NC}"
 ssh-add -l
-git clone -b $branch git@github.com:0-complexity/openvcloud_quality_testsuite.git
+git clone -b $branch git@github.com:gig-projects/openvcloud_quality_testsuite.git
 cd openvcloud_quality_testsuite
 echo -e "${GREEN}** Activating JumpScale virtual env ...${NC}"
 source /opt/jumpscale7/env.sh
