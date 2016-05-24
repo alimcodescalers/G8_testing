@@ -1,7 +1,11 @@
-from utils.utils import BasicACLTest
-from JumpScale import j
+# coding=utf-8
 import time
 import random
+
+from JumpScale import j
+from Openvcloud.utils.utils import BasicACLTest
+
+
 class NetworkBasicTests(BasicACLTest):
 
     def setUp(self):

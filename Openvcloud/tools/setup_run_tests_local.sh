@@ -22,5 +22,4 @@ which pip || apt-get install -y python-pip
 echo -e "${GREEN}** Installing org_quality requirements ...${NC}"
 pip install -r requirements.txt
 echo -e "${GREEN}** Running tests ...${NC}"
-cd Openvcloud
 nosetests $testsuite --with-xunit --xunit-file='testresults.xml' --with-progressive

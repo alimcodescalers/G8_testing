@@ -1,12 +1,13 @@
 # coding=utf-8
 import unittest
-from utils.utils import BasicACLTest
-from nose_parameterized import parameterized
-from JumpScale.portal.portal.PortalClient2 import ApiError
-from JumpScale.baselib.http_client.HttpClient import HTTPError
 import uuid
 import random
 import time
+
+from Openvcloud.utils.utils import BasicACLTest
+from nose_parameterized import parameterized
+from JumpScale.portal.portal.PortalClient2 import ApiError
+from JumpScale.baselib.http_client.HttpClient import HTTPError
 
 
 class BasicTests(BasicACLTest):
