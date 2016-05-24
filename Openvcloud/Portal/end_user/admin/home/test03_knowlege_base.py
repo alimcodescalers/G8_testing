@@ -34,7 +34,7 @@ class KnowledgeBase(BaseTest):
         self.assertEqual(self.get_text("knowledge_base_line5_tab"),
                          "My First Machine Windows")
         self.assertEqual(self.get_text("knowledge_base_line6_tab"),
-                         "Setup a PPTP connection in Windows 10 to your cloud space")
+                         "PPTP Connection To Space From Windows 8.1")
         self.assertEqual(self.get_text("knowledge_base_line7_tab"),
                          "Getting Started with JumpScale")
         self.assertEqual(self.get_text("knowledge_base_subheader_label"),
@@ -42,10 +42,10 @@ class KnowledgeBase(BaseTest):
         self.assertEqual(self.get_text("knowledge_base_subheader_email"),
                          "support@greenitglobe.com")
         self.assertEqual(self.get_text("knowledge_base_subheader_text"),
-                         "Welcome to the OpenvCloud Knowledge Base. "
-                         "The Knowledge Base is growing based on customer questions. "
-                         "In case you do not find a reply, do not hesitate to contact "
-                         "the support team at: support@greenitglobe.com.")
+                         "Welcome to the OpenvCloud Knowledge Base. The Knowledge Base is "
+                         "growing based on customer questions. In case you do not find a reply, "
+                         "do not hesistate to contact the support team at: "
+                         "support@greenitglobe.com.")
         self.lg('%s ENDED' % self._testID)
 
     def test02_technical_tutorials_first_tab(self):
@@ -332,6 +332,73 @@ class KnowledgeBase(BaseTest):
         #. check all technical tutorials sixth tab page elements, should succeed
         """
         self.lg('%s STARTED' % self._testID)
+        self.assertEqual(self.get_text("knowledge_base_header_label"),
+                         "Technical Tutorials")
+        self.assertEqual(self.get_text("knowledge_base_line6_tab"),
+                         "PPTP Connection To Space From Windows 8.1")
+        self.click("knowledge_base_line6_tab")
+        self.assertEqual(self.get_text("knowledge_base_line6_tab_header"),
+                         "PPTP Connection To Space From Windows 8.1")
+        self.assertEqual(self.get_text("knowledge_base_line6_tab_line1"),
+                         "Look for network and sharing center")
+        self.assertTrue(self.wait_element("knowledge_base_line6_tab_image1"))
+        self.assertEqual(self.get_text("knowledge_base_line6_tab_line2"),
+                         "Click on setup a new network connection")
+        self.assertTrue(self.wait_element("knowledge_base_line6_tab_image2"))
+        self.assertEqual(self.get_text("knowledge_base_line6_tab_line3"),
+                         "Select connect to a workplace")
+        self.assertTrue(self.wait_element("knowledge_base_line6_tab_image3"))
+        self.assertEqual(self.get_text("knowledge_base_line6_tab_line4"),
+                         "Select create a new connection")
+        self.assertEqual(self.get_text("knowledge_base_line6_tab_line5"),
+                         "Go to your defense shield page on OpenvCloud portal")
+        self.assertEqual(self.get_text("knowledge_base_line6_tab_line6"),
+                         "to find the external ip address of your space")
+        self.assertTrue(self.wait_element("knowledge_base_line6_tab_image4"))
+        self.assertEqual(self.get_text("knowledge_base_line6_tab_line7"),
+                         "Click on Advanced Shield Configuration")
+        self.assertTrue(self.wait_element("knowledge_base_line6_tab_image5"))
+        self.assertEqual(self.get_text("knowledge_base_line6_tab_line8"),
+                         "You will see the login page of your advanced shield configuration portal.")
+        self.assertEqual(self.get_text("knowledge_base_line6_tab_line9"),
+                         "Note the ip address in the browser (173.240.9.11) in this case.")
+        self.assertEqual(self.get_text("knowledge_base_line6_tab_line10"),
+                         "On your windows you should see following screen:")
+        self.assertTrue(self.wait_element("knowledge_base_line6_tab_image6"))
+        self.assertEqual(self.get_text("knowledge_base_line6_tab_line11"),
+                         "Choose the top one (vpn)")
+        self.assertTrue(self.wait_element("knowledge_base_line6_tab_image7"))
+        self.assertEqual(self.get_text("knowledge_base_line6_tab_line12"),
+                         "You will now see")
+        self.assertTrue(self.wait_element("knowledge_base_line6_tab_image8"))
+        self.assertEqual(self.get_text("knowledge_base_line6_tab_line13"),
+                         "Ignore this")
+        self.assertEqual(self.get_text("knowledge_base_line6_tab_line14"),
+                         "go back to")
+        self.assertTrue(self.wait_element("knowledge_base_line6_tab_image9"))
+        self.assertEqual(self.get_text("knowledge_base_line6_tab_line15"),
+                         "Tip")
+        self.assertTrue(self.wait_element("knowledge_base_line6_tab_image10"))
+        self.assertEqual(self.get_text("knowledge_base_line6_tab_line18"),
+                         "And choose view network connections, you will now see above screen")
+        self.assertTrue(self.wait_element("knowledge_base_line6_tab_image11"))
+        self.assertEqual(self.get_text("knowledge_base_line6_tab_line19"),
+                         "Do right mouse button and select properties")
+        self.assertTrue(self.wait_element("knowledge_base_line6_tab_image12"))
+        self.assertTrue(self.wait_element("knowledge_base_line6_tab_image13"))
+        self.assertEqual(self.get_text("knowledge_base_line6_tab_line20"),
+                         "Ggo to security tab and choose pptp")
+        self.assertTrue(self.wait_element("knowledge_base_line6_tab_image14"))
+        self.assertEqual(self.get_text("knowledge_base_line6_tab_line21"),
+                         "Choose connect on same screen ( or go to other screen with network "
+                         "connections)")
+        self.assertEqual(self.get_text("knowledge_base_line6_tab_line22"),
+                         "Fillin your credentials")
+        self.assertEqual(self.get_text("knowledge_base_line6_tab_line23"),
+                         "login=admin")
+        self.assertEqual(self.get_text("knowledge_base_line6_tab_line24"),
+                         "passwd=your space passwd")
+        self.assertTrue(self.wait_element("knowledge_base_line6_tab_image15"))
         self.lg('%s ENDED' % self._testID)
 
     def test08_technical_tutorials_seventh_tab(self):
