@@ -8,18 +8,18 @@ NC='\033[0m'       # No color
 
 mkdir -p $directory
 cd $directory
-rm -rf openvcloud_quality_testsuite
+rm -rf org_quality
 ssh-add -l
 #chmod g-r /root/.ssh/id_awesomo
-echo -e "${GREEN}** Clone openvcloud_quality_testsuite $branch branch ...${NC}"
+echo -e "${GREEN}** Clone org_quality $branch branch ...${NC}"
 ssh-add -l
-git clone -b $branch git@github.com:gig-projects/openvcloud_quality_testsuite.git
-cd openvcloud_quality_testsuite
+git clone -b $branch git@github.com:gig-projects/org_quality.git
+cd org_quality
 echo -e "${GREEN}** Activating JumpScale virtual env ...${NC}"
 source /opt/jumpscale7/env.sh
 echo -e "${GREEN}** Checking python-pip ...${NC}";
 which pip || apt-get install -y python-pip
-echo -e "${GREEN}** Installing openvcloud_quality_testsuite requirements ...${NC}"
+echo -e "${GREEN}** Installing org_quality requirements ...${NC}"
 pip install -r requirements.txt
 echo -e "${GREEN}** Running tests ...${NC}"
 nosetests $testsuite --with-xunit --xunit-file='testresults.xml' --with-progressive
