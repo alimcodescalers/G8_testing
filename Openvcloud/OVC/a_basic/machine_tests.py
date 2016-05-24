@@ -478,12 +478,14 @@ class BasicTests(BasicACLTest):
         self.lg('- stop the virtual machine')
         self.api.cloudapi.machines.stop(machineId=self.machineId)
         self.wait_for_status('HALTED', self.api.cloudapi.machines.get,
-                             machineId=self.machineId)
+                             machineId=self.machineId,
+                             timeout=120)
 
         self.lg('- start the virtual machine')
         self.api.cloudapi.machines.start(machineId=self.machineId)
         self.wait_for_status('RUNNING', self.api.cloudapi.machines.get,
-                             machineId=self.machineId)
+                             machineId=self.machineId,
+                             timeout=120)
 
         self.lg('- delete the virtual machine')
         self.api.cloudapi.machines.delete(machineId=self.machineId)
@@ -496,17 +498,20 @@ class BasicTests(BasicACLTest):
 
         self.lg('- Delete the cloud space')
         self.wait_for_status('DEPLOYED', self.api.cloudapi.cloudspaces.get,
-                             cloudspaceId=self.cloudspaceId)
+                             cloudspaceId=self.cloudspaceId,
+                             timeout=120)
         self.api.cloudbroker.cloudspace.destroy(accountId=self.accountId,
                                                 cloudspaceId=self.cloudspaceId,
                                                 reason='Test %s' % self._testID)
         self.wait_for_status('DESTROYED', self.api.cloudapi.cloudspaces.get,
-                             cloudspaceId=self.cloudspaceId)
+                             cloudspaceId=self.cloudspaceId,
+                             timeout=120)
 
         self.lg('- delete the account')
         self.api.cloudbroker.account.delete(accountId=self.accountId, reason="")
         self.wait_for_status('DESTROYED', self.api.cloudapi.accounts.get,
-                             accountId=self.accountId)
+                             accountId=self.accountId,
+                             timeout=120)
 
     def test009_access_docker_on_vm(self):
         """ OVC-009
