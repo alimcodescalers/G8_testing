@@ -78,12 +78,6 @@ class BaseTest(unittest.TestCase):
     def element_is_displayed(self, element):
         return self.driver.find_element_by_xpath(self.elements[element]).is_displayed()
 
-    def element_is_readonly(self, element):
-        return self.driver.find_element_by_xpath(self.elements[element]).get_attribute("readonly")
-
-    def element_link(self, element):
-        return self.driver.find_element_by_xpath(self.elements[element]).get_attribute("href")
-
     def element_background_color(self, element):
         return str(self.driver.find_element_by_xpath(self.elements[element])\
                    .value_of_css_property('background-color'))
@@ -111,9 +105,18 @@ class BaseTest(unittest.TestCase):
         return self.driver.find_element_by_xpath(element).text
 
     def get_value(self, element):
+        return self.get_attribute(element, "value")
+
+    def element_is_readonly(self, element):
+        return self.get_attribute(element, "readonly")
+
+    def element_link(self, element):
+        return self.get_attribute(element, "href")
+
+    def get_attribute(self, element, attribute):
         element = self.elements[element]
         self.wait_until_element_located(element)
-        return self.driver.find_element_by_xpath(element).get_attribute("value")
+        return self.driver.find_element_by_xpath(element).get_attribute(attribute)
 
     def set_text(self, element, value):
         element = self.elements[element]

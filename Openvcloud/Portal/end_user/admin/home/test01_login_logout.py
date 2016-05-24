@@ -1,4 +1,4 @@
-from end_user.utils import *
+from end_user.utils import BaseTest
 import uuid
 from nose_parameterized import parameterized
 
