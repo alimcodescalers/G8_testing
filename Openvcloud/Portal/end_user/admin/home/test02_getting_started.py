@@ -1,4 +1,4 @@
-from end_user.utils import *
+from end_user.utils import BaseTest
 from end_user.page_elements_xpath import home_page
 
 

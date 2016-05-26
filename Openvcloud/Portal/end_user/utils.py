@@ -1,10 +1,12 @@
 import logging
 import unittest
 import time
+import os
 
 from testconfig import config
 
 from pytractor import webdriver
+from selenium.webdriver import FirefoxProfile
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
@@ -62,7 +64,12 @@ class BaseTest(unittest.TestCase):
         if self.browser == 'chrome':
             self.driver = webdriver.Chrome()
         elif self.browser == 'firefox':
-            self.driver = webdriver.Firefox()
+            fp = FirefoxProfile()
+            fp.set_preference("browser.download.folderList",2)
+            fp.set_preference("browser.download.manager.showWhenStarting",False)
+            fp.set_preference("browser.download.dir", os.path.expanduser("~")+"/Downloads/")
+            fp.set_preference("browser.helperApps.neverAsk.saveToDisk", "application/zip, application/octet-stream")
+            self.driver = webdriver.Firefox(firefox_profile=fp)
         elif self.browser == 'ie':
             self.driver = webdriver.Ie()
         elif self.browser == 'opera':
@@ -78,12 +85,6 @@ class BaseTest(unittest.TestCase):
     def element_is_displayed(self, element):
         return self.driver.find_element_by_xpath(self.elements[element]).is_displayed()
 
-    def element_is_readonly(self, element):
-        return self.driver.find_element_by_xpath(self.elements[element]).get_attribute("readonly")
-
-    def element_link(self, element):
-        return self.driver.find_element_by_xpath(self.elements[element]).get_attribute("href")
-
     def element_background_color(self, element):
         return str(self.driver.find_element_by_xpath(self.elements[element])\
                    .value_of_css_property('background-color'))
@@ -93,6 +94,7 @@ class BaseTest(unittest.TestCase):
 
     def wait_element(self, element):
         self.wait_until_element_located(self.elements[element])
+        return True
 
     def wait_unti_element_clickable(self, name):
         self.wait.until(EC.element_to_be_clickable((By.XPATH, name)))
@@ -110,9 +112,18 @@ class BaseTest(unittest.TestCase):
         return self.driver.find_element_by_xpath(element).text
 
     def get_value(self, element):
+        return self.get_attribute(element, "value")
+
+    def element_is_readonly(self, element):
+        return self.get_attribute(element, "readonly")
+
+    def element_link(self, element):
+        return self.get_attribute(element, "href")
+
+    def get_attribute(self, element, attribute):
         element = self.elements[element]
         self.wait_until_element_located(element)
-        return self.driver.find_element_by_xpath(element).get_attribute("value")
+        return self.driver.find_element_by_xpath(element).get_attribute(attribute)
 
     def set_text(self, element, value):
         element = self.elements[element]
