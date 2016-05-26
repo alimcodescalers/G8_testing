@@ -146,13 +146,13 @@ In the test result file we can view the following information
 
 
 # Other Tests
-[1_Network_config_test](https://github.com/gig-projects/org_quality/issues/258)
-[2_Unixbench2_test](https://github.com/gig-projects/org_quality/issues/259)
-[3_Env_Limit_test](https://github.com/gig-projects/org_quality/issues/256)
-[4_Unixbench_test](https://github.com/gig-projects/org_quality/issues/257)
-[5_cloudspace_limits_test](https://github.com/gig-projects/org_quality/issues/130)
-[6_vm_live_migration_test](https://github.com/gig-projects/org_quality/issues/132)
-[8_node_maintenance_test](https://github.com/gig-projects/org_quality/issues/131)
+[1_Network_config_test](https://github.com/gig-projects/org_quality/issues/258)  
+[2_Unixbench2_test](https://github.com/gig-projects/org_quality/issues/259)  
+[3_Env_Limit_test](https://github.com/gig-projects/org_quality/issues/256)  
+[4_Unixbench_test](https://github.com/gig-projects/org_quality/issues/257)  
+[5_cloudspace_limits_test](https://github.com/gig-projects/org_quality/issues/130)  
+[6_vm_live_migration_test](https://github.com/gig-projects/org_quality/issues/132)  
+[8_node_maintenance_test](https://github.com/gig-projects/org_quality/issues/131)  
 [9_vm_unlimited _snapshots]()
  
 
