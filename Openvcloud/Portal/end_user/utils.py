@@ -1,10 +1,12 @@
 import logging
 import unittest
 import time
+import os
 
 from testconfig import config
 
 from pytractor import webdriver
+from selenium.webdriver import FirefoxProfile
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
@@ -62,7 +64,12 @@ class BaseTest(unittest.TestCase):
         if self.browser == 'chrome':
             self.driver = webdriver.Chrome()
         elif self.browser == 'firefox':
-            self.driver = webdriver.Firefox()
+            fp = FirefoxProfile()
+            fp.set_preference("browser.download.folderList",2)
+            fp.set_preference("browser.download.manager.showWhenStarting",False)
+            fp.set_preference("browser.download.dir", os.path.expanduser("~")+"/Downloads/")
+            fp.set_preference("browser.helperApps.neverAsk.saveToDisk", "application/zip, application/octet-stream")
+            self.driver = webdriver.Firefox(firefox_profile=fp)
         elif self.browser == 'ie':
             self.driver = webdriver.Ie()
         elif self.browser == 'opera':
