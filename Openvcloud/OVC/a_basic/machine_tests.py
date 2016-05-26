@@ -222,6 +222,9 @@ class BasicTests(BasicACLTest):
         self.lg('2- get all available sizes to use and choose one random, should succeed')
         size = random.choice(self.api.cloudapi.sizes.list(cloudspaceId=self.cloudspace_id))
         disksize = random.choice(size['disks'])
+        if image_name == 'Windows 2012r2 Standard':
+           while disksize < 25:
+               disksize = random.choice(size['disks'])
         self.lg('- using image [%s] with memory size [%s] with disk '
                 '[%s]' % (image_name, size['memory'], disksize))
         machine_id = self.cloudapi_create_machine(cloudspace_id=self.cloudspace_id,
@@ -613,3 +616,37 @@ class BasicTests(BasicACLTest):
         self.assertTrue(self.api.cloudbroker.cloudspace.startVFW(cloudspaceId=cloudspaceId))
         self.lg('%s ENDED' % self._testID)
 
+    def test011_windowsVM_with_different_sizes(self):
+        """ OVC-015
+        *Test case  for testing that creating a VM with windows image must use a disksize greater than 25GB*
+
+        **Test Scenario:**
+
+        #. create a cloud space
+        #. deploy the cloud space
+        #. create a VM with a windows image and disksize=10, should return 400 error
+        #. create a VM with a windows image and disksize=20, should return 400 error
+        #.  create a VM with a windows image and disksize=25, should succeed
+        """
+        self.lg('%s STARTED' % self._testID)
+        self.lg('1- Create a new cloudspace')
+        cloudspaceId = self.cloudapi_cloudspace_create(self.account_id,
+                                                       self.location,
+                                                       self.account_owner)
+
+        self.lg('- deploy cloudspace, should succeed')
+        self.api.cloudapi.cloudspaces.deploy(cloudspaceId=cloudspaceId)
+        self.wait_for_status('DEPLOYED', self.api.cloudapi.cloudspaces.get,
+                         cloudspaceId=cloudspaceId)
+
+        self.lg('- Get all sizes')
+        diskSizes = self.api.cloudapi.sizes.list(cloudspaceId)[0]['disks']
+        for diskSize in diskSizes:
+            self.lg('- Create a new machine with disk size %s' % diskSize)
+            try:
+                machineId = self.cloudapi_create_machine(cloudspaceId,image_id=3,disksize=diskSize)
+            except HTTPError as e:
+                self.lg('- expected error raised %s' % e.message)
+                self.assertEqual(e.status_code, 400)
+            else:
+                self.assertTrue(machineId)
