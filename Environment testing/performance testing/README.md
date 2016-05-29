@@ -1,34 +1,28 @@
 # Openvcloud Quality Performance Test   
 This repository contains the complete performance test script  
 
-The link on github including general information can be found [here](https://github.com/0-complexity/ovcdoc_internal/tree/master/testing/Performance%20test%202.0)
-
-
-How to perform the performance test script can be viewed [here](https://github.com/0-complexity/ovcdoc_internal/blob/master/testing/Performance%20test%202.0/Set%20up.md) 
-
 
 Performance test reports can be found [here](https://docs.google.com/document/d/1BiSOzdzidArtnuS9oPSdsCgIGE_VczgYvzTGJ_5ys_I/edit?usp=sharing) 
 
 
 ## General Set up of the system (For FIO Test)
-The Performance test repo can be found on github
-
-https://git.aydo.com/quality/Performance_test
+The Performance tests can be found on github: [here](https://github.com/gig-projects/org_quality/tree/master/Environment%20testing/performance%20testing)
+inside the [org_quality repo] (https://github.com/gig-projects/org_quality)
 
 
 To start the performance test 2.0 we should connect to one of the physical nodes of the environment that needs to be tested. To connect to a physical node, follow the steps as described in the [connect documentation](connect.md).
 
-When connecting to a physical node the node will not be used during the stress test. e.g. When you connect to node 1, tests will run on node 2 and other available nodes.
+When connecting to a physical node the node will not be used during the stress test. e.g. When you connect to node 1, tests will run on node 2 and other available nodes. (we can run the tests from any node)
 
 First we need to get the install script on the physical machine on the root directory.
 ```
-git clone https://git.aydo.com/quality/Performance_test.git
+git clone git@github.com:gig-projects/org_quality.git
 ```
 
 In the folder "Performance_test" there are several files:
 - Perf_parameters.cfg  = input file where we define parameters
 - README.md  
-- scripts  =  contains actual scripts.
+- scripts  =  contains actual scripts. 
 - utils
 
 **Perf_parameters.cfg**
@@ -105,7 +99,7 @@ jspython scripts/setup_test.py
 When the complete set up is done a user is created, a cloudspace is made, vm's are created, disks are mounted and FIO testing is has started.
 
 *user information*  
-username: cfcd208495  
+username: perftest  
 PW: gig12345
 
 *Cloudspace information*  
@@ -141,8 +135,7 @@ vim total_results
 ```
 In the test result file we can view the following information
 - Total IOPS per vm per Iteration
-- Avergage user cpu
-- Average system cpu
+- Avergage total cpu
 
 
 # Other Tests
