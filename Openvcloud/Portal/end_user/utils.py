@@ -7,9 +7,10 @@ from testconfig import config
 
 from pytractor import webdriver
 from selenium.webdriver import FirefoxProfile
+from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.action_chains import ActionChains
 
 from end_user.page_elements_xpath import login_page
 
@@ -106,6 +107,9 @@ class BaseTest(unittest.TestCase):
         self.driver.find_element_by_xpath(element).click()
         time.sleep(1)
 
+    def click_link(self, link):
+        self.driver.get(link)
+
     def get_text(self, element):
         element = self.elements[element]
         self.wait_until_element_located(element)
@@ -129,4 +133,9 @@ class BaseTest(unittest.TestCase):
         element = self.elements[element]
         self.wait_until_element_located(element)
         self.driver.find_element_by_xpath(element).clear()
-        self.driver.find_element_by_xpath(element).send_keys(value)
+        self.driver.find_element_by_xpath(element).send_keys(value)       
+
+    def move_curser_to_element(self, element):
+        element = self.elements[element]
+        location = WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, element)))
+        ActionChains(self.driver).move_to_element(location).perform()
