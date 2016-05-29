@@ -51,7 +51,7 @@ Connect as root to the physical environment, go to the Performance_test script d
 
 ```
 cd Performance_test
-jspython scripts/tear_down.py
+jspython scripts/tear_down.py --clean
 ```
 Now we need to set up the required parameters.
 
@@ -102,9 +102,6 @@ When the complete set up is done a user is created, a cloudspace is made, vm's a
 username: perftest  
 PW: gig12345
 
-*Cloudspace information*  
-name of the deployed cloudspace =
-
 *vm information*  
 during the testscript vm's are created following the naming convention  
 
@@ -135,7 +132,7 @@ vim total_results
 ```
 In the test result file we can view the following information
 - Total IOPS per vm per Iteration
-- Avergage total cpu
+- Avergage cpu
 
 
 # Other Tests
