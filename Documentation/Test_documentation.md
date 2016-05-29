@@ -8,5 +8,6 @@ All test scenarios should be clearly described in GIT issues and should be revie
 
 Documentation on testing needs to be done on Gitbook internal OVC doc. Currently there are two section where testing is described:  
 - [Automated testing](https://github.com/gig-projects/org_quality/tree/master/Environment%20testing/performance%20testing)
-- [stress testing](https://github.com/0-complexity/ovcdoc_public/blob/master/Testing/StressTesting/Performance%20test%201.0/stress_tests.md)  
+- [Stress testing](https://github.com/0-complexity/ovcdoc_public/blob/master/Testing/StressTesting/Performance%20test%201.0/stress_tests.md)  
+- [Performance testing 2.0](https://github.com/gig-projects/org_quality/blob/master/Environment%20testing/performance%20testing/README.md)
 - [Portal testing](https://github.com/gig-projects/org_quality/tree/master/Openvcloud/Portal)
