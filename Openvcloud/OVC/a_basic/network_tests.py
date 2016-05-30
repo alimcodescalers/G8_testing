@@ -140,7 +140,7 @@ class NetworkBasicTests(BasicACLTest):
         images = self.api.cloudapi.images.list()
         for image in images:
             self.lg('- Create a new machine')
-            if image['id'] == 3:
+            if 'Windows' in image['name']:
                 machineId = self.cloudapi_create_machine(cloudspaceId,image_id=int(image['id']),disksize=25)
             else:
                 machineId = self.cloudapi_create_machine(cloudspaceId,image_id=int(image['id']))

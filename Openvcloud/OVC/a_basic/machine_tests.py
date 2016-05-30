@@ -624,9 +624,10 @@ class BasicTests(BasicACLTest):
 
         #. create a cloud space
         #. deploy the cloud space
+        #. get the windows machine image id
         #. create a VM with a windows image and disksize=10, should return 400 error
         #. create a VM with a windows image and disksize=20, should return 400 error
-        #.  create a VM with a windows image and disksize=25, should succeed
+        #. create a VM with a windows image and disksize=25, should succeed
         """
         self.lg('%s STARTED' % self._testID)
         self.lg('1- Create a new cloudspace')
@@ -639,12 +640,17 @@ class BasicTests(BasicACLTest):
         self.wait_for_status('DEPLOYED', self.api.cloudapi.cloudspaces.get,
                          cloudspaceId=cloudspaceId)
 
+        self.lg('- ')
+        images = self.api.cloudapi.images.list()
+        for image in images:
+            if 'Windows' in image['name']:
+                imageId = int(image['id'])
         self.lg('- Get all sizes')
         diskSizes = self.api.cloudapi.sizes.list(cloudspaceId)[0]['disks']
         for diskSize in diskSizes:
             self.lg('- Create a new machine with disk size %s' % diskSize)
             try:
-                machineId = self.cloudapi_create_machine(cloudspaceId,image_id=3,disksize=diskSize)
+                machineId = self.cloudapi_create_machine(cloudspaceId,image_id=imageId,disksize=diskSize)
             except HTTPError as e:
                 self.lg('- expected error raised %s' % e.message)
                 self.assertEqual(e.status_code, 400)
