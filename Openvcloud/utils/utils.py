@@ -169,7 +169,7 @@ class BaseTest(unittest.TestCase):
         self.assertEqual(machine['status'], 'RUNNING')
         return machine_id
 
-    def wait_for_status(self, status, func, **kwargs):
+    def wait_for_status(self, status, func, timeout=300, **kwargs):
         """
         A generic utility method that gets a resource and wait for resource status
 
@@ -179,7 +179,7 @@ class BaseTest(unittest.TestCase):
         """
         resource = func(**kwargs)  # get resource
         self.assertTrue(resource)
-        for _ in xrange(300):
+        for _ in xrange(timeout):
             if resource['status'] == status:
                 break
             time.sleep(1)

@@ -1,10 +1,8 @@
-from utils.utils import BasicACLTest
-
-from JumpScale.portal.portal.PortalClient2 import ApiError
-
+# coding=utf-8
 import uuid
-import unittest
-import netaddr
+
+from Openvcloud.utils.utils import BasicACLTest
+from JumpScale.portal.portal.PortalClient2 import ApiError
 
 
 class ACLMACHINE(BasicACLTest):

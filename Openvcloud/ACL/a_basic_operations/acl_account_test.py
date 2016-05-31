@@ -1,8 +1,8 @@
+# coding=utf-8
 import uuid
-import unittest
 import time
-import pdb
-from utils.utils import BasicACLTest
+
+from Openvcloud.utils.utils import BasicACLTest
 from JumpScale.portal.portal.PortalClient2 import ApiError
 
 

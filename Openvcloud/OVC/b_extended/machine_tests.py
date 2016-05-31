@@ -1,6 +1,6 @@
-from utils.utils import BasicACLTest
-
+# coding=utf-8
 from nose_parameterized import parameterized
+from Openvcloud.utils.utils import BasicACLTest
 
 
 class ExtendedTests(BasicACLTest):

@@ -1,12 +1,13 @@
+# coding=utf-8
 from time import sleep
-from utils.utils import BasicACLTest
 from random import randint
+import uuid
+import unittest
+
+from Openvcloud.utils.utils import BasicACLTest
 from JumpScale import j
 from JumpScale.portal.portal.PortalClient2 import ApiError
 from JumpScale.baselib.http_client.HttpClient import HTTPError
-import uuid
-import unittest
-import netaddr
 
 
 class ACLCLOUDSPACE(BasicACLTest):
