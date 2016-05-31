@@ -196,3 +196,36 @@ class NetworkBasicTests(BasicACLTest):
                         if output['state'] == 'OK':
                            if 'Linux' not in output['result'][1]:
                                 raise NameError("This command:"+command+"is wrong")
+
+
+    def test004_move_virtual_firewall(self):
+        """ OVC-014
+        * Test case for moving virtual firewall form one node to another
+
+        **Test Scenario:**
+
+        #. create account and cloudspace
+        #. deploy the created cloudspace
+        #. get nodeId of the cloudspace virtual firewall
+        #. get another nodeId to move the virtual firewall to
+        #. move virtual firewall to another node, should succeed
+
+        """
+
+        self.lg('1- deploy the created cloudspace')
+        self.api.cloudbroker.cloudspace.deployVFW(self.cloudspace_id)
+        self.wait_for_status('DEPLOYED', self.account_owner_api.cloudapi.cloudspaces.get,
+                             cloudspaceId=self.cloudspace_id)
+
+        self.lg('2- get nodeId of the cloudspace virtual firewall')
+        nodeId = self.get_physical_node_id(self.cloudspace_id)
+
+        self.lg('3- get another nodeId to move the virtual firewall to')
+        other_nodeId = self.get_nodeId_to_move_VFW_to(nodeId)
+        self.assertNotEqual(other_nodeId, -1, msg="No active node to move the VFW to")
+
+        self.lg('4- move virtual firewall to another node')
+        self.api.cloudbroker.cloudspace.moveVirtualFirewallToFirewallNode(cloudspaceId=self.cloudspace_id,
+                                                                          targetNid=other_nodeId)
+        new_nodeId = self.get_physical_node_id(self.cloudspace_id)
+        self.assertEqual(other_nodeId, new_nodeId)

@@ -283,6 +283,17 @@ class BaseTest(unittest.TestCase):
         nodeID = ccl.stack.get(stackID).referenceId
         return nodeID
 
+    def get_nodeId_to_move_VFW_to(self, current_VFW_nodeId):
+        scl = j.clients.osis.getNamespace('system')
+        nodeIds_list = scl.node.list({})
+        nodeIds_list.remove(scl.node.get('%s_%s' % (j.application.whoAmI.gid, str(current_VFW_nodeId))).guid)
+        for nodeId in nodeIds_list[1:]:
+            node = scl.node.get(nodeId)
+            if node.active == True:
+                return node.id
+        return -1
+
+
     def execute_command_on_physical_node(self,command,nodeid):
             # This function execute a command on a physical real node
             acl = j.clients.agentcontroller.get()
