@@ -219,6 +219,7 @@ class NetworkBasicTests(BasicACLTest):
 
         self.lg('3- get another nodeId to move the virtual firewall to')
         other_nodeId = self.get_nodeId_to_move_VFW_to(nodeId)
+        self.assertNotEqual(other_nodeId, -1, msg="No active node to move the VFW to")
 
         self.lg('4- move virtual firewall to another node')
         self.api.cloudbroker.cloudspace.moveVirtualFirewallToFirewallNode(cloudspaceId=self.cloudspace_id,

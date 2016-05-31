@@ -287,7 +287,12 @@ class BaseTest(unittest.TestCase):
         scl = j.clients.osis.getNamespace('system')
         nodeIds_list = scl.node.list({})
         nodeIds_list.remove(scl.node.get('%s_%s' % (j.application.whoAmI.gid, str(current_VFW_nodeId))).guid)
-        return scl.node.get(nodeIds_list[1]).id
+        for nodeId in nodeIds_list[1:]:
+            node = scl.node.get(nodeId)
+            if node.active == True:
+                return node.id
+        return -1
+
 
     def execute_command_on_physical_node(self,command,nodeid):
             # This function execute a command on a physical real node
