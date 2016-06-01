@@ -182,7 +182,47 @@ class Write(BaseTest):
         #. rollback snapshot for a machine, should succeed
         #. delete snapshot for a machine, should succeed
         """
-        pass
+        self.lg('%s STARTED' % self._testID)
+
+        self.lg('select running machine, should succeed')
+        self.wait_machine("RUNNING")
+
+        self.lg('create snapshot for a machine, should succeed')
+        snapshot_name = str(uuid.uuid4())
+        self.click("machine_take_snapshot")
+        self.set_text("snapshot_name_textbox", snapshot_name)
+        self.click("snapshot_ok_button")
+        time.sleep(5)
+        self.click("snapshot_tab")
+        time.sleep(2)
+        self.assertEqual(snapshot_name, self.get_text("first_snapshot_name"))
+
+        self.lg('rollback snapshot for a machine, should succeed')
+        self.click("first_snapshot_rollback")
+        time.sleep(2)
+        self.assertEqual(self.get_text("snapshot_alert_message"),
+                         "A snapshot can only be rolled back to a stopped machine.")
+        self.click("snapshot_alert_ok")
+        time.sleep(2)
+        self.click("actions_tab")
+        self.lg('stop machine, should succeed')
+        self.click("machine_stop")
+        time.sleep(30)
+        self.click("snapshot_tab")
+        self.click("first_snapshot_rollback")
+        time.sleep(2)
+        self.assertEqual(self.get_text("snapshot_confirm_message"),
+                         "Snapshots newer then current snapshot will be removed.")
+        self.click("snapshot_confirm_ok")
+        time.sleep(5)
+        self.click("first_snapshot_delete")
+        time.sleep(2)
+        self.assertEqual(self.get_text("snapshot_delete_message"),
+                         "Are you sure you want to delete snapshot? ")
+        self.click("snapshot_delete_ok")
+        time.sleep(2)
+
+        self.lg('%s ENDED' % self._testID)
 
     def test03_machine_update(self):
         """

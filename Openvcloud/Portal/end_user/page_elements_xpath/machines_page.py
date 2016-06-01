@@ -63,11 +63,17 @@ elements = {"getting_started_button": ".//*[@id='navbar-list']/ul[2]/li[1]/a",
             "console_ipaddress": ".//*[@id='console']/div/div[2]/div[1]/p",
 
             "take_snapshot": ".//*[@id='snapshots']/a",
-            "snapshot_name_textbox": "//html/body/div[3]/form/div[2]/ul/input",
-            "snapshot_ok_button": "//html/body/div[3]/form/div[3]/button[1]",
-            "first_snapshot_name": ".//*[@id='machine_buckets_list']/tbody[2]/tr[1]/td[1]",
-            "first_snapshot_rollback": ".//*[@id='snapshots']/div/table/tbody/tr/td[3]/a[1]/i",
+            "snapshot_name_textbox": "//html/body/div[2]/form/div[2]/ul/input",
+            "snapshot_ok_button": "//html/body/div[2]/form/div[3]/button[1]",
+            "first_snapshot_name": ".//*[@id='snapshots']/div/table/tbody/tr[1]/td[1]",
+            "first_snapshot_rollback": ".//*[@id='snapshots']/div/table/tbody/tr[1]/td[3]/a[1]/i",
             "first_snapshot_delete": ".//*[@id='snapshots']/div/table/tbody/tr/td[3]/a[2]/i",
+            "snapshot_alert_message": "//html/body/div[3]/div[2]/pre",
+            "snapshot_alert_ok": "//html/body/div[3]/div[3]/button",
+            "snapshot_confirm_message": "//html/body/div[2]/form/div[2]/div",
+            "snapshot_confirm_ok": "//html/body/div[2]/form/div[3]/button[1]",
+            "snapshot_delete_message": "//html/body/div[2]/form/div[2]",
+            "snapshot_delete_ok": "//html/body/div[2]/form/div[3]/button[1]",
 
 
             "logout_button": ".//*[@id='wrap']/div/tour/div[1]/div[2]/div/ul/li[1]/a/span"}
