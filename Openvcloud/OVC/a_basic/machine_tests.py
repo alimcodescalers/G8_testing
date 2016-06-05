@@ -74,7 +74,13 @@ class BasicTests(BasicACLTest):
         self.lg('2- get all available sizes to use and choose one random, should succeed')
         size = random.choice(self.api.cloudapi.sizes.list(cloudspaceId=self.cloudspace_id))
         self.lg('- using image [%s] with memory size [%s]' % (image_name, size['memory']))
-        disksize = random.choice(size['disks'])
+        if 'Windows' in image_name:
+               while True:
+                   disksize = random.choice(size['disks'])
+                   if disksize > 25:
+                        break
+        else:
+            disksize = random.choice(size['disks'])
         self.lg('- using image [%s] with memory size [%s] with disk '
                 '[%s]' % (image_name, size['memory'], disksize))
         machine_id = self.cloudapi_create_machine(cloudspace_id=self.cloudspace_id,
