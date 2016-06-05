@@ -78,12 +78,14 @@ class BaseTest(unittest.TestCase):
         self.user = self.cloudbroker_user_create()
         self.user_api = self.get_authenticated_user_api(self.user)
 
-    def cloudapi_cloudspace_create(self, account_id, location, access, api=None, name=''):
+    def cloudapi_cloudspace_create(self, account_id, location, access, api=None,
+                                   name='', maxMemoryCapacity=-1, maxDiskCapacity=-1):
         if api is None:
             api = self.api
         cloudspaceId = api.cloudapi.cloudspaces.create(
                        accountId=account_id, location=location, access=access,
-                       name=name or str(uuid.uuid4()).replace('-', '')[0:10])
+                       name=name or str(uuid.uuid4()).replace('-', '')[0:10],
+                       maxMemoryCapacity=maxMemoryCapacity, maxVDiskCapacity=maxDiskCapacity)
         self.assertTrue(cloudspaceId)
         return cloudspaceId
 

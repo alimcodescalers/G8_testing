@@ -986,17 +986,17 @@ class Admin(ACLCLOUDSPACE):
         """
         self.lg('%s STARTED' % self._testID) 
 
-        self.lg('1- create new cloudspace and deploy machine')
+        self.lg('1- create new cloudspace and deploy machine with 4G memory and 10G disksize')
         newcloudspaceId = self.cloudapi_cloudspace_create(account_id=self.account_id, 
                                                           location=self.location, 
                                                           access=self.account_owner, 
                                                           api=self.account_owner_api,
-                                                          maxMemoryCapacity=512,
+                                                          maxMemoryCapacity=5,
                                                           maxDiskCapacity=10)
         self._cloudspaces = [newcloudspaceId]
 
         machine_id = self.cloudapi_create_machine(cloudspace_id=newcloudspaceId,
-                                                  api=self.account_owner_api)
+                                                  api=self.account_owner_api, size_id=3)
         self.wait_for_status('DEPLOYED', self.account_owner_api.cloudapi.cloudspaces.get,
                              cloudspaceId=newcloudspaceId)
 
@@ -1021,46 +1021,46 @@ class Admin(ACLCLOUDSPACE):
         self.assertEqual(cloudspace.name, new_cloudspace_name)
         
         self.lg('4- update cloudspace memory by increase maxMemoryCapacity')
-        maxMemoryCapacity = 1024
+        maxMemoryCapacity = 10
         self.user_api.cloudapi.cloudspaces.update(cloudspaceId=newcloudspaceId, 
                                                   maxMemoryCapacity=maxMemoryCapacity)
         
         self.lg('- get and verify cloudspace memory')
         cloudspace = scl.cloudspace.get(newcloudspaceId)
-        self.assertEqual(cloudspace.resourceLimits['CU'], maxMemoryCapacity)        
+        self.assertEqual(cloudspace.resourceLimits['CU_M'], maxMemoryCapacity)
 
         self.lg('5- try to update cloudspace memory by decrease maxMemoryCapacity')
         try:
-            self.user_api.cloudapi.cloudspaces.update(cloudspaceId=newcloudspaceId, 
-                                                      maxMemoryCapacity=256)
+            self.user_api.cloudapi.cloudspaces.update(cloudspaceId=newcloudspaceId,
+                                                      maxMemoryCapacity=3)
         except ApiError as e:
             self.lg('- expected error raised %s' % e.message)
             self.assertEqual(e.message, '400 Bad Request')
 
         self.lg('- get and verify cloudspace memory')
         cloudspace = scl.cloudspace.get(newcloudspaceId)
-        self.assertEqual(cloudspace.resourceLimits['CU'], maxMemoryCapacity) 
+        self.assertEqual(cloudspace.resourceLimits['CU_M'], maxMemoryCapacity)
 
         self.lg('6- update cloudspace disk capacity by increase maxDiskCapacity')
         maxDiskCapacity = 20
         self.user_api.cloudapi.cloudspaces.update(cloudspaceId=newcloudspaceId, 
-                                                  maxDiskCapacity=maxDiskCapacity)
+                                                  maxVDiskCapacity=maxDiskCapacity)
         
         self.lg('- get and verify cloudspace disk capacity')
         cloudspace = scl.cloudspace.get(newcloudspaceId)
-        self.assertEqual(cloudspace.resourceLimits['SU'], maxDiskCapacity)        
+        self.assertEqual(cloudspace.resourceLimits['CU_D'], maxDiskCapacity)
 
         self.lg('7- try to update cloudspace disk capacity by decrease maxDiskCapacity')
         try:
-            self.user_api.cloudapi.cloudspaces.update(cloudspaceId=newcloudspaceId, 
-                                                      maxDiskCapacity=5)
+            self.user_api.cloudapi.cloudspaces.update(cloudspaceId=newcloudspaceId,
+                                                      maxVDiskCapacity=5)
         except ApiError as e:
             self.lg('- expected error raised %s' % e.message)
             self.assertEqual(e.message, '400 Bad Request')
         
         self.lg('- get and verify cloudspace disk capacity')
         cloudspace = scl.cloudspace.get(newcloudspaceId)
-        self.assertEqual(cloudspace.resourceLimits['SU'], maxDiskCapacity)         
+        self.assertEqual(cloudspace.resourceLimits['CU_D'], maxDiskCapacity)
         
         self.lg('8- delete cloudspace.')
         self.account_owner_api.cloudapi.machines.delete(machineId=machine_id)
@@ -1074,4 +1074,6 @@ class Admin(ACLCLOUDSPACE):
             self.assertEqual(e.message, '404 Not Found')
         
         self.lg('%s ENDED' % self._testID)
+
+
 
