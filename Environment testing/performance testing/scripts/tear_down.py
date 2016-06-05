@@ -20,7 +20,7 @@ def delete_accounts(accounts):
     for account in accounts:
         if account['name'] not in ['test_storage', 'gig'] :
             print('   |--Deleting account: %s' % account['name'])
-            pcl.actors.cloudbroker.account.delete(account['id'])
+            pcl.actors.cloudbroker.account.delete(account['id'], reason='testing')
             for _ in xrange(600):
                 if account['status'] == 'DESTROYED':
                     break
