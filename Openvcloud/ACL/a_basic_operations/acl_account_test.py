@@ -38,17 +38,17 @@ class Read(ACLACCOUNT):
             self.lg('- expected error raised %s' % e.message)
             self.assertEqual(e.message, '403 Forbidden')
 
-        self.lg('3- add user1 to the account created by user2')
+        self.lg('3- add user2 to the account created by user1')
         self.api.cloudapi.accounts.addUser(accountId=self.account_id,
                                            userId=self.user,
                                            accesstype='R')
 
-        self.lg('4- get account with user1')
+        self.lg('4- get account with user2')
         user2_account = self.user_api.cloudapi.accounts.get(accountId=self.account_id)
         self.assertEqual(user2_account['id'], self.account_id)
 
-        self.lg('5- delete user2 account: %s' % self.account_id)
-        self.api.cloudbroker.account.delete(accountId=self.account_id)
+        self.lg('5- delete user1 account: %s' % self.account_id)
+        self.api.cloudbroker.account.delete(accountId=self.account_id, reason='testing')
         self.wait_for_status('DESTROYED', self.api.cloudapi.accounts.get,
                              accountId=self.account_id)
         self.CLEANUP['accountId'].remove(self.account_id)
@@ -102,7 +102,7 @@ class Read(ACLACCOUNT):
         self.assertEqual(user1_accounts[0]['id'], self.account_id)
 
         self.lg('5- delete account: %s' % self.account_id)
-        self.api.cloudbroker.account.delete(accountId=self.account_id)
+        self.api.cloudbroker.account.delete(accountId=self.account_id, reason='testing')
         self.wait_for_status('DESTROYED', self.api.cloudapi.accounts.get,
                              accountId=self.account_id)
 
@@ -168,7 +168,7 @@ class Write(ACLACCOUNT):
         self.assertEqual(newcloudspace['id'], newcloudspaceId)
 
         self.lg('5- delete the account: %s' % self.account_id)
-        self.api.cloudbroker.account.delete(accountId=self.account_id)
+        self.api.cloudbroker.account.delete(accountId=self.account_id, reason='testing')
         self.wait_for_status('DESTROYED', self.api.cloudapi.accounts.get,
                              accountId=self.account_id)
         self.CLEANUP['accountId'].remove(self.account_id)
@@ -249,7 +249,7 @@ class Write(ACLACCOUNT):
                                                                        basename=basename1))
         time.sleep(10)
         self.lg('6- delete user1 account: %s' % self.account_id)
-        self.api.cloudbroker.account.delete(accountId=self.account_id)
+        self.api.cloudbroker.account.delete(accountId=self.account_id, reason='testing')
         self.wait_for_status('DESTROYED', self.api.cloudapi.accounts.get,
                              accountId=self.account_id)
         self.CLEANUP['accountId'].remove(self.account_id)

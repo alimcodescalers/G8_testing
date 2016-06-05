@@ -61,7 +61,7 @@ class Read(ACLCLOUDSPACE):
         self.assertEqual(cloudspace1['id'], cloudspace_id)
 
         self.lg('5- delete account: %s' % self.account_id)
-        self.api.cloudbroker.account.delete(accountId=self.account_id)
+        self.api.cloudbroker.account.delete(accountId=self.account_id,  reason='testing')
         self.wait_for_status('DESTROYED', self.api.cloudapi.accounts.get,
                              accountId=self.account_id)
         self.CLEANUP['accountId'].remove(self.account_id)
