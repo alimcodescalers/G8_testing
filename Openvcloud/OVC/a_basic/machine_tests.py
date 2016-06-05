@@ -35,7 +35,7 @@ class BasicTests(BasicACLTest):
 
         self.lg('- set the vm to required status, should succeed')
         if initial_status == 'HALTED':
-            self.api.cloudbroker.machine.stop(machineId=self.machine_id)
+            self.api.cloudbroker.machine.stop(machineId=self.machine_id, reason='testing')
             self.assertEqual(self.api.cloudapi.machines.get(machineId=self.machine_id)['status'],
                              initial_status)
         else:
@@ -43,7 +43,7 @@ class BasicTests(BasicACLTest):
                              initial_status)
 
         self.lg('- reboot machine with initial status [%s], should succeed' % initial_status)
-        self.api.cloudbroker.machine.reboot(machineId=self.machine_id)
+        self.api.cloudbroker.machine.reboot(machineId=self.machine_id, reason='testing')
         self.assertEqual(self.api.cloudapi.machines.get(machineId=self.machine_id)['status'],
                          'RUNNING')
 
@@ -511,7 +511,7 @@ class BasicTests(BasicACLTest):
                              timeout=120)
 
         self.lg('- delete the account')
-        self.api.cloudbroker.account.delete(accountId=self.accountId, reason="")
+        self.api.cloudbroker.account.delete(accountId=self.accountId, reason="testing")
         self.wait_for_status('DESTROYED', self.api.cloudapi.accounts.get,
                              accountId=self.accountId,
                              timeout=120)

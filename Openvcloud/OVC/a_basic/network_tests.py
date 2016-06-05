@@ -48,7 +48,7 @@ class NetworkBasicTests(BasicACLTest):
         self.assertFalse(ccl.cloudspace.get(self.cloudspaceId).networkId)
 
         self.lg('4- delete account: %s' % self.account_id)
-        self.api.cloudbroker.account.delete(accountId=self.account_id)
+        self.api.cloudbroker.account.delete(accountId=self.account_id, reason='testing')
 
         self.lg('5- Check the release network ID are in the free network IDs list')
         lcl = j.clients.osis.getNamespace('libcloud')
@@ -145,7 +145,7 @@ class NetworkBasicTests(BasicACLTest):
         for image in images:
             self.lg('- Create a new machine')
             if 'Windows' in image['name']:
-                machineId = self.cloudapi_create_machine(cloudspaceId,image_id=int(image['id']),disksize=25)
+                machineId = self.cloudapi_create_machine(cloudspaceId,image_id=int(image['id']),disksize=50)
             else:
                 machineId = self.cloudapi_create_machine(cloudspaceId,image_id=int(image['id']))
 
