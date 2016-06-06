@@ -1,5 +1,6 @@
 from Openvcloud.utils.utils import BasicACLTest
 from JumpScale.portal.portal.PortalClient2 import ApiError
+from JumpScale.baselib.http_client.HttpClient import HTTPError
 
 
 class ExtendedTests(BasicACLTest):
@@ -14,8 +15,9 @@ class ExtendedTests(BasicACLTest):
         *Test case for testing basic resource limits on account and cloudspace limits.*
 
         **Test Scenario:**
-
+        #. create account with passing negative values in the account's limitation, should fail
         #. create account with certain limits, should succeed
+        #. create cloudspace with passing negative values in the cloudspace's limitation, should fail
         #. create cloudspace that exceeds account's max_cores, should fail
         #. create cloudspace that exceeds account's max_memory, should fail
         #. create cloudspace that exceeds account's max_vdisks, should fail
@@ -29,12 +31,34 @@ class ExtendedTests(BasicACLTest):
         #. create VM with allowed limits
         #. add publicip to this VM, should fail as account's max_IPs=1
         """
+        self.lg('- create account with passing negative values in the account\'s limitation')
+        try:
+            self.cloudbroker_account_create(self.account_owner, self.account_owner, self.email,
+                                            self.location, maxMemoryCapacity=-5, maxVDiskCapacity=-3,
+                                            maxCPUCapacity=-4, maxNumPublicIP= -2)
+        except HTTPError as e:
+            self.lg('- expected error raised %s' % e.message)
+            self.assertEqual(e.status_code, 400)
+
         self.lg(' - create account with certain limits, should succeed')
         self.account_id = self.cloudbroker_account_create(self.account_owner, self.account_owner,
                                                           self.email, self.location, maxMemoryCapacity=2,
                                                           maxVDiskCapacity=60 , maxCPUCapacity=4,
                                                           maxNumPublicIP= 1)
         self.account_owner_api = self.get_authenticated_user_api(self.account_owner)
+
+        self.lg('- create cloudspace with passing negative values in the cloudspace\'s limitation, should fail')
+        try:
+            self.cloudapi_cloudspace_create(account_id=self.account_id,
+                                                       location=self.location,
+                                                       name='cs1', access=self.account_owner,
+                                                       api=self.account_owner_api, maxMemoryCapacity=-5,
+                                                       maxDiskCapacity=-4, maxCPUCapacity=-3,
+                                                       maxNumPublicIP=-2)
+        except ApiError as e:
+            self.lg('- expected error raised %s' % e.message)
+            self.assertEqual(e.message, '400 Bad Request')
+
 
         list =[{'mC':8, 'mM':0, 'mVD':0, 'mIP':0, 's':'max_cores'},
                {'mC':0, 'mM':8, 'mVD':0, 'mIP':0, 's':'max_memory'},
@@ -54,7 +78,8 @@ class ExtendedTests(BasicACLTest):
                 self.lg('- expected error raised %s' % e.message)
                 self.assertEqual(e.message, '400 Bad Request')
 
-        self.lg('create cloudspace without exceeding account limits, should succeed')
+
+        self.lg('- create cloudspace without exceeding account limits, should succeed')
         cloudspaceId = self.cloudapi_cloudspace_create(account_id=self.account_id,
                                                        location=self.location,
                                                        name='cs1', access=self.account_owner,
