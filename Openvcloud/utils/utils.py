@@ -79,18 +79,25 @@ class BaseTest(unittest.TestCase):
         self.user_api = self.get_authenticated_user_api(self.user)
 
     def cloudapi_cloudspace_create(self, account_id, location, access, api=None,
-                                   name='', maxMemoryCapacity=-1, maxDiskCapacity=-1):
+                                   name='', maxMemoryCapacity=-1, maxDiskCapacity=-1,
+                                   maxCPUCapacity=-1, maxNumPublicIP=-1):
         if api is None:
             api = self.api
         cloudspaceId = api.cloudapi.cloudspaces.create(
                        accountId=account_id, location=location, access=access,
                        name=name or str(uuid.uuid4()).replace('-', '')[0:10],
-                       maxMemoryCapacity=maxMemoryCapacity, maxVDiskCapacity=maxDiskCapacity)
+                       maxMemoryCapacity=maxMemoryCapacity, maxVDiskCapacity=maxDiskCapacity,
+                       maxCPUCapacity=maxCPUCapacity, maxNumPublicIP=maxNumPublicIP)
         self.assertTrue(cloudspaceId)
         return cloudspaceId
 
-    def cloudbroker_account_create(self, name, username, email, location):
-        accountId = self.api.cloudbroker.account.create(name, username, email, location)
+    def cloudbroker_account_create(self, name, username, email, location, maxMemoryCapacity=-1,
+                                   maxVDiskCapacity=-1, maxCPUCapacity=-1, maxNumPublicIP=-1):
+        accountId = self.api.cloudbroker.account.create(name, username, email, location,
+                                                        maxMemoryCapacity=maxMemoryCapacity,
+                                                        maxVDiskCapacity=maxVDiskCapacity,
+                                                        maxCPUCapacity=maxCPUCapacity,
+                                                        maxNumPublicIP=maxNumPublicIP)
         self.assertTrue(accountId, 'Failed to create account for user %s!' % username)
         self.CLEANUP['accountId'].append(accountId)
         self.lg('- account ID: %s' % accountId)
@@ -156,13 +163,13 @@ class BaseTest(unittest.TestCase):
         return sizes[0]
 
     def cloudapi_create_machine(self, cloudspace_id, api='',
-                                name='', size_id=0, image_id=0, disksize=10, wait=True):
+                                name='', size_id=0, image_id=0, disksize=10, datadisks=[], wait=True):
         api = api or self.api
         name = name or str(uuid.uuid4())
         machine_id = api.cloudapi.machines.create(
             cloudspaceId=cloudspace_id, name=name,
             sizeId=size_id or self.get_size(cloudspace_id)['id'],
-            imageId=image_id or self.get_image()['id'], disksize=disksize)
+            imageId=image_id or self.get_image()['id'], disksize=disksize, datadisks=datadisks)
         self.assertTrue(machine_id)
         if wait:
             self.wait_for_status('DEPLOYED', api.cloudapi.cloudspaces.get,
