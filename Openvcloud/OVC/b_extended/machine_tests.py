@@ -47,3 +47,55 @@ class ExtendedTests(BasicACLTest):
                 self.api.cloudapi.machines.delete(machineId=machine_id)
 
         self.lg('%s ENDED' % self._testID)
+
+
+    def test002_node_maintenance_stopVMs(self):
+        """ OVC-xxx
+        *Test case for putting node in maintenance with action stop all vms.*
+
+        **Test Scenario:**
+
+        #. create 2 VMs, should succeed
+        #. put node in maintenance with action stop all vms, should succeed
+        #. check that the 2 VMs have been halted
+        #. enable the node back, should succeed
+        #. check that the 2 VMs have returned to running status
+        """
+
+        self.lg('%s STARTED' % self._testID)
+
+        self.lg('- get a running node to create VMs on')
+        stackId = self.get_running_stackId()
+        self.assertNotEqual(stackId, -1, msg="No active node to create VMs on")
+
+        self.lg('- create 2 VMs, should succeed')
+        machine_Id1 = self.cloudapi_create_machine(cloudspace_id=self.cloudspace_id,
+                                                   onStack=True, stackId=stackId)
+        machine_Id2 = self.cloudapi_create_machine(cloudspace_id=self.cloudspace_id,
+                                                   onStack=True, stackId=stackId)
+
+
+        self.lg('- put node in maintenance with action stop all vms, should succeed')
+        gid = self.get_node_gid(stackId)
+        self.api.cloudbroker.computenode.maintenance(id=stackId, gid=gid, vmaction='stop', message='testing')
+
+        self.lg('- check that the 2 VMs have been halted')
+        machine_1 = self.api.cloudapi.machines.get(machineId=machine_Id1)
+        self.wait_for_status('HALTED', self.api.cloudapi.machines.get, machineId=machine_1)
+        self.assertEqual(machine_1['status'], 'HALTED')
+        machine_2 = self.api.cloudapi.machines.get(machineId=machine_Id1)
+        self.wait_for_status('HALTED', self.api.cloudapi.machines.get, machineId=machine_2)
+        self.assertEqual(machine_2['status'], 'HALTED')
+
+        self.lg('- enable the node back, should succeed')
+        self.api.cloudbroker.computenode.enable(id=stackId, gid=gid, message='testing')
+
+        self.lg('check that the 2 VMs have returned to running status')
+        machine_1 = self.api.cloudapi.machines.get(machineId=machine_Id1)
+        self.assertEqual(machine_1['status'], 'RUNNING')
+        machine_2 = self.api.cloudapi.machines.get(machineId=machine_Id1)
+        self.assertEqual(machine_2['status'], 'RUNNING')
+
+        self.lg('%s ENDED' % self._testID)
+
+

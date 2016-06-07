@@ -155,14 +155,21 @@ class BaseTest(unittest.TestCase):
         self.assertTrue(sizes)
         return sizes[0]
 
-    def cloudapi_create_machine(self, cloudspace_id, api='',
-                                name='', size_id=0, image_id=0, disksize=10, wait=True):
+    def cloudapi_create_machine(self, cloudspace_id, api='',name='', size_id=0, image_id=0,
+                                disksize=10, wait=True, onStack=False, stackId=1):
         api = api or self.api
         name = name or str(uuid.uuid4())
-        machine_id = api.cloudapi.machines.create(
-            cloudspaceId=cloudspace_id, name=name,
-            sizeId=size_id or self.get_size(cloudspace_id)['id'],
-            imageId=image_id or self.get_image()['id'], disksize=disksize)
+        sizeId=size_id or self.get_size(cloudspace_id)['id']
+        imageId=image_id or self.get_image()['id']
+
+        if not onStack:
+            machine_id = api.cloudapi.machines.create(cloudspaceId=cloudspace_id, name=name,
+                                                      sizeId=sizeId,imageId=imageId,
+                                                      disksize=disksize)
+        else:
+            machine_id = api.cloudbroker.machine.createOnStack(cloudspaceId=cloudspace_id, name=name,
+                                                      sizeId=sizeId,imageId=imageId,
+                                                      disksize=disksize, stackid=stackId)
         self.assertTrue(machine_id)
         if wait:
             self.wait_for_status('DEPLOYED', api.cloudapi.cloudspaces.get,
@@ -271,6 +278,23 @@ class BaseTest(unittest.TestCase):
     def get_cloudspace_network_id(self, cloudspaceID):
         # This function take the cloudspace ID and return its network ID
         return self.api.models.cloudspace.get(cloudspaceID).networkId
+
+    def get_node_gid(self, stackId):
+        ccl = j.clients.osis.getNamespace('cloudbroker')
+        scl = j.clients.osis.getNamespace('system')
+        nodeId = ccl.stack.get(stackId).referenceId
+        return scl.node.get(int(nodeId)).gid
+
+    def get_running_stackId(self):
+        ccl = j.clients.osis.getNamespace('cloudbroker')
+        scl = j.clients.osis.getNamespace('system')
+        stacks_list = ccl.stack.list()
+        for stackId in stacks_list:
+            nodeId = ccl.stack.get(stackId).referenceId
+            node = scl.node.get(int(nodeId))
+            if node.active == True:
+                return stackId
+        return -1
 
     def get_physical_node_id(self, cloudspaceID):
         # This function take the cloudspace ID and return its physical node ID
