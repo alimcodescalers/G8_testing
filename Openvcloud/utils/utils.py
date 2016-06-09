@@ -156,13 +156,13 @@ class BaseTest(unittest.TestCase):
         return sizes[0]
 
     def cloudapi_create_machine(self, cloudspace_id, api='',name='', size_id=0, image_id=0,
-                                disksize=10, wait=True, onStack=False, stackId=1):
+                                disksize=10, wait=True, stackId=0):
         api = api or self.api
         name = name or str(uuid.uuid4())
         sizeId=size_id or self.get_size(cloudspace_id)['id']
         imageId=image_id or self.get_image()['id']
 
-        if not onStack:
+        if not stackId:
             machine_id = api.cloudapi.machines.create(cloudspaceId=cloudspace_id, name=name,
                                                       sizeId=sizeId,imageId=imageId,
                                                       disksize=disksize)

@@ -69,10 +69,8 @@ class ExtendedTests(BasicACLTest):
         self.assertNotEqual(stackId, -1, msg="No active node to create VMs on")
 
         self.lg('2- create 2 VMs, should succeed')
-        machine_Id1 = self.cloudapi_create_machine(cloudspace_id=self.cloudspace_id,
-                                                   onStack=True, stackId=stackId)
-        machine_Id2 = self.cloudapi_create_machine(cloudspace_id=self.cloudspace_id,
-                                                   onStack=True, stackId=stackId)
+        machine_Id1 = self.cloudapi_create_machine(cloudspace_id=self.cloudspace_id, stackId=stackId)
+        machine_Id2 = self.cloudapi_create_machine(cloudspace_id=self.cloudspace_id, stackId=stackId)
 
         self.lg('3- put node in maintenance with action stop all vms, should succeed')
         gid = self.get_node_gid(stackId)
