@@ -35,7 +35,7 @@ class BasicTests(BasicACLTest):
 
         self.lg('- set the vm to required status, should succeed')
         if initial_status == 'HALTED':
-            self.api.cloudbroker.machine.stop(machineId=self.machine_id)
+            self.api.cloudbroker.machine.stop(machineId=self.machine_id, reason='testing')
             self.assertEqual(self.api.cloudapi.machines.get(machineId=self.machine_id)['status'],
                              initial_status)
         else:
@@ -43,7 +43,7 @@ class BasicTests(BasicACLTest):
                              initial_status)
 
         self.lg('- reboot machine with initial status [%s], should succeed' % initial_status)
-        self.api.cloudbroker.machine.reboot(machineId=self.machine_id)
+        self.api.cloudbroker.machine.reboot(machineId=self.machine_id, reason='testing')
         self.assertEqual(self.api.cloudapi.machines.get(machineId=self.machine_id)['status'],
                          'RUNNING')
 
@@ -74,7 +74,13 @@ class BasicTests(BasicACLTest):
         self.lg('2- get all available sizes to use and choose one random, should succeed')
         size = random.choice(self.api.cloudapi.sizes.list(cloudspaceId=self.cloudspace_id))
         self.lg('- using image [%s] with memory size [%s]' % (image_name, size['memory']))
-        disksize = random.choice(size['disks'])
+        if 'Windows' in image_name:
+               while True:
+                   disksize = random.choice(size['disks'])
+                   if disksize > 25:
+                        break
+        else:
+            disksize = random.choice(size['disks'])
         self.lg('- using image [%s] with memory size [%s] with disk '
                 '[%s]' % (image_name, size['memory'], disksize))
         machine_id = self.cloudapi_create_machine(cloudspace_id=self.cloudspace_id,
@@ -511,7 +517,7 @@ class BasicTests(BasicACLTest):
                              timeout=120)
 
         self.lg('- delete the account')
-        self.api.cloudbroker.account.delete(accountId=self.accountId, reason="")
+        self.api.cloudbroker.account.delete(accountId=self.accountId, reason="testing")
         self.wait_for_status('DESTROYED', self.api.cloudapi.accounts.get,
                              accountId=self.accountId,
                              timeout=120)
