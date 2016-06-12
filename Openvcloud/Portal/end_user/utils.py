@@ -115,6 +115,11 @@ class BaseTest(unittest.TestCase):
         self.wait_until_element_located(element)
         return self.driver.find_element_by_xpath(element).text
 
+    def get_size(self,element):
+        element = self.elements[element]
+        self.wait_until_element_located(element)
+        return self.driver.find_element_by_xpath(element).size
+
     def get_value(self, element):
         return self.get_attribute(element, "value")
 
