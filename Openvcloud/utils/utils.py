@@ -70,8 +70,13 @@ class BaseTest(unittest.TestCase):
         self.lg('- create account for :%s' % self.account_owner)
         self.account_id = self.cloudbroker_account_create(self.account_owner, self.account_owner,
                                                           self.email, self.location)
+
         self.account_owner_api = self.get_authenticated_user_api(self.account_owner)
-        self.cloudspace_id = self.account_owner_api.cloudapi.cloudspaces.list()[0]['id']
+        # self.cloudspace_id = self.account_owner_api.cloudapi.cloudspaces.list()[0]['id']
+        self.cloudspace_id = self.cloudapi_cloudspace_create(account_id=self.account_id,
+                                                             location=self.location,
+                                                             access=self.account_owner,
+                                                             api=self.account_owner_api)
 
     def acl_setup(self):
         self.default_setup()
@@ -84,10 +89,10 @@ class BaseTest(unittest.TestCase):
         if api is None:
             api = self.api
         cloudspaceId = api.cloudapi.cloudspaces.create(
-                       accountId=account_id, location=location, access=access,
-                       name=name or str(uuid.uuid4()).replace('-', '')[0:10],
-                       maxMemoryCapacity=maxMemoryCapacity, maxVDiskCapacity=maxDiskCapacity,
-                       maxCPUCapacity=maxCPUCapacity, maxNumPublicIP=maxNumPublicIP)
+            accountId=account_id, location=location, access=access,
+            name=name or str(uuid.uuid4()).replace('-', '')[0:10],
+            maxMemoryCapacity=maxMemoryCapacity, maxVDiskCapacity=maxDiskCapacity,
+            maxCPUCapacity=maxCPUCapacity, maxNumPublicIP=maxNumPublicIP)
         self.assertTrue(cloudspaceId)
         return cloudspaceId
 
@@ -162,12 +167,12 @@ class BaseTest(unittest.TestCase):
         self.assertTrue(sizes)
         return sizes[0]
 
-    def cloudapi_create_machine(self, cloudspace_id, api='',name='', size_id=0, image_id=0,
+    def cloudapi_create_machine(self, cloudspace_id, api='', name='', size_id=0, image_id=0,
                                 disksize=10, datadisks=[], wait=True, stackId=null):
         api = api or self.api
         name = name or str(uuid.uuid4())
-        sizeId=size_id or self.get_size(cloudspace_id)['id']
-        imageId=image_id or self.get_image()['id']
+        sizeId = size_id or self.get_size(cloudspace_id)['id']
+        imageId = image_id or self.get_image()['id']
 
         if not stackId:
             machine_id = api.cloudapi.machines.create(cloudspaceId=cloudspace_id, name=name,
@@ -175,8 +180,8 @@ class BaseTest(unittest.TestCase):
                                                       disksize=disksize, datadisks=datadisks)
         else:
             machine_id = api.cloudbroker.machine.createOnStack(cloudspaceId=cloudspace_id, name=name,
-                                                      sizeId=sizeId, imageId=imageId,
-                                                      disksize=disksize, stackid=stackId)
+                                                               sizeId=sizeId, imageId=imageId,
+                                                               disksize=disksize, stackid=stackId)
         self.assertTrue(machine_id)
         if wait:
             self.wait_for_status('DEPLOYED', api.cloudapi.cloudspaces.get,
@@ -326,18 +331,17 @@ class BaseTest(unittest.TestCase):
                 return node.id
         return -1
 
-
-    def execute_command_on_physical_node(self,command,nodeid):
-            # This function execute a command on a physical real node
-            acl = j.clients.agentcontroller.get()
-            output = acl.executeJumpscript('jumpscale', 'exec', nid=nodeid, args={'cmd': command})
-            if output['state'] == 'OK':
-                if 'ERROR' not in output['result'][1]:
-                    return output['result'][1]
-                else:
-                    raise NameError("This command:"+command+"is wrong")
+    def execute_command_on_physical_node(self, command, nodeid):
+        # This function execute a command on a physical real node
+        acl = j.clients.agentcontroller.get()
+        output = acl.executeJumpscript('jumpscale', 'exec', nid=nodeid, args={'cmd': command})
+        if output['state'] == 'OK':
+            if 'ERROR' not in output['result'][1]:
+                return output['result'][1]
             else:
-                raise NameError("Node result state is not OK")
+                raise NameError("This command:" + command + "is wrong")
+        else:
+            raise NameError("Node result state is not OK")
 
 
 class BasicACLTest(BaseTest):
