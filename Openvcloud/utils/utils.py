@@ -76,7 +76,8 @@ class BaseTest(unittest.TestCase):
         self.cloudspace_id = self.cloudapi_cloudspace_create(account_id=self.account_id,
                                                              location=self.location,
                                                              access=self.account_owner,
-                                                             api=self.account_owner_api)
+                                                             api=self.account_owner_api,
+                                                             name='default')
 
     def acl_setup(self):
         self.default_setup()
