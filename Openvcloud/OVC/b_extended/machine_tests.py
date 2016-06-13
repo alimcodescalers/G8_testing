@@ -2,6 +2,9 @@
 from nose_parameterized import parameterized
 from Openvcloud.utils.utils import BasicACLTest
 
+from JumpScale.portal.portal.PortalClient2 import ApiError
+from JumpScale.baselib.http_client.HttpClient import HTTPError
+
 
 class ExtendedTests(BasicACLTest):
 
@@ -97,4 +100,43 @@ class ExtendedTests(BasicACLTest):
 
         self.lg('%s ENDED' % self._testID)
 
+    def test003_create_vmachine_clone_with_empty_name(self):
+        """ OVC-021
+        *Test case for create vmachine/clone with empty name.*
 
+        **Test Scenario:**
+
+        #. Try to create machine with empty name, should fail
+        #. Create normal machine with valid name, should succeed
+        #. Stop the created machine to be able to clone it, should succeed
+        #. Try to clone created machine with empty name, should fail
+        """
+        self.lg('%s STARTED' % self._testID)
+
+        self.lg('1- Try to create machine with empty name, should fail')
+        try:
+            self.api.cloudapi.machines.create(cloudspaceId=self.cloudspace_id,
+                                              name='',
+                                              sizeId=self.get_size(self.cloudspace_id)['id'],
+                                              imageId=self.get_image()['id'],
+                                              disksize=10)
+        except (HTTPError, ApiError) as e:
+            self.lg('- expected error raised %s' % e.message)
+            self.assertEqual(e.status_code, 400)
+
+        self.lg("2- Create normal machine with valid name, should succeed")
+        machine_id = self.cloudapi_create_machine(cloudspace_id=self.cloudspace_id)
+        self.machine_ids = [machine_id]
+
+        self.lg("3- Stop the created machine to be able to clone it, should succeed")
+        self.api.cloudapi.machines.stop(machineId=machine_id)
+        self.assertEqual(self.api.cloudapi.machines.get(machineId=machine_id)['status'], 'HALTED')
+
+        self.lg('4- Try to clone created machine with empty name, should fail')
+        try:
+            self.api.cloudapi.machines.clone(machineId=machine_id, name='')
+        except (HTTPError, ApiError) as e:
+            self.lg('- expected error raised %s' % e.message)
+            self.assertEqual(e.status_code, 400)
+
+        self.lg('%s ENDED' % self._testID)
