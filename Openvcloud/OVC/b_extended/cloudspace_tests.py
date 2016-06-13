@@ -33,7 +33,6 @@ class CloudspaceTests(BasicACLTest):
                                                         self.account_owner)
 
         images = self.api.cloudapi.images.list()
-        self.machine_ids = []
         for image in images:
             image_name = image['name']
             self.lg('- using image [%s]' % image_name)
@@ -52,8 +51,6 @@ class CloudspaceTests(BasicACLTest):
                                                       size_id=size['id'],
                                                       image_id=image['id'],
                                                       disksize=disksize)
-            self.lg('- machine with id %s, created' % machine_id)
-            self.machine_ids.append(machine_id)
 
         self.lg("2- Cloudspace status should be DEPLOYED, should succeed")
         self.wait_for_status(status='DEPLOYED', func=self.api.cloudapi.cloudspaces.get,
