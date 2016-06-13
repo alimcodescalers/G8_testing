@@ -12,14 +12,6 @@ class CloudspaceTests(BasicACLTest):
         super(CloudspaceTests, self).setUp()
         self.default_setup()
 
-    def tearDown(self):
-        if hasattr(self, "machine_ids") and self.machine_ids:
-            for machine_id in self.machine_ids:
-                self.lg('- delete machine with id %s, should succeed' % machine_id)
-                self.api.cloudapi.machines.delete(machineId=machine_id)
-
-        super(CloudspaceTests, self).tearDown()
-
     def test001_validate_deleted_cloudspace_with_running_machines(self):
         """ OVC-020
         *Test case for validate deleted cloudspace with running machines get destroyed.*
