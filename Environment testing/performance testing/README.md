@@ -142,7 +142,7 @@ In the test result file we can view the following information
 [4_Unixbench_test](https://github.com/gig-projects/org_quality/issues/257)  
 [5_cloudspace_limits_test](https://github.com/gig-projects/org_quality/issues/130)  
 [6_vm_live_migration_test](https://github.com/gig-projects/org_quality/issues/132)  
-[7_remove_SSD_test](https://github.com/gig-projects/org_quality/issues/133)
+[7_remove_SSD_test](https://github.com/gig-projects/org_quality/issues/133)  
 [8_node_maintenance_test](https://github.com/gig-projects/org_quality/issues/131)  
 [9_vm_unlimited _snapshots](https://github.com/gig-projects/org_quality/issues/242)
  
