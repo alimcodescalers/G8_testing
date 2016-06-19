@@ -20,7 +20,7 @@ email = "%s@test.com" % str(uuid.uuid4())[0:8]
 utils.create_user(USERNAME, email,  pcl, scl)
 ACCOUNTNAME = str(uuid.uuid4())[0:8]
 accountId = utils.create_account(USERNAME, email, ACCOUNTNAME, ccl, pcl)
-cloudspace = utils.create_cloudspace(accountId, ccl, pcl)
+cloudspace = utils.create_cloudspace(accountId, USERNAME, ccl, pcl)
 cloudspace_publicport = 2000
 
 cloudspace_publicIP = str(netaddr.IPNetwork(cloudspace['publicipaddress']).ip)

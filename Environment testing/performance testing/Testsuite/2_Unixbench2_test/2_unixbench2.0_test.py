@@ -35,7 +35,7 @@ def main():
     utils.create_user(USERNAME, email,  pcl, scl)
     ACCOUNTNAME = str(uuid.uuid4())[0:8]
     accountId = utils.create_account(USERNAME, email, ACCOUNTNAME, ccl, pcl)
-    cloudspace = utils.create_cloudspace(accountId, ccl, pcl)
+    cloudspace = utils.create_cloudspace(accountId, USERNAME, ccl, pcl)
     cloudspace_publicport = 2000
 
     current_stack = ccl.stack.search({'referenceId': str(j.application.whoAmI.nid), 'gid': j.application.whoAmI.gid})[1]

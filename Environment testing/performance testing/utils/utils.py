@@ -166,20 +166,15 @@ def create_account(USERNAME, email, ACCOUNTNAME, ccl, pcl):
     accountId = pcl.actors.cloudbroker.account.create(ACCOUNTNAME, USERNAME, email, loc)
     return accountId
 
-def create_cloudspace(accountId, ccl, pcl):
-    cloudspaces = ccl.cloudspace.search({'accountId': accountId,
-                                        'status': {'$in': ['VIRTUAL', 'DEPLOYED']}})[1:]
-    if not cloudspaces:
-        msg = "No cloudspace available for accountId %s, disabling test" % accountId
-        return [{'message': msg, 'category': 'Storage Test', 'state': 'OK'}]
-    else:
-        cloudspace = cloudspaces[0]
-    if cloudspace['status'] == 'VIRTUAL':
+def create_cloudspace(accountId, username, ccl, pcl, cs_name=''):
+        loc = ccl.location.search({})[1]['locationCode']
+        cloudspace_id = pcl.actors.cloudapi.cloudspaces.create(accountId=accountId, location=loc,
+                                                              name=cs_name or 'default', access=username)
         print 'Deploying CloudSpace'
-        pcl.actors.cloudbroker.cloudspace.deployVFW(cloudspace['id'])
+        pcl.actors.cloudbroker.cloudspace.deployVFW(cloudspace_id)
         # retreive cloudspace with Public IP set
-        cloudspace = ccl.cloudspace.get(cloudspace['id']).dump()
-    return cloudspace
+        cloudspace = ccl.cloudspace.get(cloudspace_id).dump()
+        return cloudspace
 
 #install unixbench on a given machine
 def Install_unixbench(machineId, cloudspace, cs_publicport, pcl, sendscript=None):

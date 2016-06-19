@@ -29,7 +29,7 @@ def main():
     utils.create_user(USERNAME, email,  pcl, scl)
     ACCOUNTNAME = str(uuid.uuid4())[0:8]
     accountId = utils.create_account(USERNAME, email, ACCOUNTNAME, ccl, pcl)
-    cloudspace = utils.create_cloudspace(accountId, ccl, pcl)
+    cloudspace = utils.create_cloudspace(accountId, USERNAME, ccl, pcl)
     cloudspace_publicport = 2000
 
     current_stack = ccl.stack.search({'referenceId': str(j.application.whoAmI.nid), 'gid': j.application.whoAmI.gid})[1]
@@ -96,10 +96,13 @@ if __name__ == "__main__":
     try:
         [test_result, stackid, gid] = main()
     finally:
-        pcl = j.clients.portal.getByInstance('main')
-        pcl.actors.cloudbroker.computenode.enable(id=stackid, gid=gid, message='testing')
-        if test_result == 'Two files are identical':
-            print ('################ \n# Test succeed #\n################')
-        else:
-            print ('############### \n# Test Failed # \n###############')
         j.do.execute('jspython scripts/tear_down.py nodemaintenanceuser')
+        try:
+            pcl = j.clients.portal.getByInstance('main')
+            pcl.actors.cloudbroker.computenode.enable(id=stackid, gid=gid, message='testing')
+            if test_result == 'Two files are identical':
+                print ('################ \n# Test succeed #\n################')
+            else:
+                print ('############### \n# Test Failed # \n###############')
+        except NameError:
+            print ('############### \n# Test Failed # \n###############')
