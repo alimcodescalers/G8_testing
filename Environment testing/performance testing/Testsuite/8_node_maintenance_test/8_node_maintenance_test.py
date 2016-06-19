@@ -58,7 +58,7 @@ def main():
             p = multiprocessing.Process(target=utils.run_script, args=(account, cloudspace_publicip, cloudspace_publicport, 'test1'))
             processes.append(p)
         else:
-            gid = machine['disks'][0]['gid']
+            gid = ccl.stack.get(ccl.vmachine.get(machineId).stackId).gid
             p = multiprocessing.Process(target=pcl.actors.cloudbroker.computenode.maintenance, args=(stackid, gid,'move', 'testing'))
             processes.append(p)
     for l in range(len(processes)):
@@ -68,11 +68,14 @@ def main():
         if l == 1:
             time.sleep(10)
             machine_db = ccl.vmachine.get(machineId)
-            if machine_db.status=='RUNNING' and machine_db.stackId!=stackid:
-                print('The VM have been successfully installed on other node with approximately no downtime during cpu node maintenance')
+            if machine_db.stackId==stackid:
+                print('VM didn\'t move to another stackId')
             else:
-                print('A high downtime have been noticed')
-                return [None, stackid, gid]
+                if machine_db.status=='RUNNING':
+                    print('The VM have been successfully installed on other node with approximately no downtime during cpu node maintenance')
+                else:
+                    print('A high downtime have been noticed')
+                    return [None, stackid, gid]
         time.sleep(12)
         if l == 0:
             print('cpu node with stackid:%s will be put in maintenance ..'% stackid)

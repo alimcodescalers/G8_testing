@@ -39,7 +39,7 @@ def main(snapshots_number):
     account = machine['accounts'][0]
 
     for i in range(snapshots_number):
-        utils.wirtefile_on_vm(account, cloudspace_publicip, cloudspace_publicport, 'snapshot%s.txt' %(i+1))
+        utils.writefile_on_vm(account, cloudspace_publicip, cloudspace_publicport, 'snapshot%s.txt' %(i+1))
         pcl.actors.cloudapi.machines.stop(machineId=machineId)
         print('   |--creating snapshot No.%s ...' %(i+1))
         pcl.actors.cloudapi.machines.snapshot(machineId=machineId, name='snapshot%s'%(i+1))

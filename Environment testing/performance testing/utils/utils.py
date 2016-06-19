@@ -15,25 +15,13 @@ def create_user(USERNAME, email, pcl, scl):
     user.groups.extend([u'level1', u'level2', u'level3', u'admin',u'finance',u'ovs_admin',u'user'])
     scl.user.set(user)
 
-def create_account_cloudspace(USERNAME, email, ACCOUNTNAME, ccl, pcl, scl):
+def create_account_cloudspace(USERNAME, email, ACCOUNTNAME, ccl, pcl, scl, cs_name=''):
 
     loc = ccl.location.search({})[1]['locationCode']
 
     print 'Creating Account with accountname %s' % ACCOUNTNAME
     accountId = pcl.actors.cloudbroker.account.create(ACCOUNTNAME, USERNAME, email, loc)
-    #Refactor the cloudspace part
-    cloudspaces = ccl.cloudspace.search({'accountId': accountId,
-                                        'status': {'$in': ['VIRTUAL', 'DEPLOYED']}})[1:]
-    if not cloudspaces:
-        msg = "Not cloudspace available for account %s, disabling test" % ACCOUNTNAME
-        return [{'message': msg, 'category': 'Storage Test', 'state': 'OK'}]
-    else:
-        cloudspace = cloudspaces[0]
-    if cloudspace['status'] == 'VIRTUAL':
-        print 'Deploying CloudSpace'
-        pcl.actors.cloudbroker.cloudspace.deployVFW(cloudspace['id'])
-        # retreive cloudspace with Public IP set
-        cloudspace = ccl.cloudspace.get(cloudspace['id']).dump()
+    cloudspace = create_cloudspace(accountId, USERNAME, ccl, pcl, cs_name='')
     return cloudspace
 
 def create_machine_onStack(stackid, cloudspace, iteration, ccl, pcl, scl, vm_specs, cs_publicport=0,  Res_dir=None, queue=None):
@@ -170,7 +158,7 @@ def create_cloudspace(accountId, username, ccl, pcl, cs_name=''):
         loc = ccl.location.search({})[1]['locationCode']
         cloudspace_id = pcl.actors.cloudapi.cloudspaces.create(accountId=accountId, location=loc,
                                                               name=cs_name or 'default', access=username)
-        print 'Deploying CloudSpace'
+        print 'Creating and deploying CloudSpace...'
         pcl.actors.cloudbroker.cloudspace.deployVFW(cloudspace_id)
         # retreive cloudspace with Public IP set
         cloudspace = ccl.cloudspace.get(cloudspace_id).dump()
@@ -246,7 +234,7 @@ def check_script(account, cloudspace_publicip, cloudspace_publicport, file1, fil
     connection.user(account['login'])
     return connection.run('python check_script.py %s %s ' %(file1, file2))
 
-def wirtefile_on_vm(account, cloudspace_publicip, cloudspace_publicport, filename):
+def writefile_on_vm(account, cloudspace_publicip, cloudspace_publicport, filename):
     connection = j.remote.cuisine.connect(cloudspace_publicip, cloudspace_publicport, account['password'], account['login'])
     connection.fabric.state.output["running"]=False
     connection.fabric.state.output["stdout"]=False
