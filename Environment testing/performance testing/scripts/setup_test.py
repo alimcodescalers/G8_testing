@@ -29,6 +29,10 @@ def main():
     testrun_time = int(config.get("perf_parameters", "testrun_time"))
     data_size = int(config.get("perf_parameters", "data_size"))
     IO_type = config.get("perf_parameters", "IO_type")
+    bs=config.get("perf_parameters", "bs")
+    iodepth=int(config.get("perf_parameters", "iodepth"))
+    direct_io=int(config.get("perf_parameters", "direct_io"))
+    rwmixwrite=int(config.get("perf_parameters", "direct_io"))
     USERNAME = config.get("perf_parameters", "username")
     Res_dir = config.get("perf_parameters", "Res_dir")
 
@@ -93,7 +97,9 @@ def main():
         #terminate all connections before setting up them again
         processes = []
         for iter_on_vms in vms_list:
-            p = multiprocessing.Process(target=utils.FIO_test, args=(iter_on_vms, pcl, data_size, testrun_time, Res_dir, i, no_of_disks))
+            p = multiprocessing.Process(target=utils.FIO_test, args=(iter_on_vms, pcl, data_size,
+                                                                     testrun_time, Res_dir, i, no_of_disks,
+                                                                     rwmixwrite, bs, iodepth, direct_io))
             processes.append(p)
         for l in range(len(vms_list)):
             dict = vms_list[l]

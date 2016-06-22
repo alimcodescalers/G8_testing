@@ -123,7 +123,7 @@ def machine_mount_disks(connection, account, machineId, no_of_disks=6):
         connection.run('echo %s | sudo -S mount /dev/vd%s /mnt/disk_%s' %(account['password'],list[i], list[i]))
     print('   |--finished mounting')
 
-def FIO_test(vm_pubip_pubport, pcl, data_size, testrun_time, Res_dir, iteration, no_of_disks):
+def FIO_test(vm_pubip_pubport, pcl, data_size, testrun_time, Res_dir, iteration, no_of_disks, rwmixwrite, bs, iodepth, direct_io):
     machineId = vm_pubip_pubport.keys()[0]
     cloudspace_publicip = vm_pubip_pubport.values()[0][0]
     cs_publicport = vm_pubip_pubport.values()[0][1]
@@ -139,7 +139,8 @@ def FIO_test(vm_pubip_pubport, pcl, data_size, testrun_time, Res_dir, iteration,
         connection.user(account['login'])
         j.do.execute('sshpass -p%s scp -o \'StrictHostKeyChecking=no\' -P %s scripts/Machine_script.py  %s@%s:'
                      %(account['password'], cs_publicport, account['login'], cloudspace_publicip))
-        connection.run('python Machine_script.py %s %s %s %s %s %s %s' %(testrun_time, machineId, account['password'], iteration, no_of_disks, data_size, write_type))
+        connection.run('python Machine_script.py %s %s %s %s %s %s %s %s %s %s %s' %(testrun_time, machineId,
+                        account['password'], iteration, no_of_disks, data_size, write_type, bs, iodepth, direct_io, rwmixwrite))
         j.do.execute('sshpass -p%s scp -r -o \'StrictHostKeyChecking=no \' -P %s  %s@%s:machine%s_iter%s_%s_results %s/'
                      %(account['password'], cs_publicport, account['login'], cloudspace_publicip, machineId, iteration, write_type, Res_dir))
 
@@ -192,7 +193,7 @@ def Run_unixbench(VM, cpu_cores, pcl, queue=None):
         machineId = VM[0]
         cloudspace_ip = VM[1]
         cloudspace_publicport = VM[2]
-        machine = pcl.actors.cloudapi.machines.get(machineId)
+        machine = run_again_if_failed(pcl.actors.cloudapi.machines.get, machineId=machineId)
         account = machine['accounts'][0]
         connection = j.remote.cuisine.connect(cloudspace_ip, cloudspace_publicport, account['password'], account['login'])
         connection.fabric.state.output["running"]=False
@@ -244,7 +245,7 @@ def writefile_on_vm(account, cloudspace_publicip, cloudspace_publicport, filenam
 def run_again_if_failed(func, **kwargs):
     while True:
         try:
-            func(**kwargs)
+            return func(**kwargs)
         except:
             continue
         break
