@@ -159,7 +159,7 @@ def create_cloudspace(accountId, username, ccl, pcl, cs_name=''):
         cloudspace_id = pcl.actors.cloudapi.cloudspaces.create(accountId=accountId, location=loc,
                                                               name=cs_name or 'default', access=username)
         print 'Creating and deploying CloudSpace...'
-        pcl.actors.cloudbroker.cloudspace.deployVFW(cloudspace_id)
+        run_again_if_failed(pcl.actors.cloudbroker.cloudspace.deployVFW, cloudspaceId=cloudspace_id)
         # retreive cloudspace with Public IP set
         cloudspace = ccl.cloudspace.get(cloudspace_id).dump()
         return cloudspace
@@ -240,3 +240,11 @@ def writefile_on_vm(account, cloudspace_publicip, cloudspace_publicport, filenam
     connection.fabric.state.output["stdout"]=False
     connection.run('touch %s' %filename)
     return connection
+
+def run_again_if_failed(func, **kwargs):
+    while True:
+        try:
+            func(**kwargs)
+        except:
+            continue
+        break

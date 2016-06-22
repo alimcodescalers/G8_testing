@@ -40,20 +40,20 @@ def main(snapshots_number):
 
     for i in range(snapshots_number):
         utils.writefile_on_vm(account, cloudspace_publicip, cloudspace_publicport, 'snapshot%s.txt' %(i+1))
-        pcl.actors.cloudapi.machines.stop(machineId=machineId)
+        utils.run_again_if_failed(pcl.actors.cloudapi.machines.stop, machineId=machineId)
         print('   |--creating snapshot No.%s ...' %(i+1))
-        pcl.actors.cloudapi.machines.snapshot(machineId=machineId, name='snapshot%s'%(i+1))
-        pcl.actors.cloudapi.machines.start(machineId=machineId)
+        utils.run_again_if_failed(pcl.actors.cloudapi.machines.snapshot, machineId=machineId, name='snapshot%s'%(i+1))
+        utils.run_again_if_failed(pcl.actors.cloudapi.machines.start, machineId=machineId)
         time.sleep(20)
 
     print('Rolling back to snapshot No.%s ...' %(snapshots_number-1))
-    pcl.actors.cloudapi.machines.stop(machineId=machineId)
+    utils.run_again_if_failed(pcl.actors.cloudapi.machines.stop, machineId=machineId)
     snapshots = pcl.actors.cloudapi.machines.listSnapshots(machineId=machineId)
     snapshots.sort()
-    pcl.actors.cloudapi.machines.rollbackSnapshot(machineId=machineId,
-                                                              epoch=snapshots[snapshots_number-2]['epoch'])
-    pcl.actors.cloudapi.machines.start(machineId=machineId)
-    time.sleep(20)
+    utils.run_again_if_failed(pcl.actors.cloudapi.machines.rollbackSnapshot, machineId=machineId,
+                              epoch=snapshots[snapshots_number-2]['epoch'])
+    utils.run_again_if_failed(pcl.actors.cloudapi.machines.start, machineId=machineId)
+    time.sleep(30)
 
     connection = j.remote.cuisine.connect(cloudspace_publicip, cloudspace_publicport, account['password'], account['login'])
     count_snapshots = connection.run('ls -1 | wc -l')
