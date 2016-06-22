@@ -19,10 +19,10 @@ if __name__ == "__main__":
     data_size = int(sys.argv[6])
     write_type = sys.argv[7]
     datasize_process = data_size/3
-    bs=sys.arg[8]
-    iodepth=sys.arg[9]
-    direct_io=sys.arg[10]
-    rwmixwrite=sys.arg[11]
+    bs=sys.argv[8]
+    iodepth=sys.argv[9]
+    direct_io=sys.argv[10]
+    rwmixwrite=sys.argv[11]
 
     disk_list = ['disk_b', 'disk_c', 'disk_d', 'disk_e', 'disk_f', 'disk_g', 'disk_h', 'disk_i', 'disk_j', 'disk_k']
     os.system('mkdir machine%s_iter%s_%s_results' % (machineId, iteration, write_type))
