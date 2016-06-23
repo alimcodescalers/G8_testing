@@ -6,6 +6,7 @@ import ConfigParser
 import uuid
 import multiprocessing
 import time
+import datetime
 from fabric import network
 
 
@@ -35,10 +36,13 @@ def main():
     rwmixwrite=int(config.get("perf_parameters", "direct_io"))
     USERNAME = config.get("perf_parameters", "username")
     Res_dir = config.get("perf_parameters", "Res_dir")
-
+    j.do.execute("mkdir -p %s" %Res_dir)
+    hostname = j.do.execute('hostname')[1].replace("\n","")
+    test_num = len(os.listdir('%s'%Res_dir))+1
+    test_folder = "/"+datetime.datetime.today().strftime('%Y-%m-%d')+"_"+hostname+"_testresults_%s"%test_num
+    Res_dir = Res_dir + test_folder
     if not j.do.exists('%s' % Res_dir):
-        j.do.execute('mkdir %s' % Res_dir)
-    j.do.execute('rm -rf %s/*' %Res_dir)
+        j.do.execute('mkdir -p %s' % Res_dir)
     if j.do.exists('/root/.ssh/known_hosts'):
         j.do.execute('rm /root/.ssh/known_hosts')
     sys.path.append(os.getcwd())
@@ -111,15 +115,13 @@ def main():
             processes[k].join()
             print('FIO testing has been ended on machine: %s' % dict.keys()[0])
         i += 1
+    return Res_dir
 
 
 if __name__ == "__main__":
     try:
-        main()
+        Res_dir = main()
     finally:
-        config = ConfigParser.ConfigParser()
-        config.read("Perf_parameters.cfg")
-        Res_dir = config.get("perf_parameters", "Res_dir")
         j.do.execute('cp scripts/collect_results.py %s' %Res_dir)
         j.do.chdir('%s' %Res_dir)
         j.do.execute('python collect_results.py %s' %Res_dir)

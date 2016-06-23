@@ -4,6 +4,7 @@ import re
 import os
 from prettytable import PrettyTable
 import itertools
+import csv
 
 Res_dir = sys.argv[1]
 #working from inside Res_dir
@@ -64,6 +65,22 @@ def table_print(iter, arrays):
     table_txt = table.get_string()
     with open('%s/total_results.table' %Res_dir,'a') as file:
         file.write('\n%s'%table_txt)
+
+    result=[]
+    for line in table_txt.splitlines():
+        splitdata = line.split("|")
+        if len(splitdata) == 1:
+            continue  # skip lines with no separators
+        linedata = []
+        for field in splitdata:
+            field = field.strip()
+            if field:
+                linedata.append(field)
+        result.append(linedata)
+    match = re.search('/(201.+)', Res_dir)
+    with open('%s/%s.csv'%(Res_dir, match.group(1)), 'a') as outcsv:
+           writer = csv.writer(outcsv)
+           writer.writerows(result)
 
 
 arr=[]
