@@ -4,6 +4,7 @@ import uuid
 import sys
 import os
 import ConfigParser
+import datetime
 
 
 def main():
@@ -14,13 +15,20 @@ def main():
     Bdisksize = int(config.get("parameters", "Bdisksize"))
     no_of_disks=0; data_disksize=0;
     vm_specs = [no_of_disks, data_disksize, Bdisksize, memory, cpu]
+    Res_dir = config.get("parameters", "Res_dir")
+
+    j.do.execute("mkdir -p %s" %Res_dir)
+    hostname = j.do.execute('hostname')[1].replace("\n","")
+    test_num = len(os.listdir('%s'%Res_dir))+1
+    test_folder = "/"+datetime.datetime.today().strftime('%Y-%m-%d')+"_"+hostname+"_testresults_%s"%test_num
+    Res_dir = Res_dir + test_folder
+
+    if not j.do.exists('%s' % Res_dir):
+        j.do.execute('mkdir -p %s' % Res_dir)
 
     ccl = j.clients.osis.getNamespace('cloudbroker')
     pcl = j.clients.portal.getByInstance('main')
     scl = j.clients.osis.getNamespace('system')
-
-    j.do.execute('mkdir -p /Env_limitation_results')
-    j.do.execute('rm -rf /Env_limitation_results/*')
 
     USERNAME = 'envlimittestuser'
     email = "%s@test.com" % str(uuid.uuid4())[0:8]
@@ -58,8 +66,10 @@ def main():
                 vms += 1
             except:
                 print('   |--failed to create the machine')
-                return [[cpu, memory, Bdisksize, vms]]
+                return [[[cpu, memory, Bdisksize, vms]], Res_dir]
         iteration += 1
+
+
 if __name__ == "__main__":
     if j.do.exists('/root/.ssh/known_hosts'):
         j.do.execute('rm /root/.ssh/known_hosts')
@@ -68,7 +78,7 @@ if __name__ == "__main__":
     try:
         results = main()
         titles = ['VM_CPU\'s', 'VM_Memory(MB)', 'HDD(GB)', 'Total VMs created']
-        utils.collect_results(titles, results, '/Env_limitation_results')
+        utils.collect_results(titles, results[0], '%s' %results[1])
     finally:
         j.do.execute('jspython scripts/tear_down.py envlimittestuser')
 
