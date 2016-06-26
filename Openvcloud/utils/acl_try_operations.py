@@ -1,6 +1,8 @@
 from JumpScale import j
 import uuid
 from random import randint
+import time
+
 
 def try_account_read(self, operation='get'):
     if operation == 'get':
@@ -15,12 +17,18 @@ def try_account_read(self, operation='get'):
         self.assertEqual(user_accounts[0]['id'], self.account_id)
     elif operation == 'getCreditBalance':
         self.lg('- getCreditBalance account with user1')
-        user_account = self.user_api.cloudapi.accounts.getCreditBalance(accountId=self.account_id)
-        self.assertEqual(user_account['credit'], 5.0)
+        user_account = self.user_api.cloudapi.accounts.getConsumedCloudUnits(accountId=self.account_id)
+        self.assertEqual(user_account['CU_M'], 0.0)
     elif operation == 'getCreditHistory':
         self.lg('- getCreditHistory account with user1')
-        user_account = self.user_api.cloudapi.accounts.getCreditHistory(accountId=self.account_id)
-        self.assertEqual(user_account[0]['credit'], 5.0)
+        user_account = self.user_api.cloudapi.accounts.getConsumedCloudUnits(accountId=self.account_id)
+        self.assertEqual(user_account['CU_A'], 0)
+        self.assertEqual(user_account['CU_C'], 0)
+        self.assertEqual(user_account['CU_D'], 0)
+        self.assertEqual(user_account['CU_I'], 0)
+        self.assertEqual(user_account['CU_NO'], 0)
+        self.assertEqual(user_account['CU_NP'], 0)
+        self.assertEqual(user_account['CU_S'], 0)
     else:
         raise AssertionError('Un-supported operation [%s]' % operation)
 
@@ -304,7 +312,7 @@ def try_cloudspace_admin(self, operation='cloudspaceAdduser'):
                                                   maxMemoryCapacity=maxMemoryCapacity)
         self.lg('- get and verify cloudspace memory')
         cloudspace = scl.cloudspace.get(newcloudspaceId)
-        self.assertEqual(cloudspace.resourceLimits['CU'], maxMemoryCapacity)
+        self.assertEqual(cloudspace.resourceLimits['CU_M'], maxMemoryCapacity)
     elif operation == 'cloudspaceDelete':
         self.lg('- create new cloudspace and deploy machine')
         newcloudspaceId = self.cloudapi_cloudspace_create(account_id=self.account_id,
