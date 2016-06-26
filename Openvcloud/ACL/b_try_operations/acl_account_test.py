@@ -601,7 +601,7 @@ class Admin(ACLACCOUNT):
                            'cloudspaceMachineClone',
                            'cloudspaceMachineDelete',
                            'cloudspaceMachineResize'])
-    def test002b_try_cloudspace_write_operations(self):
+    def test002b_try_cloudspace_write_operations(self, operation):
         """ ACL-39
         *Test case for try to use write operations with admin access.*
 
