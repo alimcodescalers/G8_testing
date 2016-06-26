@@ -7,6 +7,7 @@ from fabric import network
 import time
 import multiprocessing
 import ConfigParser
+import datetime
 
 
 def main():
@@ -18,9 +19,17 @@ def main():
     Bdisksize = int(config.get("parameters", "Bdisksize"))
     no_of_disks=0; data_disksize=0;
     vm_specs = [no_of_disks, data_disksize, Bdisksize, memory, cpus]
+    Res_dir = config.get("parameters", "Res_dir")
 
-    j.do.execute('mkdir -p /Unixbench_results')
-    j.do.execute('rm -rf /Unixbench_results/*')
+    j.do.execute("mkdir -p %s" %Res_dir)
+    hostname = j.do.execute('hostname')[1].replace("\n","")
+    test_num = len(os.listdir('%s'%Res_dir))+1
+    test_folder = "/"+datetime.datetime.today().strftime('%Y-%m-%d')+"_"+hostname+"_testresults_%s"%test_num
+    Res_dir = Res_dir + test_folder
+
+    if not j.do.exists('%s' % Res_dir):
+        j.do.execute('mkdir -p %s' % Res_dir)
+
     if j.do.exists('/root/.ssh/known_hosts'):
         j.do.execute('rm /root/.ssh/known_hosts')
     sys.path.append(os.getcwd())
@@ -60,7 +69,7 @@ def main():
     print('VM1_score = %s' %VM1_score) # for checking.. remove it later
     titles = ['Index', 'VM', 'CPU\'s', 'Memory(MB)', 'HDD(GB)', 'Avg. Unixbench Score']
     results=[[1, machineId, cpus, memory, Bdisksize, VM1_score]]
-    utils.collect_results(titles, results, '/Unixbench_results')
+    utils.collect_results(titles, results, '%s' %Res_dir)
     network.disconnect_all()
 
     cloudspace_publicport = 2001
@@ -92,7 +101,7 @@ def main():
         results=[]
         for s in res_arr:
             results.append([res_arr.index(s)+1, s[0], cpus, memory, Bdisksize, s[1]])
-        utils.collect_results(titles, results, '/Unixbench_results')
+        utils.collect_results(titles, results, '%s' %Res_dir)
         iteration += 1
         cloudspace_publicport += 1
 

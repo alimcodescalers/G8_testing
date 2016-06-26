@@ -6,6 +6,7 @@ import os
 import time
 import multiprocessing
 import ConfigParser
+import datetime
 
 
 def main():
@@ -19,10 +20,17 @@ def main():
     no_of_disks=0; data_disksize=0;
     vm_specs = [no_of_disks, data_disksize, Bdisksize, memory, cpus]
     vms_per_cs = 7; unixb_vms_per_cs = 2 ; cs_per_stack = 2
+    Res_dir = config.get("parameters", "Res_dir")
 
+    j.do.execute("mkdir -p %s" %Res_dir)
+    hostname = j.do.execute('hostname')[1].replace("\n","")
+    test_num = len(os.listdir('%s'%Res_dir))+1
+    test_folder = "/"+datetime.datetime.today().strftime('%Y-%m-%d')+"_"+hostname+"_testresults_%s"%test_num
+    Res_dir = Res_dir + test_folder
 
-    j.do.execute('mkdir -p /Unixbench1_results')
-    j.do.execute('rm -rf /Unixbench1_results/*')
+    if not j.do.exists('%s' % Res_dir):
+        j.do.execute('mkdir -p %s' % Res_dir)
+
     if j.do.exists('/root/.ssh/known_hosts'):
         j.do.execute('rm /root/.ssh/known_hosts')
     sys.path.append(os.getcwd())
@@ -114,7 +122,7 @@ def main():
         results=[]
         for s in res_arr:
             results.append([res_arr.index(s)+1, s[0], cpus, memory, Bdisksize, s[1]])
-        utils.collect_results(titles, results, '/Unixbench1_results')
+        utils.collect_results(titles, results, '%s' %Res_dir)
 
         for i in range(len(res_arr)):
             if final_results == []:
@@ -126,7 +134,7 @@ def main():
     for s in final_results:
         avg = round(sum([float(i) for i in s[1:]])/len(s[1:]), 1)
         results.append([final_results.index(s)+1, s[0], cpus, memory, Bdisksize, avg])
-    utils.collect_results(titles, results, '/Unixbench1_results')
+    utils.collect_results(titles, results, '%s' %Res_dir)
 
 
 if __name__ == "__main__":

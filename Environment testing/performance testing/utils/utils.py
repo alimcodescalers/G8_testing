@@ -3,6 +3,8 @@ import netaddr
 import time
 from JumpScale.portal.portal.PortalClient2 import ApiError
 from prettytable import PrettyTable
+import csv
+import re
 
 
 def get_stacks(ccl):
@@ -209,6 +211,24 @@ def Run_unixbench(VM, cpu_cores, pcl, queue=None):
         score = float(score)
         return score
 
+def results_on_csvfile(csv_file_name, Res_dir, table_string):
+    #s=s1.get_string()
+    result=[]
+    for line in table_string.splitlines():
+        splitdata = line.split("|")
+        if len(splitdata) == 1:
+            continue  # skip lines with no separators
+        linedata = []
+        for field in splitdata:
+            field = field.strip()
+            if field:
+                linedata.append(field)
+        result.append(linedata)
+
+    with open('%s/%s.csv'%(Res_dir, csv_file_name), 'a') as outcsv:
+           writer = csv.writer(outcsv)
+           writer.writerows(result)
+
 #collects results in a table
 def collect_results(titles, results, Res_dir, iteration=0):
     table = PrettyTable(titles)
@@ -217,6 +237,9 @@ def collect_results(titles, results, Res_dir, iteration=0):
     table_txt = table.get_string()
     with open('%s/results.table' %Res_dir,'a') as file:
         file.write('\n%s'%table_txt)
+    match = re.search('/(201.+)', Res_dir)
+    results_on_csvfile(match.group(1), Res_dir, table_txt)
+
 
 #utils for VM live migration test
 
