@@ -237,7 +237,7 @@ def try_cloudspace_write(self, operation='cloudspaceDeploy'):
 
         self.lg('4- Resize the machine with new user [user], should succeed')
         sizesAva = len(self.api.cloudapi.sizes.list(self.cloudspace_id)[1]['disks'])
-        resizeId = randint(0,sizesAva)
+        resizeId = randint(1, sizesAva)
         self.account_owner_api.cloudapi.machines.resize(machineId=machine_id,
                                                sizeId=resizeId)
 
