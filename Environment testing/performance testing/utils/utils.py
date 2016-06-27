@@ -76,9 +76,12 @@ def create_machine_onStack(stackid, cloudspace, iteration, ccl, pcl, scl, vm_spe
         print '   |--Waiting for IP for VM: node%s%s' % (stackid, iteration)
         while now + 100 > time.time() and ip == 'Undefined':
             time.sleep(1)
-            machine = pcl.actors.cloudapi.machines.get(machineId)
+            machine = run_again_if_failed(pcl.actors.cloudapi.machines.get, machineId=machineId)
             ip = machine['interfaces'][0]['ipAddress']
-        pcl.actors.cloudapi.portforwarding.create(cloudspace['id'], cloudspace_publicip, cs_publicport, machineId, 22, 'tcp')
+        try:
+            pcl.actors.cloudapi.portforwarding.create(cloudspace['id'], cloudspace_publicip, cs_publicport, machineId, 22, 'tcp')
+        except:
+            time.sleep(60)
 
         if not j.system.net.waitConnectionTest(cloudspace_publicip, cs_publicport, 60):
             print 'Could not connect to VM over public interface'
@@ -90,6 +93,7 @@ def create_machine_onStack(stackid, cloudspace, iteration, ccl, pcl, scl, vm_spe
         t2 = time.time()
         time_creating_vm = round(t2-t1, 2)
         j.do.execute('echo \'VM: %s  - creation time: %s sec\' >> %s/VMs_creation_time.txt' %(machineId, time_creating_vm, Res_dir))
+        j.do.execute('(echo "VM:;%s;creation time:;%s") | sed "s/;/,/g"" >> %s/VMs_creation_time.csv' %(machineId, time_creating_vm, Res_dir))
         cloudspace_publicip = setup_machine(cloudspace, machineId, cs_publicport, pcl, vm_specs[0])
         return [machineId, cloudspace_publicip]
 
@@ -228,6 +232,14 @@ def results_on_csvfile(csv_file_name, Res_dir, table_string):
     with open('%s/%s.csv'%(Res_dir, csv_file_name), 'a') as outcsv:
            writer = csv.writer(outcsv)
            writer.writerows(result)
+
+def write_onecsv_to_another(file1, csv_file_name, Res_dir):
+    import csv
+    reader = csv.reader(open(file1, 'rb'))
+    with open('%s/%s.csv'%(Res_dir, csv_file_name), 'a') as outcsv:
+        writer = csv.writer(outcsv)
+        for row in reader:
+            writer.writerow(row)
 
 #collects results in a table
 def collect_results(titles, results, Res_dir, iteration=0):

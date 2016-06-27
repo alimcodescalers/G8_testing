@@ -8,6 +8,7 @@ import multiprocessing
 import time
 import datetime
 from fabric import network
+import re
 
 
 def main():
@@ -115,6 +116,8 @@ def main():
             processes[k].join()
             print('FIO testing has been ended on machine: %s' % dict.keys()[0])
         i += 1
+    match = re.search('/(201.+)', Res_dir)
+    utils.write_onecsv_to_another('VMs_creation_time.csv', match.group(1), Res_dir)
     return Res_dir
 
 
