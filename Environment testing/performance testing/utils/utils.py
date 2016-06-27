@@ -92,8 +92,7 @@ def create_machine_onStack(stackid, cloudspace, iteration, ccl, pcl, scl, vm_spe
     else:
         t2 = time.time()
         time_creating_vm = round(t2-t1, 2)
-        j.do.execute('echo \'VM: %s  - creation time: %s sec\' >> %s/VMs_creation_time.txt' %(machineId, time_creating_vm, Res_dir))
-        j.do.execute('(echo "VM:;%s;creation time:;%s") | sed "s/;/,/g"" >> %s/VMs_creation_time.csv' %(machineId, time_creating_vm, Res_dir))
+        j.do.execute('(echo "VM:;%s;creation time:;%s") | sed "s/;/,/g" >> %s/VMs_creation_time.csv' %(machineId, time_creating_vm, Res_dir))
         cloudspace_publicip = setup_machine(cloudspace, machineId, cs_publicport, pcl, vm_specs[0])
         return [machineId, cloudspace_publicip]
 
@@ -234,8 +233,7 @@ def results_on_csvfile(csv_file_name, Res_dir, table_string):
            writer.writerows(result)
 
 def write_onecsv_to_another(file1, csv_file_name, Res_dir):
-    import csv
-    reader = csv.reader(open(file1, 'rb'))
+    reader = csv.reader(open('%s/%s'%(Res_dir, file1), 'rb'))
     with open('%s/%s.csv'%(Res_dir, csv_file_name), 'a') as outcsv:
         writer = csv.writer(outcsv)
         for row in reader:
