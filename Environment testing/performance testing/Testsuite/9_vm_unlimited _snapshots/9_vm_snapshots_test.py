@@ -40,9 +40,19 @@ def main(snapshots_number):
 
     for i in range(snapshots_number):
         utils.writefile_on_vm(account, cloudspace_publicip, cloudspace_publicport, 'snapshot%s.txt' %(i+1))
+        time.sleep(6)
         utils.run_again_if_failed(pcl.actors.cloudapi.machines.stop, machineId=machineId)
         print('   |--creating snapshot No.%s ...' %(i+1))
-        utils.run_again_if_failed(pcl.actors.cloudapi.machines.snapshot, machineId=machineId, name='snapshot%s'%(i+1))
+        try:
+            pcl.actors.cloudapi.machines.snapshot(machineId=machineId, name='snapshot%s'%(i+1))
+            snapshots = pcl.actors.cloudapi.machines.listSnapshots(machineId=machineId)
+            print('snapshots length: %s'%len(snapshots))
+
+        except:
+            snapshots = utils.run_again_if_failed(pcl.actors.cloudapi.machines.listSnapshots, machineId=machineId)
+            print('snapshots length: %s'%len(snapshots))
+            continue
+        time.sleep(5)
         utils.run_again_if_failed(pcl.actors.cloudapi.machines.start, machineId=machineId)
         time.sleep(20)
 
@@ -57,7 +67,7 @@ def main(snapshots_number):
 
     connection = j.remote.cuisine.connect(cloudspace_publicip, cloudspace_publicport, account['password'], account['login'])
     count_snapshots = connection.run('ls -1 | wc -l')
-    return count_snapshots[0]
+    return count_snapshots
 
 
 
