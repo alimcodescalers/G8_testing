@@ -51,7 +51,7 @@
 |-----|-----|-----|----|
 |[#1](https://github.com/gig-projects/org_quality/issues/1)|test portal automated test using explorer|:red_circle: Open||
 |[#288](https://github.com/gig-projects/org_quality/issues/288)|Do a full performance test on be-G8-1 (be-G8-1_perf)|:large_blue_circle: In Progress|story|
-|[#311](https://github.com/gig-projects/org_quality/issues/311)|be-G8-1_perf: FIO test|:white_circle: Verification|task|
+|[#311](https://github.com/gig-projects/org_quality/issues/311)|be-G8-1_perf: FIO test [2h]|:white_circle: Verification|task|
 |[#317](https://github.com/gig-projects/org_quality/issues/317)|be-G8-1_perf: vm live migration test|:white_circle: Verification|task|
 |[#322](https://github.com/gig-projects/org_quality/issues/322)|Improve the performance test scripts (perf_upgrade)|:large_blue_circle: In Progress|story|
 
