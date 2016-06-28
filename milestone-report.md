@@ -3,23 +3,23 @@
 # Summary
 |Milestone|ETA|
 |---------|---|
-|[cb 2.1.0bx](#milestone-cb-210bx)|2016/06/27|
+|[cb 2.1.0bx](#milestone-cb-210bx)|2016/06/28|
 |[cb2.1.0ga](#milestone-cb210ga)|N/A|
 |[ovc_backlog](#milestone-ovc_backlog)|N/A|
-|[No milestone](#no-milestone)|2016/06/27|
+|[No milestone](#no-milestone)|2016/06/28|
 
 ## [Milestone cb 2.1.0bx](milestones/6:cb 2.1.0bx.md)
 
 
 |Issue|Title|State|Owner|ETA|
 |-----|-----|-----|-----|---|
-|[#278](https://github.com/gig-projects/org_quality/issues/278)|Verify all open issues in state verification on openvcloud (verification)|:large_blue_circle: In Progress|[ramezsaeed](https://github.com/ramezsaeed)|[2016/06/27](https://github.com/gig-projects/org_quality/issues/278#issuecomment-None)|
-|[#288](https://github.com/gig-projects/org_quality/issues/288)|Do a full performance test on be-G8-1 (be-G8-1_perf)|:large_blue_circle: In Progress|[lzonneke](https://github.com/lzonneke)|[2016/06/27](https://github.com/gig-projects/org_quality/issues/288#issuecomment-None)|
-|[#304](https://github.com/gig-projects/org_quality/issues/304)|Create an automated test suite coverage for cockpit (test_cockpit)|:large_blue_circle: In Progress|[islamTaha12](https://github.com/islamTaha12)|[2016/06/27](https://github.com/gig-projects/org_quality/issues/304#issuecomment-None)|
-|[#306](https://github.com/gig-projects/org_quality/issues/306)|Perform automated tests coverage for cb2.1.0 beta (A_Test_2.1.0b)|:red_circle: Open|[ramezsaeed](https://github.com/ramezsaeed)|[2016/06/27](https://github.com/gig-projects/org_quality/issues/306#issuecomment-None)|
-|[#307](https://github.com/gig-projects/org_quality/issues/307)|Perform one time manual validation for milestone cb2.1.0b (M_Test_2.1.0b)|:red_circle: Open|[ramezsaeed](https://github.com/ramezsaeed)|[2016/06/27](https://github.com/gig-projects/org_quality/issues/307#issuecomment-None)|
-|[#308](https://github.com/gig-projects/org_quality/issues/308)|Create a test suite coverage for the VDC control panel (test_VDCcontrol)|:red_circle: Open|[ramezsaeed](https://github.com/ramezsaeed)|[2016/06/27](https://github.com/gig-projects/org_quality/issues/308#issuecomment-None)|
-|[#309](https://github.com/gig-projects/org_quality/issues/309)|create a test suite which is covering testing itsyou.online (test_itsyouonline)|:large_blue_circle: In Progress|[alimcodescalers](https://github.com/alimcodescalers)|[2016/06/27](https://github.com/gig-projects/org_quality/issues/309#issuecomment-None)|
+|[#278](https://github.com/gig-projects/org_quality/issues/278)|Verify all open issues in state verification on openvcloud (verification)|:large_blue_circle: In Progress|[ramezsaeed](https://github.com/ramezsaeed)|[2016/06/28](https://github.com/gig-projects/org_quality/issues/278#issuecomment-None)|
+|[#288](https://github.com/gig-projects/org_quality/issues/288)|Do a full performance test on be-G8-1 (be-G8-1_perf)|:large_blue_circle: In Progress|[lzonneke](https://github.com/lzonneke)|[2016/06/28](https://github.com/gig-projects/org_quality/issues/288#issuecomment-None)|
+|[#304](https://github.com/gig-projects/org_quality/issues/304)|Create an automated test suite coverage for cockpit (test_cockpit)|:large_blue_circle: In Progress|[islamTaha12](https://github.com/islamTaha12)|[2016/06/28](https://github.com/gig-projects/org_quality/issues/304#issuecomment-None)|
+|[#306](https://github.com/gig-projects/org_quality/issues/306)|Perform automated tests coverage for cb2.1.0 beta (A_Test_2.1.0b)|:red_circle: Open|[ramezsaeed](https://github.com/ramezsaeed)|[2016/06/28](https://github.com/gig-projects/org_quality/issues/306#issuecomment-None)|
+|[#307](https://github.com/gig-projects/org_quality/issues/307)|Perform one time manual validation for milestone cb2.1.0b (M_Test_2.1.0b)|:red_circle: Open|[ramezsaeed](https://github.com/ramezsaeed)|[2016/06/28](https://github.com/gig-projects/org_quality/issues/307#issuecomment-None)|
+|[#308](https://github.com/gig-projects/org_quality/issues/308)|Create a test suite coverage for the VDC control panel (test_VDCcontrol)|:red_circle: Open|[ramezsaeed](https://github.com/ramezsaeed)|[2016/06/28](https://github.com/gig-projects/org_quality/issues/308#issuecomment-None)|
+|[#309](https://github.com/gig-projects/org_quality/issues/309)|create a test suite which is covering testing itsyou.online (test_itsyouonline)|:large_blue_circle: In Progress|[alimcodescalers](https://github.com/alimcodescalers)|[2016/06/28](https://github.com/gig-projects/org_quality/issues/309#issuecomment-None)|
 
 ## [Milestone cb2.1.0ga](milestones/1:cb2.1.0ga.md)
 
@@ -39,4 +39,4 @@
 ## No milestone
 |Issue|Title|State|Owner|ETA|
 |-----|-----|-----|-----|---|
-|[#322](https://github.com/gig-projects/org_quality/issues/322)|Improve the performance test scripts (perf_upgrade)|:large_blue_circle: In Progress|[lzonneke](https://github.com/lzonneke)|[2016/06/27](https://github.com/gig-projects/org_quality/issues/322#issuecomment-None)|
+|[#322](https://github.com/gig-projects/org_quality/issues/322)|Improve the performance test scripts (perf_upgrade)|:large_blue_circle: In Progress|[lzonneke](https://github.com/lzonneke)|[2016/06/28](https://github.com/gig-projects/org_quality/issues/322#issuecomment-None)|
