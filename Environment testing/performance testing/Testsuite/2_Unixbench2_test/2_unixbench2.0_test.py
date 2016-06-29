@@ -14,6 +14,8 @@ def main():
     config = ConfigParser.ConfigParser()
     config.read("Testsuite/2_Unixbench2_test/parameters.cfg")
     vms_time_diff = int(config.get("parameters", "vms_time_diff"))
+    VMs = int(config.get("parameters", "VMs"))
+    unixbench_run_times = int(config.get("parameters", "unixbench_run_times"))
     cpus = int(config.get("parameters", "cpus"))
     memory = int(config.get("parameters", "memory"))
     Bdisksize = int(config.get("parameters", "Bdisksize"))
@@ -72,18 +74,34 @@ def main():
     utils.collect_results(titles, results, '%s' %Res_dir)
     network.disconnect_all()
 
+    print('creating %s vms'%VMs)
     cloudspace_publicport = 2001
     iteration=2
-    score=10000 # just fake number for intializations
-    while(score >= 0.5*VM1_score):
-        #make sure to implement which stackid
+    for k in range(1,VMs):
         [machineId, cloudspace_ip] = utils.create_machine_onStack(select_stackid(), cloudspace, iteration, ccl, pcl, scl, vm_specs, cloudspace_publicport, Res_dir='test_res')
-        connection = utils.Install_unixbench(machineId, cloudspace, cloudspace_publicport, pcl, sendscript='Testsuite/2_Unixbench2_test/2_machine_script.py')
         machines.append([machineId, cloudspace_ip ,cloudspace_publicport])
+        iteration += 1
+        cloudspace_publicport += 1
+
+    # installing unixbench on machines
+    print('Installing Unixbench on required machines')
+    processes = []
+    for vm in machines:
+        vmid = vm[0]; cs_pp = vm[2]
+        p = multiprocessing.Process(target=utils.Install_unixbench, args=(vmid, cloudspace, cs_pp, pcl, 'Testsuite/2_Unixbench2_test/2_machine_script.py'))
+        processes.append(p)
+    for l in range(len(processes)):
+        processes[l].start()
+        time.sleep(1)
+    for k in range(len(processes)):
+        processes[k].join()
+
+
+    for i in range(unixbench_run_times):
+        network.disconnect_all()
         q= multiprocessing.Queue()
         processes = []
         res_arr=[]
-        network.disconnect_all()
         for vm in machines:
             p = multiprocessing.Process(target=utils.Run_unixbench, args=(vm, cpus, pcl, q))
             processes.append(p)
@@ -97,13 +115,11 @@ def main():
 
         res_arr.sort()
         #first machine unixbench score for iteration i
-        score = res_arr[0][1]
         results=[]
         for s in res_arr:
             results.append([res_arr.index(s)+1, s[0], cpus, memory, Bdisksize, s[1]])
         utils.collect_results(titles, results, '%s' %Res_dir)
-        iteration += 1
-        cloudspace_publicport += 1
+
 
 
 if __name__ == "__main__":
