@@ -79,9 +79,12 @@ def create_machine_onStack(stackid, cloudspace, iteration, ccl, pcl, scl, vm_spe
             machine = run_again_if_failed(pcl.actors.cloudapi.machines.get, machineId=machineId)
             ip = machine['interfaces'][0]['ipAddress']
         try:
+            time.sleep(5)
             pcl.actors.cloudapi.portforwarding.create(cloudspace['id'], cloudspace_publicip, cs_publicport, machineId, 22, 'tcp')
         except:
-            time.sleep(60)
+            time.sllep(2)
+            pcl.actors.cloudapi.portforwarding.create(cloudspace['id'], cloudspace_publicip, cs_publicport, machineId, 22, 'tcp')
+            time.sleep(50)
 
         if not j.system.net.waitConnectionTest(cloudspace_publicip, cs_publicport, 60):
             print 'Could not connect to VM over public interface'
