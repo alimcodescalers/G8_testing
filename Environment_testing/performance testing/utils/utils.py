@@ -95,7 +95,7 @@ def create_machine_onStack(stackid, cloudspace, iteration, ccl, pcl, scl, vm_spe
     else:
         t2 = time.time()
         time_creating_vm = round(t2-t1, 2)
-        j.do.execute('(echo "VM:;%s;creation time:;%s") | sed "s/;/,/g" >> %s/VMs_creation_time.csv' %(machineId, time_creating_vm, Res_dir))
+        j.do.execute('(echo "VM:;%s;creation time:;%s; ;") | sed "s/;/,/g" >> %s/VMs_creation_time.csv' %(machineId, time_creating_vm, Res_dir))
         cloudspace_publicip = setup_machine(cloudspace, machineId, cs_publicport, pcl, vm_specs[0])
         return [machineId, cloudspace_publicip]
 
@@ -285,3 +285,20 @@ def run_again_if_failed(func, **kwargs):
         except:
             continue
         break
+
+def push_results_to_repo(Res_dir, test_type=''):
+    match = re.search('(/201.+)', Res_dir)
+    Res_file = Res_dir + match.group(1) + '.csv'
+    if j.do.exists('%s' %Res_file):
+       print('Pushing resutls to the repo')
+       j.do.execute('cd ../../ && git stash')
+       j.do.execute('cd ../../ && git pull')
+       j.do.execute('cd ../../ && git stash pop')
+       j.do.execute('cd ../../ && git add %s' %Res_file)
+       if test_type =='FIO_test':
+           j.do.execute('cd ../../ && git add %s/Perf_parameters.cfg' %Res_dir)
+       j.do.execute('cd ../../ && git commit -m \'Pushing: %s  \'' %Res_file)
+       j.do.execute('cd ../../ && git push')
+    else:
+       print('Found problems during running the test.. removing results directory..')
+       j.do.execute('rm -rf %s' %Res_dir)
