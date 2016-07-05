@@ -76,7 +76,7 @@ def main():
                     p = multiprocessing.Process(target=utils.create_machine_onStack, args=(stackid, cloudspace, i, ccl, pcl, scl, vm_specs, cloudspace_publicport, 'test_res', q))
                     cloudspace_publicport += 1
                 else:
-                    p = multiprocessing.Process(target=utils.create_machine_onStack, args=(stackid, cloudspace, i, ccl, pcl, scl, vm_specs, 0, 'NoIP', None))
+                    p = multiprocessing.Process(target=utils.create_machine_onStack, args=(stackid, cloudspace, i, ccl, pcl, scl, vm_specs, 0, 'wait_for_VMIP', None))
                 processes.append(p)
 
         for l in range(len(processes)):

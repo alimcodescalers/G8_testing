@@ -42,7 +42,7 @@ def main():
             try:
                 pcl.actors.cloudbroker.cloudspace.deployVFW(cloudspaceId)
                 cloudspace = ccl.cloudspace.get(cloudspaceId).dump()
-                utils.create_machine_onStack(stackid, cloudspace, 0, ccl, pcl, scl, vm_specs, cs_publicport=0, Res_dir='NoIP')
+                utils.create_machine_onStack(stackid, cloudspace, 0, ccl, pcl, scl, vm_specs, cs_publicport=0, Res_dir='wait_for_VMIP')
                 cs_No += 1
             except:
                 print('   |--failed to create the machine')

@@ -52,7 +52,7 @@ def main():
             cloudspaceId = pcl.actors.cloudapi.cloudspaces.create(accountId=accountId,location=loc,name='CS%s'%stackid,access=USERNAME)
             pcl.actors.cloudbroker.cloudspace.deployVFW(cloudspaceId)
             cloudspace = ccl.cloudspace.get(cloudspaceId).dump()
-            utils.create_machine_onStack(stackid, cloudspace, 0, ccl, pcl, scl, vm_specs, cloudspace_publicport, Res_dir='NoIP')
+            utils.create_machine_onStack(stackid, cloudspace, 0, ccl, pcl, scl, vm_specs, cloudspace_publicport, Res_dir='wait_for_VMIP')
             cloudspaces.append([cloudspace, stackid])
             cloudspace_publicport += 1
         vms = 3
@@ -63,7 +63,7 @@ def main():
                 stackid = cloudspace[1]
                 try:
                     print('creating VM No:%s' %(vms+1))
-                    utils.create_machine_onStack(stackid, cs, iteration, ccl, pcl, scl, vm_specs, cloudspace_publicport, Res_dir='NoIP')
+                    utils.create_machine_onStack(stackid, cs, iteration, ccl, pcl, scl, vm_specs, cloudspace_publicport, Res_dir='wait_for_VMIP')
                     vms += 1
                 except:
                     print('   |--failed to create the machine')

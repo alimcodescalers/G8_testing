@@ -70,7 +70,7 @@ def create_machine_onStack(stackid, cloudspace, iteration, ccl, pcl, scl, vm_spe
     if queue:
         #needed for 4_unixbench for parallel execution
         queue.put([machineId, cloudspace_publicip, cs_publicport, cloudspace])
-    if Res_dir != 'NoIP':
+    if Res_dir != 'wait_for_VMIP':
         now = time.time()
         ip = 'Undefined'
         print '   |--Waiting for IP for VM: node%s%s' % (stackid, iteration)
@@ -82,13 +82,13 @@ def create_machine_onStack(stackid, cloudspace, iteration, ccl, pcl, scl, vm_spe
             time.sleep(5)
             pcl.actors.cloudapi.portforwarding.create(cloudspace['id'], cloudspace_publicip, cs_publicport, machineId, 22, 'tcp')
         except:
-            time.sllep(2)
+            time.sleep(2)
             pcl.actors.cloudapi.portforwarding.create(cloudspace['id'], cloudspace_publicip, cs_publicport, machineId, 22, 'tcp')
             time.sleep(50)
 
         if not j.system.net.waitConnectionTest(cloudspace_publicip, cs_publicport, 60):
             print 'Could not connect to VM over public interface'
-    if not Res_dir or Res_dir=='NoIP':
+    if not Res_dir or Res_dir=='wait_for_VMIP':
         return machineId
     elif Res_dir=='test_res':
         return [machineId, cloudspace_publicip]
