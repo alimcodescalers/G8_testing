@@ -10,3 +10,4 @@ selenium
 pytractor
 mozmill
 chromedriver_installer
+requests

@@ -1,12 +1,10 @@
 import requests
-from .client_utils import build_query_string
-
-BASE_URI = "https://itsyou.online/api/"
+from client_utils import build_query_string
 
 
 class Client:
-    def __init__(self):
-        self.url = BASE_URI
+    def __init__(self, env_url):
+        self.url = env_url + 'api/'
         self.session = requests.Session()
 
     def CreateUser(self, data, headers=None, query_params=None):
