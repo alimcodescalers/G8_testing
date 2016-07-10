@@ -38,5 +38,5 @@ change the necessary parameters in config.ini according to your environment
 
 or overwrite it using the following command
 ```
-(venv)$> nosetests -xv tests --tc-file config.ini --tc=main.url:https://dev.itsyou.online:8443/  --tc=main.admin:admin 2>testresults.log
+(venv)$> nosetests -xv tests --tc-file config.ini --tc=main.code:123456 2>testresults.log
 ```
