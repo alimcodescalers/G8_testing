@@ -74,7 +74,7 @@ def create_machine_onStack(stackid, cloudspace, iteration, ccl, pcl, scl, vm_spe
         now = time.time()
         ip = 'Undefined'
         print '   |--Waiting for IP for VM: node%s%s' % (stackid, iteration)
-        while now + 100 > time.time() and ip == 'Undefined':
+        while now + 200 > time.time() and ip == 'Undefined':
             time.sleep(1)
             machine = run_again_if_failed(pcl.actors.cloudapi.machines.get, machineId=machineId)
             ip = machine['interfaces'][0]['ipAddress']
