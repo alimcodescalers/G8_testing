@@ -1,4 +1,5 @@
 from client import Client as APIClient
+from client_jwt import JWTClient
 import requests
 
 
@@ -24,5 +25,7 @@ class Client:
         session = requests.Session()
         self.api = APIClient(env_url)
         self.api.session = session
+        self.jwt = JWTClient(env_url)
+        self.jwt.session = session
         self.oauth = Oauth(env_url)
         self.oauth.session = session
