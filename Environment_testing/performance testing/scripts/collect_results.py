@@ -9,6 +9,7 @@ import csv
 Res_dir = sys.argv[1]
 #working from inside Res_dir
 #iterate on each machine results
+# Assuming RAID0 for calculating the total IOPS 
 for j in os.listdir(os.getcwd()):
 
     if j.startswith('machine'):
@@ -28,8 +29,9 @@ for j in os.listdir(os.getcwd()):
             if i.startswith("result"):
                 file = open( i, 'r')
                 f=file.read()
-                match = re.search(r'iops=([\d]+),', f)
-                iops_list.append(int(match.group(1)))
+                match = re.finditer(r'iops=([\d]+),', f)
+                disk_iops = [int(c.group(1)) for c in match]
+                iops_list.append(sum(disk_iops))
                 runt = re.search(r'runt=\s*([\d]+)msec', f)
                 disks_runtime.append(int(runt.group(1)))
         total_iops = sum(iops_list)
