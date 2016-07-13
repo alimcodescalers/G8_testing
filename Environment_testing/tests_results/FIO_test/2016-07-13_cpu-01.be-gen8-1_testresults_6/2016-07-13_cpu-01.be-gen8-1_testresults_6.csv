@@ -49,7 +49,8 @@ VM_index,Machine,Test_type,IOPS(5),cpuload(5),Testruntime(5)
 6,3460,randwrite,2206,46.9%,303858 msec
 7,3461,randwrite,2540,49.3%,308562 msec
 8,3462,randwrite,2274,53.9%,300821 msec
-9,3464,randwrite,2212,75.8%,302225 msec
+9,3463,randwrite,2263,60.8%,301002 msec
+10,3464,randwrite,2212,75.8%,302225 msec
 VM_index,Machine,Test_type,IOPS(6),cpuload(6),Testruntime(6)
 1,3455,randwrite,2814,49.5%,310003 msec
 2,3456,randwrite,2822,47.1%,306661 msec
@@ -59,9 +60,10 @@ VM_index,Machine,Test_type,IOPS(6),cpuload(6),Testruntime(6)
 6,3460,randwrite,1960,48.5%,317225 msec
 7,3461,randwrite,2118,50.6%,309946 msec
 8,3462,randwrite,1945,52.1%,319185 msec
-9,3464,randwrite,2044,59.6%,304542 msec
-10,3465,randwrite,2157,46.9%,306214 msec
-11,3466,randwrite,1928,75.4%,301908 msec
+9,3463,randwrite,2050,60.2%,303030 msec
+10,3464,randwrite,2044,59.6%,304542 msec
+11,3465,randwrite,2157,46.9%,306214 msec
+12,3466,randwrite,1928,75.4%,301908 msec
 VM_index,Machine,Test_type,IOPS(7),cpuload(7),Testruntime(7)
 1,3455,randwrite,2825,48.5%,303604 msec
 2,3456,randwrite,2672,49.7%,317273 msec
@@ -74,7 +76,9 @@ VM_index,Machine,Test_type,IOPS(7),cpuload(7),Testruntime(7)
 9,3463,randwrite,1861,8.9%,302395 msec
 10,3464,randwrite,1742,58.3%,314666 msec
 11,3465,randwrite,1856,46.0%,304503 msec
-12,3468,randwrite,1735,58.2%,301288 msec
+12,3466,randwrite,1928,50.4%,301502 msec
+13,3467,randwrite,1804,54.4%,301908 msec
+14,3468,randwrite,1735,58.2%,301288 msec
 VM_index,Machine,Test_type,IOPS(8),cpuload(8),Testruntime(8)
 1,3455,randwrite,2699,50.3%,317289 msec
 2,3456,randwrite,2516,48.7%,311483 msec
@@ -87,9 +91,11 @@ VM_index,Machine,Test_type,IOPS(8),cpuload(8),Testruntime(8)
 9,3463,randwrite,1629,24.1%,301470 msec
 10,3464,randwrite,1623,53.3%,327481 msec
 11,3465,randwrite,1759,48.7%,302213 msec
-12,3468,randwrite,1579,54.6%,301794 msec
-13,3469,randwrite,1753,24.8%,301650 msec
-14,3470,randwrite,1624,61.2%,307161 msec
+12,3466,randwrite,1728,49.4%,301502 msec
+13,3467,randwrite,1604,53.4%,301908 msec
+14,3468,randwrite,1579,54.6%,301794 msec
+15,3469,randwrite,1753,24.8%,301650 msec
+16,3470,randwrite,1624,61.2%,307161 msec
 VM_index,Machine,Test_type,IOPS(9),cpuload(9),Testruntime(9)
 1,3455,randwrite,2485,48.9%,302188 msec
 2,3456,randwrite,2757,49.2%,304796 msec
@@ -107,4 +113,5 @@ VM_index,Machine,Test_type,IOPS(9),cpuload(9),Testruntime(9)
 14,3468,randwrite,1439,47.7%,301800 msec
 15,3469,randwrite,1493,30.1%,305877 msec
 16,3470,randwrite,1431,43.8%,305364 msec
-17,3472,randwrite,1431,67.3%,323187 msec
+17,3471,randwrite,1532,60.3%,319196 msec
+18,3472,randwrite,1431,67.3%,323187 msec
