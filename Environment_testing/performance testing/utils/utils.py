@@ -56,16 +56,20 @@ def create_machine_onStack(stackid, cloudspace, iteration, ccl, pcl, scl, vm_spe
         machineId = pcl.actors.cloudbroker.machine.createOnStack(cloudspaceId=cloudspace['id'],
                                                              name='node%s%s' % (stackid, iteration), imageId=imageId, sizeId=sizeId,
                                                              disksize=boot_diskSize, stackid=stackid, datadisks=datadisks_list)
-    except ApiError as e:
-        print('   |--failed to create the machine with error: %s' %e.message)
-        vm = ccl.vmachine.search({'name': 'node%s%s'% (stackid, iteration), 'cloudspaceId': cloudspace['id']})
-        if vm[0] != 0:
-            ccl.vmachine.delete(vm[1]['id'])
-        print('   |--trying to create the machine once more')
-        machineId = pcl.actors.cloudbroker.machine.createOnStack(cloudspaceId=cloudspace['id'],
-                                                             name='node%s%s' % (stackid, iteration), imageId=imageId, sizeId=sizeId,
-                                                             disksize=boot_diskSize, stackid=stackid, datadisks=datadisks_list)
-
+    except:
+        try:
+            print('   |--failed to create the machine with error: %s' %e.message)
+            vm = ccl.vmachine.search({'name': 'node%s%s'% (stackid, iteration), 'cloudspaceId': cloudspace['id']})
+            if vm[0] != 0:
+                ccl.vmachine.delete(vm[1]['id'])
+            print('   |--trying to create the machine once more')
+            machineId = pcl.actors.cloudbroker.machine.createOnStack(cloudspaceId=cloudspace['id'],
+                                                                     name='node%s%s' % (stackid, iteration),
+                                                                     imageId=imageId, sizeId=sizeId,
+                                                                     disksize=boot_diskSize, stackid=stackid,
+                                                                     datadisks=datadisks_list)
+        except:
+            import ipdb;ipdb.set_trace()
     print('   |--finished creating machine: %s' % machineId)
     if queue:
         #needed for 4_unixbench for parallel execution
@@ -74,7 +78,7 @@ def create_machine_onStack(stackid, cloudspace, iteration, ccl, pcl, scl, vm_spe
         now = time.time()
         ip = 'Undefined'
         print '   |--Waiting for IP for VM: node%s%s' % (stackid, iteration)
-        while now + 200 > time.time() and ip == 'Undefined':
+        while now + 300 > time.time() and ip == 'Undefined':
             time.sleep(1)
             machine = run_again_if_failed(pcl.actors.cloudapi.machines.get, machineId=machineId)
             ip = machine['interfaces'][0]['ipAddress']
@@ -82,6 +86,7 @@ def create_machine_onStack(stackid, cloudspace, iteration, ccl, pcl, scl, vm_spe
             time.sleep(5)
             pcl.actors.cloudapi.portforwarding.create(cloudspace['id'], cloudspace_publicip, cs_publicport, machineId, 22, 'tcp')
         except:
+            import ipdb;ipdb.set_trace()
             time.sleep(2)
             pcl.actors.cloudapi.portforwarding.create(cloudspace['id'], cloudspace_publicip, cs_publicport, machineId, 22, 'tcp')
             time.sleep(50)
