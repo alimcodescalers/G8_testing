@@ -415,7 +415,7 @@ class Client:
     def GetOrganization(self, globalid, headers=None, query_params=None):
         """
         Get organization info
-        It is method for GET /organizations/{globalid}
+        It is method for GET /organizations/
         """
         uri = self.url + "/organizations/"+globalid
         uri = uri + build_query_string(query_params)

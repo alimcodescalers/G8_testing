@@ -1,12 +1,17 @@
 from Itsyouonline_testing.api_testing.utils import BaseTest
+import types
 
 
-class UsersTests(BaseTest):
+class UsersTestsA(BaseTest):
+
 
     def setUp(self):
-        super(UsersTests, self).setUp()
+        super(UsersTestsA, self).setUp()
         self.response = self.client.api.GetUser(self.user)
+        self.lg('GetUser [%s] response [%s]' % (self.user, self.response.json()))
 
+
+    #Currently fail due to issue 218
     def test001_get_user(self):
         """ ITSYOU-001
         *Test case for check get user /users/{username}.*
@@ -18,20 +23,32 @@ class UsersTests(BaseTest):
         """
         self.lg('%s STARTED' % self._testID)
         response = self.response
-        if response.status_code != 200:
-            raise AssertionError("Failed to get user %s" % self.user)
-        self.assertIn('addresses', response.json().keys())
-        self.assertIn('bankaccounts', response.json().keys())
-        self.assertIn('digitalwallet', response.json().keys())
-        self.assertIn('emailaddresses', response.json().keys())
-        self.assertIn('expire', response.json().keys())
-        self.assertIn('facebook', response.json().keys())
-        self.assertIn('firstname', response.json().keys())
-        self.assertIn('github', response.json().keys())
-        self.assertIn('lastname', response.json().keys())
-        self.assertIn('phonenumbers', response.json().keys())
-        self.assertIn('publicKeys', response.json().keys())
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(type(response.json()), types.DictType)
         self.assertIn('username', response.json().keys())
+        self.assertEqual(type(response.json()['username']), type(u''))
+        self.assertIn('firstname', response.json().keys())
+        self.assertEqual(type(response.json()['firstname']), type(u''))
+        self.assertIn('lastname', response.json().keys())
+        self.assertEqual(type(response.json()['lastname']), type(u''))
+        self.assertIn('expire', response.json().keys())
+        self.assertEqual(type(response.json()['expire']), type(u''))
+        self.assertIn('addresses', response.json().keys())
+        self.assertEqual(type(response.json()['addresses']), types.ListType)
+        self.assertIn('bankaccounts', response.json().keys())
+        self.assertEqual(type(response.json()['bankaccounts']), types.ListType)
+        self.assertIn('emailaddresses', response.json().keys())
+        self.assertEqual(type(response.json()['emailaddresses']), types.ListType)
+        self.assertIn('phonenumbers', response.json().keys())
+        self.assertEqual(type(response.json()['phonenumbers']), types.ListType)
+        self.assertIn('publicKeys', response.json().keys())
+        self.assertEqual(type(response.json()['publicKeys']), types.ListType)
+        self.assertIn('digitalwallet', response.json().keys())
+        self.assertEqual(type(response.json()['digitalwallet']), types.ListType)
+        self.assertIn('facebook', response.json().keys())
+        self.assertEqual(type(response.json()['facebook']), types.DictType)
+        self.assertIn('github', response.json().keys())
+        self.assertEqual(type(response.json()['github']), types.DictType)
         self.lg('%s ENDED' % self._testID)
 
     def test002_get_user_addresses(self):
@@ -45,8 +62,9 @@ class UsersTests(BaseTest):
         """
         self.lg('%s STARTED' % self._testID)
         response = self.client.api.GetUserAddresses(self.user)
-        if response.status_code != 200:
-            raise AssertionError("Failed to get user %s addresses" % self.user)
+        self.lg('GetUserAddresses [%s] response [%s]' % (self.user, response.json()))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(type(response.json()), types.ListType)
         self.assertEqual(response.json(), self.response.json()['addresses'])
         self.lg('%s ENDED' % self._testID)
 
@@ -61,77 +79,52 @@ class UsersTests(BaseTest):
         """
         self.lg('%s STARTED' % self._testID)
         response = self.client.api.GetEmailAddresses(self.user)
-        if response.status_code != 200:
-            raise AssertionError("Failed to get user %s email addresses" % self.user)
+        self.lg('GetEmailAddresses [%s] response [%s]' % (self.user, response.json()))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(type(response.json()), types.ListType)
         self.assertEqual(response.json(), self.response.json()['emailaddresses'])
         self.lg('%s ENDED' % self._testID)
 
-    def test004_get_user_notifications(self):
+    def test004_get_user_bankaccounts(self):
         """ ITSYOU-004
-        *Test case for check get user notifications /users/{username}/notifications.*
+        *Test case for check get user bankaccounts /users/{username}/bankaccounts.*
 
         **Test Scenario:**
 
-        #. check get user notifications, should succeed
-        #. validate all expected notifications in the returned response
+        #. check get user bankaccounts, should succeed
+        #. validate all expected bankaccounts in the returned response
         """
         self.lg('%s STARTED' % self._testID)
-        response = self.client.api.GetNotifications(self.user)
-        if response.status_code != 200:
-            raise AssertionError("Failed to get user %s notifications" % self.user)
-        self.assertEqual(response.json(), self.response.json()['notifications'])
+        response = self.client.api.GetUserBankAccounts(self.user)
+        self.lg('GetUserBankAccounts [%s] response [%s]' % (self.user, response.json()))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(type(response.json()), types.ListType)
+        self.assertEqual(response.json(), self.response.json()['bankaccounts'])
         self.lg('%s ENDED' % self._testID)
 
-    def test005_get_user_organizations(self):
+    def test005_get_user_bankaccounts(self):
         """ ITSYOU-005
-        *Test case for check get user organizations /users/{username}/organizations.*
+        *Test case for check get user bankaccounts /users/{username}/bankaccounts.*
 
         **Test Scenario:**
 
-        #. check get user organizations, should succeed
-        #. validate all expected organizations in the returned response
+        #. check get user bankaccounts, should succeed
+        #. validate all expected bankaccounts in the returned response
         """
         self.lg('%s STARTED' % self._testID)
-        response = self.client.api.GetUserOrganizations(self.user)
-        if response.status_code != 200:
-            raise AssertionError("Failed to get user %s organizations" % self.user)
-        self.assertEqual(response.json(), self.response.json()['organizations'])
+        response = self.client.api.GetUserBankAccounts(self.user)
+        self.lg('GetUserBankAccounts [%s] response [%s]' % (self.user, response.json()))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(type(response.json()), types.ListType)
+        self.assertEqual(response.json(), self.response.json()['bankaccounts'])
         self.lg('%s ENDED' % self._testID)
 
-    def test006_get_user_bankaccounts(self):
+
+class UsersTestsB(BaseTest):
+
+
+    def test006_get_user_username(self):
         """ ITSYOU-006
-        *Test case for check get user bankaccounts /users/{username}/bankaccounts.*
-
-        **Test Scenario:**
-
-        #. check get user bankaccounts, should succeed
-        #. validate all expected bankaccounts in the returned response
-        """
-        self.lg('%s STARTED' % self._testID)
-        response = self.client.api.GetUserBankAccounts(self.user)
-        if response.status_code != 200:
-            raise AssertionError("Failed to get user %s bankaccounts" % self.user)
-        self.assertEqual(response.json(), self.response.json()['bankaccounts'])
-        self.lg('%s ENDED' % self._testID)
-
-    def test007_get_user_bankaccounts(self):
-        """ ITSYOU-007
-        *Test case for check get user bankaccounts /users/{username}/bankaccounts.*
-
-        **Test Scenario:**
-
-        #. check get user bankaccounts, should succeed
-        #. validate all expected bankaccounts in the returned response
-        """
-        self.lg('%s STARTED' % self._testID)
-        response = self.client.api.GetUserBankAccounts(self.user)
-        if response.status_code != 200:
-            raise AssertionError("Failed to get user %s bankaccounts" % self.user)
-        self.assertEqual(response.json(), self.response.json()['bankaccounts'])
-        self.lg('%s ENDED' % self._testID)
-
-    def test008_get_user_username(self):
-        """ ITSYOU-008
         *Test case for check get user username /users/{username}/username.*
 
         **Test Scenario:**
@@ -141,9 +134,42 @@ class UsersTests(BaseTest):
         """
         self.lg('%s STARTED' % self._testID)
         response = self.client.api.GetUser(self.user)
-        if response.status_code != 200:
-            raise AssertionError("Failed to get user %s username" % self.user)
-        self.assertEqual(response.json(), self.response.json()['username'])
+        self.lg('GetUser [%s] response [%s]' % (self.user, response.json()))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(type(response.json()['username']), type(u''))
+        self.assertEqual(response.json()['username'], self.user)
+        self.lg('%s ENDED' % self._testID)
+
+    def test007_get_user_notifications(self):
+        """ ITSYOU-007
+        *Test case for check get user notifications /users/{username}/notifications.*
+
+        **Test Scenario:**
+
+        #. check get user notifications, should succeed
+        #. validate all expected notifications in the returned response
+        """
+        self.lg('%s STARTED' % self._testID)
+        response = self.client.api.GetNotifications(self.user)
+        self.lg('GetNotifications [%s] response [%s]' % (self.user, response.json()))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(type(response.json()), types.DictType)
+        self.lg('%s ENDED' % self._testID)
+
+    def test008_get_user_organizations(self):
+        """ ITSYOU-008
+        *Test case for check get user organizations /users/{username}/organizations.*
+
+        **Test Scenario:**
+
+        #. check get user organizations, should succeed
+        #. validate all expected organizations in the returned response
+        """
+        self.lg('%s STARTED' % self._testID)
+        response = self.client.api.GetUserOrganizations(self.user)
+        self.lg('GetUserOrganizations [%s] response [%s]' % (self.user, response.json()))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(type(response.json()), types.DictType)
         self.lg('%s ENDED' % self._testID)
 
     def test009_get_user_apikeys(self):
@@ -157,11 +183,12 @@ class UsersTests(BaseTest):
         """
         self.lg('%s STARTED' % self._testID)
         response = self.client.api.ListAPIKeys(self.user)
-        if response.status_code != 200:
-            raise AssertionError("Failed to get user %s apikeys" % self.user)
-        self.assertEqual(response.json(), self.response.json()['apikeys'])
+        self.lg('ListAPIKeys [%s] response [%s]' % (self.user, response.json()))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(type(response.json()), types.ListType)
         self.lg('%s ENDED' % self._testID)
 
+    #Currently fail due to issue 218
     def test010_get_user_info(self):
         """ ITSYOU-010
         *Test case for check get user info /users/{username}/info.*
@@ -173,9 +200,27 @@ class UsersTests(BaseTest):
         """
         self.lg('%s STARTED' % self._testID)
         response = self.client.api.GetUserInformation(self.user)
-        if response.status_code != 200:
-            raise AssertionError("Failed to get user %s info" % self.user)
-        self.assertEqual(response.json(), self.response.json()['info'])
+        self.lg('GetUserInformation [%s] response [%s]' % (self.user, response.json()))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(type(response.json()), types.DictType)
+        self.assertIn('username', response.json().keys())
+        self.assertEqual(type(response.json()['username']), type(u''))
+        self.assertIn('firstname', response.json().keys())
+        self.assertEqual(type(response.json()['firstname']), type(u''))
+        self.assertIn('lastname', response.json().keys())
+        self.assertEqual(type(response.json()['lastname']), type(u''))
+        self.assertIn('addresses', response.json().keys())
+        self.assertEqual(type(response.json()['addresses']), types.ListType)
+        self.assertIn('emailaddresses', response.json().keys())
+        self.assertEqual(type(response.json()['emailaddresses']), types.ListType)
+        self.assertIn('phonenumbers', response.json().keys())
+        self.assertEqual(type(response.json()['phonenumbers']), types.ListType)
+        self.assertIn('publicKeys', response.json().keys())
+        self.assertEqual(type(response.json()['publicKeys']), types.ListType)
+        self.assertIn('facebook', response.json().keys())
+        self.assertEqual(type(response.json()['facebook']), types.DictType)
+        self.assertIn('github', response.json().keys())
+        self.assertEqual(type(response.json()['github']), types.DictType)
         self.lg('%s ENDED' % self._testID)
 
     def test011_get_user_contracts(self):
@@ -189,11 +234,12 @@ class UsersTests(BaseTest):
         """
         self.lg('%s STARTED' % self._testID)
         response = self.client.api.GetUserContracts(self.user)
-        if response.status_code != 200:
-            raise AssertionError("Failed to get user %s contracts" % self.user)
-        self.assertEqual(response.json(), self.response.json()['contracts'])
+        self.lg('GetUserContracts [%s] response [%s]' % (self.user, response.json()))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(type(response.json()), types.ListType)
         self.lg('%s ENDED' % self._testID)
 
+    #Currently fail due to issue 218
     def test012_get_user_authorizations(self):
         """ ITSYOU-012
         *Test case for check get user authorizations /users/{username}/authorizations.*
@@ -205,7 +251,7 @@ class UsersTests(BaseTest):
         """
         self.lg('%s STARTED' % self._testID)
         response = self.client.api.GetAllAuthorizations(self.user)
-        if response.status_code != 200:
-            raise AssertionError("Failed to get user %s authorizations" % self.user)
-        self.assertEqual(response.json(), self.response.json()['authorizations'])
+        self.lg('GetAllAuthorizations [%s] response [%s]' % (self.user, response.json()))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(type(response.json()), types.ListType)
         self.lg('%s ENDED' % self._testID)
