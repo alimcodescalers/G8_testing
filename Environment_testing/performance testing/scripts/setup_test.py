@@ -34,7 +34,7 @@ def main():
     bs=config.get("perf_parameters", "bs")
     iodepth=int(config.get("perf_parameters", "iodepth"))
     direct_io=int(config.get("perf_parameters", "direct_io"))
-    rwmixwrite=int(config.get("perf_parameters", "direct_io"))
+    rwmixwrite=int(config.get("perf_parameters", "rwmixwrite"))
     USERNAME = config.get("perf_parameters", "username")
     Res_dir = config.get("perf_parameters", "Res_dir")
     j.do.execute("mkdir -p %s" %Res_dir)
