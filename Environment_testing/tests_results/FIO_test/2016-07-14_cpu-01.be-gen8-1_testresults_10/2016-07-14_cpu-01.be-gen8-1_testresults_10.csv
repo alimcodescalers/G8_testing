@@ -62,7 +62,8 @@ VM_index,Machine,Test_type,IOPS(6),cpuload(6),Testruntime(6)
 8,3593,randwrite,1449,56.1%,305392 msec
 9,3594,randwrite,1643,39.1%,312741 msec
 10,3595,randwrite,1409,52.6%,313937 msec
-11,3597,randwrite,1378,67.5%,317846 msec
+11,3596,randwrite,1399,50.5%,311801 msec
+12,3597,randwrite,1378,67.5%,317846 msec
 VM_index,Machine,Test_type,IOPS(7),cpuload(7),Testruntime(7)
 1,3585,randwrite,2729,40.4%,301470 msec
 2,3586,randwrite,2162,45.6%,317610 msec
