@@ -18,7 +18,7 @@ VM:,3430,creation time:,151.76, ,
 VM:,3431,creation time:,203.15, ,
 VM_index,Machine,Test_type,IOPS(1),cpuload(1),Testruntime(1)
 1,3413,randwrite,44595,37.7%,89758 msec
-2,3413,randwrite,44595,37.7%,89758 msec
+2,3414,randwrite,52584,65.50%,74733 msec
 VM_index,Machine,Test_type,IOPS(2),cpuload(2),Testruntime(2)
 1,3413,randwrite,14661,46.5%,284642 msec
 2,3414,randwrite,16428,47.4%,239423 msec
