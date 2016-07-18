@@ -11,7 +11,7 @@ The Performance tests can be found on github: [here](https://github.com/gig-proj
 inside the [org_quality repo] (https://github.com/gig-projects/org_quality)
 
 
-To start the performance test 2.0 we should connect to one of the physical nodes of the environment that needs to be tested. To connect to a physical node, follow the steps as described in the [connect documentation](connect.md).
+To start the performance test 2.0 we should connect to one of the physical nodes of the environment that needs to be tested. To connect to a physical node, follow the steps as described in the [connect documentation](https://gig.gitbooks.io/ovcdoc_public/content/Sysadmin/connect.html).
 
 When connecting to a physical node the node will not be used during the stress test. e.g. When you connect to node 1, tests will run on node 2 and other available nodes. (we can run the tests from any node)
 
