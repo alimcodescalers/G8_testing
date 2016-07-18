@@ -2,7 +2,8 @@
 This repository contains the complete performance test script  
 
 
-Performance test reports can be found [here](https://docs.google.com/document/d/1BiSOzdzidArtnuS9oPSdsCgIGE_VczgYvzTGJ_5ys_I/edit?usp=sharing) 
+Performance test reports can be found [here](https://docs.google.com/document/d/1BiSOzdzidArtnuS9oPSdsCgIGE_VczgYvzTGJ_5ys_I/edit?usp=sharing) an on [GIT](https://github.com/gig-projects/org_quality/tree/master/Environment_testing/tests_results)
+
 
 
 ## General Set up of the system (For FIO Test)
