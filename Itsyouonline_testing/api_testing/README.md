@@ -7,6 +7,9 @@ Tests are performed using the descriptions in the Folders
 **testsuite**
 In this folder we have automated test testsuite for the itsyouonline api
 
+# Pre-Requirements:
+Create user on the target environment using sign-up and create api key under this user and use this info in the config file [config.ini]
+
 # Requirements:
 
 If you don't have python 2.7 use this commands to install:

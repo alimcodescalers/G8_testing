@@ -9,10 +9,7 @@ Tests are performed using the descriptions in the Folders
 In this folder we have automated test testsuite for the itsyouonline portal
 
 **api_testing**
-In this folder we have automated test testsuite for the itsyouonline api
-
-**jwt_testing**
-In this folder we have automated test testsuite for the itsyouonline jwt
+In this folder we have automated test testsuite for the itsyouonline api & jwt
 
 **manual_testing**
 In this folder we have manual test testsuite for the itsyouonline site
