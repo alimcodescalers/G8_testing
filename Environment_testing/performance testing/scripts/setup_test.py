@@ -26,7 +26,7 @@ def main():
     memory = int(config.get("perf_parameters", "memory"))
     cpu = int(config.get("perf_parameters", "cpu"))
     Bdisksize = int(config.get("perf_parameters", "Bdisksize"))
-    no_of_vms_per_stack_per_iteration(config.get("perf_parameters", "no_of_vms_per_stack_per_iteration"))
+    no_of_vms_per_stack_per_iteration = int(config.get("perf_parameters", "no_of_vms_per_stack_per_iteration"))
     no_of_disks = int(config.get("perf_parameters", "no_of_disks"))
     data_disksize = int(config.get("perf_parameters", "data_disksize"))
     vms_time_diff = int(config.get("perf_parameters", "vms_time_diff"))
@@ -94,15 +94,17 @@ def main():
                     cloudspaces_cre += 1
 
                 cs = cloudspace_of_stacks['stack %s' % stackid]
-                cloudspace_publicport += 1
 
                 def create_machine_in_other_process(queue):
                     machineId, cloudspace_publicip = utils.create_machine_onStack(stackid, cs, i, ccl, pcl, scl, vm_specs, cloudspace_publicport, Res_dir)
-                    queue.put((machineId, cloudspace_publicip))
+                    queue.put((machineId, cloudspace_publicip, cloudspace_publicip))
 
-                process = multiprocessing.Process(target=create_machine_in_other_process, args=(results,))
-                process.start()
-                processes.append(process)
+                for _ in xrange(no_of_vms_per_stack_per_iteration):
+                    cloudspace_publicport += 1
+                    process = multiprocessing.Process(target=create_machine_in_other_process, args=(results,))
+                    process.start()
+                    processes.append(process)
+                    time.sleep(vms_time_diff * 2)
 
                 used_stacks -= 1
 
@@ -113,7 +115,7 @@ def main():
             # process the results
             while True:
                 try:
-                    machineId, cloudspace_publicip = results.get_no_wait()
+                    machineId, cloudspace_publicip, cloudspace_publicip = results.get_no_wait()
                 except Queue.Empty:
                     break
                 if IO_type:
