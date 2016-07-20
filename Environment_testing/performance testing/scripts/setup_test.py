@@ -95,13 +95,13 @@ def main():
 
                 cs = cloudspace_of_stacks['stack %s' % stackid]
 
-                def create_machine_in_other_process(queue):
-                    machineId, cloudspace_publicip = utils.create_machine_onStack(stackid, cs, i, ccl, pcl, scl, vm_specs, cloudspace_publicport, Res_dir)
-                    queue.put((machineId, cloudspace_publicip, cloudspace_publicip))
+                def create_machine_in_other_process(queue, n):
+                    machineId, cloudspace_publicip = utils.create_machine_onStack(stackid, cs, n, ccl, pcl, scl, vm_specs, cloudspace_publicport, Res_dir)
+                    queue.put((machineId, cloudspace_publicip, cloudspace_publicport))
 
-                for _ in xrange(no_of_vms_per_stack_per_iteration):
+                for r in xrange(no_of_vms_per_stack_per_iteration):
                     cloudspace_publicport += 1
-                    process = multiprocessing.Process(target=create_machine_in_other_process, args=(results,))
+                    process = multiprocessing.Process(target=create_machine_in_other_process, args=(results, '%s%s' %(i,r),))
                     process.start()
                     processes.append(process)
                     time.sleep(vms_time_diff * 2)
@@ -115,7 +115,7 @@ def main():
             # process the results
             while True:
                 try:
-                    machineId, cloudspace_publicip, cloudspace_publicip = results.get_no_wait()
+                    machineId, cloudspace_publicip, cloudspace_publicport = results.get_nowait()
                 except Queue.Empty:
                     break
                 if IO_type:
@@ -157,11 +157,10 @@ if __name__ == "__main__":
     sys.path.append(os.getcwd())
     from utils import utils
 
-    try:
-        Res_dir = main()
-    finally:
-        j.do.execute('cp scripts/collect_results.py %s' %Res_dir)
-        j.do.chdir('%s' %Res_dir)
-        j.do.execute('python collect_results.py %s' %Res_dir)
-        j.do.execute('rm -rf collect_results.py')
+    Res_dir = main()
+    j.do.execute('cp scripts/collect_results.py %s' %Res_dir)
+    j.do.chdir('%s' %Res_dir)
+    j.do.execute('python collect_results.py %s' %Res_dir)
+    j.do.execute('rm -rf collect_results.py')
+
     utils.push_results_to_repo(Res_dir, test_type='FIO_test')
