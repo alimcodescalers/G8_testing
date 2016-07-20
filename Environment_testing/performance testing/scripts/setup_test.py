@@ -9,6 +9,7 @@ import time
 import datetime
 from fabric import network
 import re
+import Queue
 
 
 def main():
@@ -25,6 +26,7 @@ def main():
     memory = int(config.get("perf_parameters", "memory"))
     cpu = int(config.get("perf_parameters", "cpu"))
     Bdisksize = int(config.get("perf_parameters", "Bdisksize"))
+    no_of_vms_per_stack_per_iteration = int(config.get("perf_parameters", "no_of_vms_per_stack_per_iteration"))
     no_of_disks = int(config.get("perf_parameters", "no_of_disks"))
     data_disksize = int(config.get("perf_parameters", "data_disksize"))
     vms_time_diff = int(config.get("perf_parameters", "vms_time_diff"))
@@ -69,6 +71,9 @@ def main():
         while i <= iterations:
             print ('###################### \n Starting Iteration(%s) \n######################'%i)
             used_stacks = int(config.get("perf_parameters", "used_stacks"))
+
+            processes = list()
+            results = multiprocessing.Queue()
             for stackid in stacks:
                 if used_stacks == 0:
                     used_stacks = int(config.get("perf_parameters", "used_stacks"))
@@ -89,16 +94,36 @@ def main():
                     cloudspaces_cre += 1
 
                 cs = cloudspace_of_stacks['stack %s' % stackid]
-                cloudspace_publicport += 1
-                [machineId, cloudspace_publicip] = utils.create_machine_onStack(stackid, cs, i, ccl, pcl, scl, vm_specs, cloudspace_publicport, Res_dir)
+
+                def create_machine_in_other_process(queue, n):
+                    machineId, cloudspace_publicip = utils.create_machine_onStack(stackid, cs, n, ccl, pcl, scl, vm_specs, cloudspace_publicport, Res_dir)
+                    queue.put((machineId, cloudspace_publicip, cloudspace_publicport))
+
+                for r in xrange(no_of_vms_per_stack_per_iteration):
+                    cloudspace_publicport += 1
+                    process = multiprocessing.Process(target=create_machine_in_other_process, args=(results, '%s%s' %(i,r),))
+                    process.start()
+                    processes.append(process)
+                    time.sleep(vms_time_diff * 2)
+
+                used_stacks -= 1
+
+            # wait for the machines to be created
+            for process in processes:
+                process.join()
+
+            # process the results
+            while True:
+                try:
+                    machineId, cloudspace_publicip, cloudspace_publicport = results.get_nowait()
+                except Queue.Empty:
+                    break
                 if IO_type:
                     vms_list.append({machineId: [cloudspace_publicip, cloudspace_publicport, IO_type]})
                 elif cloudspace_publicport%2 == 0:
                     vms_list.append({machineId: [cloudspace_publicip, cloudspace_publicport, 'write']})
                 else:
                     vms_list.append({machineId: [cloudspace_publicip, cloudspace_publicport, 'randwrite']})
-
-                used_stacks -= 1
 
             # make ur tests and collect ur resutls before going to the next iteration
             network.disconnect_all()
@@ -132,11 +157,10 @@ if __name__ == "__main__":
     sys.path.append(os.getcwd())
     from utils import utils
 
-    try:
-        Res_dir = main()
-    finally:
-        j.do.execute('cp scripts/collect_results.py %s' %Res_dir)
-        j.do.chdir('%s' %Res_dir)
-        j.do.execute('python collect_results.py %s' %Res_dir)
-        j.do.execute('rm -rf collect_results.py')
+    Res_dir = main()
+    j.do.execute('cp scripts/collect_results.py %s' %Res_dir)
+    j.do.chdir('%s' %Res_dir)
+    j.do.execute('python collect_results.py %s' %Res_dir)
+    j.do.execute('rm -rf collect_results.py')
+
     utils.push_results_to_repo(Res_dir, test_type='FIO_test')
