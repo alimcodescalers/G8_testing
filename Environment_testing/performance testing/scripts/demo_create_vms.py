@@ -31,7 +31,7 @@ def main():
     sys.path.append(os.getcwd())
 
     from utils import utils
-    stacks = utils.get_stacks(ccl)
+    stacks = utils.remove_ovsnodes_from_stacks(utils.get_stacks(ccl), ccl)
     current_stack = ccl.stack.search({'referenceId': str(j.application.whoAmI.nid), 'gid': j.application.whoAmI.gid})[1]
     stacks.remove(current_stack['id'])
     vm_specs = [no_of_disks, data_disksize, Bdisksize, memory, cpu]

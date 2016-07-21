@@ -10,6 +10,14 @@ import re
 def get_stacks(ccl):
     return ccl.stack.list()
 
+def remove_ovsnodes_from_stacks(stacks_list,ccl):
+    for stk in ccl.stack.search({}):
+        if type(stk)==int:
+            continue
+        if stk['name'].startswith('ovs'):
+            stacks_list.remove(stk['id'])
+    return stacks_list
+
 def create_user(USERNAME, email, pcl, scl):
     print "Creating User with username %s" %USERNAME
     pcl.actors.cloudbroker.user.create(USERNAME, email, 'gig12345')
