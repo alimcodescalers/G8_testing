@@ -34,7 +34,7 @@ class KnowledgeBase(BaseTest):
         self.assertEqual(self.get_text("knowledge_base_line5_tab"),
                          "My First Machine Windows")
         self.assertEqual(self.get_text("knowledge_base_line6_tab"),
-                         "PPTP Connection To Space From Windows 8.1")
+                         "Setup a PPTP connection in Windows 10 to your cloud space")
         self.assertEqual(self.get_text("knowledge_base_line7_tab"),
                          "Getting Started with JumpScale")
         self.assertEqual(self.get_text("knowledge_base_subheader_label"),
@@ -44,7 +44,7 @@ class KnowledgeBase(BaseTest):
         self.assertEqual(self.get_text("knowledge_base_subheader_text"),
                          "Welcome to the OpenvCloud Knowledge Base. The Knowledge Base is "
                          "growing based on customer questions. In case you do not find a reply, "
-                         "do not hesistate to contact the support team at: "
+                         "do not hesitate to contact the support team at: "
                          "support@greenitglobe.com.")
         self.lg('%s ENDED' % self._testID)
 
