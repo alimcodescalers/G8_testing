@@ -10,7 +10,7 @@ import datetime
 sys.path.append(os.getcwd())
 from utils import utils
 
-
+vms_to_run_fio_on = int(sys.argv[1])
 config = ConfigParser.ConfigParser()
 config.read("Perf_parameters.cfg")
 USERNAME = config.get("perf_parameters", "username")
@@ -49,17 +49,21 @@ iteration_no=1
 network.disconnect_all()
 #terminate all connections in case they are there
 processes = []
+i=0
 for iter_on_vms in vms_list:
     p = multiprocessing.Process(target=utils.FIO_test, args=(iter_on_vms, pcl, data_size,
                                                              testrun_time, Res_dir, iteration_no, no_of_disks,
                                                              rwmixwrite, bs, iodepth, direct_io))
     processes.append(p)
-for l in range(len(vms_list)):
+    i += 1
+    if i == vms_to_run_fio_on:
+        break
+for l in range(len(processes)):
     dict = vms_list[l]
     processes[l].start()
     print('FIO testing has been started on machine: %s' % dict.keys()[0])
     time.sleep(vms_time_diff)
-for k in range(len(vms_list)):
+for k in range(len(processes)):
     dict = vms_list[k]
     processes[k].join()
     print('FIO testing has been ended on machine: %s' % dict.keys()[0])
