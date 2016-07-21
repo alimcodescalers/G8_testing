@@ -335,70 +335,65 @@ class KnowledgeBase(BaseTest):
         self.assertEqual(self.get_text("knowledge_base_header_label"),
                          "Technical Tutorials")
         self.assertEqual(self.get_text("knowledge_base_line6_tab"),
-                         "PPTP Connection To Space From Windows 8.1")
+                         "Setup a PPTP connection in Windows 10 to your cloud space")
         self.click("knowledge_base_line6_tab")
         self.assertEqual(self.get_text("knowledge_base_line6_tab_header"),
-                         "PPTP Connection To Space From Windows 8.1")
+                         "PPTP Connection to Cloud Space from Windows 10")
         self.assertEqual(self.get_text("knowledge_base_line6_tab_line1"),
-                         "Look for network and sharing center")
+                         "Go to Settings:")
         self.assertTrue(self.wait_element("knowledge_base_line6_tab_image1"))
         self.assertEqual(self.get_text("knowledge_base_line6_tab_line2"),
-                         "Click on setup a new network connection")
+                         "In Settings go to Network & Internet:")
         self.assertTrue(self.wait_element("knowledge_base_line6_tab_image2"))
         self.assertEqual(self.get_text("knowledge_base_line6_tab_line3"),
-                         "Select connect to a workplace")
+                         "Click Add a VPN Connection:")
         self.assertTrue(self.wait_element("knowledge_base_line6_tab_image3"))
         self.assertEqual(self.get_text("knowledge_base_line6_tab_line4"),
-                         "Select create a new connection")
-        self.assertEqual(self.get_text("knowledge_base_line6_tab_line5"),
-                         "Go to your defense shield page on OpenvCloud portal")
-        self.assertEqual(self.get_text("knowledge_base_line6_tab_line6"),
-                         "to find the external ip address of your space")
+                         "Here you will need to specify the public IP address of the cloud space."
+                         " For this you first need to go to the End User Portal:")
         self.assertTrue(self.wait_element("knowledge_base_line6_tab_image4"))
-        self.assertEqual(self.get_text("knowledge_base_line6_tab_line7"),
-                         "Click on Advanced Shield Configuration")
+        self.assertEqual(self.get_text("knowledge_base_line6_tab_line5"),
+                         "In the End User Portal select Defense Shield:")
         self.assertTrue(self.wait_element("knowledge_base_line6_tab_image5"))
-        self.assertEqual(self.get_text("knowledge_base_line6_tab_line8"),
-                         "You will see the login page of your advanced shield configuration portal.")
-        self.assertEqual(self.get_text("knowledge_base_line6_tab_line9"),
-                         "Note the ip address in the browser (173.240.9.11) in this case.")
-        self.assertEqual(self.get_text("knowledge_base_line6_tab_line10"),
-                         "On your windows you should see following screen:")
+        self.assertEqual(self.get_text("knowledge_base_line6_tab_line6"),
+                         "Here click the Advanced Shield Configuration button:")
         self.assertTrue(self.wait_element("knowledge_base_line6_tab_image6"))
-        self.assertEqual(self.get_text("knowledge_base_line6_tab_line11"),
-                         "Choose the top one (vpn)")
+        self.assertEqual(self.get_text("knowledge_base_line6_tab_line7"),
+                         "Under IP | Addresses you will see the public IP address of your cloud "
+                         "space:")
         self.assertTrue(self.wait_element("knowledge_base_line6_tab_image7"))
-        self.assertEqual(self.get_text("knowledge_base_line6_tab_line12"),
-                         "You will now see")
+        self.assertEqual(self.get_text("knowledge_base_line6_tab_line8"),
+                         "Going back to configuration of the new VPN connection in Windows, "
+                         "select the built-in VPN provider, specify a connection name and the "
+                         "public IP address of your cloud space, in this case: 85.255.197.118.")
         self.assertTrue(self.wait_element("knowledge_base_line6_tab_image8"))
-        self.assertEqual(self.get_text("knowledge_base_line6_tab_line13"),
-                         "Ignore this")
-        self.assertEqual(self.get_text("knowledge_base_line6_tab_line14"),
-                         "go back to")
+        self.assertEqual(self.get_text("knowledge_base_line6_tab_line9"),
+                         "Hit the Save button and see the newly added VPN configuration listed:")
         self.assertTrue(self.wait_element("knowledge_base_line6_tab_image9"))
-        self.assertEqual(self.get_text("knowledge_base_line6_tab_line15"),
-                         "Tip")
+        self.assertEqual(self.get_text("knowledge_base_line6_tab_line10"),
+                         "When you click Connect you will be asked to specify for credentials, "
+                         "for we first need to go back to the Advanced Defense Shield "
+                         "Configuration, this time under PPP | Secrets:")
         self.assertTrue(self.wait_element("knowledge_base_line6_tab_image10"))
-        self.assertEqual(self.get_text("knowledge_base_line6_tab_line18"),
-                         "And choose view network connections, you will now see above screen")
+        self.assertEqual(self.get_text("knowledge_base_line6_tab_line11"),
+                         "Here click Add New and specify a username and password:")
         self.assertTrue(self.wait_element("knowledge_base_line6_tab_image11"))
-        self.assertEqual(self.get_text("knowledge_base_line6_tab_line19"),
-                         "Do right mouse button and select properties")
+        self.assertEqual(self.get_text("knowledge_base_line6_tab_line12"),
+                         "After click OK, use these credentials in the Sign in screen of Windows:")
         self.assertTrue(self.wait_element("knowledge_base_line6_tab_image12"))
+        self.assertEqual(self.get_text("knowledge_base_line6_tab_line13"),
+                         "When you OK you should get connected:")
         self.assertTrue(self.wait_element("knowledge_base_line6_tab_image13"))
-        self.assertEqual(self.get_text("knowledge_base_line6_tab_line20"),
-                         "Ggo to security tab and choose pptp")
+        self.assertEqual(self.get_text("knowledge_base_line6_tab_line14"),
+                         "Also in the Advanced Defense Shield Configuration under PPP | Active "
+                         "Connections you will see that the connection was successful:")
         self.assertTrue(self.wait_element("knowledge_base_line6_tab_image14"))
-        self.assertEqual(self.get_text("knowledge_base_line6_tab_line21"),
-                         "Choose connect on same screen ( or go to other screen with network "
-                         "connections)")
-        self.assertEqual(self.get_text("knowledge_base_line6_tab_line22"),
-                         "Fillin your credentials")
-        self.assertEqual(self.get_text("knowledge_base_line6_tab_line23"),
-                         "login=admin")
-        self.assertEqual(self.get_text("knowledge_base_line6_tab_line24"),
-                         "passwd=your space passwd")
-        self.assertTrue(self.wait_element("knowledge_base_line6_tab_image15"))
+        self.assertEqual(self.get_text("knowledge_base_line6_tab_line15"),
+                         "In this case you see that the Windows client did receive IP address "
+                         "192.168.103.244.")
+        self.assertEqual(self.get_text("knowledge_base_line6_tab_line16"),
+                         "As a final test you will want to ping from your Windows machine another"
+                         " (virtual) machine in the same cloud space.")
         self.lg('%s ENDED' % self._testID)
 
     def test08_technical_tutorials_seventh_tab(self):
