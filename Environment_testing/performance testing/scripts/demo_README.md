@@ -10,4 +10,8 @@
   1- After creating the vms please make sure that the assigned ip for the machines
      matches the ip on the portal
 
-
+# To Run the scripts
+  1- Make sure you are on the demo branch (git checkout demo)
+  2- cd org_quality/Environment_testing/performance\ testing/
+  3- jspython scripts/demo_create_vms.py 25 (25= number of vms need to be created)
+  4- jspython scripts/demo_run_fio.py 10 (10 = number of vms need to run FIO on .. (bet (1-25))
