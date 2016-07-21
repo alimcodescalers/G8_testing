@@ -11,7 +11,7 @@ def main():
     pcl = j.clients.portal.getByInstance('main')
     scl = j.clients.osis.getNamespace('system')
 
-    No_of_vms=20
+    No_of_vms= int(sys.argv[1])
 
     #run the setup_test from inside the repo so the file could be parsed
     config = ConfigParser.ConfigParser()
@@ -26,17 +26,15 @@ def main():
     ACCOUNTNAME = str(uuid.uuid4())[0:8]
     Res_dir = config.get("perf_parameters", "Res_dir")
     j.do.execute('mkdir -p %s' % Res_dir)
-
-
     sys.path.append(os.getcwd())
-
     from utils import utils
+
     stacks = utils.remove_ovsnodes_from_stacks(utils.get_stacks(ccl), ccl)
-    current_stack = ccl.stack.search({'referenceId': str(j.application.whoAmI.nid), 'gid': j.application.whoAmI.gid})[1]
-    stacks.remove(current_stack['id'])
+    #current_stack = ccl.stack.search({'referenceId': str(j.application.whoAmI.nid), 'gid': j.application.whoAmI.gid})[1]
+    #stacks.remove(current_stack['id'])
     vm_specs = [no_of_disks, data_disksize, Bdisksize, memory, cpu]
     cloudspace_publicport = 1999
-    vms_list = [] #list of vms
+
 
     email = "%s@test.com" % str(uuid.uuid4())[0:8]
     utils.create_user(USERNAME, email,  pcl, scl)

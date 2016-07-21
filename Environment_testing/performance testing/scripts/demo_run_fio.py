@@ -37,15 +37,12 @@ if j.do.exists('/root/.ssh/known_hosts'):
 
 ccl = j.clients.osis.getNamespace('cloudbroker')
 pcl = j.clients.portal.getByInstance('main')
-
-
 cloudspaceId = ccl.cloudspace.search({'acl.userGroupId': USERNAME, 'status': 'DEPLOYED'})[1]['id']
 portforwards = pcl.actors.cloudapi.portforwarding.list(cloudspaceId=cloudspaceId)
 
 vms_list=[]
 for pi in portforwards:
     vms_list.append({pi['machineId']:[pi['publicIp'],pi['publicPort'], IO_type]})
-
 
 iteration_no=1
 #Only one iteration will be done
