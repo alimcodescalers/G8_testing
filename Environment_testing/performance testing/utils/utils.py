@@ -58,7 +58,7 @@ def create_machine_onStack(stackid, cloudspace, iteration, ccl, pcl, scl, vm_spe
                                                              disksize=boot_diskSize, stackid=stackid, datadisks=datadisks_list)
     except:
         try:
-            print('   |--failed to create the machine with error: %s' %e.message)
+            print('   |--failed to create the machine with error')
             vm = ccl.vmachine.search({'name': 'node%s%s'% (stackid, iteration), 'cloudspaceId': cloudspace['id']})
             if vm[0] != 0:
                 ccl.vmachine.delete(vm[1]['id'])
@@ -150,6 +150,8 @@ def FIO_test(vm_pubip_pubport, pcl, data_size, testrun_time, Res_dir, iteration,
     else:
         connection = j.remote.cuisine.connect(cloudspace_publicip, cs_publicport, account['password'], account['login'])
         connection.user(account['login'])
+        connection.fabric.state.output["running"]=False
+        connection.fabric.state.output["stdout"]=False
         j.do.execute('sshpass -p%s scp -o \'StrictHostKeyChecking=no\' -P %s scripts/Machine_script.py  %s@%s:'
                      %(account['password'], cs_publicport, account['login'], cloudspace_publicip))
         connection.run('python Machine_script.py %s %s %s %s %s %s %s %s %s %s %s' %(testrun_time, machineId,
