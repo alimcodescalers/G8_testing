@@ -137,12 +137,12 @@ def setup_machine(cloudspace, machineId, cs_publicport, pcl, no_of_disks, fio=No
             connection.apt_get('install sysstat')
             machine_mount_disks(connection, account, machineId, no_of_disks)
         if telegraf:
-            connection.run('wget https://dl.influxdata.com/telegraf/releases/telegraf_1.0.0-beta3_amd64.deb')
-            connection.run('dpkg -i telegraf_1.0.0-beta3_amd64.deb ')
-
-
-
-
+            connection.run('echo %s | sudo -S wget https://dl.influxdata.com/telegraf/releases/telegraf_1.0.0-beta3_amd64.deb' %account['password'])
+            connection.run('echo %s | sudo -S dpkg -i telegraf_1.0.0-beta3_amd64.deb' %account['password'])
+            try:
+                connection.run('echo %s | sudo -S telegraf' %account['password'], timeout=3)
+            except:
+                return cloudspace_publicip
     return cloudspace_publicip
 
 def machine_mount_disks(connection, account, machineId, no_of_disks=6):

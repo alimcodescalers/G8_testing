@@ -71,4 +71,4 @@ for k in range(len(processes)):
 j.do.execute('cp scripts/collect_results.py %s' %Res_dir)
 j.do.chdir('%s' %Res_dir)
 j.do.execute('python collect_results.py %s' %Res_dir)
-utils.push_results_to_repo(Res_dir, test_type='FIO_test')
+#utils.push_results_to_repo(Res_dir, test_type='FIO_test')
