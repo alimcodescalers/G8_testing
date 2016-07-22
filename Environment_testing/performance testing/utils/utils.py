@@ -140,7 +140,7 @@ def setup_machine(cloudspace, machineId, cs_publicport, pcl, no_of_disks, fio=No
             connection.run('echo %s | sudo -S wget https://dl.influxdata.com/telegraf/releases/telegraf_1.0.0-beta3_amd64.deb' %account['password'])
             connection.run('echo %s | sudo -S dpkg -i telegraf_1.0.0-beta3_amd64.deb' %account['password'])
             try:
-                connection.run('echo %s | sudo -S telegraf' %account['password'], timeout=3)
+                connection.run('echo %s | sudo -S service telegraf restart' %account['password'], timeout=3)
             except:
                 return cloudspace_publicip
     return cloudspace_publicip
