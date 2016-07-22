@@ -26,6 +26,7 @@ def main():
     ACCOUNTNAME = str(uuid.uuid4())[0:8]
     Res_dir = config.get("perf_parameters", "Res_dir")
     j.do.execute('mkdir -p %s' % Res_dir)
+    j.do.execute('mkdir -p /test_resutls' )
     sys.path.append(os.getcwd())
     from utils import utils
 
@@ -45,7 +46,8 @@ def main():
     while i < No_of_vms:
         for stackId in stacks:
             cloudspace_publicport += 1
-            machineId, cloudspace_publicip = utils.create_machine_onStack(stackId, cloudspace, '_%s' %i, ccl, pcl, scl, vm_specs, cloudspace_publicport, Res_dir)
+            machineId, cloudspace_publicip = utils.create_machine_onStack(stackId, cloudspace, '_%s' %i, ccl, pcl, scl,
+                                                                          vm_specs, cloudspace_publicport, Res_dir='/test_resutls', telegraf='install')
             vms_list.append({machineId: [cloudspace_publicip, cloudspace_publicport]})
             i += 1
             if i == No_of_vms:

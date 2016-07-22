@@ -34,7 +34,8 @@ def create_account_cloudspace(USERNAME, email, ACCOUNTNAME, ccl, pcl, scl, cs_na
     cloudspace = create_cloudspace(accountId, USERNAME, ccl, pcl, cs_name='')
     return cloudspace
 
-def create_machine_onStack(stackid, cloudspace, iteration, ccl, pcl, scl, vm_specs, cs_publicport=0,  Res_dir=None, queue=None):
+def create_machine_onStack(stackid, cloudspace, iteration, ccl, pcl, scl, vm_specs, cs_publicport=0,
+                           telegraf=None, Res_dir=None, queue=None):
 
     images = ccl.image.search({'name': 'Ubuntu 14.04 x64'})[1:]
     if not images:
@@ -109,10 +110,14 @@ def create_machine_onStack(stackid, cloudspace, iteration, ccl, pcl, scl, vm_spe
         t2 = time.time()
         time_creating_vm = round(t2-t1, 2)
         j.do.execute('(echo "VM:;%s;creation time:;%s; ;") | sed "s/;/,/g" >> %s/VMs_creation_time.csv' %(machineId, time_creating_vm, Res_dir))
-        cloudspace_publicip = setup_machine(cloudspace, machineId, cs_publicport, pcl, vm_specs[0])
+        if telegraf:
+            cloudspace_publicip = setup_machine(cloudspace, machineId, cs_publicport, pcl, vm_specs[0], telegraf='install')
+        else:
+            cloudspace_publicip = setup_machine(cloudspace, machineId, cs_publicport, pcl, vm_specs[0])
+
         return [machineId, cloudspace_publicip]
 
-def setup_machine(cloudspace, machineId, cs_publicport, pcl, no_of_disks, fio=None):
+def setup_machine(cloudspace, machineId, cs_publicport, pcl, no_of_disks, fio=None, telegraf=None):
     print ('   |--setup machine:%s' %machineId)
     cloudspace_publicip = str(netaddr.IPNetwork(cloudspace['publicipaddress']).ip)
 
@@ -131,6 +136,13 @@ def setup_machine(cloudspace, machineId, cs_publicport, pcl, no_of_disks, fio=No
         if fio != 'onlyfio':
             connection.apt_get('install sysstat')
             machine_mount_disks(connection, account, machineId, no_of_disks)
+        if telegraf:
+            connection.run('wget https://dl.influxdata.com/telegraf/releases/telegraf_1.0.0-beta3_amd64.deb')
+            connection.run('dpkg -i telegraf_1.0.0-beta3_amd64.deb ')
+
+
+
+
     return cloudspace_publicip
 
 def machine_mount_disks(connection, account, machineId, no_of_disks=6):
