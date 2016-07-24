@@ -142,7 +142,9 @@ def setup_machine(cloudspace, machineId, cs_publicport, pcl, no_of_disks, fio=No
             connection.run('echo %s | sudo -S chmod 666 /etc/telegraf/telegraf.conf'%account['password'])
             j.do.execute('sshpass -p%s scp -r -o \'StrictHostKeyChecking=no \' -P %s telegraf.conf %s@%s:/etc/telegraf'
                      %(account['password'], cs_publicport, account['login'], cloudspace_publicip))
-            connection.run('echo %s | sudo -S service telegraf restart' %account['password'])
+            time.sleep(2)
+            connection.run('echo %s | sudo -S service telegraf restart; sleep 4' %account['password'], timeout=10)
+
 
 def machine_mount_disks(connection, account, machineId, no_of_disks=6):
     list=['b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k']
