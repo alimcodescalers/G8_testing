@@ -139,11 +139,10 @@ def setup_machine(cloudspace, machineId, cs_publicport, pcl, no_of_disks, fio=No
         if telegraf:
             connection.run('echo %s | sudo -S wget https://dl.influxdata.com/telegraf/releases/telegraf_1.0.0-beta3_amd64.deb' %account['password'])
             connection.run('echo %s | sudo -S dpkg -i telegraf_1.0.0-beta3_amd64.deb' %account['password'])
-            try:
-                connection.run('echo %s | sudo -S service telegraf restart' %account['password'], timeout=3)
-            except:
-                return cloudspace_publicip
-    return cloudspace_publicip
+            connection.run('echo %s | sudo -S chmod 666 /etc/telegraf/telegraf.conf'%account['password'])
+            j.do.execute('sshpass -p%s scp -r -o \'StrictHostKeyChecking=no \' -P %s telegraf.conf %s@%s:/etc/telegraf'
+                     %(account['password'], cs_publicport, account['login'], cloudspace_publicip))
+            connection.run('echo %s | sudo -S service telegraf restart' %account['password'])
 
 def machine_mount_disks(connection, account, machineId, no_of_disks=6):
     list=['b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k']
