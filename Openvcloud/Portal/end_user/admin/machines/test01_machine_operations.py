@@ -67,7 +67,7 @@ class Write(BaseTest):
             self.assertFalse(self.element_is_displayed("send_ctrl/alt/del_button"))
 
     def test01_machine_stop_start_reboot_reset_pause_resume(self):
-        """
+        """ PRTL-007
         *Test case for start/stop/reboot/reset/pause/resume machine.*
 
         **Test Scenario:**
@@ -198,12 +198,6 @@ class Write(BaseTest):
         self.assertEqual(snapshot_name, self.get_text("first_snapshot_name"))
 
         self.lg('rollback snapshot for a machine, should succeed')
-        self.click("first_snapshot_rollback")
-        time.sleep(2)
-        self.assertEqual(self.get_text("snapshot_alert_message"),
-                         "A snapshot can only be rolled back to a stopped machine.")
-        self.click("snapshot_alert_ok")
-        time.sleep(2)
         self.click("actions_tab")
         self.lg('stop machine, should succeed')
         self.click("machine_stop")
@@ -218,83 +212,9 @@ class Write(BaseTest):
         self.click("first_snapshot_delete")
         time.sleep(2)
         self.assertEqual(self.get_text("snapshot_delete_message"),
-                         "Are you sure you want to delete snapshot? ")
+                         "Are you sure you want to delete snapshot?")
         self.click("snapshot_delete_ok")
         time.sleep(2)
-
-        self.lg('%s ENDED' % self._testID)
-
-    def test03_machine_update(self):
-        """
-        *Test case for update machine.*
-
-        **Test Scenario:**
-
-        #. select running machine, should succeed
-        #. update machine description, should succeed
-        #. stop machine, should succeed
-        #. update machine description, should succeed
-        #. start machine, should succeed
-        #. update machine description, should succeed
-        """
-        self.lg('%s STARTED' % self._testID)
-
-        self.lg('select running machine, should succeed')
-        self.wait_machine("RUNNING")
-
-        self.lg('update machine description, should succeed')
-        self.click("machine_description")
-        new_desc = str(uuid.uuid4())
-        self.set_text("edit_description_textbox", new_desc)
-        self.click("edit_description_cancel")
-        time.sleep(2)
-        self.click("refresh_button")
-        self.assertEqual(self.machine_description, self.get_text("machine_description"))
-        self.click("machine_description")
-        self.set_text("edit_description_textbox", new_desc)
-        self.click("edit_description_ok")
-        time.sleep(2)
-        self.click("refresh_button")
-        self.assertEqual(new_desc, self.get_text("machine_description"))
-
-        self.lg('stop machine, should succeed')
-        self.click("machine_stop")
-        time.sleep(5)
-        self.wait_machine("HALTED")
-
-        self.lg('update machine description, should succeed')
-        self.click("machine_description")
-        self.set_text("edit_description_textbox", self.machine_description)
-        self.click("edit_description_cancel")
-        time.sleep(2)
-        self.click("refresh_button")
-        self.assertEqual(new_desc, self.get_text("machine_description"))
-        self.click("machine_description")
-        self.set_text("edit_description_textbox", self.machine_description)
-        self.click("edit_description_ok")
-        time.sleep(2)
-        self.click("refresh_button")
-        self.assertEqual(self.get_text("machine_description"), self.machine_description)
-
-        self.lg('start machine, should succeed')
-        self.click("machine_start")
-        time.sleep(5)
-        self.click("actions_tab")
-        self.wait_machine("RUNNING")
-
-        self.lg('update machine description, should succeed')
-        self.click("machine_description")
-        self.set_text("edit_description_textbox", new_desc)
-        self.click("edit_description_cancel")
-        time.sleep(2)
-        self.click("refresh_button")
-        self.assertEqual(self.machine_description, self.get_text("machine_description"))
-        self.click("machine_description")
-        self.set_text("edit_description_textbox", new_desc)
-        self.click("edit_description_ok")
-        time.sleep(2)
-        self.click("refresh_button")
-        self.assertEqual(new_desc, self.get_text("machine_description"))
 
         self.lg('%s ENDED' % self._testID)
         
