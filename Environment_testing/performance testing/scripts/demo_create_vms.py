@@ -30,6 +30,9 @@ def main():
     sys.path.append(os.getcwd())
     from utils import utils
 
+    if j.do.exists('/root/.ssh/known_hosts'):
+        j.do.execute('rm /root/.ssh/known_hosts')
+
     stacks = utils.remove_ovsnodes_from_stacks(utils.get_stacks(ccl), ccl)
     #current_stack = ccl.stack.search({'referenceId': str(j.application.whoAmI.nid), 'gid': j.application.whoAmI.gid})[1]
     #stacks.remove(current_stack['id'])
