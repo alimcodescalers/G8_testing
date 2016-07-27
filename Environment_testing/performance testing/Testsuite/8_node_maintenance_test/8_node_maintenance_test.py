@@ -20,8 +20,8 @@ def main():
     pcl = j.clients.portal.getByInstance('main')
     scl = j.clients.osis.getNamespace('system')
 
-    if j.do.exists('/root/.ssh/known_hosts'):
-        j.do.execute('rm /root/.ssh/known_hosts')
+    #if j.do.exists('/root/.ssh/known_hosts'):
+    #    j.do.execute('rm /root/.ssh/known_hosts')
     sys.path.append(os.getcwd())
     from utils import utils
     USERNAME = 'nodemaintenanceuser'
