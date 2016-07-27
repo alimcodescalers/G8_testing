@@ -33,8 +33,6 @@ def main():
         if not j.do.exists('%s' % Res_dir):
             j.do.execute('mkdir -p %s' % Res_dir)
 
-        if j.do.exists('/root/.ssh/known_hosts'):
-            j.do.execute('rm /root/.ssh/known_hosts')
         sys.path.append(os.getcwd())
         from utils import utils
 
@@ -121,9 +119,16 @@ def main():
                 results.append([res_arr.index(s)+1, s[0], cpus, memory, Bdisksize, s[1]])
             utils.collect_results(titles, results, '%s' %Res_dir)
         utils.push_results_to_repo(Res_dir)
+	#Removing vms fingerprints from known hosts
+        for vm in machines:
+            cs_ip = vm[1]; cs_pp = vm[2]
+            j.do.execute('ssh-keygen -f "/root/.ssh/known_hosts" -R [%s]:%s'%(cs_ip, cs_pp))
 
     except:
         print('Found problems during running the test.. removing results directory..')
+        for vm in machines:
+            cs_ip = vm[1]; cs_pp = vm[2]
+            j.do.execute('ssh-keygen -f "/root/.ssh/known_hosts" -R [%s]:%s'%(cs_ip, cs_pp))
         j.do.execute('rm -rf %s' %Res_dir)
         raise
 

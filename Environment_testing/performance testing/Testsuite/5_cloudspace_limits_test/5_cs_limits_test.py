@@ -50,8 +50,6 @@ def main():
 
 
 if __name__ == "__main__":
-    if j.do.exists('/root/.ssh/known_hosts'):
-        j.do.execute('rm /root/.ssh/known_hosts')
     sys.path.append(os.getcwd())
     from utils import utils
     try:
