@@ -4,7 +4,7 @@ import time
 import os
 
 from testconfig import config
-
+from selenium.common.exceptions import NoSuchElementException
 from pytractor import webdriver
 from selenium.webdriver import FirefoxProfile
 from selenium.webdriver.support import expected_conditions as EC
@@ -144,3 +144,12 @@ class BaseTest(unittest.TestCase):
         element = self.elements[element]
         location = WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, element)))
         ActionChains(self.driver).move_to_element(location).perform()
+
+    def check_element_is_exist(self,element):
+        element = self.elements[element]
+        try:
+            self.driver.find_element_by_xpath(element)
+        except NoSuchElementException as e:
+            return False
+        else:
+            return True
