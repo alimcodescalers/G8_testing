@@ -30,14 +30,11 @@ def main():
     sys.path.append(os.getcwd())
     from utils import utils
 
-    if j.do.exists('/root/.ssh/known_hosts'):
-        j.do.execute('rm /root/.ssh/known_hosts')
-
     stacks = utils.remove_ovsnodes_from_stacks(utils.get_stacks(ccl), ccl)
     #current_stack = ccl.stack.search({'referenceId': str(j.application.whoAmI.nid), 'gid': j.application.whoAmI.gid})[1]
     #stacks.remove(current_stack['id'])
     vm_specs = [no_of_disks, data_disksize, Bdisksize, memory, cpu]
-    cloudspace_publicport = 1999
+    cloudspace_publicport = 7000
 
 
     email = "%s@test.com" % str(uuid.uuid4())[0:8]
@@ -55,6 +52,12 @@ def main():
             i += 1
             if i == No_of_vms:
                 break
+    #Removing vms fingerprints entries from known hosts
+    for vm in vms_list:
+            cloudspace_publicip=vm[machineId][0]
+            cloudspace_publicport=vm[machineId][1]
+            j.do.execute('ssh-keygen -f "/root/.ssh/known_hosts" -R [%s]:%s'
+                         %(cloudspace_publicip, cloudspace_publicport))
 
 if __name__ == "__main__":
     main()

@@ -32,8 +32,6 @@ Res_dir = Res_dir + test_folder
 
 if not j.do.exists('%s' % Res_dir):
     j.do.execute('mkdir -p %s' % Res_dir)
-#if j.do.exists('/root/.ssh/known_hosts'):
-#    j.do.execute('rm /root/.ssh/known_hosts')
 
 ccl = j.clients.osis.getNamespace('cloudbroker')
 pcl = j.clients.portal.getByInstance('main')

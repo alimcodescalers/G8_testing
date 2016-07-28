@@ -48,8 +48,6 @@ def main():
     try:
         if not j.do.exists('%s' % Res_dir):
             j.do.execute('mkdir -p %s' % Res_dir)
-        if j.do.exists('/root/.ssh/known_hosts'):
-            j.do.execute('rm /root/.ssh/known_hosts')
         sys.path.append(os.getcwd())
 
         from utils import utils
@@ -146,9 +144,19 @@ def main():
             i += 1
         match = re.search('/(201.+)', Res_dir)
         utils.write_onecsv_to_another('VMs_creation_time.csv', match.group(1), Res_dir)
+        for vm in vms_list:
+            cloudspace_publicip=vm[machineId][0]
+            cloudspace_publicport=vm[machineId][1]
+            j.do.execute('ssh-keygen -f "/root/.ssh/known_hosts" -R [%s]:%s'
+                         %(cloudspace_publicip, cloudspace_publicport))
         return Res_dir
     except:
         print('Found problems during running the test.. removing results directory..')
+        for vm in vms_list:
+            cloudspace_publicip=vm[machineId][0]
+            cloudspace_publicport=vm[machineId][1]
+            j.do.execute('ssh-keygen -f "/root/.ssh/known_hosts" -R [%s]:%s'
+                         %(cloudspace_publicip, cloudspace_publicport))
         j.do.execute('rm -rf %s' %Res_dir)
         raise
 
