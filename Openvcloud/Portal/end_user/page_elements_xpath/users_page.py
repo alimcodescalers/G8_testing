@@ -1,12 +1,22 @@
 elements = {
-    "users": "id('collapse-2')/x:li[2]/x:a",
-    "add_user": "/x:html/x:body/x:div[2]/x:div/x:div/x:a",
-    "create_user": "id('createuserLabel')",
-    "username": "id('createuser')/x:div/x:div[2]/x:div[3]/x:div[1]/x:input",
-    "mail":"id('createuser')/x:div/x:div[2]/x:div[3]/x:div[2]/x:input",
-    "password":"id('createuser')/x:div/x:div[2]/x:div[3]/x:div[3]/x:input",
-    "left_menu": "/x:html/x:body/x:div[1]/x:div/x:div[1]/x:div/x:nav/x:div/x:p",
-    "left_menu_button":"id('PortalsHamburgerMenu')",
-    "cloud_broker":"/x:html/x:body/x:div[1]/x:div/x:div[1]/x:div/x:nav/x:div/x:ul/x:li[2]/x:ul[1]/x:a[2]",
-    "confirm_add_user":"id('createuser')/x:div/x:div[3]/x:button[2]"
+    "users": ".//*[@id='collapse-2']/li[8]/a",
+    "add_user": "html/body/div[2]/div/div/a",
+    "create_user": ".//*[@id='createuserLabel']",
+    "username": ".//*[@id='createuser']/div/div[2]/div[3]/div[1]/input",
+    "mail":".//*[@id='createuser']/div/div[2]/div[3]/div[2]/input",
+    "password":".//*[@id='createuser']/div/div[2]/div[3]/div[3]/input",
+    "left_menu": "/html/body/div/div/tour/div[1]/div[1]/div/nav/div/p",
+    "left_menu_button":"/html/body/div/div/tour/div[1]/div[1]/div/button",
+    "cloud_broker":"/html/body/div/div/tour/div[1]/div[1]/div/nav/div/ul/li[2]/ul[1]/a[2]",
+    "confirm_add_user":".//*[@id='createuser']/div/div[3]/button[2]",
+    "user_profile":".//*[@id='wrap']/div/tour/div[1]/div[1]/div/ul/li[2]/a",
+    "current_pw":".//*[@id='wrap']/div/tour/div[3]/div[2]/div/div/div/div/form/div[1]/div[1]/input",
+    "new_pw_1":".//*[@id='wrap']/div/tour/div[3]/div[2]/div/div/div/div/form/div[1]/div[2]/input",
+    "new_pw_2":".//*[@id='wrap']/div/tour/div[3]/div[2]/div/div/div/div/form/div[1]/div[3]/input",
+    "update_password":".//*[@id='wrap']/div/tour/div[3]/div[2]/div/div/div/div/form/button",
+    "admin_logout_button":"html/body/div[1]/div/div[2]/div/ul[2]/li/a",
+    "access_denied":"html/body/div[2]/div/div/div/div/div/h4",
+    "end_user_logout":".//*[@id='wrap']/div/tour/div[1]/div[1]/div/ul/li[1]/a/span",
+    "profile":".//*[@id='wrap']/div/tour/div[3]/div[2]/div/div/div/h1"
+
 }
