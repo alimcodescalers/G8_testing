@@ -156,7 +156,7 @@ class BaseTest(unittest.TestCase):
         else:
             return True
 
-    def create_new_user(self,username='',password='',email='',group=''):
+    def create_new_user(self,username='', password='', email='', group=''):
         self.username = username or str(uuid.uuid4()).replace('-', '')[0:10]
         self.password = password or str(uuid.uuid4()).replace('-', '')[0:10]
         self.email = email or str(uuid.uuid4()).replace('-', '')[0:10] + "@g.com"

@@ -15,7 +15,7 @@ class ChangePassword(BaseTest):
         if self.check_element_is_exist("left_menu")==False:
             self.click("left_menu_button")
 
-    def test01_create_new_user(self):
+    def test01_verify_change_user_password(self):
         """ PRTL-010
         *Test case for create new user and change his password*
 
