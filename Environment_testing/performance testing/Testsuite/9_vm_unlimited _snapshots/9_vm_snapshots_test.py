@@ -15,8 +15,6 @@ def main(snapshots_number):
     pcl = j.clients.portal.getByInstance('main')
     scl = j.clients.osis.getNamespace('system')
 
-    if j.do.exists('/root/.ssh/known_hosts'):
-        j.do.execute('rm /root/.ssh/known_hosts')
     sys.path.append(os.getcwd())
     from utils import utils
     USERNAME = 'vmsnapshotsuser'
@@ -25,7 +23,7 @@ def main(snapshots_number):
     ACCOUNTNAME = str(uuid.uuid4())[0:8]
     accountId = utils.create_account(USERNAME, email, ACCOUNTNAME, ccl, pcl)
     cloudspace = utils.create_cloudspace(accountId, USERNAME, ccl, pcl)
-    cloudspace_publicport = 2000
+    cloudspace_publicport = 9000
 
     current_stack = ccl.stack.search({'referenceId': str(j.application.whoAmI.nid), 'gid': j.application.whoAmI.gid})[1]
     stacks=utils.get_stacks(ccl)
@@ -67,6 +65,7 @@ def main(snapshots_number):
 
     connection = j.remote.cuisine.connect(cloudspace_publicip, cloudspace_publicport, account['password'], account['login'])
     count_snapshots = connection.run('ls -1 | wc -l')
+    j.do.execute('ssh-keygen -f "/root/.ssh/known_hosts" -R [%s]:%s'%(cloudspace_publicip, cloudspace_publicport))
     return count_snapshots
 
 

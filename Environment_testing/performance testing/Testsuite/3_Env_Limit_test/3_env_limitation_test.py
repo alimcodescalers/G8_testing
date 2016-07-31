@@ -37,11 +37,10 @@ def main():
         ACCOUNTNAME = str(uuid.uuid4())[0:8]
         accountId = utils.create_account(USERNAME, email, ACCOUNTNAME, ccl, pcl)
 
-
         current_stack = ccl.stack.search({'referenceId': str(j.application.whoAmI.nid), 'gid': j.application.whoAmI.gid})[1]
         stacks=utils.get_stacks(ccl)
 
-        cloudspace_publicport = 2000
+        cloudspace_publicport = 3000
         cloudspaces=[]
         for stackid in stacks:
             if stackid == current_stack['id']:
@@ -76,8 +75,6 @@ def main():
 
 
 if __name__ == "__main__":
-    if j.do.exists('/root/.ssh/known_hosts'):
-        j.do.execute('rm /root/.ssh/known_hosts')
     sys.path.append(os.getcwd())
     from utils import utils
     try:

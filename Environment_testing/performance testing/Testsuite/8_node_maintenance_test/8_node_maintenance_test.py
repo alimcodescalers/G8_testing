@@ -20,8 +20,8 @@ def main():
     pcl = j.clients.portal.getByInstance('main')
     scl = j.clients.osis.getNamespace('system')
 
-    if j.do.exists('/root/.ssh/known_hosts'):
-        j.do.execute('rm /root/.ssh/known_hosts')
+    #if j.do.exists('/root/.ssh/known_hosts'):
+    #    j.do.execute('rm /root/.ssh/known_hosts')
     sys.path.append(os.getcwd())
     from utils import utils
     USERNAME = 'nodemaintenanceuser'
@@ -30,7 +30,7 @@ def main():
     ACCOUNTNAME = str(uuid.uuid4())[0:8]
     accountId = utils.create_account(USERNAME, email, ACCOUNTNAME, ccl, pcl)
     cloudspace = utils.create_cloudspace(accountId, USERNAME, ccl, pcl)
-    cloudspace_publicport = 2000
+    cloudspace_publicport = 8000
 
     current_stack = ccl.stack.search({'referenceId': str(j.application.whoAmI.nid), 'gid': j.application.whoAmI.gid})[1]
     stacks=utils.get_stacks(ccl)
@@ -92,6 +92,7 @@ def main():
     test_result = utils.check_script(account, cloudspace_publicip, cloudspace_publicport, 'test1.1.0', 'test2.1.0')
     if test_result != 'Two files are identical':
         print('There is a data loss')
+    j.do.execute('ssh-keygen -f "/root/.ssh/known_hosts" -R [%s]:%s'%(cloudspace_publicip, cloudspace_publicport))
     return [test_result, stackid, gid]
 
 

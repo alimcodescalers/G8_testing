@@ -7,6 +7,7 @@ import time
 import multiprocessing
 import ConfigParser
 import datetime
+import netaddr
 
 
 def main():
@@ -33,8 +34,6 @@ def main():
         if not j.do.exists('%s' % Res_dir):
             j.do.execute('mkdir -p %s' % Res_dir)
 
-        if j.do.exists('/root/.ssh/known_hosts'):
-            j.do.execute('rm /root/.ssh/known_hosts')
         sys.path.append(os.getcwd())
         from utils import utils
 
@@ -64,7 +63,7 @@ def main():
                 cloudspace = ccl.cloudspace.get(cloudspaceId).dump()
                 cloudspaces.append([cloudspace, stackid])
 
-        cloudspace_publicport=2000
+        cloudspace_publicport=4000
         q= multiprocessing.Queue()
         unixbench_machines=[]
         processes = []
@@ -137,9 +136,20 @@ def main():
             avg = round(sum([float(i) for i in s[1:]])/len(s[1:]), 1)
             results.append([final_results.index(s)+1, s[0], cpus, memory, Bdisksize, avg])
         utils.collect_results(titles, results, '%s' %Res_dir)
+
+	#Removing vms fingerprints from known hosts
+        for vm in unixbench_machines:
+            cs = vm[3]; cs_pp = vm[2]
+            cloudspace_publicip = str(netaddr.IPNetwork(cs['publicipaddress']).ip)
+            j.do.execute('ssh-keygen -f "/root/.ssh/known_hosts" -R [%s]:%s'%(cloudspace_publicip, cs_pp))
+
         utils.push_results_to_repo(Res_dir)
     except:
         print('Found problems during running the test.. removing results directory..')
+        for vm in unixbench_machines:
+            cs = vm[3]; cs_pp = vm[2]
+            cloudspace_publicip = str(netaddr.IPNetwork(cs['publicipaddress']).ip)
+            j.do.execute('ssh-keygen -f "/root/.ssh/known_hosts" -R [%s]:%s'%(cloudspace_publicip, cs_pp))
         j.do.execute('rm -rf %s' %Res_dir)
         raise
 
