@@ -18,5 +18,6 @@ elements = {"username_textbox": ".//*[@id='input_0']",
             "user_table_first_element":".//*[@id='table_system_user']/tbody/tr/td[1]/a",
             "user_action":"html/body/div[2]/div/div/div[1]/button",
             "user_delete":"html/body/div[2]/div/div/div[1]/ul/li[2]/a",
-            "user_delete_confirm":".//*[@id='action-Delete']/div/div[3]/button[2]"
+            "user_delete_confirm":".//*[@id='action-Delete']/div/div[3]/button[2]",
+            "user_group":".//*[@id='createuser']/div/div[2]/div[3]/div[4]/label[%d]"
             }

@@ -176,10 +176,10 @@ class BaseTest(unittest.TestCase):
         self.set_text("password",self.password)
 
         for i in range(1,100):
-            xpath = ".//*[@id='createuser']/div/div[2]/div[3]/div[4]/label[%d]" % i
-            if self.group == self.driver.find_element_by_xpath(xpath).text:
+            xpath_user_group = self.elements["user_group"] % i
+            if self.group == self.driver.find_element_by_xpath(xpath_user_group).text:
                 break
-        user_group = self.driver.find_element_by_xpath(xpath)
+        user_group = self.driver.find_element_by_xpath(xpath_user_group)
         if not user_group.is_selected():
             user_group.click()
 
@@ -196,6 +196,7 @@ class BaseTest(unittest.TestCase):
         self.set_text("user_search", username)
         self.lg("check if this user is exist")
         if self.check_element_is_exist("user_table_first_element") == True:
+            time.sleep(1)
             self.click("user_table_first_element")
             self.click("user_action")
             self.click("user_delete")

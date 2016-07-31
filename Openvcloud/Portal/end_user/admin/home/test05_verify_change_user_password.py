@@ -68,8 +68,10 @@ class ChangePassword(BaseTest):
         self.lg("Do logout")
         self.click("end_user_logout")
 
+    def tearDown(self):
         self.lg("login as admin")
         self.login()
 
         self.lg("Delete the user")
         self.assertTrue(self.delete_user(self.username))
+        super(ChangePassword, self).tearDown()
