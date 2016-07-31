@@ -237,4 +237,5 @@ elements = {"getting_started_button": ".//*[@id='navbar-list']/ul[2]/li[1]/a",
             "cloudpsace_menu": ".//*[@id='drop1']/span",
 
 
-            "logout_button": ".//*[@id='wrap']/div/tour/div[1]/div[2]/div/ul/li[1]/a/span"}
+            "logout_button": ".//*[@id='wrap']/div/tour/div[1]/div[2]/div/ul/li[1]/a/span"
+            }
