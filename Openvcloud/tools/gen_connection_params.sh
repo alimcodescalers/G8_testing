@@ -2,8 +2,8 @@
 
 environment=$1
 node=$2
-repodir="/opt/code/github/0-complexity/"
-userrepodir="$HOME/code/github/0-complexity/"
+repodir="/opt/code/github/gig-projects/"
+userrepodir="$HOME/code/github/gig-projects/"
 if [ -e $userrepodir ]; then
     repodir=$userrepodir
 fi
@@ -15,10 +15,10 @@ if ! mkdir -p $repodir; then
         exit 1
     fi
 fi
-envrepo="${repodir}/${environment}"
+envrepo="${repodir}/env_${environment}"
 if [ ! -e ${envrepo} ]; then
     pushd $repodir > /dev/null
-    git clone git@github.com:0-complexity/$environment
+    git clone git@github.com:gig-projects/env_$environment
     popd > /dev/null
 fi
 
