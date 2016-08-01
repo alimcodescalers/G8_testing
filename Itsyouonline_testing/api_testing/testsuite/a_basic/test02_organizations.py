@@ -9,6 +9,7 @@ class OrganizationsTests(BaseTest):
     def setUp(self):
         super(OrganizationsTests, self).setUp()
         self.organization_id = str(uuid.uuid4()).replace('-', '')[0:10]
+        self.organization = {'globalId': self.organization_id}
         self.response = self.client.api.CreateNewOrganization(self.organization_id)
         self.assertEqual(self.response.status_code, 200)
 
