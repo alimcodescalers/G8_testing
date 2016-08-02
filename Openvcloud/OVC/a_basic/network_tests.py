@@ -200,7 +200,8 @@ class NetworkBasicTests(BasicACLTest):
                         if output['state'] == 'OK':
                            if 'Linux' not in output['result'][1]:
                                 raise NameError("This command:"+command+"is wrong")
-
+        time.sleep(60)
+        self.lg('%s ENDED' % self._testID)
 
     def test004_move_virtual_firewall(self):
         """ OVC-014
@@ -215,7 +216,7 @@ class NetworkBasicTests(BasicACLTest):
         #. move virtual firewall to another node, should succeed
 
         """
-
+        self.lg('%s STARTED' % self._testID)
         self.lg('1- deploy the created cloudspace')
         self.api.cloudbroker.cloudspace.deployVFW(self.cloudspace_id)
         self.wait_for_status('DEPLOYED', self.account_owner_api.cloudapi.cloudspaces.get,
@@ -233,3 +234,6 @@ class NetworkBasicTests(BasicACLTest):
                                                                           targetNid=other_nodeId)
         new_nodeId = self.get_physical_node_id(self.cloudspace_id)
         self.assertEqual(other_nodeId, new_nodeId)
+
+        time.sleep(30)
+        self.lg('%s ENDED' % self._testID)        

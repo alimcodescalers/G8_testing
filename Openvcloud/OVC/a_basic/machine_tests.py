@@ -238,6 +238,8 @@ class BasicTests(BasicACLTest):
                                                   size_id=size['id'],
                                                   image_id=image['id'],
                                                   disksize=disksize)
+        self.wait_for_status('RUNNING', self.api.cloudapi.machines.get,
+                             machineId=machine_id)
         self.lg('- done using image [%s] with memory size [%s] with disk '
                 '[%s]' % (image_name, size['memory'], disksize))
 
@@ -370,6 +372,8 @@ class BasicTests(BasicACLTest):
             self.lg('- expected error raised %s' % e.message)
             self.assertEqual(e.message, '403 Forbidden')
 
+        self.lg('%s ENDED' % self._testID)
+
     def test007_cleanup_vxlans_for_stopped_deleted_vms(self):
         """ OVC-007
         *Test case  for cleaning up vxlans for stopped or deleted VMs*
@@ -390,7 +394,8 @@ class BasicTests(BasicACLTest):
         self.lg('1- create virtual machine')
         machineId = self.cloudapi_create_machine(self.cloudspace_id, self.account_owner_api,
                                                  'cleanupvm', disksize=10)
-
+        self.wait_for_status('RUNNING', self.api.cloudapi.machines.get,
+                             machineId=machineId)
         self.lg('2- make sure there is a coressponding vxlan and space bridge')
         nodeID = self.get_machine_nodeID(machineId)
         machine = self.account_owner_api.cloudapi.machines.get(machineId=machineId)
@@ -444,6 +449,8 @@ class BasicTests(BasicACLTest):
         output = self.execute_command_on_physical_node('if [ ! -d "/sys/class/net/space_%s" ]; '
                                                        'then echo notfound;fi' % NetId_hexa, nodeID)
         self.assertEqual(output.split('\n')[0], 'notfound')
+
+        self.lg('%s ENDED' % self._testID)
 
     @parameterized.expand(['تست_عربى',
                            'утрчиогфрыуи',
@@ -521,6 +528,7 @@ class BasicTests(BasicACLTest):
         self.wait_for_status('DESTROYED', self.api.cloudapi.accounts.get,
                              accountId=self.accountId,
                              timeout=120)
+        self.lg('%s ENDED' % self._testID)
 
     def test009_access_docker_on_vm(self):
         """ OVC-009
@@ -599,6 +607,7 @@ class BasicTests(BasicACLTest):
         finally:
             self.execute_command_on_physical_node('cd; rm machine_script.py', nodeID)
 
+        self.lg('%s ENDED' % self._testID)
 
     def test010_enable_disable_fireWall(self):
         """ OVC-010
@@ -668,3 +677,5 @@ class BasicTests(BasicACLTest):
                 self.assertEqual(e.status_code, 400)
             else:
                 self.assertTrue(machineId)
+
+        self.lg('%s ENDED' % self._testID)

@@ -247,7 +247,7 @@ class Write(ACLACCOUNT):
                                                                        templatename=str(uuid.uuid4()).replace('-', '')[
                                                                                     0:10],
                                                                        basename=basename1))
-        time.sleep(10)
+        time.sleep(30)
         self.lg('6- delete user1 account: %s' % self.account_id)
         self.api.cloudbroker.account.delete(accountId=self.account_id, reason='testing')
         self.wait_for_status('DESTROYED', self.api.cloudapi.accounts.get,
