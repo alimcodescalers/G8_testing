@@ -7,6 +7,7 @@ class CompaniesTests(BaseTest):
     def setUp(self):
         super(CompaniesTests, self).setUp()
         self.response = self.client.api.GetCompanyList()
+        self.assertEqual(self.response.status_code, 200)
         self.company = self.response.json()[0]
         self.lg('GetCompanyList [%s] response [%s]' % (self.user, self.response.json()))
 
