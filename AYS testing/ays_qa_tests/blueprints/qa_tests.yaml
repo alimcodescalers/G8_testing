@@ -1,0 +1,3 @@
+qatests__t1:
+  host    : 'du-conv-2-cpu-01'
+  testcmd : 'cd /root/org_quality/Environment_testing/performance\ testing/ && jspython Testsuite/1_Network_config_test/1_Network_conf_test.py'
