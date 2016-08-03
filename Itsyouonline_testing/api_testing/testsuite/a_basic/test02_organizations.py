@@ -13,9 +13,9 @@ class OrganizationsTests(BaseTest):
         self.organization_id = response.json()['owner'][0]
         self.lg('organization_id %s' % self.organization_id)
 
-    #Currently fail due to issue 233
+    #Currently fail due to issue https://github.com/itsyouonline/identityserver/issues/233
     def test001_get_organization(self):
-        """ ITSYOU-0
+        """ ITSYOU-013
         *Test case for check get organization GET /organizations/{globalid}.*
 
         **Test Scenario:**
@@ -30,7 +30,7 @@ class OrganizationsTests(BaseTest):
         self.lg('%s ENDED' % self._testID)
 
     def test002_get_organization_tree(self):
-        """ ITSYOU-0
+        """ ITSYOU-014
         *Test case for check get organization tree GET /organizations/{globalid}/tree.*
 
         **Test Scenario:**
@@ -44,9 +44,9 @@ class OrganizationsTests(BaseTest):
         self.assertEqual(type(response.json()), types.DictType)
         self.lg('%s ENDED' % self._testID)
 
-    #Currently fail due to issue 233
+    #Currently fail due to issue https://github.com/itsyouonline/identityserver/issues/233
     def test003_get_organization_contracts(self):
-        """ ITSYOU-0
+        """ ITSYOU-015
         *Test case for check get organization contracts GET /organizations/{globalid}/contracts.*
 
         **Test Scenario:**
@@ -60,9 +60,9 @@ class OrganizationsTests(BaseTest):
         self.assertEqual(type(response.json()), types.ListType)
         self.lg('%s ENDED' % self._testID)
 
-    #Currently fail due to issue 233
+    #Currently fail due to issue https://github.com/itsyouonline/identityserver/issues/233
     def test004_get_organization_invitations(self):
-        """ ITSYOU-0
+        """ ITSYOU-016
         *Test case for check get organization invitations GET /organizations/{globalid}/invitations.*
 
         **Test Scenario:**
@@ -76,9 +76,9 @@ class OrganizationsTests(BaseTest):
         self.assertEqual(type(response.json()), types.ListType)
         self.lg('%s ENDED' % self._testID)
 
-    #Currently fail due to issue 233
+    #Currently fail due to issue https://github.com/itsyouonline/identityserver/issues/233
     def test005_get_organization_apikeys(self):
-        """ ITSYOU-0
+        """ ITSYOU-017
         *Test case for check get organization apikeys GET /organizations/{globalid}/apikeys.*
 
         **Test Scenario:**
