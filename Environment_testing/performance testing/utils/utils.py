@@ -325,9 +325,10 @@ def push_results_to_repo(Res_dir, test_type=''):
     Res_file = Res_dir + match.group(1) + '.csv'
     if j.do.exists('%s' %Res_file):
        print('Pushing resutls to the repo')
-       j.do.execute('cd ../../ && git stash')
+       str = j.do.execute('cd ../../ && git stash')
        j.do.execute('cd ../../ && git pull')
-       j.do.execute('cd ../../ && git stash pop')
+       if str[1] != 'No local changes to save\n':
+            j.do.execute('cd ../../ && git stash pop')
        j.do.execute('cd ../../ && git add %s' %Res_file)
        if test_type =='FIO_test':
            j.do.execute('cd ../../ && git add %s/Perf_parameters.cfg' %Res_dir)

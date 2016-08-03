@@ -119,7 +119,7 @@ def main():
                 results.append([res_arr.index(s)+1, s[0], cpus, memory, Bdisksize, s[1]])
             utils.collect_results(titles, results, '%s' %Res_dir)
         utils.push_results_to_repo(Res_dir)
-	#Removing vms fingerprints from known hosts
+	    #Removing vms fingerprints from known hosts
         for vm in machines:
             cs_ip = vm[1]; cs_pp = vm[2]
             j.do.execute('ssh-keygen -f "/root/.ssh/known_hosts" -R [%s]:%s'%(cs_ip, cs_pp))
