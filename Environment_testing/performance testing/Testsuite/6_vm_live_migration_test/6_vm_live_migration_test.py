@@ -73,6 +73,7 @@ def main():
                 print('started writing a file on the created machine ...')
             processes[l].start()
             if l == 1:
+                time.sleep(7)
                 machine_db = ccl.vmachine.get(machineId)
                 if machine_db.status=='RUNNING' and machine_db.stackId==stacks[1]:
                     print('The VM have been successfully installed on other node with approximately no downtime during live migration')
