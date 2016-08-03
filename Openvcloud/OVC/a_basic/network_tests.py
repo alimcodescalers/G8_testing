@@ -200,7 +200,10 @@ class NetworkBasicTests(BasicACLTest):
                         if output['state'] == 'OK':
                            if 'Linux' not in output['result'][1]:
                                 raise NameError("This command:"+command+"is wrong")
-        time.sleep(60)
+            
+        self.api.cloudapi.machines.stop(machineId=machineId)
+        self.assertEqual(self.api.cloudapi.machines.get(machineId=machineId)['status'],
+                         'HALTED')
         self.lg('%s ENDED' % self._testID)
 
     def test004_move_virtual_firewall(self):
@@ -235,5 +238,6 @@ class NetworkBasicTests(BasicACLTest):
         new_nodeId = self.get_physical_node_id(self.cloudspace_id)
         self.assertEqual(other_nodeId, new_nodeId)
 
-        time.sleep(30)
+        self.wait_for_status('DEPLOYED', self.account_owner_api.cloudapi.cloudspaces.get,
+                             cloudspaceId=self.cloudspace_id)
         self.lg('%s ENDED' % self._testID)        
