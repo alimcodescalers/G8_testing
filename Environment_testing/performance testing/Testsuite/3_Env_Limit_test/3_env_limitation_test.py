@@ -66,12 +66,11 @@ def main():
                     utils.create_machine_onStack(stackid, cs, iteration, ccl, pcl, scl, vm_specs, cloudspace_publicport, Res_dir='wait_for_VMIP')
                     vms += 1
                     if needed_vms == vms+1 and needed_vms != 0:
-                        break
+                        return [[[cpu, memory, Bdisksize, needed_vms]], Res_dir]
                 except:
                     print('   |--failed to create the machine')
                     return [[[cpu, memory, Bdisksize, vms]], Res_dir]
-            if needed_vms == vms+1 and needed_vms != 0:
-                break
+
             iteration += 1
     except:
         print('Found problems during running the test.. removing results directory..')
