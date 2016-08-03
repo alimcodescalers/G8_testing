@@ -65,12 +65,12 @@ def main():
                     print('creating VM No:%s' %(vms+1))
                     utils.create_machine_onStack(stackid, cs, iteration, ccl, pcl, scl, vm_specs, cloudspace_publicport, Res_dir='wait_for_VMIP')
                     vms += 1
-                    if needed_vms == vms+1:
+                    if needed_vms == vms+1 and needed_vms != 0:
                         break
                 except:
                     print('   |--failed to create the machine')
                     return [[[cpu, memory, Bdisksize, vms]], Res_dir]
-            if needed_vms == vms+1:
+            if needed_vms == vms+1 and needed_vms != 0:
                 break
             iteration += 1
     except:
