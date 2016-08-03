@@ -13,6 +13,7 @@ def main():
     cpu = int(config.get("parameters", "cpu"))
     memory = int(config.get("parameters", "memory"))
     Bdisksize = int(config.get("parameters", "Bdisksize"))
+    needed_vms = int(config.get("parameters", "vms"))
     no_of_disks=0; data_disksize=0;
     vm_specs = [no_of_disks, data_disksize, Bdisksize, memory, cpu]
     Res_dir = config.get("parameters", "Res_dir")
@@ -64,9 +65,13 @@ def main():
                     print('creating VM No:%s' %(vms+1))
                     utils.create_machine_onStack(stackid, cs, iteration, ccl, pcl, scl, vm_specs, cloudspace_publicport, Res_dir='wait_for_VMIP')
                     vms += 1
+                    if needed_vms == vms+1:
+                        break
                 except:
                     print('   |--failed to create the machine')
                     return [[[cpu, memory, Bdisksize, vms]], Res_dir]
+            if needed_vms == vms+1:
+                break
             iteration += 1
     except:
         print('Found problems during running the test.. removing results directory..')
