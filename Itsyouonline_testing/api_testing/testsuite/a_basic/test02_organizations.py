@@ -13,6 +13,7 @@ class OrganizationsTests(BaseTest):
         self.organization_id = response.json()['owner'][0]
         self.lg('organization_id %s' % self.organization_id)
 
+    #Currently fail due to issue 233
     def test001_get_organization(self):
         """ ITSYOU-0
         *Test case for check get organization GET /organizations/{globalid}.*
@@ -43,6 +44,7 @@ class OrganizationsTests(BaseTest):
         self.assertEqual(type(response.json()), types.DictType)
         self.lg('%s ENDED' % self._testID)
 
+    #Currently fail due to issue 233
     def test003_get_organization_contracts(self):
         """ ITSYOU-0
         *Test case for check get organization contracts GET /organizations/{globalid}/contracts.*
@@ -58,6 +60,7 @@ class OrganizationsTests(BaseTest):
         self.assertEqual(type(response.json()), types.ListType)
         self.lg('%s ENDED' % self._testID)
 
+    #Currently fail due to issue 233
     def test004_get_organization_invitations(self):
         """ ITSYOU-0
         *Test case for check get organization invitations GET /organizations/{globalid}/invitations.*
@@ -73,6 +76,7 @@ class OrganizationsTests(BaseTest):
         self.assertEqual(type(response.json()), types.ListType)
         self.lg('%s ENDED' % self._testID)
 
+    #Currently fail due to issue 233
     def test005_get_organization_apikeys(self):
         """ ITSYOU-0
         *Test case for check get organization apikeys GET /organizations/{globalid}/apikeys.*

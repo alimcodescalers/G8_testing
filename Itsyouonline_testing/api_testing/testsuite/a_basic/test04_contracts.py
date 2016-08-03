@@ -15,6 +15,7 @@ class ContractsTests(BaseTest):
         self.contractId = response.json()[0]
         self.lg('contractId %s' % self.contractId)
 
+    #Currently fail due to issue 233
     def test001_get_contracts(self):
         """ ITSYOU-0
         *Test case for check get a contract GET /contracts/{contractId}.*

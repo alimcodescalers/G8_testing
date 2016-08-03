@@ -11,6 +11,7 @@ class CompaniesTests(BaseTest):
         self.company = self.response.json()[0]
         self.lg('GetCompanyList [%s] response [%s]' % (self.user, self.response.json()))
 
+    #Currently fail due to issue 218
     def test001_get_companies(self):
         """ ITSYOU-0
         *Test case for check get companies GET /companies.*
@@ -26,6 +27,7 @@ class CompaniesTests(BaseTest):
         self.assertEqual(type(response.json()), types.ListType)
         self.lg('%s ENDED' % self._testID)
 
+    #Currently fail due to issue 218
     def test002_get_company(self):
         """ ITSYOU-0
         *Test case for check get company GET /companies/{globalId}.*
@@ -42,6 +44,7 @@ class CompaniesTests(BaseTest):
         self.assertEqual(response.json()['globalId'], self.company['globalId'])
         self.lg('%s ENDED' % self._testID)
 
+    #Currently fail due to issue 218
     def test003_get_company_contracts(self):
         """ ITSYOU-0
         *Test case for check get company contracts GET /companies/{globalId}/contracts.*
@@ -57,6 +60,7 @@ class CompaniesTests(BaseTest):
         self.assertEqual(type(response.json()), types.ListType)
         self.lg('%s ENDED' % self._testID)
 
+    #Currently fail due to issue 218
     def test004_get_company_info(self):
         """ ITSYOU-0
         *Test case for check get company info GET /companies/{globalId}/info.*
@@ -73,6 +77,7 @@ class CompaniesTests(BaseTest):
         self.assertEqual(response.json(), self.company['info'])
         self.lg('%s ENDED' % self._testID)
 
+    #Currently fail due to issue 218
     def test005_get_company_validate(self):
         """ ITSYOU-0
         *Test case for check get company validate GET /companies/{globalId}/validate.*
