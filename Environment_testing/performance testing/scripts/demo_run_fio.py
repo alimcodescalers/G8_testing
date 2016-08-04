@@ -33,6 +33,7 @@ Res_dir = Res_dir + test_folder
 if not j.do.exists('%s' % Res_dir):
     j.do.execute('mkdir -p %s' % Res_dir)
 j.do.execute('cp Perf_parameters.cfg %s' %Res_dir)
+j.do.execute('cp /test_results/VMs_creation_time.csv %s' %Res_dir)
 
 ccl = j.clients.osis.getNamespace('cloudbroker')
 pcl = j.clients.portal.getByInstance('main')
@@ -77,5 +78,5 @@ for vm in vms_list:
 j.do.execute('cp scripts/collect_results.py %s' %Res_dir)
 j.do.chdir('%s' %Res_dir)
 j.do.execute('python collect_results.py %s' %Res_dir)
-#utils.push_results_to_repo(Res_dir, test_type='FIO_test')
+utils.push_results_to_repo(Res_dir, test_type='demo_run_fio')
 

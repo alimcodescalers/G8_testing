@@ -331,6 +331,9 @@ def push_results_to_repo(Res_dir, test_type=''):
        j.do.execute('cd ../../ && git add %s' %Res_file)
        if test_type =='FIO_test':
            j.do.execute('cd ../../ && git add %s/Perf_parameters.cfg' %Res_dir)
+       if test_type == 'demo_run_fio':
+           j.do.execute('cd ../../ && git add %s/Perf_parameters.cfg' %Res_dir)
+           j.do.execute('cd ../../ && git add %s/VMs_creation_time.csv' %Res_dir)
        j.do.execute('cd ../../ && git commit -m \'Pushing: %s  \'' %Res_file)
        j.do.execute('cd ../../ && git push')
     else:

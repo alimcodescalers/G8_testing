@@ -26,7 +26,9 @@ def main():
     ACCOUNTNAME = str(uuid.uuid4())[0:8]
     Res_dir = config.get("perf_parameters", "Res_dir")
     j.do.execute('mkdir -p %s' % Res_dir)
-    j.do.execute('mkdir -p /test_results' )
+    if j.do.exists('/test_results'):
+        j.do.execute('rm -rf /test_results/*')
+    j.do.execute('mkdir -p /test_results')
     sys.path.append(os.getcwd())
     from utils import utils
 

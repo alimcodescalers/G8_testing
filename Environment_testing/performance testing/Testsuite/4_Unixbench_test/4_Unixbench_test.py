@@ -30,7 +30,6 @@ def main():
     Res_dir = Res_dir + test_folder
 
     try:
-
         if not j.do.exists('%s' % Res_dir):
             j.do.execute('mkdir -p %s' % Res_dir)
 
@@ -72,10 +71,10 @@ def main():
             stackid = cs[1]
             for i in range(vms_per_cs):
                 if(i < unixb_vms_per_cs):
-                    p = multiprocessing.Process(target=utils.create_machine_onStack, args=(stackid, cloudspace, i, ccl, pcl, scl, vm_specs, cloudspace_publicport, 'test_res', q))
+                    p = multiprocessing.Process(target=utils.create_machine_onStack, args=(stackid, cloudspace, i, ccl, pcl, scl, vm_specs, cloudspace_publicport, None, 'test_res', q))
                     cloudspace_publicport += 1
                 else:
-                    p = multiprocessing.Process(target=utils.create_machine_onStack, args=(stackid, cloudspace, i, ccl, pcl, scl, vm_specs, 0, 'wait_for_VMIP', None))
+                    p = multiprocessing.Process(target=utils.create_machine_onStack, args=(stackid, cloudspace, i, ccl, pcl, scl, vm_specs, 0, None, 'wait_for_VMIP', None))
                 processes.append(p)
 
         for l in range(len(processes)):
