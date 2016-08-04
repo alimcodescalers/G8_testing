@@ -1,21 +1,23 @@
-
 from JumpScale import j
+
 
 class Actions(ActionsBaseMgmt):
     def install(self, service):
-
-        print("Hello I'm running performance Tests...")
+        print("Hello I'm running JS8 TESTS...")
+        # ex =  service.executor
+        # c  =  ex.cuisine
         host = service.hrd.getStr('host')
-        cmd = service.hrd.getStr('testcmd')
+        mail_service = service.getProducers('mailclient')[0]
+        email_sender = mail_service.actions.getSender(mail_service)
+        executor = j.tools.executor.getSSHViaProxy(host)
+        cuisine = executor.cuisine
+        rc, out, err = cuisine.core.run(service.hrd.getStr('testcmd'))
+        email_sender.send(service.hrd.getStr('sendto'),
+                          mail_service.hrd.getStr("smtp.sender"),
+                          "asdadad",
+                          "OUT: %s, ERR: %s"%(out, err),
+                          'html',
+                          )
 
-        executer = j.tools.executor.getSSHViaProxy(host)
-        connection=executer.cuisine
 
-        a = connection.core.run("cd; ls")[1].find('org_quality')
-        if a < 0:
-            connection.core.run("cd; git clone https://js-awesomo:jsR00t3r@github.com/gig-projects/org_quality.git")
-
-        connection.core.run(cmd)
-
-
-
+        #executor("cd /root/org_quality/Environment_testing/performance\ testing/ && jspython Testsuite/1_Network_config_test/1_Network_conf_test.py ")
