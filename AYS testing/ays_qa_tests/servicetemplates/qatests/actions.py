@@ -4,14 +4,24 @@ from JumpScale import j
 class Actions(ActionsBaseMgmt):
     def install(self, service):
         print("Hello I'm running JS8 TESTS...")
-        # ex =  service.executor
-        # c  =  ex.cuisine
         host = service.hrd.getStr('host')
+        cmd = service.hrd.getStr('testcmd')
+
+        executer = j.tools.executor.getSSHViaProxy(host)
+        connection=executer.cuisine
+
+        def clone_repo(directory):
+            a = connection.core.run("%s; ls")[1].find('org_quality' %directory)
+            if a < 0:
+                connection.core.run("%s; git clone https://js-awesomo:jsR00t3r@"
+                                    "github.com/gig-projects/org_quality.git" %directory)
+
+        clone_repo('cd')
+        clone_repo('cd /opt/code/github/')
         mail_service = service.getProducers('mailclient')[0]
         email_sender = mail_service.actions.getSender(mail_service)
-        executor = j.tools.executor.getSSHViaProxy(host)
-        cuisine = executor.cuisine
-        rc, out, err = cuisine.core.run(service.hrd.getStr('testcmd'))
+
+        rc, out, err = connection.core.run(cmd)
         email_sender.send(service.hrd.getStr('sendto'),
                           mail_service.hrd.getStr("smtp.sender"),
                           "asdadad",
@@ -20,4 +30,7 @@ class Actions(ActionsBaseMgmt):
                           )
 
 
-        #executor("cd /root/org_quality/Environment_testing/performance\ testing/ && jspython Testsuite/1_Network_config_test/1_Network_conf_test.py ")
+
+
+
+
