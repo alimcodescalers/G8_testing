@@ -11,7 +11,7 @@ class Actions(ActionsBaseMgmt):
         connection=executer.cuisine
 
         def clone_repo(directory):
-            a = connection.core.run("%s; ls")[1].find('org_quality' %directory)
+            a = connection.core.run("%s; ls"%directory)[1].find('org_quality')
             if a < 0:
                 connection.core.run("%s; git clone https://js-awesomo:jsR00t3r@"
                                     "github.com/gig-projects/org_quality.git" %directory)
