@@ -10,6 +10,7 @@ import datetime
 sys.path.append(os.getcwd())
 from utils import utils
 
+
 vms_to_run_fio_on = int(sys.argv[1])
 config = ConfigParser.ConfigParser()
 config.read("Perf_parameters.cfg")
@@ -24,7 +25,6 @@ bs=config.get("perf_parameters", "bs")
 iodepth=int(config.get("perf_parameters", "iodepth"))
 direct_io=int(config.get("perf_parameters", "direct_io"))
 IO_type = config.get("perf_parameters", "IO_type")
-Res_dir = config.get("perf_parameters", "Res_dir")
 hostname = j.do.execute('hostname')[1].replace("\n","")
 test_num = len(os.listdir('%s'%Res_dir))+1
 test_folder = "/"+datetime.datetime.today().strftime('%Y-%m-%d')+"_"+hostname+"_testresults_%s"%test_num
@@ -32,6 +32,7 @@ Res_dir = Res_dir + test_folder
 
 if not j.do.exists('%s' % Res_dir):
     j.do.execute('mkdir -p %s' % Res_dir)
+j.do.execute('cp Perf_parameters.cfg %s' %Res_dir)
 
 ccl = j.clients.osis.getNamespace('cloudbroker')
 pcl = j.clients.portal.getByInstance('main')
@@ -66,7 +67,15 @@ for k in range(len(processes)):
     processes[k].join()
     print('FIO testing has been ended on machine: %s' % dict.keys()[0])
 
+for vm in vms_list:
+    machineId = vm.keys()[0]
+    cloudspace_publicip=vm[machineId][0]
+    cloudspace_publicport=vm[machineId][1]
+    j.do.execute('ssh-keygen -f "/root/.ssh/known_hosts" -R [%s]:%s'
+                 %(cloudspace_publicip, cloudspace_publicport))
+
 j.do.execute('cp scripts/collect_results.py %s' %Res_dir)
 j.do.chdir('%s' %Res_dir)
 j.do.execute('python collect_results.py %s' %Res_dir)
 #utils.push_results_to_repo(Res_dir, test_type='FIO_test')
+

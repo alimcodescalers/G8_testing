@@ -46,7 +46,7 @@ def main():
     while i < No_of_vms:
         for stackId in stacks:
             cloudspace_publicport += 1
-            machineId, cloudspace_publicip = utils.create_machine_onStack(stackId, cloudspace, '_%s' %i, ccl, pcl, scl,
+            [machineId, cloudspace_publicip] = utils.create_machine_onStack(stackId, cloudspace, '_%s' %i, ccl, pcl, scl,
                                                                           vm_specs, cloudspace_publicport, Res_dir='/test_results', telegraf='install')
             vms_list.append({machineId: [cloudspace_publicip, cloudspace_publicport]})
             i += 1
@@ -54,10 +54,11 @@ def main():
                 break
     #Removing vms fingerprints entries from known hosts
     for vm in vms_list:
-            cloudspace_publicip=vm[machineId][0]
-            cloudspace_publicport=vm[machineId][1]
-            j.do.execute('ssh-keygen -f "/root/.ssh/known_hosts" -R [%s]:%s'
-                         %(cloudspace_publicip, cloudspace_publicport))
+        machineId = vm.keys()[0]
+        cloudspace_publicip=vm[machineId][0]
+        cloudspace_publicport=vm[machineId][1]
+        j.do.execute('ssh-keygen -f "/root/.ssh/known_hosts" -R [%s]:%s'
+                     %(cloudspace_publicip, cloudspace_publicport))
 
 if __name__ == "__main__":
     main()

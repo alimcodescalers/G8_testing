@@ -111,10 +111,9 @@ def create_machine_onStack(stackid, cloudspace, iteration, ccl, pcl, scl, vm_spe
         time_creating_vm = round(t2-t1, 2)
         j.do.execute('(echo "VM:;%s;creation time:;%s; ;") | sed "s/;/,/g" >> %s/VMs_creation_time.csv' %(machineId, time_creating_vm, Res_dir))
         if telegraf:
-            cloudspace_publicip = setup_machine(cloudspace, machineId, cs_publicport, pcl, vm_specs[0], telegraf='install')
+            setup_machine(cloudspace, machineId, cs_publicport, pcl, vm_specs[0], telegraf='install')
         else:
-            cloudspace_publicip = setup_machine(cloudspace, machineId, cs_publicport, pcl, vm_specs[0])
-
+            setup_machine(cloudspace, machineId, cs_publicport, pcl, vm_specs[0])
         return [machineId, cloudspace_publicip]
 
 def setup_machine(cloudspace, machineId, cs_publicport, pcl, no_of_disks, fio=None, telegraf=None):
