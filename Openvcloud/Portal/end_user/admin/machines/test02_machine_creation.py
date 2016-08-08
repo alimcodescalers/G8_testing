@@ -58,4 +58,3 @@ class Read():
         #. getHistory of created machine, should succeed
         """
         pass
-
