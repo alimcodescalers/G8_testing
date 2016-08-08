@@ -11,8 +11,6 @@ ccl = j.clients.osis.getNamespace('cloudbroker')
 pcl = j.clients.portal.getByInstance('main')
 scl = j.clients.osis.getNamespace('system')
 
-if j.do.exists('/root/.ssh/known_hosts'):
-    j.do.execute('rm /root/.ssh/known_hosts')
 sys.path.append(os.getcwd())
 from utils import utils
 USERNAME = 'networktestuser'
@@ -21,7 +19,7 @@ utils.create_user(USERNAME, email,  pcl, scl)
 ACCOUNTNAME = str(uuid.uuid4())[0:8]
 accountId = utils.create_account(USERNAME, email, ACCOUNTNAME, ccl, pcl)
 cloudspace = utils.create_cloudspace(accountId, USERNAME, ccl, pcl)
-cloudspace_publicport = 2000
+cloudspace_publicport = 1000
 
 cloudspace_publicIP = str(netaddr.IPNetwork(cloudspace['publicipaddress']).ip)
 
@@ -108,6 +106,10 @@ if match:
 else:
     print ('################ \n# Test succeed #\n################')
 
+#Removing vms fingerprints from known hosts
+for vm in machines:
+    cloudspace_publicport = vm[1]
+    j.do.execute('ssh-keygen -f "/root/.ssh/known_hosts" -R [%s]:%s'%(cloudspace_publicIP, cloudspace_publicport))
 j.do.execute('rm final.txt')
 j.do.execute('jspython scripts/tear_down.py networktestuser')
 

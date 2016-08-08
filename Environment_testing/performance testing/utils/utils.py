@@ -10,6 +10,14 @@ import re
 def get_stacks(ccl):
     return ccl.stack.list()
 
+def remove_ovsnodes_from_stacks(stacks_list,ccl):
+    for stk in ccl.stack.search({}):
+        if type(stk)==int:
+            continue
+        if stk['name'].startswith('ovs'):
+            stacks_list.remove(stk['id'])
+    return stacks_list
+
 def create_user(USERNAME, email, pcl, scl):
     print "Creating User with username %s" %USERNAME
     pcl.actors.cloudbroker.user.create(USERNAME, email, 'gig12345')
@@ -26,7 +34,8 @@ def create_account_cloudspace(USERNAME, email, ACCOUNTNAME, ccl, pcl, scl, cs_na
     cloudspace = create_cloudspace(accountId, USERNAME, ccl, pcl, cs_name='')
     return cloudspace
 
-def create_machine_onStack(stackid, cloudspace, iteration, ccl, pcl, scl, vm_specs, cs_publicport=0,  Res_dir=None, queue=None):
+def create_machine_onStack(stackid, cloudspace, iteration, ccl, pcl, scl, vm_specs, cs_publicport=0,
+                           telegraf=None, Res_dir=None, queue=None):
 
     images = ccl.image.search({'name': 'Ubuntu 14.04 x64'})[1:]
     if not images:
@@ -58,7 +67,7 @@ def create_machine_onStack(stackid, cloudspace, iteration, ccl, pcl, scl, vm_spe
                                                              disksize=boot_diskSize, stackid=stackid, datadisks=datadisks_list)
     except:
         try:
-            print('   |--failed to create the machine with error: %s' %e.message)
+            print('   |--failed to create the machine with error')
             vm = ccl.vmachine.search({'name': 'node%s%s'% (stackid, iteration), 'cloudspaceId': cloudspace['id']})
             if vm[0] != 0:
                 ccl.vmachine.delete(vm[1]['id'])
@@ -101,10 +110,13 @@ def create_machine_onStack(stackid, cloudspace, iteration, ccl, pcl, scl, vm_spe
         t2 = time.time()
         time_creating_vm = round(t2-t1, 2)
         j.do.execute('(echo "VM:;%s;creation time:;%s; ;") | sed "s/;/,/g" >> %s/VMs_creation_time.csv' %(machineId, time_creating_vm, Res_dir))
-        cloudspace_publicip = setup_machine(cloudspace, machineId, cs_publicport, pcl, vm_specs[0])
+        if telegraf:
+            setup_machine(cloudspace, machineId, cs_publicport, pcl, vm_specs[0], telegraf='install')
+        else:
+            setup_machine(cloudspace, machineId, cs_publicport, pcl, vm_specs[0])
         return [machineId, cloudspace_publicip]
 
-def setup_machine(cloudspace, machineId, cs_publicport, pcl, no_of_disks, fio=None):
+def setup_machine(cloudspace, machineId, cs_publicport, pcl, no_of_disks, fio=None, telegraf=None):
     print ('   |--setup machine:%s' %machineId)
     cloudspace_publicip = str(netaddr.IPNetwork(cloudspace['publicipaddress']).ip)
 
@@ -123,7 +135,15 @@ def setup_machine(cloudspace, machineId, cs_publicport, pcl, no_of_disks, fio=No
         if fio != 'onlyfio':
             connection.apt_get('install sysstat')
             machine_mount_disks(connection, account, machineId, no_of_disks)
-    return cloudspace_publicip
+        if telegraf:
+            connection.run('echo %s | sudo -S wget https://dl.influxdata.com/telegraf/releases/telegraf_1.0.0-beta3_amd64.deb' %account['password'])
+            connection.run('echo %s | sudo -S dpkg -i telegraf_1.0.0-beta3_amd64.deb' %account['password'])
+            connection.run('echo %s | sudo -S chmod 666 /etc/telegraf/telegraf.conf'%account['password'])
+            j.do.execute('sshpass -p%s scp -r -o \'StrictHostKeyChecking=no \' -P %s telegraf.conf %s@%s:/etc/telegraf'
+                     %(account['password'], cs_publicport, account['login'], cloudspace_publicip))
+            time.sleep(2)
+            connection.run('echo %s | sudo -S service telegraf restart; sleep 4' %account['password'], timeout=10)
+
 
 def machine_mount_disks(connection, account, machineId, no_of_disks=6):
     list=['b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k']
@@ -150,12 +170,20 @@ def FIO_test(vm_pubip_pubport, pcl, data_size, testrun_time, Res_dir, iteration,
     else:
         connection = j.remote.cuisine.connect(cloudspace_publicip, cs_publicport, account['password'], account['login'])
         connection.user(account['login'])
+        connection.fabric.state.output["running"]=False
+        connection.fabric.state.output["stdout"]=False
         j.do.execute('sshpass -p%s scp -o \'StrictHostKeyChecking=no\' -P %s scripts/Machine_script.py  %s@%s:'
                      %(account['password'], cs_publicport, account['login'], cloudspace_publicip))
         connection.run('python Machine_script.py %s %s %s %s %s %s %s %s %s %s %s' %(testrun_time, machineId,
                         account['password'], iteration, no_of_disks, data_size, write_type, bs, iodepth, direct_io, rwmixwrite))
         j.do.execute('sshpass -p%s scp -r -o \'StrictHostKeyChecking=no \' -P %s  %s@%s:machine%s_iter%s_%s_results %s/'
                      %(account['password'], cs_publicport, account['login'], cloudspace_publicip, machineId, iteration, write_type, Res_dir))
+        list=['b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k']
+        for i in range(no_of_disks):
+            connection.run('echo %s | sudo -S umount /dev/vd%s ' %(account['password'],list[i]))
+            connection.run('echo %s | sudo -S mkfs.ext4 /dev/vd%s' %(account['password'],list[i]))
+            connection.run('echo %s | sudo -S mount /dev/vd%s /mnt/disk_%s' %(account['password'],list[i], list[i]))
+
 
 
 
@@ -296,12 +324,16 @@ def push_results_to_repo(Res_dir, test_type=''):
     Res_file = Res_dir + match.group(1) + '.csv'
     if j.do.exists('%s' %Res_file):
        print('Pushing resutls to the repo')
-       j.do.execute('cd ../../ && git stash')
+       str = j.do.execute('cd ../../ && git stash')
        j.do.execute('cd ../../ && git pull')
-       j.do.execute('cd ../../ && git stash pop')
+       if str[1] != 'No local changes to save\n':
+            j.do.execute('cd ../../ && git stash pop')
        j.do.execute('cd ../../ && git add %s' %Res_file)
        if test_type =='FIO_test':
            j.do.execute('cd ../../ && git add %s/Perf_parameters.cfg' %Res_dir)
+       if test_type == 'demo_run_fio':
+           j.do.execute('cd ../../ && git add %s/Perf_parameters.cfg' %Res_dir)
+           j.do.execute('cd ../../ && git add %s/VMs_creation_time.csv' %Res_dir)
        j.do.execute('cd ../../ && git commit -m \'Pushing: %s  \'' %Res_file)
        j.do.execute('cd ../../ && git push')
     else:

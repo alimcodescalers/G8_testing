@@ -13,6 +13,7 @@ def main():
     cpu = int(config.get("parameters", "cpu"))
     memory = int(config.get("parameters", "memory"))
     Bdisksize = int(config.get("parameters", "Bdisksize"))
+    needed_vms = int(config.get("parameters", "vms"))
     no_of_disks=0; data_disksize=0;
     vm_specs = [no_of_disks, data_disksize, Bdisksize, memory, cpu]
     Res_dir = config.get("parameters", "Res_dir")
@@ -37,11 +38,10 @@ def main():
         ACCOUNTNAME = str(uuid.uuid4())[0:8]
         accountId = utils.create_account(USERNAME, email, ACCOUNTNAME, ccl, pcl)
 
-
         current_stack = ccl.stack.search({'referenceId': str(j.application.whoAmI.nid), 'gid': j.application.whoAmI.gid})[1]
         stacks=utils.get_stacks(ccl)
 
-        cloudspace_publicport = 2000
+        cloudspace_publicport = 3000
         cloudspaces=[]
         for stackid in stacks:
             if stackid == current_stack['id']:
@@ -65,9 +65,12 @@ def main():
                     print('creating VM No:%s' %(vms+1))
                     utils.create_machine_onStack(stackid, cs, iteration, ccl, pcl, scl, vm_specs, cloudspace_publicport, Res_dir='wait_for_VMIP')
                     vms += 1
+                    if needed_vms == vms+1 and needed_vms != 0:
+                        return [[[cpu, memory, Bdisksize, needed_vms]], Res_dir]
                 except:
                     print('   |--failed to create the machine')
                     return [[[cpu, memory, Bdisksize, vms]], Res_dir]
+
             iteration += 1
     except:
         print('Found problems during running the test.. removing results directory..')
@@ -76,8 +79,6 @@ def main():
 
 
 if __name__ == "__main__":
-    if j.do.exists('/root/.ssh/known_hosts'):
-        j.do.execute('rm /root/.ssh/known_hosts')
     sys.path.append(os.getcwd())
     from utils import utils
     try:

@@ -21,8 +21,6 @@ def main():
     pcl = j.clients.portal.getByInstance('main')
     scl = j.clients.osis.getNamespace('system')
 
-    if j.do.exists('/root/.ssh/known_hosts'):
-        j.do.execute('rm /root/.ssh/known_hosts')
     sys.path.append(os.getcwd())
     from utils import utils
     USERNAME = 'vmlivemigrateuser'
@@ -31,7 +29,7 @@ def main():
     ACCOUNTNAME = str(uuid.uuid4())[0:8]
     accountId = utils.create_account(USERNAME, email, ACCOUNTNAME, ccl, pcl)
     cloudspace = utils.create_cloudspace(accountId, USERNAME, ccl, pcl)
-    cloudspace_publicport = 2000
+    cloudspace_publicport = 6000
 
     current_stack = ccl.stack.search({'referenceId': str(j.application.whoAmI.nid), 'gid': j.application.whoAmI.gid})[1]
     stacks=utils.get_stacks(ccl)
@@ -45,58 +43,62 @@ def main():
     machine = pcl.actors.cloudapi.machines.get(machineId)
     account = machine['accounts'][0]
 
-    if not j.system.net.waitConnectionTest(cloudspace_publicip, cloudspace_publicport, 40):
-        print 'Could not connect to VM over public interface'
-    else:
-        connection = j.remote.cuisine.connect(cloudspace_publicip, cloudspace_publicport, account['password'], account['login'])
-        connection.fabric.state.output["running"]=False
-        connection.fabric.state.output["stdout"]=False
-        connection.user(account['login'])
-        connection.apt_get('update')
-        connection.apt_get('install fio')
-
-    j.do.execute('sshpass -p%s scp -o \'StrictHostKeyChecking=no\' -P %s Testsuite/6_vm_live_migration_test/machine_script.py %s@%s:'
-                         %(account['password'], cloudspace_publicport, account['login'], cloudspace_publicip))
-    j.do.execute('sshpass -p%s scp -o \'StrictHostKeyChecking=no\' -P %s Testsuite/6_vm_live_migration_test/check_script.py %s@%s:'
-                         %(account['password'], cloudspace_publicport, account['login'], cloudspace_publicip))
-
-    network.disconnect_all()
-    processes=[]
-    for i in range(2):
-        if i==0:
-            p = multiprocessing.Process(target=utils.run_script, args=(account, cloudspace_publicip, cloudspace_publicport, 'test1'))
-            processes.append(p)
+    try:
+        if not j.system.net.waitConnectionTest(cloudspace_publicip, cloudspace_publicport, 40):
+            print 'Could not connect to VM over public interface'
         else:
-            p = multiprocessing.Process(target=pcl.actors.cloudbroker.machine.moveToDifferentComputeNode, args=(machineId, 'Testing', stacks[1], False))
-            processes.append(p)
-    for l in range(len(processes)):
-        if l == 0:
-            print('started writing a file on the created machine ...')
-        processes[l].start()
-        if l == 1:
-            time.sleep(7)
-            machine_db = ccl.vmachine.get(machineId)
-            if machine_db.status=='RUNNING' and machine_db.stackId==stacks[1]:
-                print('The VM have been successfully installed on other node with approximately no downtime during live migration')
+            connection = j.remote.cuisine.connect(cloudspace_publicip, cloudspace_publicport, account['password'], account['login'])
+            connection.fabric.state.output["running"]=False
+            connection.fabric.state.output["stdout"]=False
+            connection.user(account['login'])
+            connection.apt_get('update')
+            connection.apt_get('install fio')
+
+        j.do.execute('sshpass -p%s scp -o \'StrictHostKeyChecking=no\' -P %s Testsuite/6_vm_live_migration_test/machine_script.py %s@%s:'
+                             %(account['password'], cloudspace_publicport, account['login'], cloudspace_publicip))
+        j.do.execute('sshpass -p%s scp -o \'StrictHostKeyChecking=no\' -P %s Testsuite/6_vm_live_migration_test/check_script.py %s@%s:'
+                             %(account['password'], cloudspace_publicport, account['login'], cloudspace_publicip))
+
+        network.disconnect_all()
+        processes=[]
+        for i in range(2):
+            if i==0:
+                p = multiprocessing.Process(target=utils.run_script, args=(account, cloudspace_publicip, cloudspace_publicport, 'test1'))
+                processes.append(p)
             else:
-                print('A high downtime (more than 7 secs) have been noticed')
-                return None
-        time.sleep(12)
-        if l == 0:
-            print('Machine will be moved to the node with stackId:%s' %stacks[1])
-    for k in range(len(processes)):
-        processes[k].join()
+                p = multiprocessing.Process(target=pcl.actors.cloudbroker.machine.moveToDifferentComputeNode, args=(machineId, 'Testing', stacks[1], False))
+                processes.append(p)
+        for l in range(len(processes)):
+            if l == 0:
+                print('started writing a file on the created machine ...')
+            processes[l].start()
+            if l == 1:
+                time.sleep(7)
+                machine_db = ccl.vmachine.get(machineId)
+                if machine_db.status=='RUNNING' and machine_db.stackId==stacks[1]:
+                    print('The VM have been successfully installed on other node with approximately no downtime during live migration')
+                else:
+                    print('A high downtime (more than 7 secs) have been noticed')
+                    return None
+            time.sleep(15)
+            if l == 0:
+                print('Machine will be moved to the node with stackId:%s' %stacks[1])
+        for k in range(len(processes)):
+            processes[k].join()
 
-    network.disconnect_all()
-    print('writing a second file to compare with ...')
-    utils.run_script(account, cloudspace_publicip, cloudspace_publicport, 'test2')
+        network.disconnect_all()
+        print('writing a second file to compare with ...')
+        utils.run_script(account, cloudspace_publicip, cloudspace_publicport, 'test2')
 
-    network.disconnect_all()
-    print('checking if there is no data loss ...')
-    test_result = utils.check_script(account, cloudspace_publicip, cloudspace_publicport, 'test1.1.0', 'test2.1.0')
-    if test_result != 'Two files are identical':
-        print('There is a data loss')
-    return test_result
+        network.disconnect_all()
+        print('checking if there is no data loss ...')
+        test_result = utils.check_script(account, cloudspace_publicip, cloudspace_publicport, 'test1.1.0', 'test2.1.0')
+        if test_result != 'Two files are identical':
+            print('There is a data loss')
+        j.do.execute('ssh-keygen -f "/root/.ssh/known_hosts" -R [%s]:%s'%(cloudspace_publicip, cloudspace_publicport))
+        return test_result
+    finally:
+        j.do.execute('ssh-keygen -f "/root/.ssh/known_hosts" -R [%s]:%s'%(cloudspace_publicip, cloudspace_publicport))
 
 
 if __name__ == "__main__":
