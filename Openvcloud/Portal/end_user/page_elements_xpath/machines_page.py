@@ -76,4 +76,37 @@ elements = {"getting_started_button": ".//*[@id='navbar-list']/ul[2]/li[1]/a",
             "snapshot_delete_ok": "//html/body/div[2]/form/div[3]/button[1]",
 
 
-            "logout_button": ".//*[@id='wrap']/div/tour/div[1]/div[2]/div/ul/li[1]/a/span"}
+            "logout_button": ".//*[@id='wrap']/div/tour/div[1]/div[2]/div/ul/li[1]/a/span",
+
+            "end_user":".//*[@id='wrap']/div/tour/div[1]/div[1]/div/nav/div/ul/li[7]/ul/a",
+            "machine_name":".//*[@id='wrap']/div/tour/div[3]/div[2]/div/div/div/div/div/div/div[1]/input",
+            "machine_description_":".//*[@id='wrap']/div/tour/div[3]/div[2]/div/div/div/div/div/div/div[2]/textarea",
+            "create_machine":".//*[@id='wrap']/div/tour/div[3]/div[2]/div/div/div/div/div/div/div[7]/button",
+
+            "left_menu": "/html/body/div/div/tour/div[1]/div[1]/div/nav/div/p",
+            "left_menu_button":"/html/body/div/div/tour/div[1]/div[1]/div/button",
+            "ubuntu_14_04":".//*[@id='Linux']/ul/button[1]",
+            "ubuntu_15_10":".//*[@id='Linux']/ul/button[2]",
+            "ubuntu_16_04":".//*[@id='Linux']/ul/button[3]",
+            "windows_2012":".//*[@id='Windows']/ul/button",
+            "linux":".//*[@id='tabbable']/ul/li[1]/a",
+            "windows":".//*[@id='tabbable']/ul/li[2]/a",
+            "package_1":".//*[@id='wrap']/div/tour/div[3]/div[2]/div/div/div/div/div/div/div[5]/div/ul/li[1]/a",
+            "package_2":".//*[@id='wrap']/div/tour/div[3]/div[2]/div/div/div/div/div/div/div[5]/div/ul/li[2]/a",
+            "package_3":".//*[@id='wrap']/div/tour/div[3]/div[2]/div/div/div/div/div/div/div[5]/div/ul/li[3]/a",
+            "package_4":".//*[@id='wrap']/div/tour/div[3]/div[2]/div/div/div/div/div/div/div[5]/div/ul/li[4]/a",
+            "package_5":".//*[@id='wrap']/div/tour/div[3]/div[2]/div/div/div/div/div/div/div[5]/div/ul/li[5]/a",
+            "package_6":".//*[@id='wrap']/div/tour/div[3]/div[2]/div/div/div/div/div/div/div[5]/div/ul/li[6]/a",
+            "disk_size_1":".//*[@id='wrap']/div/tour/div[3]/div[2]/div/div/div/div/div/div/div[6]/div/ul/li[1]/button",
+            "disk_size_2":".//*[@id='wrap']/div/tour/div[3]/div[2]/div/div/div/div/div/div/div[6]/div/ul/li[2]/button",
+            "disk_size_3":".//*[@id='wrap']/div/tour/div[3]/div[2]/div/div/div/div/div/div/div[6]/div/ul/li[3]/button",
+            "disk_size_4":".//*[@id='wrap']/div/tour/div[3]/div[2]/div/div/div/div/div/div/div[6]/div/ul/li[4]/button",
+            "disk_size_5":".//*[@id='wrap']/div/tour/div[3]/div[2]/div/div/div/div/div/div/div[6]/div/ul/li[5]/button",
+            "disk_size_6":".//*[@id='wrap']/div/tour/div[3]/div[2]/div/div/div/div/div/div/div[6]/div/ul/li[6]/button",
+            "disk_size_7":".//*[@id='wrap']/div/tour/div[3]/div[2]/div/div/div/div/div/div/div[6]/div/ul/li[7]/button",
+            "disk_size_8":".//*[@id='wrap']/div/tour/div[3]/div[2]/div/div/div/div/div/div/div[6]/div/ul/li[8]/button",
+            "destroy_machine":".//*[@id='actions']/div/div[2]/ul/li[10]/a",
+            "destroy_machine_confirm":"html/body/div[2]/form/div[3]/button[1]",
+            "machine_list":".//*[@id='tabbable']/h1"
+
+            }

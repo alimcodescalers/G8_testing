@@ -5,7 +5,7 @@ import os
 import uuid
 
 from testconfig import config
-from selenium.common.exceptions import NoSuchElementException
+from selenium.common.exceptions import NoSuchElementException, TimeoutException
 from pytractor import webdriver
 from selenium.webdriver import FirefoxProfile
 from selenium.webdriver.support import expected_conditions as EC
@@ -104,8 +104,20 @@ class BaseTest(unittest.TestCase):
 
     def click(self, element):
         element = self.elements[element]
-        self.wait_until_element_located(element)
-        self.wait_unti_element_clickable(element)
+        for i in range(10):
+            try:
+                self.wait_until_element_located(element)
+            except TimeoutException:
+                continue
+            else:
+                break
+        for k in range(10):
+            try:
+                self.wait_unti_element_clickable(element)
+            except TimeoutException:
+                continue
+            else:
+                break
         self.driver.find_element_by_xpath(element).click()
         time.sleep(1)
 
