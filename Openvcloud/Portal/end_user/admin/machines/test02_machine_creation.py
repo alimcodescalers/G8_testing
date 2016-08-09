@@ -120,3 +120,4 @@ class Read(BaseTest):
         self.click("destroy_machine_confirm")
         time.sleep(10)
         self.assertEqual(self.get_text("machine_list"),"Machines")
+        self.lg('%s ENDED' % self._testID)
