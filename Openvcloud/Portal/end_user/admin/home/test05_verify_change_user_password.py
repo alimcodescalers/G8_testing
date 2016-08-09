@@ -67,6 +67,7 @@ class ChangePassword(BaseTest):
 
         self.lg("Do logout")
         self.click("end_user_logout")
+        self.lg('%s ENDED' % self._testID)
 
     def tearDown(self):
         self.lg("login as admin")

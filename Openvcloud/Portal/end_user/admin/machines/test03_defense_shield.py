@@ -51,6 +51,7 @@ class DefenseShield(BaseTest):
         self.lg('click close button, should return to defense shield page')
         self.click("close_button")
         self.assertEqual(self.get_text("defense_shield_header"),"Defense Shield")
+        self.lg('%s ENDED' % self._testID)
 
 
 
