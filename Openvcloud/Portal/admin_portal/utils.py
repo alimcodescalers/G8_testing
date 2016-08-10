@@ -13,7 +13,7 @@ from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.action_chains import ActionChains
 
-from end_user.page_elements_xpath import login_page
+from admin_portal.page_elements_xpath import login_page
 
 
 class BaseTest(unittest.TestCase):
@@ -93,31 +93,36 @@ class BaseTest(unittest.TestCase):
                    .value_of_css_property('background-color'))
 
     def wait_until_element_located(self, name):
-        self.wait.until(EC.visibility_of_element_located((By.XPATH, name)))
+        for i in range(10):
+            try:
+                self.wait.until(EC.visibility_of_element_located((By.XPATH, name)))
+            except TimeoutException:
+                continue
+            else:
+                break
 
     def wait_element(self, element):
-        self.wait_until_element_located(self.elements[element])
-        return True
+        for i in range(10):
+            try:
+                self.wait_until_element_located(self.elements[element])
+            except TimeoutException:
+                continue
+            else:
+                return True
 
     def wait_unti_element_clickable(self, name):
-        self.wait.until(EC.element_to_be_clickable((By.XPATH, name)))
+        for i in range(10):
+            try:
+                self.wait.until(EC.element_to_be_clickable((By.XPATH, name)))
+            except TimeoutException:
+                continue
+            else:
+                break
 
     def click(self, element):
         element = self.elements[element]
-        for i in range(10):
-            try:
-                self.wait_until_element_located(element)
-            except TimeoutException:
-                continue
-            else:
-                break
-        for k in range(10):
-            try:
-                self.wait_unti_element_clickable(element)
-            except TimeoutException:
-                continue
-            else:
-                break
+        self.wait_until_element_located(element)
+        self.wait_unti_element_clickable(element)
         self.driver.find_element_by_xpath(element).click()
         time.sleep(1)
 
@@ -168,13 +173,16 @@ class BaseTest(unittest.TestCase):
         else:
             return True
 
-    def create_new_user(self,username='', password='', email='', group=''):
+    def get_url(self):
+        return self.driver.current_url
+
+    def create_new_user(self, username='', password='', email='', group=''):
         self.username = username or str(uuid.uuid4()).replace('-', '')[0:10]
         self.password = password or str(uuid.uuid4()).replace('-', '')[0:10]
         self.email = email or str(uuid.uuid4()).replace('-', '')[0:10] + "@g.com"
         self.group = group or 'user'
 
-        if self.check_element_is_exist("left_menu")==False:
+        if self.check_element_is_exist("left_menu") == False:
             self.click("left_menu_button")
 
         self.click("cloud_broker")
@@ -183,11 +191,11 @@ class BaseTest(unittest.TestCase):
         self.click("add_user")
         self.assertTrue(self.check_element_is_exist("create_user"))
 
-        self.set_text("username",self.username)
-        self.set_text("mail",self.email)
-        self.set_text("password",self.password)
+        self.set_text("username", self.username)
+        self.set_text("mail", self.email)
+        self.set_text("password", self.password)
 
-        for i in range(1,100):
+        for i in range(1, 100):
             xpath_user_group = self.elements["user_group"] % i
             if self.group == self.driver.find_element_by_xpath(xpath_user_group).text:
                 break
@@ -197,7 +205,6 @@ class BaseTest(unittest.TestCase):
 
         self.click("confirm_add_user")
         return True
-
 
     def delete_user(self, username):
         if self.check_element_is_exist("left_menu") == False:
@@ -217,3 +224,78 @@ class BaseTest(unittest.TestCase):
             return True
         else:
             return False
+
+    def create_new_account(self, account='', username=''):
+        self.account = account or str(uuid.uuid4()).replace('-', '')[0:10]
+        self.username = username
+
+        if self.check_element_is_exist("left_menu") == False:
+            self.click("left_menu_button")
+
+        self.click("cloud_broker")
+        self.click("accounts")
+
+        self.click("add_account")
+        self.assertTrue(self.check_element_is_exist("create_account"))
+
+        self.set_text("account_name", self.account)
+        self.set_text("account_username", self.username)
+
+        self.click("account_confirm")
+        self.assertEqual(self.get_text("account_table_first_element"), self.account)
+        if account == '' :
+            return self.account
+
+    def open_account_page(self, account=''):
+        self.account = account
+
+        if self.check_element_is_exist("left_menu") == False:
+            self.click("left_menu_button")
+
+        self.click("cloud_broker")
+        self.click("accounts")
+
+        self.set_text("account_search", self.account)
+        account_id = self.get_text("account_first_id")
+        self.click("account_first_id")
+
+        if account_id in self.get_url():
+            return True
+        else:
+            raise NoSuchElementException
+
+    def create_cloud_space(self,account='',cloud_space=''):
+        self.account = account
+        self.cloud_space_name = cloud_space or str(uuid.uuid4()).replace('-', '')[0:10]
+
+        self.open_account_page(self.account)
+        self.account_username = self.get_text("account_first_user_name")
+
+        self.click("add_cloudspace")
+
+        self.assertEqual(self.get_text("create_cloud_space"),"create cloud space")
+
+        self.set_text("cloud_space_name",self.cloud_space_name)
+        self.set_text("cloud_space_user_name",self.account_username)
+
+        self.click("cloud_space_confirm")
+
+        self.set_text("cloud_space_search",self.cloud_space_name)
+        self.assertEqual(self.get_text("cloud_space_table_first_element_2"),self.cloud_space_name)
+        return self.cloud_space_name
+
+    def open_cloudspace_page(self,cloudspace='',account=''):
+        self.account = account
+        self.cloudspace= cloudspace
+
+        self.open_account_page(self.account)
+
+        self.set_text("cloud_space_search",self.cloudspace)
+
+        cloudspace_id = self.get_text("cloud_space_table_first_element_1")
+        self.click("cloud_space_table_first_element_1")
+
+        if cloudspace_id in self.get_url():
+            return True
+        else:
+            raise NoSuchElementException

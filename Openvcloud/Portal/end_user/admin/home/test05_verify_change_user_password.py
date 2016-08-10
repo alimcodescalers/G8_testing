@@ -41,7 +41,7 @@ class ChangePassword(BaseTest):
         self.lg('Do logout')
         self.click("admin_logout_button")
 
-        self.lg("login using the new account")
+        self.lg("login using the new username")
         self.login(self.username,self.password)
 
         self.lg("check access denied")
