@@ -86,8 +86,13 @@ for i in os.listdir('%s/'%Res_dir):
     if i.startswith("disk"):
         file = open( '%s/'%Res_dir + i, 'r')
         f=file.read()
-        match = re.finditer(r'iops=([\d]+),', f)
-        disk_iops = [int(c.group(1)) for c in match]
+        disk_iops=[]
+        match = re.finditer(r'iops=([\S]+),', f)
+        for c in match:
+            if c.group(1).endswith('K'):
+                disk_iops.append(int(float(c.group(1).replace('K',''))*1000))
+            else:
+                disk_iops.append(int(c.group(1)))
         iops_list.append(sum(disk_iops))
         results.append(['disk_%s'%k, sum(disk_iops)])
         runt = re.search(r'runt=\s*([\d]+)msec', f)
