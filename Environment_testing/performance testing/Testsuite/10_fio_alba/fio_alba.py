@@ -13,7 +13,7 @@ from utils import utils
 
 
 config = ConfigParser.ConfigParser()
-config.read("Perf_parameters.cfg")
+config.read("Testsuite/10_fio_alba/Perf_parameters.cfg")
 testrun_time = int(config.get("perf_parameters", "testrun_time"))
 data_size = int(config.get("perf_parameters", "data_size"))/3
 IO_type = config.get("perf_parameters", "IO_type")
@@ -98,4 +98,4 @@ total_iops = sum(iops_list)
 titles = ['Disks', 'IOPS']
 results.append(['Total_IOPS', total_iops])
 utils.collect_results(titles, results, '%s' %Res_dir)
-utils.push_results_to_repo(Res_dir, test_type='fio_alba')
+#utils.push_results_to_repo(Res_dir, test_type='fio_alba')
