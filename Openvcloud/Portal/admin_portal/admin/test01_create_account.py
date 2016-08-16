@@ -1,5 +1,5 @@
-from admin_portal.utils import BaseTest
-from admin_portal.page_elements_xpath import account_page
+from ..utils import BaseTest
+from ..page_elements_xpath import account_page
 import time
 import uuid
 from nose_parameterized import parameterized
@@ -28,10 +28,13 @@ class Account(BaseTest):
         #. open the account page
         #. create new cloudspace
         #. open cloudspace page
+        #. create virtual machine
+        #. open the virtual machine page
         """
         self.username = str(uuid.uuid4()).replace('-', '')[0:10]
         self.account = str(uuid.uuid4()).replace('-', '')[0:10]
         self.cloudspace = str(uuid.uuid4()).replace('-', '')[0:10]
+        self.machine_name = str(uuid.uuid4()).replace('-', '')[0:10]
         self.password = str(uuid.uuid4()).replace('-', '')[0:10]
         self.email = str(uuid.uuid4()).replace('-', '')[0:10] + "@g.com"
         self.group = 'user'
@@ -51,5 +54,19 @@ class Account(BaseTest):
         self.lg('open cloud space page')
         self.open_cloudspace_page(self.account,self.cloudspace)
 
+        self.lg('create virtual machine')
+        self.create_virtual_machine(self.cloudspace,self.account,self.machine_name)
+
+        self.lg('open virtual machine page')
+        self.open_virtual_machine_page(self.account,self.cloudspace,self.machine_name)
+
+        self.lg('delete virtual machine')
+        self.delete_virtual_machine(self.account,self.cloudspace,self.machine_name)
+
+        self.lg('delete cloudspace')
+        self.delete_cloudspace(self.account,self.cloudspace)
+
+        self.lg('delete account')
+        self.delete_account(self.account)
 
         self.lg('%s ENDED' % self._testID)

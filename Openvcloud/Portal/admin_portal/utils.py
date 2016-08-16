@@ -12,6 +12,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.support.ui import Select
 
 from admin_portal.page_elements_xpath import login_page
 
@@ -176,6 +177,18 @@ class BaseTest(unittest.TestCase):
     def get_url(self):
         return self.driver.current_url
 
+    def select(self,list_xpath,item_value):
+        self.select_obeject = Select(self.driver.find_element_by_xpath(list_xpath))
+        self.select_list = self.select_obeject.options
+
+        for option in self.select_list:
+            if item_value in option:
+                self.select_obeject.select_by_visible_text(option)
+                item_value = option
+                break
+
+        self.assertEqual(item_value,self.select_obeject.first_selected_option)
+
     def create_new_user(self, username='', password='', email='', group=''):
         self.username = username or str(uuid.uuid4()).replace('-', '')[0:10]
         self.password = password or str(uuid.uuid4()).replace('-', '')[0:10]
@@ -264,6 +277,20 @@ class BaseTest(unittest.TestCase):
         else:
             raise NoSuchElementException
 
+    def delete_account(self,account=''):
+        self.account = account
+
+        self.lg('open %s account' % account)
+        self.open_account_page(self.account)
+
+        self.lg('delete the account')
+        self.click('account_action')
+        self.click('account_delete')
+        self.set_text('account_delete_reason',"Test")
+        self.click("account_delete_confirm")
+        self.assertEqual(self.get_text('account_page_status'),"DESTROYED")
+
+
     def create_cloud_space(self,account='',cloud_space=''):
         self.account = account
         self.cloud_space_name = cloud_space or str(uuid.uuid4()).replace('-', '')[0:10]
@@ -284,7 +311,7 @@ class BaseTest(unittest.TestCase):
         self.assertEqual(self.get_text("cloud_space_table_first_element_2"),self.cloud_space_name)
         return self.cloud_space_name
 
-    def open_cloudspace_page(self,cloudspace='',account=''):
+    def open_cloudspace_page(self, account='', cloudspace=''):
         self.account = account
         self.cloudspace= cloudspace
 
@@ -299,3 +326,84 @@ class BaseTest(unittest.TestCase):
             return True
         else:
             raise NoSuchElementException
+
+    def delete_cloudspace(self,account='', cloudspace=''):
+        self.account = account
+        self.cloudspace = cloudspace
+
+        self.lg('open %s cloudspace' % cloudspace)
+        self.open_cloudspace_page(self.account,self.cloudspace)
+
+        self.lg('delete the cloudspace')
+        self.click('cloudspace_action')
+        self.click('cloudspace_delete')
+        self.set_text('cloudspace_delete_reason',"Test")
+        self.click("cloudspace_delete_confirm")
+        self.assertEqual(self.get_text('cloudspace_page_status'),"DESTROYED")
+
+    def create_virtual_machine(self, cloudspace='', account='',machine_name='',image='',memory='',disk=''):
+        self.account = account
+        self.cloudspace= cloudspace
+        self.machine_name = machine_name or str(uuid.uuid4()).replace('-', '')[0:10]
+        self.image = image or 'ubuntu 14.04'
+        self.memory = memory or '1024 MB'
+        self.disk = disk or '50 GB'
+
+        self.lg('open the cloudspace page')
+        self.open_cloudspace_page(self.cloudspace,self.account)
+
+        self.lg('add virtual machine')
+        self.click('add_virtual_machine')
+        self.assertEqual(self.get_text('create_virtual_machine_on_cpu_node'),'Create Machine On CPU Node')
+
+        self.lg('enter the machine name')
+        self.set_text('machine_name',self.machine_name)
+
+        self.lg('enter the machien description')
+        self.set_text('machine_description',str(uuid.uuid4()).replace('-', '')[0:10])
+
+        self.lg('select the image')
+        self.select('machine_image_list',self.image)
+
+        self.lg('select the memory')
+        self.select('machine_memory_list',self.memory)
+
+        self.lg('select the disk')
+        self.select('machine_disk_list',self.disk)
+
+        self.lg('create machine confirm button')
+        self.click('machine_confirm_button')
+
+    def open_virtual_machine_page(self,account='',cloudspace='',machine_name=''):
+        self.account = account
+        self.cloudspace = cloudspace
+        self.machine_name = machine_name
+
+        self.lg('opne %s cloudspace' % cloudspace)
+        self.open_cloudspace_page(self.account,self.cloudspace)
+
+        self.lg('open %s virtual machine' % machine_name)
+        self.set_text('virtual machine search',self.machine_name)
+        vm_id = self.get_text("virtual_machine_tabkle_first_element_2")[3:]
+        self.click('virtual_machine_table_first_element')
+
+        if vm_id in self.get_url():
+            return True
+        else:
+            raise NoSuchElementException
+
+    def delete_virtual_machine(self,account='', cloudspace='', machine_name=''):
+        self.account = account
+        self.cloudspace = cloudspace
+        self.machine_name = machine_name
+
+        self.lg('open %s virtual machine' % machine_name)
+        self.open_virtual_machine_page(self.account,self.cloudspace,self.machine_name)
+
+        self.lg('delete the machine')
+        self.click('virtual_machine_action')
+        self.click('virtual_machine_delete')
+        self.set_text('virtual_machine_delete_reason',"Test")
+        self.click("virtual_machine_delete_confirm")
+        self.assertEqual(self.get_text('virtual_machine_page_status'),"DESTROYED")
+
