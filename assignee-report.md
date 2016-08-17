@@ -3,7 +3,7 @@
 # Issues per assignee
 - [alimcodescalers](#alimcodescalers) has 5 assigned
 - [islamTaha12](#islamtaha12) has 3 assigned
-- [john-kheir](#john-kheir) has 8 assigned
+- [john-kheir](#john-kheir) has 9 assigned
 - [lzonneke](#lzonneke) has 1 assigned
 - [ramezsaeed](#ramezsaeed) has 12 assigned
 
@@ -26,7 +26,7 @@
 |-----|-----|-----|----|
 |[#304](https://github.com/gig-projects/org_quality/issues/304)|Create an automated test suite coverage for cockpit (test_cockpit)|:red_circle: Open|story|
 |[#370](https://github.com/gig-projects/org_quality/issues/370)|cockpit_drive_QA: create a blueprint to run the acl_basic_testsuite [4h]|:red_circle: Open|task|
-|[#379](https://github.com/gig-projects/org_quality/issues/379)|Portal: Create new Account with new User [2d]|:large_blue_circle: In Progress||
+|[#379](https://github.com/gig-projects/org_quality/issues/379)|Portal: Create new Account with new User [2d]|:large_blue_circle: In Progress|task|
 
 
 ## [john-kheir](https://github.com/john-kheir)
@@ -41,6 +41,7 @@
 |[#384](https://github.com/gig-projects/org_quality/issues/384)|full-test-Fargo G8-3: Network configuration test [30m]|:red_circle: Open|task|
 |[#385](https://github.com/gig-projects/org_quality/issues/385)|be-G8-3_fargo_perf: environment limitation test [4h]|:large_blue_circle: In Progress|task|
 |[#386](https://github.com/gig-projects/org_quality/issues/386)|be-G8-3_fargo_perf: vm unlimited snapshots [5h]|:large_blue_circle: In Progress|task|
+|[#394](https://github.com/gig-projects/org_quality/issues/394)|M_Test_2.1.0b: Upgrade du-conv-2 to the latest release [1d]|:red_circle: Open|task|
 
 
 ## [lzonneke](https://github.com/lzonneke)
