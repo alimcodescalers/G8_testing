@@ -25,7 +25,7 @@
 |Issue|Title|State|Type|
 |-----|-----|-----|----|
 |[#304](https://github.com/gig-projects/org_quality/issues/304)|Create an automated test suite coverage for cockpit (test_cockpit)|:red_circle: Open|story|
-|[#370](https://github.com/gig-projects/org_quality/issues/370)|cockpit_drive_QA: create a blueprint to run the acl_basic_testsuite|:red_circle: Open|task|
+|[#370](https://github.com/gig-projects/org_quality/issues/370)|cockpit_drive_QA: create a blueprint to run the acl_basic_testsuite [4h]|:red_circle: Open|task|
 |[#379](https://github.com/gig-projects/org_quality/issues/379)|Portal: Create new Account with new User [2d]|:large_blue_circle: In Progress||
 
 
@@ -61,9 +61,9 @@
 |[#308](https://github.com/gig-projects/org_quality/issues/308)|Create a test suite coverage for the VDC control panel (test_VDCcontrol)|:red_circle: Open|story|
 |[#309](https://github.com/gig-projects/org_quality/issues/309)|create a test suite which is covering testing itsyou.online (testing_itsyouonline)|:large_blue_circle: In Progress|story|
 |[#361](https://github.com/gig-projects/org_quality/issues/361)|Adapt the testsuite so it can be run on a grid environments (grid_testsuite)|:red_circle: Open|story|
-|[#362](https://github.com/gig-projects/org_quality/issues/362)|grid_testsuite: Access the grid master node and check the APIs|:red_circle: Open|task|
+|[#362](https://github.com/gig-projects/org_quality/issues/362)|grid_testsuite: Access the grid master node and check the APIs [1d]|:red_circle: Open|task|
 |[#366](https://github.com/gig-projects/org_quality/issues/366)|Make cockpit driven testing on our environments (cockpit_drive_QA)|:large_blue_circle: In Progress|story|
 |[#367](https://github.com/gig-projects/org_quality/issues/367)|testing_itsyouonline: Create new jenkens project for api_testing [8h]|:red_circle: Open|task|
-|[#373](https://github.com/gig-projects/org_quality/issues/373)|A_Test_2.1.0b: adapt jenkins to use the new ssh config iso the old ovce script|:red_circle: Open|task|
+|[#373](https://github.com/gig-projects/org_quality/issues/373)|A_Test_2.1.0b: adapt jenkins to use the new ssh config iso the old ovce script [4h]|:red_circle: Open|task|
 |[#382](https://github.com/gig-projects/org_quality/issues/382)|Alba|:large_blue_circle: In Progress||
 
