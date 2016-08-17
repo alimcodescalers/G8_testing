@@ -3,31 +3,52 @@
 # Summary
 |Milestone|ETA|
 |---------|---|
-|[cb 2.1.0bx](#milestone-cb-210bx)|2016/07/01|
-|[cb2.1.0ga](#milestone-cb210ga)|N/A|
-|[ovc_backlog](#milestone-ovc_backlog)|N/A|
-|[No milestone](#no-milestone)|2016/07/01|
+|[aug_end](#milestone-aug_end)|2016/08/17|
+|[aug_mid](#milestone-aug_mid)|2016/08/17|
+|[q4](#milestone-q4)|N/A|
+|[roadmap](#milestone-roadmap)|N/A|
+|[sept_end](#milestone-sept_end)|N/A|
+|[sept_mid](#milestone-sept_mid)|N/A|
+|[No milestone](#no-milestone)|2016/08/17|
 
-## [Milestone cb 2.1.0bx](milestones/6:cb 2.1.0bx.md)
-
-
-|Issue|Title|State|Owner|ETA|
-|-----|-----|-----|-----|---|
-|[#278](https://github.com/gig-projects/org_quality/issues/278)|Verify all open issues in state verification on openvcloud (verification)|:large_blue_circle: In Progress|[ramezsaeed](https://github.com/ramezsaeed)|[2016/07/01](https://github.com/gig-projects/org_quality/issues/278#issuecomment-None)|
-|[#288](https://github.com/gig-projects/org_quality/issues/288)|Do a full performance test on be-G8-1 (be-G8-1_perf)|:large_blue_circle: In Progress|[lzonneke](https://github.com/lzonneke)|[2016/07/01](https://github.com/gig-projects/org_quality/issues/288#issuecomment-None)|
-|[#304](https://github.com/gig-projects/org_quality/issues/304)|Create an automated test suite coverage for cockpit (test_cockpit)|:large_blue_circle: In Progress|[islamTaha12](https://github.com/islamTaha12)|[2016/07/01](https://github.com/gig-projects/org_quality/issues/304#issuecomment-None)|
-|[#306](https://github.com/gig-projects/org_quality/issues/306)|Perform automated tests coverage for cb2.1.0 beta (A_Test_2.1.0b)|:red_circle: Open|[ramezsaeed](https://github.com/ramezsaeed)|[2016/07/01](https://github.com/gig-projects/org_quality/issues/306#issuecomment-None)|
-|[#307](https://github.com/gig-projects/org_quality/issues/307)|Perform one time manual validation for milestone cb2.1.0b (M_Test_2.1.0b)|:red_circle: Open|[ramezsaeed](https://github.com/ramezsaeed)|[2016/07/01](https://github.com/gig-projects/org_quality/issues/307#issuecomment-None)|
-|[#308](https://github.com/gig-projects/org_quality/issues/308)|Create a test suite coverage for the VDC control panel (test_VDCcontrol)|:red_circle: Open|[ramezsaeed](https://github.com/ramezsaeed)|[2016/07/01](https://github.com/gig-projects/org_quality/issues/308#issuecomment-None)|
-|[#309](https://github.com/gig-projects/org_quality/issues/309)|create a test suite which is covering testing itsyou.online (test_itsyouonline)|:large_blue_circle: In Progress|[alimcodescalers](https://github.com/alimcodescalers)|[2016/07/01](https://github.com/gig-projects/org_quality/issues/309#issuecomment-None)|
-
-## [Milestone cb2.1.0ga](milestones/1:cb2.1.0ga.md)
+## [Milestone aug_end](milestones/7:aug_end.md)
 
 
 |Issue|Title|State|Owner|ETA|
 |-----|-----|-----|-----|---|
+|[#304](https://github.com/gig-projects/org_quality/issues/304)|Create an automated test suite coverage for cockpit (test_cockpit)|:red_circle: Open|[islamTaha12](https://github.com/islamTaha12)|[2016/08/17](https://github.com/gig-projects/org_quality/issues/304#issuecomment-None)|
+|[#308](https://github.com/gig-projects/org_quality/issues/308)|Create a test suite coverage for the VDC control panel (test_VDCcontrol)|:red_circle: Open|[ramezsaeed](https://github.com/ramezsaeed)|[2016/08/17](https://github.com/gig-projects/org_quality/issues/308#issuecomment-None)|
+|[#309](https://github.com/gig-projects/org_quality/issues/309)|create a test suite which is covering testing itsyou.online (testing_itsyouonline)|:large_blue_circle: In Progress|[ramezsaeed](https://github.com/ramezsaeed)|[2016/08/17](https://github.com/gig-projects/org_quality/issues/309#issuecomment-None)|
+|[#361](https://github.com/gig-projects/org_quality/issues/361)|Adapt the testsuite so it can be run on a grid environments (grid_testsuite)|:red_circle: Open|[ramezsaeed](https://github.com/ramezsaeed)|[2016/08/17](https://github.com/gig-projects/org_quality/issues/361#issuecomment-None)|
+|[#366](https://github.com/gig-projects/org_quality/issues/366)|Make cockpit driven testing on our environments (cockpit_drive_QA)|:large_blue_circle: In Progress|[ramezsaeed](https://github.com/ramezsaeed)|[2016/08/17](https://github.com/gig-projects/org_quality/issues/366#issuecomment-None)|
+|[#387](https://github.com/gig-projects/org_quality/issues/387)|Repair performance testing with Grafana (Grafana)|:red_circle: Open||[2016/08/17](https://github.com/gig-projects/org_quality/issues/387#issuecomment-None)|
 
-## [Milestone ovc_backlog](milestones/7:ovc_backlog.md)
+## [Milestone aug_mid](milestones/6:aug_mid.md)
+
+
+|Issue|Title|State|Owner|ETA|
+|-----|-----|-----|-----|---|
+|[#375](https://github.com/gig-projects/org_quality/issues/375)|Run full test cycle on BE-G8-3 with Fargo (full-test-Fargo G8-3)|:red_circle: Open|[john-kheir](https://github.com/john-kheir)|[2016/08/17](https://github.com/gig-projects/org_quality/issues/375#issuecomment-None)|
+
+## [Milestone q4](milestones/10:q4.md)
+
+
+|Issue|Title|State|Owner|ETA|
+|-----|-----|-----|-----|---|
+
+## [Milestone roadmap](milestones/11:roadmap.md)
+
+
+|Issue|Title|State|Owner|ETA|
+|-----|-----|-----|-----|---|
+
+## [Milestone sept_end](milestones/9:sept_end.md)
+
+
+|Issue|Title|State|Owner|ETA|
+|-----|-----|-----|-----|---|
+
+## [Milestone sept_mid](milestones/8:sept_mid.md)
 
 
 |Issue|Title|State|Owner|ETA|
@@ -39,4 +60,7 @@
 ## No milestone
 |Issue|Title|State|Owner|ETA|
 |-----|-----|-----|-----|---|
-|[#322](https://github.com/gig-projects/org_quality/issues/322)|Improve the performance test scripts (perf_upgrade)|:large_blue_circle: In Progress|[lzonneke](https://github.com/lzonneke)|[2016/07/01](https://github.com/gig-projects/org_quality/issues/322#issuecomment-None)|
+|[#278](https://github.com/gig-projects/org_quality/issues/278)|Verify all open issues in state verification on openvcloud (verification)|:large_blue_circle: In Progress|[ramezsaeed](https://github.com/ramezsaeed)|[2016/08/17](https://github.com/gig-projects/org_quality/issues/278#issuecomment-None)|
+|[#306](https://github.com/gig-projects/org_quality/issues/306)|Perform automated tests coverage for cb2.1.0 beta (A_Test_2.1.0b)|:red_circle: Open|[ramezsaeed](https://github.com/ramezsaeed)|[2016/08/17](https://github.com/gig-projects/org_quality/issues/306#issuecomment-None)|
+|[#307](https://github.com/gig-projects/org_quality/issues/307)|Perform one time manual validation for milestone cb2.1.0b (M_Test_2.1.0b)|:red_circle: Open|[ramezsaeed](https://github.com/ramezsaeed)|[2016/08/17](https://github.com/gig-projects/org_quality/issues/307#issuecomment-None)|
+|[#322](https://github.com/gig-projects/org_quality/issues/322)|Improve the performance test scripts (perf_upgrade)|:red_circle: Open|[john-kheir](https://github.com/john-kheir)|[2016/08/17](https://github.com/gig-projects/org_quality/issues/322#issuecomment-None)|
