@@ -7,8 +7,8 @@
 |Issue|Title|State|Type|
 |-----|-----|-----|---|
 |[#387](https://github.com/gig-projects/org_quality/issues/387)|Repair performance testing with Grafana (Grafana)|:red_circle: Open|story|
-|[#388](https://github.com/gig-projects/org_quality/issues/388)|cockpit_drive_QA: documentation|:red_circle: Open|task|
-|[#389](https://github.com/gig-projects/org_quality/issues/389)|cockpit_drive_QA: Make test-results available on env_repo|:red_circle: Open|task|
+|[#388](https://github.com/gig-projects/org_quality/issues/388)|cockpit_drive_QA: documentation [1d]|:red_circle: Open|task|
+|[#389](https://github.com/gig-projects/org_quality/issues/389)|cockpit_drive_QA: Make test-results available on env_repo [1d]|:red_circle: Open|task|
 
 
 ## Issues per assignee
