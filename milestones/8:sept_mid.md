@@ -33,6 +33,7 @@
 
 |Issue|Title|State|Type|
 |-----|-----|-----|----|
+|[#394](https://github.com/gig-projects/org_quality/issues/394)|M_Test_2.1.0b: Upgrade du-conv-2 to the latest release [1d]|:red_circle: Open|task|
 
 
 ### [lzonneke](https://github.com/lzonneke)
