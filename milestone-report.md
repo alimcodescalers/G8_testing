@@ -7,7 +7,7 @@
 |[aug_mid](#milestone-aug_mid)|2016/08/17|
 |[q4](#milestone-q4)|N/A|
 |[roadmap](#milestone-roadmap)|N/A|
-|[sept_end](#milestone-sept_end)|N/A|
+|[sept_end](#milestone-sept_end)|2016/08/17|
 |[sept_mid](#milestone-sept_mid)|N/A|
 |[No milestone](#no-milestone)|2016/08/17|
 
@@ -47,6 +47,7 @@
 
 |Issue|Title|State|Owner|ETA|
 |-----|-----|-----|-----|---|
+|[#395](https://github.com/gig-projects/org_quality/issues/395)|Create testsuite for Admin portal (Portal)|:red_circle: Open||[2016/08/17](https://github.com/gig-projects/org_quality/issues/395#issuecomment-None)|
 
 ## [Milestone sept_mid](milestones/8:sept_mid.md)
 
