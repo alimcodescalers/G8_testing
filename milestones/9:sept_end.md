@@ -6,6 +6,7 @@
 
 |Issue|Title|State|Type|
 |-----|-----|-----|---|
+|[#395](https://github.com/gig-projects/org_quality/issues/395)|Create testsuite for Admin portal (Portal)|:red_circle: Open|story|
 
 
 ## Issues per assignee
