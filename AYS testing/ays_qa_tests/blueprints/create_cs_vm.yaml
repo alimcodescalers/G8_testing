@@ -7,8 +7,8 @@ g8client__dubai:
 vdc__helloislam:
   g8.client.name: 'dubai'              
   maxMemoryCapacity: 2
-  maxVDiskCapacity: 10
-  maxCPUCapacity: 2
+  maxVDiskCapacity: -1
+  maxCPUCapacity: -1
   maxNASCapacity: 20
   maxArchiveCapacity: 20
   maxNetworkOptTransfer: 5
