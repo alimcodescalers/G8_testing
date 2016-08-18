@@ -6,6 +6,7 @@
 
 |Issue|Title|State|Type|
 |-----|-----|-----|---|
+|[#397](https://github.com/gig-projects/org_quality/issues/397)|grid_testsuite: start create a new test suite to test the grid|:red_circle: Open|task|
 
 
 ## Issues per assignee
@@ -33,7 +34,6 @@
 
 |Issue|Title|State|Type|
 |-----|-----|-----|----|
-|[#394](https://github.com/gig-projects/org_quality/issues/394)|M_Test_2.1.0b: Upgrade du-conv-2 to the latest release [1d]|:red_circle: Open|task|
 
 
 ### [lzonneke](https://github.com/lzonneke)
@@ -46,4 +46,5 @@
 
 |Issue|Title|State|Type|
 |-----|-----|-----|----|
+|[#394](https://github.com/gig-projects/org_quality/issues/394)|M_Test_2.1.0b: Upgrade du-conv-2 to the latest release [1d]|:large_blue_circle: In Progress|task|
 
