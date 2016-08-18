@@ -26,7 +26,7 @@
 |-----|-----|-----|----|
 |[#304](https://github.com/gig-projects/org_quality/issues/304)|Create an automated test suite coverage for cockpit (test_cockpit)|:red_circle: Open|story|
 |[#370](https://github.com/gig-projects/org_quality/issues/370)|cockpit_drive_QA: create a blueprint to run the acl_basic_testsuite [4h]|:red_circle: Open|task|
-|[#379](https://github.com/gig-projects/org_quality/issues/379)|Portal: Create new Account with new User [2d]|:large_blue_circle: In Progress|task|
+|[#377](https://github.com/gig-projects/org_quality/issues/377)|Portal: Create portal test to cover machine section [2d]|:large_blue_circle: In Progress|task|
 
 
 ## [john-kheir](https://github.com/john-kheir)
@@ -36,12 +36,12 @@
 |[#269](https://github.com/gig-projects/org_quality/issues/269)|whmcs-int: Test integration of WHMCS into OVC|:red_circle: Open|task|
 |[#280](https://github.com/gig-projects/org_quality/issues/280)|Implement testcases for cloudapi images part|:red_circle: Open||
 |[#321](https://github.com/gig-projects/org_quality/issues/321)|full-test-Fargo G8-3: Testing FIO on ALBA layer from OVS [3d]|:red_circle: Open|task|
-|[#322](https://github.com/gig-projects/org_quality/issues/322)|Improve the performance test scripts (perf_upgrade)|:red_circle: Open|story|
+|[#322](https://github.com/gig-projects/org_quality/issues/322)|Improve the performance test scripts (perf_upgrade)|:large_blue_circle: In Progress|story|
+|[#354](https://github.com/gig-projects/org_quality/issues/354)|perf_upgrade: add the average file transfer speed in test results column [1d]|:large_blue_circle: In Progress|task|
+|[#355](https://github.com/gig-projects/org_quality/issues/355)|perf_upgrade: add the latency figures in the test result table of FIO [1d]|:large_blue_circle: In Progress|task|
 |[#375](https://github.com/gig-projects/org_quality/issues/375)|Run full test cycle on BE-G8-3 with Fargo (full-test-Fargo G8-3)|:red_circle: Open|story|
-|[#384](https://github.com/gig-projects/org_quality/issues/384)|full-test-Fargo G8-3: Network configuration test [30m]|:red_circle: Open|task|
 |[#385](https://github.com/gig-projects/org_quality/issues/385)|be-G8-3_fargo_perf: environment limitation test [4h]|:large_blue_circle: In Progress|task|
 |[#386](https://github.com/gig-projects/org_quality/issues/386)|be-G8-3_fargo_perf: vm unlimited snapshots [5h]|:large_blue_circle: In Progress|task|
-|[#394](https://github.com/gig-projects/org_quality/issues/394)|M_Test_2.1.0b: Upgrade du-conv-2 to the latest release [1d]|:red_circle: Open|task|
 
 
 ## [lzonneke](https://github.com/lzonneke)
@@ -61,10 +61,10 @@
 |[#307](https://github.com/gig-projects/org_quality/issues/307)|Perform one time manual validation for milestone cb2.1.0b (M_Test_2.1.0b)|:red_circle: Open|story|
 |[#308](https://github.com/gig-projects/org_quality/issues/308)|Create a test suite coverage for the VDC control panel (test_VDCcontrol)|:red_circle: Open|story|
 |[#309](https://github.com/gig-projects/org_quality/issues/309)|create a test suite which is covering testing itsyou.online (testing_itsyouonline)|:large_blue_circle: In Progress|story|
-|[#361](https://github.com/gig-projects/org_quality/issues/361)|Adapt the testsuite so it can be run on a grid environments (grid_testsuite)|:red_circle: Open|story|
-|[#362](https://github.com/gig-projects/org_quality/issues/362)|grid_testsuite: Access the grid master node and check the APIs [1d]|:red_circle: Open|task|
+|[#361](https://github.com/gig-projects/org_quality/issues/361)|Adapt the testsuite so it can be run on a grid environments (grid_testsuite)|:large_blue_circle: In Progress|story|
 |[#366](https://github.com/gig-projects/org_quality/issues/366)|Make cockpit driven testing on our environments (cockpit_drive_QA)|:large_blue_circle: In Progress|story|
 |[#367](https://github.com/gig-projects/org_quality/issues/367)|testing_itsyouonline: Create new jenkens project for api_testing [8h]|:red_circle: Open|task|
 |[#373](https://github.com/gig-projects/org_quality/issues/373)|A_Test_2.1.0b: adapt jenkins to use the new ssh config iso the old ovce script [4h]|:red_circle: Open|task|
 |[#382](https://github.com/gig-projects/org_quality/issues/382)|Alba|:large_blue_circle: In Progress||
+|[#394](https://github.com/gig-projects/org_quality/issues/394)|M_Test_2.1.0b: Upgrade du-conv-2 to the latest release [1d]|:large_blue_circle: In Progress|task|
 
