@@ -94,31 +94,24 @@ class BaseTest(unittest.TestCase):
                    .value_of_css_property('background-color'))
 
     def wait_until_element_located(self, name):
-        for i in range(10):
+        for i in range(3):
             try:
                 self.wait.until(EC.visibility_of_element_located((By.XPATH, name)))
             except TimeoutException:
                 continue
-            else:
-                break
 
     def wait_element(self, element):
-        for i in range(10):
-            try:
-                self.wait_until_element_located(self.elements[element])
-            except TimeoutException:
-                continue
-            else:
-                return True
+        self.wait_until_element_located(self.elements[element])
+        return True
 
     def wait_unti_element_clickable(self, name):
-        for i in range(10):
+        for i in range(3):
             try:
                 self.wait.until(EC.element_to_be_clickable((By.XPATH, name)))
             except TimeoutException:
                 continue
             else:
-                break
+                return True
 
     def click(self, element):
         element = self.elements[element]
@@ -166,28 +159,37 @@ class BaseTest(unittest.TestCase):
         ActionChains(self.driver).move_to_element(location).perform()
 
     def check_element_is_exist(self, element):
-        element = self.elements[element]
-        try:
-            self.driver.find_element_by_xpath(element)
-        except NoSuchElementException:
-            return False
-        else:
+        if self.wait_element(element) == True:
             return True
+        else:
+            return False
 
     def get_url(self):
         return self.driver.current_url
 
-    def select(self,list_xpath,item_value):
+    def select(self,list_element,item_value):
+        list_xpath = self.elements[list_element]
         self.select_obeject = Select(self.driver.find_element_by_xpath(list_xpath))
         self.select_list = self.select_obeject.options
+        self.lg("Debug Test" + str(self.select_list) + str(self.select_list[1].text))
 
         for option in self.select_list:
-            if item_value in option:
-                self.select_obeject.select_by_visible_text(option)
-                item_value = option
+            self.lg("Debug Test"+str(option.text))
+            if item_value in option.text:
+                self.select_obeject.select_by_visible_text(option.text)
+                item_value = option.text
                 break
 
-        self.assertEqual(item_value,self.select_obeject.first_selected_option)
+        self.assertEqual(item_value,self.select_obeject.first_selected_option.text)
+
+    def open_base_page(self,menu_item='',sub_menu_item=''):
+        self.driver.get(self.environment_url)
+        time.sleep(5)
+        if self.check_element_is_exist("left_menu") == False:
+            self.click("left_menu_button")
+
+        self.click(menu_item)
+        self.click(sub_menu_item)
 
     def create_new_user(self, username='', password='', email='', group=''):
         self.username = username or str(uuid.uuid4()).replace('-', '')[0:10]
@@ -195,11 +197,7 @@ class BaseTest(unittest.TestCase):
         self.email = email or str(uuid.uuid4()).replace('-', '')[0:10] + "@g.com"
         self.group = group or 'user'
 
-        if self.check_element_is_exist("left_menu") == False:
-            self.click("left_menu_button")
-
-        self.click("cloud_broker")
-        self.click("users")
+        self.open_base_page("cloud_broker","users")
 
         self.click("add_user")
         self.assertTrue(self.check_element_is_exist("create_user"))
@@ -219,12 +217,23 @@ class BaseTest(unittest.TestCase):
         self.click("confirm_add_user")
         return True
 
-    def delete_user(self, username):
-        if self.check_element_is_exist("left_menu") == False:
-            self.click("left_menu_button")
+    def open_user_page(self,username=''):
+        self.username = username
+        self.open_base_page("cloud_broker","users")
 
-        self.click("cloud_broker")
-        self.click("users")
+        self.set_text("username_search", self.username)
+        username_id = self.get_text("username_table_first")
+
+        self.click("username_table_first")
+
+        if username_id in self.get_url():
+            return True
+        else:
+            raise NoSuchElementException
+
+    def delete_user(self, username):
+        self.open_base_page("cloud_broker","users")
+
         self.set_text("user_search", username)
         self.lg("check if this user is exist")
         if self.check_element_is_exist("user_table_first_element") == True:
@@ -241,12 +250,7 @@ class BaseTest(unittest.TestCase):
     def create_new_account(self, account='', username=''):
         self.account = account or str(uuid.uuid4()).replace('-', '')[0:10]
         self.username = username
-
-        if self.check_element_is_exist("left_menu") == False:
-            self.click("left_menu_button")
-
-        self.click("cloud_broker")
-        self.click("accounts")
+        self.open_base_page("cloud_broker","accounts")
 
         self.click("add_account")
         self.assertTrue(self.check_element_is_exist("create_account"))
@@ -255,22 +259,29 @@ class BaseTest(unittest.TestCase):
         self.set_text("account_username", self.username)
 
         self.click("account_confirm")
-        self.assertEqual(self.get_text("account_table_first_element"), self.account)
+
+        self.set_text("account_search",self.account)
+        for i in range(5):
+            try:
+                self.assertEqual(self.get_text("account_table_first_element"), self.account)
+            except :
+                time.sleep(1)
+                continue
+            else:
+                break
         if account == '' :
             return self.account
 
     def open_account_page(self, account=''):
         self.account = account
+        #self.driver.switch_to_window(self.driver.window_handles[-1])
+        self.open_base_page("cloud_broker","accounts")
 
-        if self.check_element_is_exist("left_menu") == False:
-            self.click("left_menu_button")
-
-        self.click("cloud_broker")
-        self.click("accounts")
-
-        self.set_text("account_search", self.account)
+        self.set_text("account_search",self.account)
+        #time.sleep(60)
         account_id = self.get_text("account_first_id")
         self.click("account_first_id")
+        #time.sleep(20)
 
         if account_id in self.get_url():
             return True
@@ -300,7 +311,7 @@ class BaseTest(unittest.TestCase):
 
         self.click("add_cloudspace")
 
-        self.assertEqual(self.get_text("create_cloud_space"),"create cloud space")
+        self.assertEqual(self.get_text("create_cloud_space"),"Create Cloud Space")
 
         self.set_text("cloud_space_name",self.cloud_space_name)
         self.set_text("cloud_space_user_name",self.account_username)
@@ -341,16 +352,16 @@ class BaseTest(unittest.TestCase):
         self.click("cloudspace_delete_confirm")
         self.assertEqual(self.get_text('cloudspace_page_status'),"DESTROYED")
 
-    def create_virtual_machine(self, cloudspace='', account='',machine_name='',image='',memory='',disk=''):
+    def create_virtual_machine(self, account='', cloudspace='', machine_name='',image='',memory='',disk=''):
         self.account = account
         self.cloudspace= cloudspace
         self.machine_name = machine_name or str(uuid.uuid4()).replace('-', '')[0:10]
-        self.image = image or 'ubuntu 14.04'
+        self.image = image or 'Ubuntu 15.10'
         self.memory = memory or '1024 MB'
         self.disk = disk or '50 GB'
 
         self.lg('open the cloudspace page')
-        self.open_cloudspace_page(self.cloudspace,self.account)
+        self.open_cloudspace_page(self.account,self.cloudspace)
 
         self.lg('add virtual machine')
         self.click('add_virtual_machine')
@@ -363,7 +374,7 @@ class BaseTest(unittest.TestCase):
         self.set_text('machine_description',str(uuid.uuid4()).replace('-', '')[0:10])
 
         self.lg('select the image')
-        self.select('machine_image_list',self.image)
+        self.select('machine_images_list',self.image)
 
         self.lg('select the memory')
         self.select('machine_memory_list',self.memory)
