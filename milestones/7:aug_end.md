@@ -9,6 +9,7 @@
 |[#387](https://github.com/gig-projects/org_quality/issues/387)|Repair performance testing with Grafana (Grafana)|:red_circle: Open|story|
 |[#388](https://github.com/gig-projects/org_quality/issues/388)|cockpit_drive_QA: documentation [1d]|:red_circle: Open|task|
 |[#389](https://github.com/gig-projects/org_quality/issues/389)|cockpit_drive_QA: Make test-results available on env_repo [1d]|:red_circle: Open|task|
+|[#396](https://github.com/gig-projects/org_quality/issues/396)|ubuntudockers: test daily build of all dockers in the repo on a daily basis|:red_circle: Open|task|
 
 
 ## Issues per assignee
@@ -51,6 +52,6 @@
 |-----|-----|-----|----|
 |[#308](https://github.com/gig-projects/org_quality/issues/308)|Create a test suite coverage for the VDC control panel (test_VDCcontrol)|:red_circle: Open|story|
 |[#309](https://github.com/gig-projects/org_quality/issues/309)|create a test suite which is covering testing itsyou.online (testing_itsyouonline)|:large_blue_circle: In Progress|story|
-|[#361](https://github.com/gig-projects/org_quality/issues/361)|Adapt the testsuite so it can be run on a grid environments (grid_testsuite)|:red_circle: Open|story|
+|[#361](https://github.com/gig-projects/org_quality/issues/361)|Adapt the testsuite so it can be run on a grid environments (grid_testsuite)|:large_blue_circle: In Progress|story|
 |[#366](https://github.com/gig-projects/org_quality/issues/366)|Make cockpit driven testing on our environments (cockpit_drive_QA)|:large_blue_circle: In Progress|story|
 
