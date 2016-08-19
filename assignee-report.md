@@ -3,7 +3,7 @@
 # Issues per assignee
 - [alimcodescalers](#alimcodescalers) has 6 assigned
 - [islamTaha12](#islamtaha12) has 3 assigned
-- [john-kheir](#john-kheir) has 9 assigned
+- [john-kheir](#john-kheir) has 10 assigned
 - [lzonneke](#lzonneke) has 1 assigned
 - [ramezsaeed](#ramezsaeed) has 11 assigned
 
@@ -43,6 +43,7 @@
 |[#375](https://github.com/gig-projects/org_quality/issues/375)|Run full test cycle on BE-G8-3 with Fargo (full-test-Fargo G8-3)|:red_circle: Open|story|
 |[#385](https://github.com/gig-projects/org_quality/issues/385)|be-G8-3_fargo_perf: environment limitation test [4h]|:large_blue_circle: In Progress|task|
 |[#386](https://github.com/gig-projects/org_quality/issues/386)|be-G8-3_fargo_perf: vm unlimited snapshots [5h]|:large_blue_circle: In Progress|task|
+|[#387](https://github.com/gig-projects/org_quality/issues/387)|Repair performance testing with Grafana (Grafana)|:red_circle: Open|story|
 
 
 ## [lzonneke](https://github.com/lzonneke)
