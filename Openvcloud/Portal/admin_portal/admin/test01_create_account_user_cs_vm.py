@@ -2,9 +2,6 @@ from ....utils.utils import BaseTest
 from ..page_elements_xpath import account_page
 import time
 import uuid
-from nose_parameterized import parameterized
-from random import randint
-
 
 class Account(BaseTest):
     def __init__(self, *args, **kwargs):

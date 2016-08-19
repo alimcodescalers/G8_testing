@@ -167,22 +167,22 @@ class BaseTest(unittest.TestCase):
     def get_url(self):
         return self.driver.current_url
 
-    def select(self,list_element,item_value):
+    def select(self, list_element, item_value):
         list_xpath = self.elements[list_element]
         self.select_obeject = Select(self.driver.find_element_by_xpath(list_xpath))
         self.select_list = self.select_obeject.options
         self.lg("Debug Test" + str(self.select_list) + str(self.select_list[1].text))
 
         for option in self.select_list:
-            self.lg("Debug Test"+str(option.text))
+            self.lg("Debug Test" + str(option.text))
             if item_value in option.text:
                 self.select_obeject.select_by_visible_text(option.text)
                 item_value = option.text
                 break
 
-        self.assertEqual(item_value,self.select_obeject.first_selected_option.text)
+        self.assertEqual(item_value, self.select_obeject.first_selected_option.text)
 
-    def open_base_page(self,menu_item='',sub_menu_item=''):
+    def open_base_page(self, menu_item='', sub_menu_item=''):
         self.driver.get(self.environment_url)
         time.sleep(5)
         if self.check_element_is_exist("left_menu") == False:
@@ -197,7 +197,7 @@ class BaseTest(unittest.TestCase):
         self.email = email or str(uuid.uuid4()).replace('-', '')[0:10] + "@g.com"
         self.group = group or 'user'
 
-        self.open_base_page("cloud_broker","users")
+        self.open_base_page("cloud_broker", "users")
 
         self.click("add_user")
         self.assertTrue(self.check_element_is_exist("create_user"))
@@ -217,9 +217,9 @@ class BaseTest(unittest.TestCase):
         self.click("confirm_add_user")
         return True
 
-    def open_user_page(self,username=''):
+    def open_user_page(self, username=''):
         self.username = username
-        self.open_base_page("cloud_broker","users")
+        self.open_base_page("cloud_broker", "users")
 
         self.set_text("username_search", self.username)
         username_id = self.get_text("username_table_first")
@@ -232,7 +232,7 @@ class BaseTest(unittest.TestCase):
             raise NoSuchElementException
 
     def delete_user(self, username):
-        self.open_base_page("cloud_broker","users")
+        self.open_base_page("cloud_broker", "users")
 
         self.set_text("user_search", username)
         self.lg("check if this user is exist")
@@ -250,7 +250,7 @@ class BaseTest(unittest.TestCase):
     def create_new_account(self, account='', username=''):
         self.account = account or str(uuid.uuid4()).replace('-', '')[0:10]
         self.username = username
-        self.open_base_page("cloud_broker","accounts")
+        self.open_base_page("cloud_broker", "accounts")
 
         self.click("add_account")
         self.assertTrue(self.check_element_is_exist("create_account"))
@@ -260,35 +260,34 @@ class BaseTest(unittest.TestCase):
 
         self.click("account_confirm")
 
-        self.set_text("account_search",self.account)
+        self.set_text("account_search", self.account)
         for i in range(5):
             try:
                 self.assertEqual(self.get_text("account_table_first_element"), self.account)
-            except :
+            except:
                 time.sleep(1)
                 continue
             else:
                 break
-        if account == '' :
+        if account == '':
             return self.account
 
     def open_account_page(self, account=''):
         self.account = account
-        #self.driver.switch_to_window(self.driver.window_handles[-1])
-        self.open_base_page("cloud_broker","accounts")
 
-        self.set_text("account_search",self.account)
-        #time.sleep(60)
+        self.open_base_page("cloud_broker", "accounts")
+
+        self.set_text("account_search", self.account)
+
         account_id = self.get_text("account_first_id")
         self.click("account_first_id")
-        #time.sleep(20)
 
         if account_id in self.get_url():
             return True
         else:
             raise NoSuchElementException
 
-    def delete_account(self,account=''):
+    def delete_account(self, account=''):
         self.account = account
 
         self.lg('open %s account' % account)
@@ -297,12 +296,11 @@ class BaseTest(unittest.TestCase):
         self.lg('delete the account')
         self.click('account_action')
         self.click('account_delete')
-        self.set_text('account_delete_reason',"Test")
+        self.set_text('account_delete_reason', "Test")
         self.click("account_delete_confirm")
-        self.assertEqual(self.get_text('account_page_status'),"DESTROYED")
+        self.assertEqual(self.get_text('account_page_status'), "DESTROYED")
 
-
-    def create_cloud_space(self,account='',cloud_space=''):
+    def create_cloud_space(self, account='', cloud_space=''):
         self.account = account
         self.cloud_space_name = cloud_space or str(uuid.uuid4()).replace('-', '')[0:10]
 
@@ -311,24 +309,24 @@ class BaseTest(unittest.TestCase):
 
         self.click("add_cloudspace")
 
-        self.assertEqual(self.get_text("create_cloud_space"),"Create Cloud Space")
+        self.assertEqual(self.get_text("create_cloud_space"), "Create Cloud Space")
 
-        self.set_text("cloud_space_name",self.cloud_space_name)
-        self.set_text("cloud_space_user_name",self.account_username)
+        self.set_text("cloud_space_name", self.cloud_space_name)
+        self.set_text("cloud_space_user_name", self.account_username)
 
         self.click("cloud_space_confirm")
 
-        self.set_text("cloud_space_search",self.cloud_space_name)
-        self.assertEqual(self.get_text("cloud_space_table_first_element_2"),self.cloud_space_name)
+        self.set_text("cloud_space_search", self.cloud_space_name)
+        self.assertEqual(self.get_text("cloud_space_table_first_element_2"), self.cloud_space_name)
         return self.cloud_space_name
 
     def open_cloudspace_page(self, account='', cloudspace=''):
         self.account = account
-        self.cloudspace= cloudspace
+        self.cloudspace = cloudspace
 
         self.open_account_page(self.account)
 
-        self.set_text("cloud_space_search",self.cloudspace)
+        self.set_text("cloud_space_search", self.cloudspace)
 
         cloudspace_id = self.get_text("cloud_space_table_first_element_1")
         self.click("cloud_space_table_first_element_1")
@@ -338,63 +336,63 @@ class BaseTest(unittest.TestCase):
         else:
             raise NoSuchElementException
 
-    def delete_cloudspace(self,account='', cloudspace=''):
+    def delete_cloudspace(self, account='', cloudspace=''):
         self.account = account
         self.cloudspace = cloudspace
 
         self.lg('open %s cloudspace' % cloudspace)
-        self.open_cloudspace_page(self.account,self.cloudspace)
+        self.open_cloudspace_page(self.account, self.cloudspace)
 
         self.lg('delete the cloudspace')
         self.click('cloudspace_action')
         self.click('cloudspace_delete')
-        self.set_text('cloudspace_delete_reason',"Test")
+        self.set_text('cloudspace_delete_reason', "Test")
         self.click("cloudspace_delete_confirm")
-        self.assertEqual(self.get_text('cloudspace_page_status'),"DESTROYED")
+        self.assertEqual(self.get_text('cloudspace_page_status'), "DESTROYED")
 
-    def create_virtual_machine(self, account='', cloudspace='', machine_name='',image='',memory='',disk=''):
+    def create_virtual_machine(self, account='', cloudspace='', machine_name='', image='', memory='', disk=''):
         self.account = account
-        self.cloudspace= cloudspace
+        self.cloudspace = cloudspace
         self.machine_name = machine_name or str(uuid.uuid4()).replace('-', '')[0:10]
         self.image = image or 'Ubuntu 15.10'
         self.memory = memory or '1024 MB'
         self.disk = disk or '50 GB'
 
         self.lg('open the cloudspace page')
-        self.open_cloudspace_page(self.account,self.cloudspace)
+        self.open_cloudspace_page(self.account, self.cloudspace)
 
         self.lg('add virtual machine')
         self.click('add_virtual_machine')
-        self.assertEqual(self.get_text('create_virtual_machine_on_cpu_node'),'Create Machine On CPU Node')
+        self.assertEqual(self.get_text('create_virtual_machine_on_cpu_node'), 'Create Machine On CPU Node')
 
         self.lg('enter the machine name')
-        self.set_text('machine_name',self.machine_name)
+        self.set_text('machine_name', self.machine_name)
 
         self.lg('enter the machien description')
-        self.set_text('machine_description',str(uuid.uuid4()).replace('-', '')[0:10])
+        self.set_text('machine_description', str(uuid.uuid4()).replace('-', '')[0:10])
 
         self.lg('select the image')
-        self.select('machine_images_list',self.image)
+        self.select('machine_images_list', self.image)
 
         self.lg('select the memory')
-        self.select('machine_memory_list',self.memory)
+        self.select('machine_memory_list', self.memory)
 
         self.lg('select the disk')
-        self.select('machine_disk_list',self.disk)
+        self.select('machine_disk_list', self.disk)
 
         self.lg('create machine confirm button')
         self.click('machine_confirm_button')
 
-    def open_virtual_machine_page(self,account='',cloudspace='',machine_name=''):
+    def open_virtual_machine_page(self, account='', cloudspace='', machine_name=''):
         self.account = account
         self.cloudspace = cloudspace
         self.machine_name = machine_name
 
         self.lg('opne %s cloudspace' % cloudspace)
-        self.open_cloudspace_page(self.account,self.cloudspace)
+        self.open_cloudspace_page(self.account, self.cloudspace)
 
         self.lg('open %s virtual machine' % machine_name)
-        self.set_text('virtual machine search',self.machine_name)
+        self.set_text('virtual machine search', self.machine_name)
         vm_id = self.get_text("virtual_machine_tabkle_first_element_2")[3:]
         self.click('virtual_machine_table_first_element')
 
@@ -403,18 +401,17 @@ class BaseTest(unittest.TestCase):
         else:
             raise NoSuchElementException
 
-    def delete_virtual_machine(self,account='', cloudspace='', machine_name=''):
+    def delete_virtual_machine(self, account='', cloudspace='', machine_name=''):
         self.account = account
         self.cloudspace = cloudspace
         self.machine_name = machine_name
 
         self.lg('open %s virtual machine' % machine_name)
-        self.open_virtual_machine_page(self.account,self.cloudspace,self.machine_name)
+        self.open_virtual_machine_page(self.account, self.cloudspace, self.machine_name)
 
         self.lg('delete the machine')
         self.click('virtual_machine_action')
         self.click('virtual_machine_delete')
-        self.set_text('virtual_machine_delete_reason',"Test")
+        self.set_text('virtual_machine_delete_reason', "Test")
         self.click("virtual_machine_delete_confirm")
-        self.assertEqual(self.get_text('virtual_machine_page_status'),"DESTROYED")
-
+        self.assertEqual(self.get_text('virtual_machine_page_status'), "DESTROYED")
