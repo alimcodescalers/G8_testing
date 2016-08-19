@@ -6,7 +6,6 @@
 
 |Issue|Title|State|Type|
 |-----|-----|-----|---|
-|[#387](https://github.com/gig-projects/org_quality/issues/387)|Repair performance testing with Grafana (Grafana)|:red_circle: Open|story|
 |[#388](https://github.com/gig-projects/org_quality/issues/388)|cockpit_drive_QA: documentation [1d]|:red_circle: Open|task|
 |[#389](https://github.com/gig-projects/org_quality/issues/389)|cockpit_drive_QA: Make test-results available on env_repo [1d]|:red_circle: Open|task|
 |[#396](https://github.com/gig-projects/org_quality/issues/396)|ubuntudockers: test daily build of all dockers in the repo on a daily basis|:red_circle: Open|task|
@@ -38,6 +37,7 @@
 
 |Issue|Title|State|Type|
 |-----|-----|-----|----|
+|[#387](https://github.com/gig-projects/org_quality/issues/387)|Repair performance testing with Grafana (Grafana)|:red_circle: Open|story|
 
 
 ### [lzonneke](https://github.com/lzonneke)
