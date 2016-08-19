@@ -1,4 +1,4 @@
-from ..utils import BaseTest
+from ....utils.utils import BaseTest
 from ..page_elements_xpath import account_page
 import time
 import uuid
@@ -16,9 +16,8 @@ class Account(BaseTest):
         self.login()
         if self.check_element_is_exist("left_menu") == False:
             self.click("left_menu_button")
-        #self.driver.implicitly_wait(50)
 
-    def test01_create_account(self):
+    def test01_create_account_user_cs_vm(self):
         """ PRTL-010
         *Test case for create new user and change his password*
 
@@ -32,13 +31,13 @@ class Account(BaseTest):
         #. open the virtual machine page
         """
         self.username = str(uuid.uuid4()).replace('-', '')[0:10]
-        self.account = "98b0d47956"#str(uuid.uuid4()).replace('-', '')[0:10]
-        self.cloudspace = "3df6aa26a4"#str(uuid.uuid4()).replace('-', '')[0:10]
+        self.account = str(uuid.uuid4()).replace('-', '')[0:10]
+        self.cloudspace = str(uuid.uuid4()).replace('-', '')[0:10]
         self.machine_name = str(uuid.uuid4()).replace('-', '')[0:10]
         self.password = str(uuid.uuid4()).replace('-', '')[0:10]
         self.email = str(uuid.uuid4()).replace('-', '')[0:10] + "@g.com"
         self.group = 'user'
-        '''
+
         self.lg('Create new username, user:%s password:%s' % (self.username,self.password))
         self.create_new_user(self.username,self.password,self.email,self.group)
 
@@ -56,7 +55,7 @@ class Account(BaseTest):
 
         self.lg('open cloud space page')
         self.open_cloudspace_page(self.account,self.cloudspace)
-        '''
+
         self.lg('create virtual machine')
         self.create_virtual_machine(self.account, self.cloudspace, self.machine_name)
 

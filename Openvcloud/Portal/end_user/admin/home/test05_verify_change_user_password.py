@@ -1,4 +1,4 @@
-from end_user.utils import BaseTest
+from ....utils.utils import BaseTest
 from end_user.page_elements_xpath import users_page
 from selenium.common.exceptions import NoSuchElementException
 import uuid

@@ -1,4 +1,4 @@
-from end_user.utils import BaseTest
+from ....utils.utils import BaseTest
 from end_user.page_elements_xpath import home_page
 
 class KnowledgeBase(BaseTest):

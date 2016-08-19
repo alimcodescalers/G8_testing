@@ -14,7 +14,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support.ui import Select
 
-from admin_portal.page_elements_xpath import login_page
+from . import utils_xpath
 
 
 class BaseTest(unittest.TestCase):
@@ -24,7 +24,7 @@ class BaseTest(unittest.TestCase):
         self.admin_username = config['main']['admin']
         self.admin_password = config['main']['passwd']
         self.browser = config['main']['browser']
-        self.elements = login_page.elements.copy()
+        self.elements = utils_xpath.elements.copy()
 
     def setUp(self):
         self._testID = self._testMethodName
