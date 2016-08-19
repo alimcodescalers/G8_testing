@@ -30,8 +30,14 @@ for j in os.listdir(os.getcwd()):
             if i.startswith("result"):
                 file = open( i, 'r')
                 f=file.read()
-                match = re.finditer(r'iops=([\d]+),', f)
-                disk_iops = [int(c.group(1)) for c in match]
+                disk_iops=[]
+                match = re.finditer(r'iops=([\S]+),', f)
+                # this for loop in case there are iops for write and read
+                for c in match:
+                    if c.group(1).endswith('K'):
+                        disk_iops.append(int(float(c.group(1).replace('K',''))*1000))
+                    else:
+                        disk_iops.append(int(c.group(1)))
                 iops_list.append(sum(disk_iops))
                 runt = re.search(r'runt=\s*([\d]+)msec', f)
                 disks_runtime.append(int(runt.group(1)))
