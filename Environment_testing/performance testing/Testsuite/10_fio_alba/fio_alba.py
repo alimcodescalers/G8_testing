@@ -105,7 +105,9 @@ try:
         j.do.execute('rm -rf /var/tmp/disk_%s' %(p+1))
         j.do.execute('rm -rf /mnt/vmstor/test_disk%s.raw' %(p+1))
 
-except:
+except Exception as e:
+    print('Error: %s' %e)
+    print('Error args: %s' %e.args)
     j.do.execute('rm -rf %s' %Res_dir)
     for p in range(no_of_disks):
         try:
