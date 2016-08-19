@@ -36,8 +36,7 @@ node=${node:-ovc_master}
 branch=${branch:-master}
 directory=${directory:-/opt/code}
 
-eval $(bash Openvcloud/tools/gen_connection_params.sh $environment $node) # This script returns SSHKEY, PROXY and HOST
-
+su jenkins
 eval $(ssh-agent -s)
 private_key="$HOME/.ssh/id_awesomo"
 if [ ! -e $private_key ]; then
@@ -46,6 +45,10 @@ fi
 echo $private_key
 ssh-add $private_key
 ssh-add -l
+
+python3 Openvcloud/tools/sshconfigen.py -r $environment >> .ssh/config
+eval $(bash Openvcloud/tools/gen_connection_params.sh $environment $node) # This script returns SSHKEY, PROXY and HOST
+
 
 script="'bash -s' < Openvcloud/tools/setup_run_tests_local.sh $branch $directory $testsuite"
 eval "ssh -A -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -M -l root -i $SSHKEY -o ProxyCommand=\"$PROXY\" $HOST $script"
