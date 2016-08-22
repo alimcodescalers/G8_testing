@@ -31,19 +31,21 @@
 |Issue|Title|State|Type|
 |-----|-----|-----|----|
 |[#304](https://github.com/gig-projects/org_quality/issues/304)|Create an automated test suite coverage for cockpit (test_cockpit)|:red_circle: Open|story|
+|[#401](https://github.com/gig-projects/org_quality/issues/401)|grid_testsuite: Adapt the basic utils to run the basic test suite on be-conv-2 which is part of the grid|:large_blue_circle: In Progress|task|
 
 
 ### [john-kheir](https://github.com/john-kheir)
 
 |Issue|Title|State|Type|
 |-----|-----|-----|----|
-|[#387](https://github.com/gig-projects/org_quality/issues/387)|Repair performance testing with Grafana (Grafana)|:red_circle: Open|story|
+|[#387](https://github.com/gig-projects/org_quality/issues/387)|Repair performance testing with Grafana (Grafana)|:large_blue_circle: In Progress|story|
 
 
 ### [lzonneke](https://github.com/lzonneke)
 
 |Issue|Title|State|Type|
 |-----|-----|-----|----|
+|[#404](https://github.com/gig-projects/org_quality/issues/404)|Run performance test on G8-2 (performance tests G8-2)|:red_circle: Open|story|
 
 
 ### [ramezsaeed](https://github.com/ramezsaeed)
