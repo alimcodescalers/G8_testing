@@ -2,10 +2,10 @@
 
 # Issues per assignee
 - [alimcodescalers](#alimcodescalers) has 6 assigned
-- [islamTaha12](#islamtaha12) has 3 assigned
-- [john-kheir](#john-kheir) has 10 assigned
-- [lzonneke](#lzonneke) has 1 assigned
-- [ramezsaeed](#ramezsaeed) has 11 assigned
+- [islamTaha12](#islamtaha12) has 4 assigned
+- [john-kheir](#john-kheir) has 9 assigned
+- [lzonneke](#lzonneke) has 3 assigned
+- [ramezsaeed](#ramezsaeed) has 10 assigned
 
 
 
@@ -27,7 +27,8 @@
 |-----|-----|-----|----|
 |[#304](https://github.com/gig-projects/org_quality/issues/304)|Create an automated test suite coverage for cockpit (test_cockpit)|:red_circle: Open|story|
 |[#370](https://github.com/gig-projects/org_quality/issues/370)|cockpit_drive_QA: create a blueprint to run the acl_basic_testsuite [4h]|:red_circle: Open|task|
-|[#377](https://github.com/gig-projects/org_quality/issues/377)|Portal: Create portal test to cover machine section [2d]|:large_blue_circle: In Progress|task|
+|[#379](https://github.com/gig-projects/org_quality/issues/379)|Portal: Create new Account with new User [2d]|:red_circle: Open|task|
+|[#401](https://github.com/gig-projects/org_quality/issues/401)|grid_testsuite: Adapt the basic utils to run the basic test suite on be-conv-2 which is part of the grid|:large_blue_circle: In Progress|task|
 
 
 ## [john-kheir](https://github.com/john-kheir)
@@ -36,14 +37,13 @@
 |-----|-----|-----|----|
 |[#269](https://github.com/gig-projects/org_quality/issues/269)|whmcs-int: Test integration of WHMCS into OVC|:red_circle: Open|task|
 |[#280](https://github.com/gig-projects/org_quality/issues/280)|Implement testcases for cloudapi images part|:red_circle: Open||
-|[#321](https://github.com/gig-projects/org_quality/issues/321)|full-test-Fargo G8-3: Testing FIO on ALBA layer from OVS [3d]|:red_circle: Open|task|
-|[#322](https://github.com/gig-projects/org_quality/issues/322)|Improve the performance test scripts (perf_upgrade)|:large_blue_circle: In Progress|story|
-|[#354](https://github.com/gig-projects/org_quality/issues/354)|perf_upgrade: add the average file transfer speed in test results column [1d]|:large_blue_circle: In Progress|task|
-|[#355](https://github.com/gig-projects/org_quality/issues/355)|perf_upgrade: add the latency figures in the test result table of FIO [1d]|:large_blue_circle: In Progress|task|
+|[#322](https://github.com/gig-projects/org_quality/issues/322)|Improve the performance test scripts (perf_upgrade)|:red_circle: Open|story|
+|[#354](https://github.com/gig-projects/org_quality/issues/354)|perf_upgrade: add the average file transfer speed in test results column [1d]|:red_circle: Open|task|
+|[#355](https://github.com/gig-projects/org_quality/issues/355)|perf_upgrade: add the latency figures in the test result table of FIO [1d]|:red_circle: Open|task|
 |[#375](https://github.com/gig-projects/org_quality/issues/375)|Run full test cycle on BE-G8-3 with Fargo (full-test-Fargo G8-3)|:red_circle: Open|story|
-|[#385](https://github.com/gig-projects/org_quality/issues/385)|be-G8-3_fargo_perf: environment limitation test [4h]|:large_blue_circle: In Progress|task|
-|[#386](https://github.com/gig-projects/org_quality/issues/386)|be-G8-3_fargo_perf: vm unlimited snapshots [5h]|:large_blue_circle: In Progress|task|
-|[#387](https://github.com/gig-projects/org_quality/issues/387)|Repair performance testing with Grafana (Grafana)|:red_circle: Open|story|
+|[#385](https://github.com/gig-projects/org_quality/issues/385)|be-G8-3_fargo_perf: environment limitation test [4h]|:red_circle: Open|task|
+|[#386](https://github.com/gig-projects/org_quality/issues/386)|be-G8-3_fargo_perf: vm unlimited snapshots [5h]|:red_circle: Open|task|
+|[#387](https://github.com/gig-projects/org_quality/issues/387)|Repair performance testing with Grafana (Grafana)|:large_blue_circle: In Progress|story|
 
 
 ## [lzonneke](https://github.com/lzonneke)
@@ -51,6 +51,8 @@
 |Issue|Title|State|Type|
 |-----|-----|-----|----|
 |[#1](https://github.com/gig-projects/org_quality/issues/1)|test portal automated test using explorer|:red_circle: Open||
+|[#403](https://github.com/gig-projects/org_quality/issues/403)| Demolition testing on G8-2 (demolition test)|:red_circle: Open|story|
+|[#404](https://github.com/gig-projects/org_quality/issues/404)|Run performance test on G8-2 (performance tests G8-2)|:red_circle: Open|story|
 
 
 ## [ramezsaeed](https://github.com/ramezsaeed)
@@ -66,6 +68,5 @@
 |[#361](https://github.com/gig-projects/org_quality/issues/361)|Adapt the testsuite so it can be run on a grid environments (grid_testsuite)|:large_blue_circle: In Progress|story|
 |[#366](https://github.com/gig-projects/org_quality/issues/366)|Make cockpit driven testing on our environments (cockpit_drive_QA)|:large_blue_circle: In Progress|story|
 |[#373](https://github.com/gig-projects/org_quality/issues/373)|A_Test_2.1.0b: adapt jenkins to use the new ssh config iso the old ovce script [4h]|:red_circle: Open|task|
-|[#382](https://github.com/gig-projects/org_quality/issues/382)|Alba|:large_blue_circle: In Progress||
 |[#394](https://github.com/gig-projects/org_quality/issues/394)|M_Test_2.1.0b: Upgrade du-conv-2 to the latest release [1d]|:large_blue_circle: In Progress|task|
 
