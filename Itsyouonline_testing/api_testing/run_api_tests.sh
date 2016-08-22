@@ -51,6 +51,7 @@ ssh-add -l
 git clone -b $branch git@github.com:gig-projects/org_quality.git
 cd org_quality/Itsyouonline_testing/api_testing
 echo -e "${GREEN}** Activating JumpScale virtual env ...${NC}"
+apt-get install -y virtualenv
 virtualenv venv
 source venv/bin/activate
 echo -e "${GREEN}** Checking python-pip ...${NC}";
