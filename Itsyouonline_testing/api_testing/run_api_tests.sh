@@ -20,8 +20,8 @@ fi
 OPTIND=1
 while getopts ":i:p:u:b:d:" opt; do
   case $opt in
-	i) id=="$OPTARG";;
-	p) passwd=="$OPTARG";;
+	i) id="$OPTARG";;
+	p) passwd="$OPTARG";;
 	u) user="$OPTARG";;
     b) branch="$OPTARG";;
     d) directory="$OPTARG";;
@@ -35,11 +35,7 @@ then
     exit 1
 fi
 environment=$1
-id=${id:-wyWj8JDYWSny2yOJ0wwsvaAyDAUH}
-passwd=${passwd:-abmyA-0oYXRwOF5uIPewvktwX6em}
-user=${user:-m_flip_flop}
 branch=${branch:-master}
-directory=${directory:-/opt}
 
 
 mkdir -p $directory
@@ -51,7 +47,7 @@ ssh-add -l
 git clone -b $branch git@github.com:gig-projects/org_quality.git
 cd org_quality/Itsyouonline_testing/api_testing
 echo -e "${GREEN}** Checking python-pip ...${NC}";
-sudo which pip || apt-get install -y python-pip
+which pip || apt-get install -y python-pip
 echo -e "${GREEN}** Activating JumpScale virtual env ...${NC}"
 pip install virtualenv
 virtualenv venv
