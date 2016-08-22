@@ -3,3 +3,4 @@ nose-progressive
 nose-testconfig
 nose_parameterized==0.3.3
 requests==2.7.0
+pyopenssl
