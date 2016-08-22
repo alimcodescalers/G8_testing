@@ -18,7 +18,7 @@ then
 fi
 
 OPTIND=1
-while getopts ":i:p:u:d:" opt; do
+while getopts ":i:p:u:b:d:" opt; do
   case $opt in
 	i) id=="$OPTARG";;
 	p) passwd=="$OPTARG";;
