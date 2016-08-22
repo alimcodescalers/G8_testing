@@ -50,16 +50,16 @@ echo -e "${GREEN}** Clone org_quality $branch branch ...${NC}"
 ssh-add -l
 git clone -b $branch git@github.com:gig-projects/org_quality.git
 cd org_quality/Itsyouonline_testing/api_testing
+echo -e "${GREEN}** Checking python-pip ...${NC}";
+sudo which pip || apt-get install -y python-pip
 echo -e "${GREEN}** Activating JumpScale virtual env ...${NC}"
-apt-get install -y virtualenv
+pip install virtualenv
 virtualenv venv
 source venv/bin/activate
-echo -e "${GREEN}** Checking python-pip ...${NC}";
-which pip || apt-get install -y python-pip
 echo -e "${GREEN}** Installing org_quality requirements ...${NC}"
-pip install -r requirements.txt
+sudo pip install -r requirements.txt
 echo -e "${GREEN}** Running tests ...${NC}"
-nosetests testsuite --tc-file config.ini --tc=main.env_url:$environment --tc=main.applicationid:$id --tc=main.secret:$passwd --tc=main.user:$user  --with-xunit --xunit-file='testresults.xml' --with-progressive
+nosetests -v testsuite --tc-file config.ini --tc=main.env_url:$environment --tc=main.applicationid:$id --tc=main.secret:$passwd --tc=main.user:$user  --with-xunit --xunit-file='testresults.xml' --with-progressive
 
 
 # Collect result
