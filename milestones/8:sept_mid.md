@@ -40,6 +40,7 @@
 
 |Issue|Title|State|Type|
 |-----|-----|-----|----|
+|[#403](https://github.com/gig-projects/org_quality/issues/403)| Demolition testing on G8-2 (demolition test)|:red_circle: Open|story|
 
 
 ### [ramezsaeed](https://github.com/ramezsaeed)
