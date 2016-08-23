@@ -35,6 +35,7 @@
 
 |Issue|Title|State|Type|
 |-----|-----|-----|----|
+|[#304](https://github.com/gig-projects/org_quality/issues/304)|Create an automated test suite coverage for cockpit (test_cockpit)|:red_circle: Open|story|
 
 
 ### [john-kheir](https://github.com/john-kheir)
