@@ -2,7 +2,8 @@
 
 # Issues per assignee
 - [alimcodescalers](#alimcodescalers) has 8 assigned
-- [islamTaha12](#islamtaha12) has 5 assigned
+- [hofkensj](#hofkensj) has 1 assigned
+- [islamTaha12](#islamtaha12) has 6 assigned
 - [john-kheir](#john-kheir) has 9 assigned
 - [lzonneke](#lzonneke) has 3 assigned
 - [ramezsaeed](#ramezsaeed) has 11 assigned
@@ -19,8 +20,15 @@
 |[#350](https://github.com/gig-projects/org_quality/issues/350)|testing_itsyouonline: implement extended api tests POST/PUT/DELETE companies [1d]|:red_circle: Open|task|
 |[#351](https://github.com/gig-projects/org_quality/issues/351)|testing_itsyouonline: implement extended api tests POST/PUT/DELETE contracts [4h]|:red_circle: Open|task|
 |[#367](https://github.com/gig-projects/org_quality/issues/367)|testing_itsyouonline: Create new jenkens project for api_testing|:red_circle: Open|task|
-|[#398](https://github.com/gig-projects/org_quality/issues/398)|Task 379|:large_blue_circle: In Progress||
 |[#405](https://github.com/gig-projects/org_quality/issues/405)|M_Test_2.1.0b: Perform one time manual validation for VNAS Installation|:large_blue_circle: In Progress|task|
+|[#415](https://github.com/gig-projects/org_quality/issues/415)|Portal: Create new test case scenarios for testing admin portal [2d]|:large_blue_circle: In Progress|task|
+
+
+## [hofkensj](https://github.com/hofkensj)
+
+|Issue|Title|State|Type|
+|-----|-----|-----|----|
+|[#414](https://github.com/gig-projects/org_quality/issues/414)|Demolition test specs (G8_demolition)|:red_circle: Open|story|
 
 
 ## [islamTaha12](https://github.com/islamTaha12)
@@ -30,8 +38,9 @@
 |[#304](https://github.com/gig-projects/org_quality/issues/304)|Create an automated test suite coverage for cockpit (test_cockpit)|:red_circle: Open|story|
 |[#370](https://github.com/gig-projects/org_quality/issues/370)|cockpit_drive_QA: create a blueprint to run the acl_basic_testsuite [4h]|:red_circle: Open|task|
 |[#379](https://github.com/gig-projects/org_quality/issues/379)|Portal: Create new Account with new User [2d]|:red_circle: Open|task|
-|[#406](https://github.com/gig-projects/org_quality/issues/406)|Portal: Create new test case to verify admin portal menu [6h]|:red_circle: Open|task|
+|[#406](https://github.com/gig-projects/org_quality/issues/406)|Portal: Create new test case to verify admin portal menu [6h]|:large_blue_circle: In Progress|task|
 |[#407](https://github.com/gig-projects/org_quality/issues/407)|Portal: Create new test case to verify environment health status [6h]|:red_circle: Open|task|
+|[#412](https://github.com/gig-projects/org_quality/issues/412)|Portal: Create new test case to test accounts [6h]|:red_circle: Open|task|
 
 
 ## [john-kheir](https://github.com/john-kheir)
