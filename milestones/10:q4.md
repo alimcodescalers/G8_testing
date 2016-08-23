@@ -10,6 +10,7 @@
 
 ## Issues per assignee
 - [alimcodescalers](#alimcodescalers)
+- [hofkensj](#hofkensj)
 - [islamTaha12](#islamtaha12)
 - [john-kheir](#john-kheir)
 - [lzonneke](#lzonneke)
@@ -18,6 +19,12 @@
 
 
 ### [alimcodescalers](https://github.com/alimcodescalers)
+
+|Issue|Title|State|Type|
+|-----|-----|-----|----|
+
+
+### [hofkensj](https://github.com/hofkensj)
 
 |Issue|Title|State|Type|
 |-----|-----|-----|----|
