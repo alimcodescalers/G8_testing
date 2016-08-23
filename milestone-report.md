@@ -4,7 +4,7 @@
 |Milestone|ETA|
 |---------|---|
 |[aug_end](#milestone-aug_end)|2016/08/23|
-|[aug_mid](#milestone-aug_mid)|2016/08/23|
+|[aug_mid](#milestone-aug_mid)|N/A|
 |[q4](#milestone-q4)|N/A|
 |[roadmap](#milestone-roadmap)|N/A|
 |[sept_end](#milestone-sept_end)|2016/08/23|
@@ -20,16 +20,15 @@
 |[#308](https://github.com/gig-projects/org_quality/issues/308)|Create a test suite coverage for the VDC control panel (test_VDCcontrol)|:red_circle: Open|[ramezsaeed](https://github.com/ramezsaeed)|[2016/08/23](https://github.com/gig-projects/org_quality/issues/308#issuecomment-None)|
 |[#309](https://github.com/gig-projects/org_quality/issues/309)|create a test suite which is covering testing itsyou.online (testing_itsyouonline)|:large_blue_circle: In Progress|[ramezsaeed](https://github.com/ramezsaeed)|[2016/08/23](https://github.com/gig-projects/org_quality/issues/309#issuecomment-None)|
 |[#361](https://github.com/gig-projects/org_quality/issues/361)|Adapt the testsuite so it can be run on a grid environments (grid_testsuite)|:large_blue_circle: In Progress|[ramezsaeed](https://github.com/ramezsaeed)|[2016/08/23](https://github.com/gig-projects/org_quality/issues/361#issuecomment-None)|
-|[#366](https://github.com/gig-projects/org_quality/issues/366)|Make cockpit driven testing on our environments (cockpit_drive_QA)|:large_blue_circle: In Progress|[ramezsaeed](https://github.com/ramezsaeed)|[2016/08/23](https://github.com/gig-projects/org_quality/issues/366#issuecomment-None)|
-|[#387](https://github.com/gig-projects/org_quality/issues/387)|Repair performance testing with Grafana (Grafana)|:large_blue_circle: In Progress|[john-kheir](https://github.com/john-kheir)|[2016/08/23](https://github.com/gig-projects/org_quality/issues/387#issuecomment-None)|
+|[#375](https://github.com/gig-projects/org_quality/issues/375)|Run full test cycle on BE-G8-3 with Fargo (full-test-Fargo G8-3)|:red_circle: Open|[john-kheir](https://github.com/john-kheir)|[2016/08/23](https://github.com/gig-projects/org_quality/issues/375#issuecomment-None)|
 |[#404](https://github.com/gig-projects/org_quality/issues/404)|Run performance test on G8-2 (performance tests G8-2)|:red_circle: Open|[lzonneke](https://github.com/lzonneke)|[2016/08/23](https://github.com/gig-projects/org_quality/issues/404#issuecomment-None)|
+|[#414](https://github.com/gig-projects/org_quality/issues/414)|Demolition test specs (G8_demolition)|:red_circle: Open|[hofkensj](https://github.com/hofkensj)|[2016/08/23](https://github.com/gig-projects/org_quality/issues/414#issuecomment-None)|
 
 ## [Milestone aug_mid](milestones/6:aug_mid.md)
 
 
 |Issue|Title|State|Owner|ETA|
 |-----|-----|-----|-----|---|
-|[#375](https://github.com/gig-projects/org_quality/issues/375)|Run full test cycle on BE-G8-3 with Fargo (full-test-Fargo G8-3)|:red_circle: Open|[john-kheir](https://github.com/john-kheir)|[2016/08/23](https://github.com/gig-projects/org_quality/issues/375#issuecomment-None)|
 
 ## [Milestone q4](milestones/10:q4.md)
 
@@ -48,6 +47,7 @@
 
 |Issue|Title|State|Owner|ETA|
 |-----|-----|-----|-----|---|
+|[#387](https://github.com/gig-projects/org_quality/issues/387)|Repair performance testing with Grafana (Grafana)|:large_blue_circle: In Progress|[john-kheir](https://github.com/john-kheir)|[2016/08/23](https://github.com/gig-projects/org_quality/issues/387#issuecomment-None)|
 |[#395](https://github.com/gig-projects/org_quality/issues/395)|Create testsuite for Admin portal (Portal)|:red_circle: Open||[2016/08/23](https://github.com/gig-projects/org_quality/issues/395#issuecomment-None)|
 
 ## [Milestone sept_mid](milestones/8:sept_mid.md)
@@ -55,6 +55,7 @@
 
 |Issue|Title|State|Owner|ETA|
 |-----|-----|-----|-----|---|
+|[#366](https://github.com/gig-projects/org_quality/issues/366)|Make cockpit driven testing on our environments (cockpit_drive_QA)|:large_blue_circle: In Progress|[ramezsaeed](https://github.com/ramezsaeed)|[2016/08/23](https://github.com/gig-projects/org_quality/issues/366#issuecomment-None)|
 |[#403](https://github.com/gig-projects/org_quality/issues/403)| Demolition testing on G8-2 (demolition test)|:red_circle: Open|[lzonneke](https://github.com/lzonneke)|[2016/08/23](https://github.com/gig-projects/org_quality/issues/403#issuecomment-None)|
 
 
@@ -67,3 +68,7 @@
 |[#306](https://github.com/gig-projects/org_quality/issues/306)|Perform automated tests coverage for cb2.1.0 beta (A_Test_2.1.0b)|:red_circle: Open|[ramezsaeed](https://github.com/ramezsaeed)|[2016/08/23](https://github.com/gig-projects/org_quality/issues/306#issuecomment-None)|
 |[#307](https://github.com/gig-projects/org_quality/issues/307)|Perform one time manual validation for milestone cb2.1.0b (M_Test_2.1.0b)|:red_circle: Open|[ramezsaeed](https://github.com/ramezsaeed)|[2016/08/23](https://github.com/gig-projects/org_quality/issues/307#issuecomment-None)|
 |[#322](https://github.com/gig-projects/org_quality/issues/322)|Improve the performance test scripts (perf_upgrade)|:red_circle: Open|[john-kheir](https://github.com/john-kheir)|[2016/08/23](https://github.com/gig-projects/org_quality/issues/322#issuecomment-None)|
+|[#409](https://github.com/gig-projects/org_quality/issues/409)|document the manual test that needs to be done (manual_test_docu)|:red_circle: Open||[2016/08/23](https://github.com/gig-projects/org_quality/issues/409#issuecomment-None)|
+|[#410](https://github.com/gig-projects/org_quality/issues/410)|review all the automated test and documentation (auto_test_review)|:red_circle: Open||[2016/08/23](https://github.com/gig-projects/org_quality/issues/410#issuecomment-None)|
+|[#411](https://github.com/gig-projects/org_quality/issues/411)|migrate all g8 test code to a public repo on 0-coplexity (migrate_QA)|:red_circle: Open||[2016/08/23](https://github.com/gig-projects/org_quality/issues/411#issuecomment-None)|
+|[#413](https://github.com/gig-projects/org_quality/issues/413)|update test documentation for Sberbank|:red_circle: Open||[2016/08/23](https://github.com/gig-projects/org_quality/issues/413#issuecomment-None)|
