@@ -13,6 +13,7 @@
 
 ## Issues per assignee
 - [alimcodescalers](#alimcodescalers)
+- [hofkensj](#hofkensj)
 - [islamTaha12](#islamtaha12)
 - [john-kheir](#john-kheir)
 - [lzonneke](#lzonneke)
@@ -26,6 +27,13 @@
 |-----|-----|-----|----|
 
 
+### [hofkensj](https://github.com/hofkensj)
+
+|Issue|Title|State|Type|
+|-----|-----|-----|----|
+|[#414](https://github.com/gig-projects/org_quality/issues/414)|Demolition test specs (G8_demolition)|:red_circle: Open|story|
+
+
 ### [islamTaha12](https://github.com/islamTaha12)
 
 |Issue|Title|State|Type|
@@ -37,7 +45,7 @@
 
 |Issue|Title|State|Type|
 |-----|-----|-----|----|
-|[#387](https://github.com/gig-projects/org_quality/issues/387)|Repair performance testing with Grafana (Grafana)|:large_blue_circle: In Progress|story|
+|[#375](https://github.com/gig-projects/org_quality/issues/375)|Run full test cycle on BE-G8-3 with Fargo (full-test-Fargo G8-3)|:red_circle: Open|story|
 
 
 ### [lzonneke](https://github.com/lzonneke)
@@ -54,5 +62,4 @@
 |[#308](https://github.com/gig-projects/org_quality/issues/308)|Create a test suite coverage for the VDC control panel (test_VDCcontrol)|:red_circle: Open|story|
 |[#309](https://github.com/gig-projects/org_quality/issues/309)|create a test suite which is covering testing itsyou.online (testing_itsyouonline)|:large_blue_circle: In Progress|story|
 |[#361](https://github.com/gig-projects/org_quality/issues/361)|Adapt the testsuite so it can be run on a grid environments (grid_testsuite)|:large_blue_circle: In Progress|story|
-|[#366](https://github.com/gig-projects/org_quality/issues/366)|Make cockpit driven testing on our environments (cockpit_drive_QA)|:large_blue_circle: In Progress|story|
 
