@@ -5,7 +5,7 @@
 - [hofkensj](#hofkensj) has 1 assigned
 - [islamTaha12](#islamtaha12) has 5 assigned
 - [john-kheir](#john-kheir) has 9 assigned
-- [lzonneke](#lzonneke) has 3 assigned
+- [lzonneke](#lzonneke) has 5 assigned
 - [ramezsaeed](#ramezsaeed) has 11 assigned
 
 
@@ -65,6 +65,8 @@
 |[#1](https://github.com/gig-projects/org_quality/issues/1)|test portal automated test using explorer|:red_circle: Open||
 |[#403](https://github.com/gig-projects/org_quality/issues/403)| Demolition testing on G8-2 (demolition test)|:red_circle: Open|story|
 |[#404](https://github.com/gig-projects/org_quality/issues/404)|Run performance test on G8-2 (performance tests G8-2)|:red_circle: Open|story|
+|[#411](https://github.com/gig-projects/org_quality/issues/411)|migrate all g8 test code to a public repo on 0-complexity (migrate_QA)|:red_circle: Open|story|
+|[#413](https://github.com/gig-projects/org_quality/issues/413)|update test documentation for Sberbank (sberbank_doc)|:red_circle: Open|story|
 
 
 ## [ramezsaeed](https://github.com/ramezsaeed)
@@ -72,7 +74,7 @@
 |Issue|Title|State|Type|
 |-----|-----|-----|----|
 |[#271](https://github.com/gig-projects/org_quality/issues/271)|1604: Validation if the default os is Ubuntu 16.04|:red_circle: Open|task|
-|[#278](https://github.com/gig-projects/org_quality/issues/278)|Verify all open issues in state verification on openvcloud (verification)|:large_blue_circle: In Progress|story|
+|[#278](https://github.com/gig-projects/org_quality/issues/278)|Verify all open issues in state verification on openvcloud (verification_b16)|:large_blue_circle: In Progress|story|
 |[#306](https://github.com/gig-projects/org_quality/issues/306)|Perform automated tests coverage for cb2.1.0 beta (A_Test_2.1.0b)|:red_circle: Open|story|
 |[#307](https://github.com/gig-projects/org_quality/issues/307)|Perform one time manual validation for milestone cb2.1.0b (M_Test_2.1.0b)|:red_circle: Open|story|
 |[#308](https://github.com/gig-projects/org_quality/issues/308)|Create a test suite coverage for the VDC control panel (test_VDCcontrol)|:red_circle: Open|story|
