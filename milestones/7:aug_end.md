@@ -31,7 +31,6 @@
 |Issue|Title|State|Type|
 |-----|-----|-----|----|
 |[#304](https://github.com/gig-projects/org_quality/issues/304)|Create an automated test suite coverage for cockpit (test_cockpit)|:red_circle: Open|story|
-|[#401](https://github.com/gig-projects/org_quality/issues/401)|grid_testsuite: Adapt the basic utils to run the basic test suite on be-conv-2 which is part of the grid|:large_blue_circle: In Progress|task|
 
 
 ### [john-kheir](https://github.com/john-kheir)
