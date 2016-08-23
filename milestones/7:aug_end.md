@@ -6,11 +6,8 @@
 
 |Issue|Title|State|Type|
 |-----|-----|-----|---|
-|[#409](https://github.com/gig-projects/org_quality/issues/409)|document the manual test that needs to be done (manual_test_docu)|:red_circle: Open|story|
-|[#410](https://github.com/gig-projects/org_quality/issues/410)|review all the automated test and documentation (auto_test_review)|:red_circle: Open|story|
-|[#417](https://github.com/gig-projects/org_quality/issues/417)|migrate_QA: create a public repo including the code on 0-complexity [2h]|:red_circle: Open|task|
-|[#418](https://github.com/gig-projects/org_quality/issues/418)|migrate_QA: refactor Jenkins in order to use the public repo [6h]|:red_circle: Open|task|
-|[#420](https://github.com/gig-projects/org_quality/issues/420)|manual_test_docu: Create a basic template which will be used for all manual validation testing [3d]|:red_circle: Open|task|
+|[#411](https://github.com/gig-projects/org_quality/issues/411)|migrate all g8 test code to a public repo on 0-complexity (migrate_QA)|:red_circle: Open|story|
+|[#413](https://github.com/gig-projects/org_quality/issues/413)|update test documentation for Sberbank (sberbank_doc)|:red_circle: Open|story|
 
 
 ## Issues per assignee
@@ -56,15 +53,12 @@
 |Issue|Title|State|Type|
 |-----|-----|-----|----|
 |[#404](https://github.com/gig-projects/org_quality/issues/404)|Run performance test on G8-2 (performance tests G8-2)|:red_circle: Open|story|
-|[#411](https://github.com/gig-projects/org_quality/issues/411)|migrate all g8 test code to a public repo on 0-complexity (migrate_QA)|:red_circle: Open|story|
-|[#413](https://github.com/gig-projects/org_quality/issues/413)|update test documentation for Sberbank (sberbank_doc)|:red_circle: Open|story|
 
 
 ### [ramezsaeed](https://github.com/ramezsaeed)
 
 |Issue|Title|State|Type|
 |-----|-----|-----|----|
-|[#278](https://github.com/gig-projects/org_quality/issues/278)|Verify all open issues in state verification on openvcloud (verification_b16)|:large_blue_circle: In Progress|story|
 |[#361](https://github.com/gig-projects/org_quality/issues/361)|Adapt the testsuite so it can be run on a grid environments (grid_testsuite)|:large_blue_circle: In Progress|story|
 |[#396](https://github.com/gig-projects/org_quality/issues/396)|ubuntudockers: test daily build of all dockers in the repo on a daily basis|:red_circle: Open|task|
 
