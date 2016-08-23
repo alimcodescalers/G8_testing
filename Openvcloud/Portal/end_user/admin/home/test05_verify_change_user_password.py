@@ -1,6 +1,5 @@
-from end_user.utils import BaseTest
-from end_user.page_elements_xpath import users_page
-from selenium.common.exceptions import NoSuchElementException
+from ....utils.utils import BaseTest
+from ...page_elements_xpath import users_page
 import uuid
 
 class ChangePassword(BaseTest):
@@ -41,7 +40,7 @@ class ChangePassword(BaseTest):
         self.lg('Do logout')
         self.click("admin_logout_button")
 
-        self.lg("login using the new account")
+        self.lg("login using the new username")
         self.login(self.username,self.password)
 
         self.lg("check access denied")
