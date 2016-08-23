@@ -2,7 +2,7 @@ import os
 import unittest
 from testconfig import config
 from ....utils.utils import BaseTest
-from end_user.page_elements_xpath import defense_shield_page
+from ...page_elements_xpath import defense_shield_page
 
 
 class DefenseShield(BaseTest):

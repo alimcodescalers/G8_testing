@@ -1,6 +1,5 @@
 from ....utils.utils import BaseTest
-from end_user.page_elements_xpath import users_page
-from selenium.common.exceptions import NoSuchElementException
+from ...page_elements_xpath import users_page
 import uuid
 
 class ChangePassword(BaseTest):

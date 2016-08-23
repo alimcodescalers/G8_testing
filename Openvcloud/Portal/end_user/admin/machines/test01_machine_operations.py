@@ -1,5 +1,5 @@
 from ....utils.utils import BaseTest
-from end_user.page_elements_xpath import machines_page
+from ...page_elements_xpath import machines_page
 import time
 import uuid
 

@@ -1,5 +1,5 @@
 from ....utils.utils import BaseTest
-from end_user.page_elements_xpath import home_page
+from ...page_elements_xpath import home_page
 
 class Support(BaseTest):
 
