@@ -11,6 +11,7 @@
 
 ## Issues per assignee
 - [alimcodescalers](#alimcodescalers)
+- [hofkensj](#hofkensj)
 - [islamTaha12](#islamtaha12)
 - [john-kheir](#john-kheir)
 - [lzonneke](#lzonneke)
@@ -19,6 +20,12 @@
 
 
 ### [alimcodescalers](https://github.com/alimcodescalers)
+
+|Issue|Title|State|Type|
+|-----|-----|-----|----|
+
+
+### [hofkensj](https://github.com/hofkensj)
 
 |Issue|Title|State|Type|
 |-----|-----|-----|----|
@@ -34,6 +41,7 @@
 
 |Issue|Title|State|Type|
 |-----|-----|-----|----|
+|[#387](https://github.com/gig-projects/org_quality/issues/387)|Repair performance testing with Grafana (Grafana)|:large_blue_circle: In Progress|story|
 
 
 ### [lzonneke](https://github.com/lzonneke)
