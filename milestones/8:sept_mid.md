@@ -11,6 +11,7 @@
 
 ## Issues per assignee
 - [alimcodescalers](#alimcodescalers)
+- [hofkensj](#hofkensj)
 - [islamTaha12](#islamtaha12)
 - [john-kheir](#john-kheir)
 - [lzonneke](#lzonneke)
@@ -19,6 +20,12 @@
 
 
 ### [alimcodescalers](https://github.com/alimcodescalers)
+
+|Issue|Title|State|Type|
+|-----|-----|-----|----|
+
+
+### [hofkensj](https://github.com/hofkensj)
 
 |Issue|Title|State|Type|
 |-----|-----|-----|----|
@@ -47,5 +54,6 @@
 
 |Issue|Title|State|Type|
 |-----|-----|-----|----|
+|[#366](https://github.com/gig-projects/org_quality/issues/366)|Make cockpit driven testing on our environments (cockpit_drive_QA)|:large_blue_circle: In Progress|story|
 |[#394](https://github.com/gig-projects/org_quality/issues/394)|M_Test_2.1.0b: Upgrade du-conv-2 to the latest release [1d]|:large_blue_circle: In Progress|task|
 
