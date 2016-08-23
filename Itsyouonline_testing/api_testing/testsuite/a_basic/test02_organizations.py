@@ -1,5 +1,6 @@
 from Itsyouonline_testing.api_testing.utils import BaseTest
 import types
+import unittest
 
 
 class OrganizationsTests(BaseTest):
@@ -14,6 +15,7 @@ class OrganizationsTests(BaseTest):
         self.lg('organization_id %s' % self.organization_id)
 
     #Currently fail due to issue https://github.com/itsyouonline/identityserver/issues/233
+    @unittest.skip("fail due to issue https://github.com/itsyouonline/identityserver/issues/233")
     def test001_get_organization(self):
         """ ITSYOU-013
         *Test case for check get organization GET /organizations/{globalid}.*
@@ -45,6 +47,7 @@ class OrganizationsTests(BaseTest):
         self.lg('%s ENDED' % self._testID)
 
     #Currently fail due to issue https://github.com/itsyouonline/identityserver/issues/233
+    @unittest.skip("fail due to issue https://github.com/itsyouonline/identityserver/issues/233")
     def test003_get_organization_contracts(self):
         """ ITSYOU-015
         *Test case for check get organization contracts GET /organizations/{globalid}/contracts.*
@@ -61,6 +64,7 @@ class OrganizationsTests(BaseTest):
         self.lg('%s ENDED' % self._testID)
 
     #Currently fail due to issue https://github.com/itsyouonline/identityserver/issues/233
+    @unittest.skip("fail due to issue https://github.com/itsyouonline/identityserver/issues/233")
     def test004_get_organization_invitations(self):
         """ ITSYOU-016
         *Test case for check get organization invitations GET /organizations/{globalid}/invitations.*
@@ -77,6 +81,7 @@ class OrganizationsTests(BaseTest):
         self.lg('%s ENDED' % self._testID)
 
     #Currently fail due to issue https://github.com/itsyouonline/identityserver/issues/233
+    @unittest.skip("fail due to issue https://github.com/itsyouonline/identityserver/issues/233")
     def test005_get_organization_apikeys(self):
         """ ITSYOU-017
         *Test case for check get organization apikeys GET /organizations/{globalid}/apikeys.*

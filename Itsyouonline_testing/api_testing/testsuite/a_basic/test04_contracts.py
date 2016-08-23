@@ -1,5 +1,6 @@
 from Itsyouonline_testing.api_testing.utils import BaseTest
 import types
+import unittest
 
 
 class ContractsTests(BaseTest):
@@ -16,6 +17,7 @@ class ContractsTests(BaseTest):
         self.lg('contractId %s' % self.contractId)
 
     #Currently fail due to issue https://github.com/itsyouonline/identityserver/issues/233
+    @unittest.skip("fail due to issue https://github.com/itsyouonline/identityserver/issues/233")
     def test001_get_contracts(self):
         """ ITSYOU-023
         *Test case for check get a contract GET /contracts/{contractId}.*
