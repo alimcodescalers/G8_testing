@@ -10,6 +10,7 @@
 
 ## Issues per assignee
 - [alimcodescalers](#alimcodescalers)
+- [hofkensj](#hofkensj)
 - [islamTaha12](#islamtaha12)
 - [john-kheir](#john-kheir)
 - [lzonneke](#lzonneke)
@@ -18,6 +19,12 @@
 
 
 ### [alimcodescalers](https://github.com/alimcodescalers)
+
+|Issue|Title|State|Type|
+|-----|-----|-----|----|
+
+
+### [hofkensj](https://github.com/hofkensj)
 
 |Issue|Title|State|Type|
 |-----|-----|-----|----|
@@ -33,7 +40,6 @@
 
 |Issue|Title|State|Type|
 |-----|-----|-----|----|
-|[#375](https://github.com/gig-projects/org_quality/issues/375)|Run full test cycle on BE-G8-3 with Fargo (full-test-Fargo G8-3)|:red_circle: Open|story|
 
 
 ### [lzonneke](https://github.com/lzonneke)
