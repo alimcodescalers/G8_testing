@@ -2,10 +2,10 @@
 
 # Issues per assignee
 - [alimcodescalers](#alimcodescalers) has 7 assigned
-- [islamTaha12](#islamtaha12) has 4 assigned
+- [islamTaha12](#islamtaha12) has 6 assigned
 - [john-kheir](#john-kheir) has 9 assigned
 - [lzonneke](#lzonneke) has 3 assigned
-- [ramezsaeed](#ramezsaeed) has 10 assigned
+- [ramezsaeed](#ramezsaeed) has 11 assigned
 
 
 
@@ -18,7 +18,7 @@
 |[#349](https://github.com/gig-projects/org_quality/issues/349)|testing_itsyouonline: implement extended api tests POST/PUT/DELETE organizations [2d]|:red_circle: Open|task|
 |[#350](https://github.com/gig-projects/org_quality/issues/350)|testing_itsyouonline: implement extended api tests POST/PUT/DELETE companies [1d]|:red_circle: Open|task|
 |[#351](https://github.com/gig-projects/org_quality/issues/351)|testing_itsyouonline: implement extended api tests POST/PUT/DELETE contracts [4h]|:red_circle: Open|task|
-|[#367](https://github.com/gig-projects/org_quality/issues/367)|testing_itsyouonline: Create new jenkens project for api_testing [8h]|:large_blue_circle: In Progress|task|
+|[#367](https://github.com/gig-projects/org_quality/issues/367)|testing_itsyouonline: Create new jenkens project for api_testing|:red_circle: Open|task|
 |[#405](https://github.com/gig-projects/org_quality/issues/405)|M_Test_2.1.0b: Perform one time manual validation for VNAS Installation|:large_blue_circle: In Progress|task|
 
 
@@ -30,6 +30,8 @@
 |[#370](https://github.com/gig-projects/org_quality/issues/370)|cockpit_drive_QA: create a blueprint to run the acl_basic_testsuite [4h]|:red_circle: Open|task|
 |[#379](https://github.com/gig-projects/org_quality/issues/379)|Portal: Create new Account with new User [2d]|:red_circle: Open|task|
 |[#401](https://github.com/gig-projects/org_quality/issues/401)|grid_testsuite: Adapt the basic utils to run the basic test suite on be-conv-2 which is part of the grid|:large_blue_circle: In Progress|task|
+|[#406](https://github.com/gig-projects/org_quality/issues/406)|Portal: Create new test case to verify admin portal menu [6h]|:red_circle: Open|task|
+|[#407](https://github.com/gig-projects/org_quality/issues/407)|Portal: Create new test case to verify environment health status [6h]|:red_circle: Open|task|
 
 
 ## [john-kheir](https://github.com/john-kheir)
@@ -70,4 +72,5 @@
 |[#366](https://github.com/gig-projects/org_quality/issues/366)|Make cockpit driven testing on our environments (cockpit_drive_QA)|:large_blue_circle: In Progress|story|
 |[#373](https://github.com/gig-projects/org_quality/issues/373)|A_Test_2.1.0b: adapt jenkins to use the new ssh config iso the old ovce script [4h]|:red_circle: Open|task|
 |[#394](https://github.com/gig-projects/org_quality/issues/394)|M_Test_2.1.0b: Upgrade du-conv-2 to the latest release [1d]|:large_blue_circle: In Progress|task|
+|[#408](https://github.com/gig-projects/org_quality/issues/408)|task_367|:large_blue_circle: In Progress||
 
