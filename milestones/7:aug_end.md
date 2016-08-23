@@ -6,9 +6,8 @@
 
 |Issue|Title|State|Type|
 |-----|-----|-----|---|
-|[#388](https://github.com/gig-projects/org_quality/issues/388)|cockpit_drive_QA: documentation [1d]|:red_circle: Open|task|
-|[#389](https://github.com/gig-projects/org_quality/issues/389)|cockpit_drive_QA: Make test-results available on env_repo [1d]|:red_circle: Open|task|
-|[#396](https://github.com/gig-projects/org_quality/issues/396)|ubuntudockers: test daily build of all dockers in the repo on a daily basis|:red_circle: Open|task|
+|[#411](https://github.com/gig-projects/org_quality/issues/411)|migrate all g8 test code to a public repo on 0-complexity (migrate_QA)|:red_circle: Open|story|
+|[#413](https://github.com/gig-projects/org_quality/issues/413)|update test documentation for Sberbank (sberbank_doc)|:red_circle: Open|story|
 
 
 ## Issues per assignee
@@ -25,6 +24,7 @@
 
 |Issue|Title|State|Type|
 |-----|-----|-----|----|
+|[#309](https://github.com/gig-projects/org_quality/issues/309)|create a test suite which is covering testing itsyou.online (testing_itsyouonline)|:red_circle: Open|story|
 
 
 ### [hofkensj](https://github.com/hofkensj)
@@ -38,7 +38,7 @@
 
 |Issue|Title|State|Type|
 |-----|-----|-----|----|
-|[#304](https://github.com/gig-projects/org_quality/issues/304)|Create an automated test suite coverage for cockpit (test_cockpit)|:red_circle: Open|story|
+|[#406](https://github.com/gig-projects/org_quality/issues/406)|Portal: Create new test case to verify admin portal menu [6h]|:large_blue_circle: In Progress|task|
 
 
 ### [john-kheir](https://github.com/john-kheir)
@@ -59,7 +59,6 @@
 
 |Issue|Title|State|Type|
 |-----|-----|-----|----|
-|[#308](https://github.com/gig-projects/org_quality/issues/308)|Create a test suite coverage for the VDC control panel (test_VDCcontrol)|:red_circle: Open|story|
-|[#309](https://github.com/gig-projects/org_quality/issues/309)|create a test suite which is covering testing itsyou.online (testing_itsyouonline)|:large_blue_circle: In Progress|story|
 |[#361](https://github.com/gig-projects/org_quality/issues/361)|Adapt the testsuite so it can be run on a grid environments (grid_testsuite)|:large_blue_circle: In Progress|story|
+|[#396](https://github.com/gig-projects/org_quality/issues/396)|ubuntudockers: test daily build of all dockers in the repo on a daily basis|:red_circle: Open|task|
 
