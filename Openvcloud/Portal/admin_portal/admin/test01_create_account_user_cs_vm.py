@@ -28,6 +28,10 @@ class Account(BaseTest):
         #. open cloudspace page
         #. create virtual machine
         #. open the virtual machine page
+        #. delete this virtual machine page
+        #. delete the cloudspcae
+        #. delete the account
+        #. delete the user
         """
         self.username = str(uuid.uuid4()).replace('-', '')[0:10]
         self.account = str(uuid.uuid4()).replace('-', '')[0:10]
@@ -70,4 +74,6 @@ class Account(BaseTest):
         self.lg('delete account')
         self.delete_account(self.account)
 
+        self.lg('delete the user')
+        self.delete_user(self.username)
         self.lg('%s ENDED' % self._testID)
