@@ -6,6 +6,8 @@
 
 |Issue|Title|State|Type|
 |-----|-----|-----|---|
+|[#388](https://github.com/gig-projects/org_quality/issues/388)|cockpit_drive_QA: documentation [1d]|:red_circle: Open|task|
+|[#389](https://github.com/gig-projects/org_quality/issues/389)|cockpit_drive_QA: Make test-results available on env_repo [1d]|:red_circle: Open|task|
 |[#397](https://github.com/gig-projects/org_quality/issues/397)|grid_testsuite: start create a new test suite to test the grid|:red_circle: Open|task|
 
 
@@ -54,6 +56,7 @@
 
 |Issue|Title|State|Type|
 |-----|-----|-----|----|
+|[#308](https://github.com/gig-projects/org_quality/issues/308)|Create a test suite coverage for the VDC control panel (test_VDCcontrol)|:red_circle: Open|story|
 |[#366](https://github.com/gig-projects/org_quality/issues/366)|Make cockpit driven testing on our environments (cockpit_drive_QA)|:large_blue_circle: In Progress|story|
 |[#394](https://github.com/gig-projects/org_quality/issues/394)|M_Test_2.1.0b: Upgrade du-conv-2 to the latest release [1d]|:large_blue_circle: In Progress|task|
 
