@@ -5,7 +5,7 @@ import os
 import uuid
 
 from testconfig import config
-from selenium.common.exceptions import NoSuchElementException, TimeoutException
+from selenium.common.exceptions import NoSuchElementException, TimeoutException, StaleElementReferenceException
 from pytractor import webdriver
 from selenium.webdriver import FirefoxProfile
 from selenium.webdriver.support import expected_conditions as EC
@@ -24,6 +24,7 @@ class BaseTest(unittest.TestCase):
         self.admin_username = config['main']['admin']
         self.admin_password = config['main']['passwd']
         self.browser = config['main']['browser']
+        self.base_page = config['main']['base_page']
         self.elements = utils_xpath.elements.copy()
 
     def setUp(self):
@@ -94,22 +95,35 @@ class BaseTest(unittest.TestCase):
                    .value_of_css_property('background-color'))
 
     def wait_until_element_located(self, name):
-        for i in range(3):
+        for temp in range(3):
             try:
                 self.wait.until(EC.visibility_of_element_located((By.XPATH, name)))
-            except TimeoutException:
-                continue
+                break
+            except (TimeoutException, StaleElementReferenceException):
+                time.sleep(1)
+        else:
+            raise TimeoutException
 
     def wait_element(self, element):
         self.wait_until_element_located(self.elements[element])
         return True
 
+    def wait_until_element_located_and_has_text(self, xpath, text):
+        for temp in range(3):
+            try:
+                self.wait.until(EC.text_to_be_present_in_element((By.XPATH, xpath), text))
+                break
+            except (TimeoutException, StaleElementReferenceException):
+                time.sleep(1)
+        else:
+            raise TimeoutException
+
     def wait_unti_element_clickable(self, name):
-        for i in range(3):
+        for temp in range(3):
             try:
                 self.wait.until(EC.element_to_be_clickable((By.XPATH, name)))
-            except TimeoutException:
-                continue
+            except (TimeoutException, StaleElementReferenceException):
+                time.sleep(1)
             else:
                 return True
 
@@ -117,7 +131,14 @@ class BaseTest(unittest.TestCase):
         element = self.elements[element]
         self.wait_until_element_located(element)
         self.wait_unti_element_clickable(element)
-        self.driver.find_element_by_xpath(element).click()
+        for temp in range(10):
+            try:
+                self.driver.find_element_by_xpath(element).click()
+                break
+            except:
+                time.sleep(1)
+        else:
+            raise NoSuchElementException("can't find %s element" % element)
         time.sleep(1)
 
     def click_link(self, link):
@@ -182,10 +203,21 @@ class BaseTest(unittest.TestCase):
 
         self.assertEqual(item_value, self.select_obeject.first_selected_option.text)
 
+    def element_in_url(self, text_item):
+        for temp in range(100):
+            try:
+                if text_item in self.get_url():
+                    break
+            except NoSuchElementException:
+                time.sleep(1)
+        else:
+            raise NoSuchElementException("this %s item isn't exist" % text_item)
+
+        return True
+
     def open_base_page(self, menu_item='', sub_menu_item=''):
-        self.driver.get(self.environment_url)
-        time.sleep(5)
-        if self.check_element_is_exist("left_menu") == False:
+        self.driver.get(self.base_page)
+        if not self.element_is_displayed("left_menu"):
             self.click("left_menu_button")
 
         self.click(menu_item)
@@ -215,28 +247,27 @@ class BaseTest(unittest.TestCase):
             user_group.click()
 
         self.click("confirm_add_user")
-        return True
+        time.sleep(1)
+        self.set_text("username_search", self.username)
+        self.wait_until_element_located_and_has_text(self.elements["username_table_first"], self.username)
 
     def open_user_page(self, username=''):
         self.username = username
         self.open_base_page("cloud_broker", "users")
 
         self.set_text("username_search", self.username)
+        self.wait_until_element_located_and_has_text(self.elements["username_table_first"], self.username)
         username_id = self.get_text("username_table_first")
 
         self.click("username_table_first")
-
-        if username_id in self.get_url():
-            return True
-        else:
-            raise NoSuchElementException
+        self.element_in_url(username_id)
 
     def delete_user(self, username):
         self.open_base_page("cloud_broker", "users")
 
         self.set_text("user_search", username)
         self.lg("check if this user is exist")
-        if self.check_element_is_exist("user_table_first_element") == True:
+        if self.check_element_is_exist("user_table_first_element"):
             time.sleep(1)
             self.click("user_table_first_element")
             self.click("user_action")
@@ -261,14 +292,8 @@ class BaseTest(unittest.TestCase):
         self.click("account_confirm")
 
         self.set_text("account_search", self.account)
-        for i in range(5):
-            try:
-                self.assertEqual(self.get_text("account_table_first_element"), self.account)
-            except:
-                time.sleep(1)
-                continue
-            else:
-                break
+        self.wait_until_element_located_and_has_text(self.elements["account_table_first_element"], self.account)
+
         if account == '':
             return self.account
 
@@ -278,14 +303,11 @@ class BaseTest(unittest.TestCase):
         self.open_base_page("cloud_broker", "accounts")
 
         self.set_text("account_search", self.account)
+        self.wait_until_element_located_and_has_text(self.elements["account_table_first_element"], self.account)
 
         account_id = self.get_text("account_first_id")
         self.click("account_first_id")
-
-        if account_id in self.get_url():
-            return True
-        else:
-            raise NoSuchElementException
+        self.element_in_url(account_id)
 
     def delete_account(self, account=''):
         self.account = account
@@ -298,7 +320,8 @@ class BaseTest(unittest.TestCase):
         self.click('account_delete')
         self.set_text('account_delete_reason', "Test")
         self.click("account_delete_confirm")
-        self.assertEqual(self.get_text('account_page_status'), "DESTROYED")
+        self.wait_until_element_located_and_has_text(self.elements["account_page_status"],
+                                                     "DESTROYED")
 
     def create_cloud_space(self, account='', cloud_space=''):
         self.account = account
@@ -317,7 +340,8 @@ class BaseTest(unittest.TestCase):
         self.click("cloud_space_confirm")
 
         self.set_text("cloud_space_search", self.cloud_space_name)
-        self.assertEqual(self.get_text("cloud_space_table_first_element_2"), self.cloud_space_name)
+        self.wait_until_element_located_and_has_text(self.elements["cloud_space_table_first_element_2"],
+                                                     self.cloud_space_name)
         return self.cloud_space_name
 
     def open_cloudspace_page(self, account='', cloudspace=''):
@@ -327,14 +351,11 @@ class BaseTest(unittest.TestCase):
         self.open_account_page(self.account)
 
         self.set_text("cloud_space_search", self.cloudspace)
-
+        self.wait_until_element_located_and_has_text(self.elements["cloud_space_table_first_element_2"],
+                                                     self.cloudspace)
         cloudspace_id = self.get_text("cloud_space_table_first_element_1")
         self.click("cloud_space_table_first_element_1")
-
-        if cloudspace_id in self.get_url():
-            return True
-        else:
-            raise NoSuchElementException
+        self.element_in_url(cloudspace_id)
 
     def delete_cloudspace(self, account='', cloudspace=''):
         self.account = account
@@ -348,7 +369,10 @@ class BaseTest(unittest.TestCase):
         self.click('cloudspace_delete')
         self.set_text('cloudspace_delete_reason', "Test")
         self.click("cloudspace_delete_confirm")
-        self.assertEqual(self.get_text('cloudspace_page_status'), "DESTROYED")
+        time.sleep(1)
+        self.driver.refresh()
+        self.wait_until_element_located_and_has_text(self.elements["cloudspace_page_status"],
+                                                     "DESTROYED")
 
     def create_virtual_machine(self, account='', cloudspace='', machine_name='', image='', memory='', disk=''):
         self.account = account
@@ -383,6 +407,10 @@ class BaseTest(unittest.TestCase):
         self.lg('create machine confirm button')
         self.click('machine_confirm_button')
 
+        self.set_text('virtual machine search', self.machine_name)
+        self.wait_until_element_located_and_has_text(self.elements["virtual_machine_table_first_element"],
+                                                     self.machine_name)
+
     def open_virtual_machine_page(self, account='', cloudspace='', machine_name=''):
         self.account = account
         self.cloudspace = cloudspace
@@ -393,13 +421,11 @@ class BaseTest(unittest.TestCase):
 
         self.lg('open %s virtual machine' % machine_name)
         self.set_text('virtual machine search', self.machine_name)
-        vm_id = self.get_text("virtual_machine_tabkle_first_element_2")[3:]
+        self.wait_until_element_located_and_has_text(self.elements["virtual_machine_table_first_element"],
+                                                     self.machine_name)
+        vm_id = self.get_text("virtual_machine_table_first_element_2")[3:]
         self.click('virtual_machine_table_first_element')
-
-        if vm_id in self.get_url():
-            return True
-        else:
-            raise NoSuchElementException
+        self.element_in_url(vm_id)
 
     def delete_virtual_machine(self, account='', cloudspace='', machine_name=''):
         self.account = account
@@ -414,4 +440,5 @@ class BaseTest(unittest.TestCase):
         self.click('virtual_machine_delete')
         self.set_text('virtual_machine_delete_reason', "Test")
         self.click("virtual_machine_delete_confirm")
-        self.assertEqual(self.get_text('virtual_machine_page_status'), "DESTROYED")
+        self.wait_until_element_located_and_has_text(self.elements["virtual_machine_page_status"],
+                                                     "DESTROYED")

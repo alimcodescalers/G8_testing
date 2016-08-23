@@ -60,7 +60,7 @@ elements = {
     "machine_disk_list" : ".//*[@id='createmachine']/div/div[2]/div[3]/div[6]/select",
     "virtual machine search": ".//*[@id='table_cloudbroker_vmachine_filter']/label/input",
     "virtual_machine_table_first_element": ".//*[@id='table_cloudbroker_vmachine']/tbody/tr/td[1]/a",
-    "virtual_machine_tabkle_first_element_2": ".//*[@id='table_cloudbroker_vmachine']/tbody/tr/td[2]",
+    "virtual_machine_table_first_element_2": ".//*[@id='table_cloudbroker_vmachine']/tbody/tr/td[2]",
     "virtual_machine_action": "html/body/div[2]/div/div/div[1]/button",
     "virtual_machine_delete": "html/body/div[2]/div/div/div[1]/ul/li[4]/a",
     "virtual_machine_delete_reason": ".//*[@id='action-Delete']/div/div[2]/div[3]/div/input",

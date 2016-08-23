@@ -1,6 +1,7 @@
-from ....utils.utils import BaseTest
-from ..page_elements_xpath import account_page
+from selenium.common.exceptions import NoSuchElementException
 import time
+from ...utils.utils import BaseTest
+from ..page_elements_xpath import account_page
 import uuid
 
 class Account(BaseTest):
@@ -11,8 +12,9 @@ class Account(BaseTest):
     def setUp(self):
         super(Account, self).setUp()
         self.login()
-        if self.check_element_is_exist("left_menu") == False:
+        if not self.element_is_displayed("left_menu"):
             self.click("left_menu_button")
+
 
     def test01_create_account_user_cs_vm(self):
         """ PRTL-010
