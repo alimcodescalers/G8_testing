@@ -43,6 +43,9 @@
 
 |Issue|Title|State|Type|
 |-----|-----|-----|----|
+|[#322](https://github.com/gig-projects/org_quality/issues/322)|Improve the performance test scripts (perf_upgrade)|:red_circle: Open|story|
+|[#354](https://github.com/gig-projects/org_quality/issues/354)|perf_upgrade: add the average file transfer speed in test results column [1d]|:red_circle: Open|task|
+|[#355](https://github.com/gig-projects/org_quality/issues/355)|perf_upgrade: add the latency figures in the test result table of FIO [1d]|:red_circle: Open|task|
 
 
 ### [lzonneke](https://github.com/lzonneke)
