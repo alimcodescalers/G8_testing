@@ -17,7 +17,6 @@
 |Issue|Title|State|Owner|ETA|
 |-----|-----|-----|-----|---|
 |[#278](https://github.com/gig-projects/org_quality/issues/278)|Verify all open issues in state verification on openvcloud (verification_b16)|:large_blue_circle: In Progress|[ramezsaeed](https://github.com/ramezsaeed)|[2016/08/24](https://github.com/gig-projects/org_quality/issues/278#issuecomment-None)|
-|[#309](https://github.com/gig-projects/org_quality/issues/309)|create a test suite which is covering testing itsyou.online (testing_itsyouonline)|:red_circle: Open|[alimcodescalers](https://github.com/alimcodescalers)|[2016/08/24](https://github.com/gig-projects/org_quality/issues/309#issuecomment-None)|
 |[#361](https://github.com/gig-projects/org_quality/issues/361)|Adapt the testsuite so it can be run on a grid environments (grid_testsuite)|:large_blue_circle: In Progress|[ramezsaeed](https://github.com/ramezsaeed)|[2016/08/24](https://github.com/gig-projects/org_quality/issues/361#issuecomment-None)|
 |[#375](https://github.com/gig-projects/org_quality/issues/375)|Run full test cycle on BE-G8-3 with Fargo (full-test-Fargo G8-3)|:red_circle: Open|[john-kheir](https://github.com/john-kheir)|[2016/08/24](https://github.com/gig-projects/org_quality/issues/375#issuecomment-None)|
 |[#404](https://github.com/gig-projects/org_quality/issues/404)|Run performance test on G8-2 (performance tests G8-2)|:red_circle: Open|[lzonneke](https://github.com/lzonneke)|[2016/08/24](https://github.com/gig-projects/org_quality/issues/404#issuecomment-None)|
@@ -60,6 +59,7 @@
 |Issue|Title|State|Owner|ETA|
 |-----|-----|-----|-----|---|
 |[#308](https://github.com/gig-projects/org_quality/issues/308)|Create a test suite coverage for the VDC control panel (test_VDCcontrol)|:red_circle: Open|[ramezsaeed](https://github.com/ramezsaeed)|[2016/08/24](https://github.com/gig-projects/org_quality/issues/308#issuecomment-None)|
+|[#309](https://github.com/gig-projects/org_quality/issues/309)|create a test suite which is covering testing itsyou.online (testing_itsyouonline)|:red_circle: Open|[alimcodescalers](https://github.com/alimcodescalers)|[2016/08/24](https://github.com/gig-projects/org_quality/issues/309#issuecomment-None)|
 |[#322](https://github.com/gig-projects/org_quality/issues/322)|Improve the performance test scripts (perf_upgrade)|:red_circle: Open|[john-kheir](https://github.com/john-kheir)|[2016/08/24](https://github.com/gig-projects/org_quality/issues/322#issuecomment-None)|
 |[#366](https://github.com/gig-projects/org_quality/issues/366)|Make cockpit driven testing on our environments (cockpit_drive_QA)|:large_blue_circle: In Progress|[ramezsaeed](https://github.com/ramezsaeed)|[2016/08/24](https://github.com/gig-projects/org_quality/issues/366#issuecomment-None)|
 |[#403](https://github.com/gig-projects/org_quality/issues/403)| Demolition testing on G8-2 (demolition test)|:red_circle: Open|[lzonneke](https://github.com/lzonneke)|[2016/08/24](https://github.com/gig-projects/org_quality/issues/403#issuecomment-None)|
