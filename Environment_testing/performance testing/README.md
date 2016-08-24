@@ -1,45 +1,25 @@
-# Openvcloud Quality Performance Test   
-This repository contains the complete performance test script  
-
-
-Performance test reports can be found [here](https://docs.google.com/document/d/1BiSOzdzidArtnuS9oPSdsCgIGE_VczgYvzTGJ_5ys_I/edit?usp=sharing) an on [GIT](https://github.com/gig-projects/org_quality/tree/master/Environment_testing/tests_results)
-
-
-
-## General Set up of the system (For FIO Test)
-The Performance tests can be found on github: [here](https://github.com/gig-projects/org_quality/tree/master/Environment%20testing/performance%20testing)
-inside the [org_quality repo] (https://github.com/gig-projects/org_quality)
-
-
-To start the performance test 2.0 we should connect to one of the physical nodes of the environment that needs to be tested. To connect to a physical node, follow the steps as described in the [connect documentation](https://gig.gitbooks.io/ovcdoc_public/content/Sysadmin/connect.html).
-
-When connecting to a physical node the node will not be used during the stress test. e.g. When you connect to node 1, tests will run on node 2 and other available nodes. (we can run the tests from any node)
-
-First we need to get the install script on the physical machine on the root directory.
-```
-git clone git@github.com:gig-projects/org_quality.git
-```
+# FIO Performance testing
 
 In the folder "Performance_test" there are several files:
-- Perf_parameters.cfg  = input file where we define parameters
+- Perf_parameters.cfg  = input file where we define parameters  
 - README.md  
 - scripts  =  contains actual scripts. 
-- utils
+- utils  
 
 **Perf_parameters.cfg**
 The Performance test parameters can be changed in this file.
 
 **scripts**
-In this script folder you can see that there are 5 scripts defined
+In this script folder you can see that there are 5 scripts defined  
 1. collect_results.py  
-A script which is made to collect all the results of the virtual machines.
+A script which is made to collect all the results of the virtual machines.  
 2. core  __init__.py  
 3. Machine_script.py  
-This is the script that runs on each virtual machine.
+This is the script that runs on each virtual machine.  
 4. setup_test.py  
-This is a script for setting up environment and execute the test script.
-5. tear_down.py
-tear down the environment means that you are removing all information on that machine to start clean... So removal of vm's, cloudspaces and the users created.
+This is a script for setting up environment and execute the test script.  
+5. tear_down.py  
+tear down the environment means that you are removing all information on that machine to start clean... So removal of vm's, cloudspaces and the users created.  
 
 ## FIO settings
 When running the test we are writing 3GB of data per disk. This means if we have defined 5 disks we will write 3GB x 5 per iteration.
@@ -134,17 +114,5 @@ vim total_results
 In the test result file we can view the following information
 - Total IOPS per vm per Iteration
 - Avergage cpu
-
-
-# Other Tests
-[1_Network_config_test](https://github.com/gig-projects/org_quality/issues/258)  
-[2_Unixbench2_test](https://github.com/gig-projects/org_quality/issues/259)  
-[3_Env_Limit_test](https://github.com/gig-projects/org_quality/issues/256)  
-[4_Unixbench_test](https://github.com/gig-projects/org_quality/issues/257)  
-[5_cloudspace_limits_test](https://github.com/gig-projects/org_quality/issues/130)  
-[6_vm_live_migration_test](https://github.com/gig-projects/org_quality/issues/132)  
-[7_remove_SSD_test](https://github.com/gig-projects/org_quality/issues/133)  
-[8_node_maintenance_test](https://github.com/gig-projects/org_quality/issues/131)  
-[9_vm_unlimited _snapshots](https://github.com/gig-projects/org_quality/issues/242)
  
 
