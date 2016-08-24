@@ -3,7 +3,6 @@ This repo will be used for testing our Gener8
 - Installation test --> Auto Installation testing should be added in this repo
 - Performance testing --> All testing that result in providing Performance information of an environment
 - Upgrade testing --> Automated upgrade script tests should be added into this repo
-- Automated tests --> Automated test currently performed through Jenkins. In the near furure all test will run using AYS & Cockpit.
 
 
 ## usefull info
