@@ -27,6 +27,7 @@
 
 |Issue|Title|State|Type|
 |-----|-----|-----|----|
+|[#424](https://github.com/gig-projects/org_quality/issues/424)|Portal: create new jenkins project fot the portal testsuite|:red_circle: Open|task|
 
 
 ### [hofkensj](https://github.com/hofkensj)
@@ -48,6 +49,7 @@
 |Issue|Title|State|Type|
 |-----|-----|-----|----|
 |[#375](https://github.com/gig-projects/org_quality/issues/375)|Run full test cycle on BE-G8-3 with Fargo (full-test-Fargo G8-3)|:red_circle: Open|story|
+|[#394](https://github.com/gig-projects/org_quality/issues/394)|M_Test_2.1.0b: Upgrade du-conv-2 to the latest release [1d]|:large_blue_circle: In Progress|task|
 
 
 ### [lzonneke](https://github.com/lzonneke)
