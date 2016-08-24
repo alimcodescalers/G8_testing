@@ -38,7 +38,7 @@ all later snapshots than the one selected should be removed from the portal...
 ## Running the Test
 - Go to performance testing directory: 
 ```
-cd org_quality/Environment testing/performance testing
+cd G8_testing/Environment testing/performance testing
 ```
 - From inside that directory:  
 ```
