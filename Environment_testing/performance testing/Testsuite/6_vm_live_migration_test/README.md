@@ -25,8 +25,15 @@ When one of the above actions fail then its a FAIL
 
 
 ## Running the Test
-- Go to performance testing directory: cd G8_testing/Environment testing/performance testing
-- From inside that directory:  jspython Testsuite/6_vm_live_migration_test/6_vm_live_migration_test.py 
+- Go to performance testing directory: 
+```
+cd G8_testing/Environment testing/performance testing
+```
+
+- From inside that directory:  
+```
+jspython Testsuite/6_vm_live_migration_test/6_vm_live_migration_test.py 
+```
 - After the test has been completed, the test will clean itself.
 
 ## Result Sample
