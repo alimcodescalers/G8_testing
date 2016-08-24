@@ -8,7 +8,7 @@ owner of this repo & organization: Lesley
 All code related to testing
 
 ## Team members
-**Belgium:** Lesley Zonnekein 
+**Belgium:** Lesley Zonnekein  
 **Egypt:**   
 Ramez Saeed (Team lead Egypt)  
 Mahmoud Ali  
