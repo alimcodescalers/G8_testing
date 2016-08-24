@@ -25,6 +25,11 @@
 
 |Issue|Title|State|Type|
 |-----|-----|-----|----|
+|[#309](https://github.com/gig-projects/org_quality/issues/309)|create a test suite which is covering testing itsyou.online (testing_itsyouonline)|:red_circle: Open|story|
+|[#348](https://github.com/gig-projects/org_quality/issues/348)|testing_itsyouonline: implement extended api tests POST/PUT/DELETE users [2d]|:red_circle: Open|task|
+|[#349](https://github.com/gig-projects/org_quality/issues/349)|testing_itsyouonline: implement extended api tests POST/PUT/DELETE organizations [2d]|:red_circle: Open|task|
+|[#350](https://github.com/gig-projects/org_quality/issues/350)|testing_itsyouonline: implement extended api tests POST/PUT/DELETE companies [1d]|:red_circle: Open|task|
+|[#351](https://github.com/gig-projects/org_quality/issues/351)|testing_itsyouonline: implement extended api tests POST/PUT/DELETE contracts [4h]|:red_circle: Open|task|
 
 
 ### [hofkensj](https://github.com/hofkensj)
