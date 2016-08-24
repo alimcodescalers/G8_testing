@@ -2,6 +2,11 @@
 
 note: In a public setup the number of created cloudspaces or VDC's are limited to the number of available public IP adresses.
 
+## Prerequisite
+
+Have a gener8 run the latest version of openvcloud.
+Have admin rights as a user
+
 ## Test Scenario
 
 create an account
