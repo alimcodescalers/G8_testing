@@ -66,5 +66,4 @@
 |-----|-----|-----|----|
 |[#308](https://github.com/gig-projects/org_quality/issues/308)|Create a test suite coverage for the VDC control panel (test_VDCcontrol)|:red_circle: Open|story|
 |[#366](https://github.com/gig-projects/org_quality/issues/366)|Make cockpit driven testing on our environments (cockpit_drive_QA)|:large_blue_circle: In Progress|story|
-|[#394](https://github.com/gig-projects/org_quality/issues/394)|M_Test_2.1.0b: Upgrade du-conv-2 to the latest release [1d]|:large_blue_circle: In Progress|task|
 
