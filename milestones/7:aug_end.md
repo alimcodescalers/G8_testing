@@ -27,7 +27,6 @@
 
 |Issue|Title|State|Type|
 |-----|-----|-----|----|
-|[#309](https://github.com/gig-projects/org_quality/issues/309)|create a test suite which is covering testing itsyou.online (testing_itsyouonline)|:red_circle: Open|story|
 
 
 ### [hofkensj](https://github.com/hofkensj)
