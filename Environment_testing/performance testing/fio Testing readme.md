@@ -18,7 +18,7 @@ jspython scripts/tear_down.py --clean
 ```
 Now we need to set up the required parameters.
 
-To change the performance test parameters we need to run a vim command.
+Run a vim command to change the performance test parameters.
 ```
 vim Perf_parameters.cfg
 ```
@@ -92,11 +92,18 @@ Res_dir: /root/org_quality/Environment_testing/tests_results/FIO_test
 username: perftestuser
 
 ```
-Now run the test script
+
+When the configfile is set you can run the FIO test script using
 ```
 jspython scripts/setup_test.py
 ```
-When the complete set up is done a user is created, a cloudspace is made, vm's are created, disks are mounted and FIO testing is has started.
+When the complete set up is done following actions are performed:  
+1. user creation
+2. cloudspace is made
+3. vm's are created
+4. disks are mounted
+5. Start of FIO test
+6. Test results are posted to the repo
 
 *user information*  
 username: perftest  
@@ -134,7 +141,7 @@ In the test result file we can view the following information
 - Total IOPS per vm per Iteration
 - Avergage cpu
 
-A more advanced test result is pasted in the environment repo on the following path:  
+A more advanced test result is added to the environment repo on the following path:  
 
 $environment_repo/Testreport/Fio_test/YYMMDD_$CPU_nodename_$iterationnumber_of_the_day
  
