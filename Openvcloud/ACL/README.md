@@ -1,21 +1,15 @@
 
-## Goal of this repo:
-This repo is used to execute our automated tests.
+## ACL Testsuite
 
-Tests are performed using the descriptions in the above Folders
+Following test are currently done on the ACL testsuite:
 
-**ACL**
-In this folder we have automated test for the Access Control list.  
+This is a [link](https://docs.google.com/spreadsheets/d/1VgEoIUxZdCQEglwN2VUe3sDY-Jn-nnrEWWNcGQq7dPU/edit#gid=0) to all available automated test that are done
 
-**disk_management**
-TBC  
+In the case of the ACL test we need to check the Access Controll List tab
 
-**docs**
-TBC  
+## To Do
+Get auto generation test descriptions for the automated tests done
 
-**tools**
-TBC  
-
-**utils**
-TBC
+| test ID | Prerequisites | test description | expected results |
+|---|---|---|---|
 
