@@ -1,8 +1,8 @@
-## Environment limitation test
+## Environment Limitations Test
 
-### Prerequisite
-Have a gener8 run the latest version of openvcloud
-Clean the Gener8 so no vm's are running on it.
+### Prerequisites
+- Have a G8 running the latest version of OpenvCloud
+- Clean the G8 so no VMs are running on it
 
 ### Test Case description
 - create an account

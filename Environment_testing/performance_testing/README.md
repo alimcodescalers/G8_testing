@@ -1,4 +1,4 @@
-## Performance testing
+## Performance Testing
 
 ### Intro
 
@@ -14,4 +14,4 @@ In this section of the repo we have a testsuite available including the code tha
 [6_vm_live_migration_test](https://github.com/0-complexity/G8_testing/tree/master/Environment_testing/performance_testing/Testsuite/6_vm_live_migration_test)  
 [8_node_maintenance_test](https://github.com/0-complexity/G8_testing/tree/master/Environment_testing/performance_testing/Testsuite/8_node_maintenance_test)  
 [9_vm_unlimited _snapshots](https://github.com/0-complexity/G8_testing/tree/master/Environment_testing/performance_testing/Testsuite/9_vm_unlimited%20_snapshots)  
-[10_FIO_testing](https://github.com/0-complexity/G8_testing/blob/master/Environment_testing/performance_testing/fio%20Testing%20readme.md)
+[10_FIO_testing](https://github.com/0-complexity/G8_testing/blob/master/Environment_testing/performance_testing/FIO_Testing%20readme.md)
