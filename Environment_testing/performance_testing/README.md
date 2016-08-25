@@ -1,6 +1,6 @@
-# Performance testing
+## Performance testing
 
-## Intro
+### Intro
 
 The performance testing section is made to assist the testing team in investigating the bounderies of the system.  
 

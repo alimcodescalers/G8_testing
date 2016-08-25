@@ -1,10 +1,10 @@
+## Demolition Testing
 
-# Demolition testing
 This section describes the tests that test the behaviour of the system when critical components fail.
 
-## Compute
+### Compute
 
-### Remove Compute Node
+#### Remove Compute Node
 | Input        | Test Scenario           | Output  |
 | ------------- |:-------------:| -----:|
 | A fully healthy system (check on healthcheck), a few VM's deployed on each of the CPU Nodes, a snapshot for each of the VM's | Power off 1 CPU Node | CPU Node goes in alarm in the healthcheck|
@@ -13,7 +13,7 @@ This section describes the tests that test the behaviour of the system when crit
 
 @TODO describe how VM's come back up on other host
 
-### Failure scenarios for power supply
+#### Failure scenarios for power supply
 | Input        | Test Scenario           | Output  |
 | ------------- |:-------------:| -----:|
 | A fully healthy system (check on healthcheck), a few VM's deployed on each of the CPU Nodes, a snapshot for each of the VM's | Take out A or B feed | System continues to function|
@@ -24,47 +24,50 @@ This section describes the tests that test the behaviour of the system when crit
 | A fully healthy system (check on healthcheck), a few VM's deployed on each of the CPU Nodes, a snapshot for each of the VM's | Take out A AND B feed | CPU Node goes in alarm in the healthcheck|
 After that - same as section on Remove Compute Node
 
-### Failure in networking
+#### Failure in networking
 
 | Input        | Test Scenario           | Output  |
 | ------------- |:-------------:| -----:|
 | A fully healthy system (check on healthcheck), a few VM's deployed on each of the CPU Nodes, a snapshot for each of the VM's | Take out one of the 2 cables to the Mellanox switches | System continues to function |
 | Working system with one cable failing   | Put cable back in | System back in full redundant mode|
 
-## Storage
+### Storage
 
-### Remove Storage Node
+#### Remove Storage Node
 | Input        | Test Scenario           | Output  |
 | ------------- |:-------------:| -----:|
 | A fully healthy system (check on healthcheck), a few VM's with associated disks deployed on each of the CPU Nodes, a snapshot for each of the VM's | Physically remove one server from the Storage Node | System continues to function |
 
 @TODO - describe behaviour and describe actions to get back live.
 
-### Failure scenarios for disks in backend system
+#### Failure scenarios for disks in backend system
 We assume the parity for the backend is (16:4) meaning 4 disks can fail out of 20.
 
 You will have to deploy the OVS monitoring tools - see https://openvstorage.gitbooks.io/ovs-monitoring/content/docs/deploy_with_ansible.html
 
-#### Failing 1 disks
+##### Failing 1 disks
 
 Execute this for all tiers configured in the system.
 
 | Input        | Test Scenario           | Output  |
 | ------------- |:-------------:| -----:|
 | A fully healthy system (check on healthcheck), a few VM's with associated disks deployed on each of the CPU Nodes, make sure that rebalancing of the nodes is finished and all disks are with full parity | Physically remove one HDD/SSD from the storage node| System continues to function, all VM's have full access to their vDISKS, rebalancing starts to restore parity in the storage node |
-#### Failing 2 disks
+
+##### Failing 2 disks
 Execute this for all tiers configured in the system.
 
 | Input        | Test Scenario           | Output  |
 | ------------- |:-------------:| -----:|
 | A fully healthy system (check on healthcheck), a few VM's with associated disks deployed on each of the CPU Nodes, make sure that rebalancing of the nodes is finished and all disks are with full parity | Physically remove two HDD/SSD from the storage node| System continues to function, all VM's have full access to their vDISKS, rebalancing starts to restore parity in the storage node |
-#### Failing 4 disks
+
+##### Failing 4 disks
 Execute this for all tiers configured in the system.
 
 | Input        | Test Scenario           | Output  |
 | ------------- |:-------------:| -----:|
 | A fully healthy system (check on healthcheck), a few VM's with associated disks deployed on each of the CPU Nodes, make sure that rebalancing of the nodes is finished and all disks are with full parity | Physically remove four HDD/SSD from the storage node| System continues to function, all VM's have full access to their vDISKS, rebalancing starts to restore parity in the storage node |
-#### Failing 5 disks
+
+##### Failing 5 disks
 Execute this for all tiers configured in the system.
 
 | Input        | Test Scenario           | Output  |
@@ -73,7 +76,7 @@ Execute this for all tiers configured in the system.
 
 @TODO how do you recover from this ?
 
-### Failure scenarios for power supply
+#### Failure scenarios for power supply
 | Input        | Test Scenario           | Output  |
 | ------------- |:-------------:| -----:|
 | A fully healthy system (check on healthcheck), a few VM's deployed on each of the CPU Nodes, a snapshot for each of the VM's | Take out A or B feed from the storage node | System continues to function|
@@ -84,13 +87,14 @@ Execute this for all tiers configured in the system.
 | A fully healthy system (check on healthcheck), a few VM's deployed on each of the CPU Nodes, a snapshot for each of the VM's | Take out A AND B feed | Storage Node goes in alarm in the healthcheck|
 After that - same as section on Remove Storage Node
 
-### Failure in networking
+#### Failure in networking
 
 | Input        | Test Scenario           | Output  |
 | ------------- |:-------------:| -----:|
 | A fully healthy system (check on healthcheck), a few VM's deployed on each of the CPU Nodes, a snapshot for each of the VM's | Take out one of the 2 cables to the Mellanox switches from the Storage Node| System continues to function |
 | Working system with one cable failing   | Put cable back in | System back in full redundant mode|
-## Networking
+
+### Networking
 
 | Input        | Test Scenario           | Output  |
 | ------------- |:-------------:| -----:|
