@@ -1,6 +1,5 @@
 ## Performance Testing
 
-* [Virtual Machines Performance Test](0_vm_performance_test/0_vm_performance_test.md)
 * [Network Configuration Test](1_network_config_test/1_network_config_test.md)
 * [Unixbench2 Test](2_Unixbench2_test/2_Unixbench2_test.md)
 * [Environment Limit Test](3_Env_Limit_test/3_Env_Limit_test.md)
