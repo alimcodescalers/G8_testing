@@ -10,13 +10,13 @@ This directory is made to test full functionality of our OVC product
 1. Pull the OpenvCloud Testsuite repository:
 
   ```
-  git clone https://github.com/gig-projects/org_quality.git
+  git clone https://github.com/0-complexity/G8_testing.git
   ```
 
 2. Change directory to Openvcloud:
 
   ```
-  $ cd org_quality/Openvcloud/
+  $ cd G8_testing/Openvcloud/
   ```
 
 3. Run the `run_tests_remote.sh` script with the required parameters:
@@ -50,13 +50,13 @@ This directory is made to test full functionality of our OVC product
 1. Pull the OpenvCloud Testsuite repository:
 
   ```
-  git clone https://github.com/gig-projects/org_quality.git
+  git clone https://github.com/0-complexity/G8_testing.git
   ```
 
 2. Change directory to Openvcloud:
 
   ```
-  $ cd org_quality/Openvcloud/
+  $ cd G8_testing/Openvcloud/
   ```
 3. Run the `setup_run_tests_local.sh` script with the required parameters:
   ```
@@ -85,12 +85,6 @@ This directory is made to test full functionality of our OVC product
 
 OpenvCloud Testsuite runs continuously on [Jenkins CI](http://ci.codescalers.com/view/Integration%20Testing/)
 
-### Coverage Documentation
-
-The latest test suite coverage is documented in the README of the [OpenvCloud Testsuite](https://github.com/gig-projects/org_quality/blob/master/Openvcloud/README.md)
-
-This documentation is extracted from the actual test scripts: https://github.com/gig-projects/org_quality/tree/master/Openvcloud/ACL
-
 **Prerequisites**
 
 * This instruction works for UNIX-Like operating systems
@@ -112,7 +106,7 @@ This documentation is extracted from the actual test scripts: https://github.com
 2. Change directory to Openvcloud:
 
   ```
-  $ cd org_quality/Openvcloud/
+  $ cd G8_testing/Openvcloud/
   ```
 
 3. Run the build script to generate the documentation locally:
