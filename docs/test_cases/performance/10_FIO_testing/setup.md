@@ -1,10 +1,7 @@
 ## Setup of the Performance Test 2.0
 
-The Performance test repository can be found on GitHub: https://github.com/gig-projects/org_quality.git
 
-To start the Performance Test 2.0 we should connect to one of the physical nodes of the environment that needs to be tested.
 
-To connect to a physical node, follow the steps as described in the section [How to Connect to an OpenvCloud Environment](..\..\Sysadmin\Connect\connect.md).
 
 When connecting to a physical node the node will not be used during the stress test. E.g. When you connect to node 1, tests will run on node 2 and other available nodes.
 
@@ -63,14 +60,7 @@ Note: the default block size that is used here is 4K (bs=4k)
 So this means if we have defined 5 disks per VM we will write 3GB x 5 disk for each iteration.
 
 
-## VM specs
 
-- CPUcpu cores = 2
-- Memory = 2048
-- Boot disk size = 100G
-- Number of data disk = 5 , each disk = 30G
-
- These parameters can be changed in the `Perf_parameters.cfg` file
 
 
 ## Running the test script

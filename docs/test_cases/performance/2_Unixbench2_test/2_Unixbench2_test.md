@@ -22,14 +22,16 @@
 |vm name  | CPU's  | Memory | HDD | Iteration 1 | Iteration 2 | ... | iteration x | Avg Unixbench score|
 
 ### Running the test
-- For changing the test parameters:
-  ```
-  vim Testsuite/2_Unixbench2_test/parameters.cfg 
-  ```
 - Go to performance testing directory: 
   ```
   cd org_quality/Environment_testing/performance_testing
   ```
+  
+- For changing the test parameters:
+  ```
+  vim Testsuite/2_Unixbench2_test/parameters.cfg 
+  ```
+
 - From inside that directory:
   ```
   jspython Testsuite/2_Unixbench2_test/2_unixbench2.0_test.py 

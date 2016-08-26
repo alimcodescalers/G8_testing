@@ -10,5 +10,5 @@
    * [Snapshots Limit Test](test_cases/functional/9_vm_unlimited _snapshots/9_vm_unlimited _snapshots.md)
 * [Performance Testing](test_cases/performance/performance.md)
   * [UnixBench Test](test_cases/performance/2_Unixbench2_test/2_Unixbench2_test.md)
-  * [FIO Performance Testing](test_cases/performance/10_FIO_testing/10_FIO_testing.md)
+  * [FIO Test](test_cases/performance/10_FIO_testing/10_FIO_testing.md)
 * [Demolition Testing](test_cases/demolition/demolition.md)

@@ -1,4 +1,4 @@
-## FIO Performance Testing
+## FIO Test
 
 ### Prerequisites
 - Have a G8 running the latest version of OpenvCloud
@@ -6,23 +6,20 @@
 - Have admin access to one of the physical compute nodes
 
 ### FIO settings
-When running the test we are writing 3GB of data per disk. This means if we have defined 5 disks we will write 3GB x 5 per iteration. The amount of data to be written is settable in the Perf_parameters.cfg file.
+When running the test we are writing 3GB of data per disk. This means if we have defined 5 disks we will write 3GB x 5 per iteration. The amount of data to be written is settable in the `Perf_parameters.cfg` file.
 
-### Running the test script
-Prior to running the script we need to make sure that the environment is clean. To clean the environment we need to use the tear down script.
-
-Connect as root to the physical environment, go to the Performance_test script directory. and run the tear_down.py script.
-
+### Running the test
+Prior to running the script we need to make sure that the environment is clean. To clean the environment we need to use the `tear_down.py` script:
 ```
-cd Performance_test
+cd G8_testing/Environment_testing/performance_testing
 jspython scripts/tear_down.py --clean
 ```
-Now we need to set up the required parameters.
 
-Run a vim command to change the performance test parameters.
+Now we need to set up the required parameters:
 ```
 vim Perf_parameters.cfg
 ```
+
 Following paramenters are settable in the config file:
 ```
 # Number of Iterations --> each iteration create one VM per cpunode(stack)
@@ -91,57 +88,70 @@ Res_dir: /root/org_quality/Environment_testing/tests_results/FIO_test
 
 # username
 username: perftestuser
-
 ```
 
-When the configfile is set you can run the FIO test script using
+When the config file is set you can run the FIO test script:
 ```
 jspython scripts/setup_test.py
 ```
-When the complete set up is done following actions are performed:  
-1. user creation
-2. cloudspace is made
-3. vm's are created
-4. disks are mounted
-5. Start of FIO test
-6. Test results are posted to the repo
 
-*user information*  
+When the complete setup is done following actions are performed:  
+1. User creation
+2. Cloudspace is created
+3. Virtual machines are created
+4. Disks are mounted
+5. Start of the actual FIO test
+6. Test results are posted
+
+*User information*
 username: perftest  
 PW: gig12345
 
-*vm information*  
-during the testscript vm's are created following the naming convention  
+*Virtual machine information*  
+During the test script VMs are created with a name in formatted like "nodexy", where:
+- x = the node/stack where the VM is installed
+- y = the iteration number
 
-"nodexy"   
-x = the stack where the vm is installed
+Each deployed VM also gets his own ID during the set up.  
 
-y = the iteration number  
-
-Each deployed vm also gets his own ID during the set up.  
-
-The more iterations we have selected the more vm's are created per node or stack. This means if you have 3 iterations selected and we use 1 stack in the set up we have the following process:
+The more iterations we have selected the more VMs are created per node. This means if you have 3 iterations selected and we use 1 stack in the setup we get the following process:
 
 Iteration 1:
-- vm created on stack 1 and FIO test is done.
+- A VM created on node 1 and FIO test is done, let's call it vm1.
 
 Iteration 2:
-- a new vm is created on stack 1 and FIO tests are now performed on vm1 and vm2
+- A new VM is created on node 1 and FIO tests are now performed on vm1 and vm2.
 
 Iteration 3:
-- a new vm is created on stack 1 and FIO tests are now performed on vm1, vm2 and vm3.
+- A new VM is created on stack 1 and FIO tests are now performed on vm1, vm2 and vm3.
 
 
-## Check the test results.
-If we want to view the results of the test we need to go to the following file:  
+### Check the test results
+If we want to check the results of the test we need to check the following file:
 ```
-cd /perftest/
-vim total_results
+cd /org_quality/Environment_testing/tests_results/FIO_test/(date)_(cpu_name).(env_name)_testresults(run_number)/
+vim (date)_(cpu_name).(env_name)_testresults(run_number).csv
 ```
-In the test result file we can view the following information
-- Total IOPS per vm per Iteration
-- Avergage cpu
 
-A more advanced test result is added to the environment repo on the following path:  
+In the test result file we can view the following information:
+- Total IOPS per virtual machine per iteration
+- Avergage CPU usage
 
-$environment_repo/Testreport/Fio_test/YYMMDD_$CPU_nodename_$iterationnumber_of_the_day
+------------
+UPDATE:
+### This test has also been divided into 2 scripts :
+  1- `demo_create_vms.py`: create all vms on the environment  
+  2- `demo_run_fio.py`: runs FIO tests on all vms inn parallel  
+
+- These scripts assuming that all machines are created on one cloudspace  
+
+- Precautions
+
+  1- After creating the vms please make sure that the assigned ip for the machines
+     matches the ip on the portal  
+
+- To Run the scripts
+
+  1- cd org_quality/Environment_testing/performance\ testing/  
+  2- jspython scripts/demo_create_vms.py 25 (25 = number of vms need to be created)  
+  3- jspython scripts/demo_run_fio.py 10 (10 = number of vms need to run FIO on .. (bet (1-25))  
