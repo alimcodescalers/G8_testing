@@ -32,7 +32,7 @@ jspython Testsuite/3_Env_Limit_test/3_env_limitation_test.py
 ```
 - After the test has been completed, the test will clean itself.
 
-### Results Sample
+### Result sample
 - Results can be found in `/Env_limitation_results/results.table`
-- Test output
+- Test output:
 ![env](https://cloud.githubusercontent.com/assets/15011431/14171111/e85dcee6-f739-11e5-86ea-8537bd7187f5.png)

@@ -21,7 +21,7 @@
 
 |vm name  | CPU's  | Memory | HDD | Iteration 1 | Iteration 2 | ... | iteration x | Avg Unixbench score|
 
-### Running the Test
+### Running the test
 - For changing the test parameters:
   ```
   vim Testsuite/2_Unixbench2_test/parameters.cfg 
@@ -36,8 +36,8 @@
   ```
 - After the test has been completed, the test will clean itself.
 
-### Results Sample
+### Result sample
 - Results can be found in /Unixbench_results/results.table
-- This sample is only for 2 iterations
+- This sample is only for 2 iterations:
 ![unixbench](https://cloud.githubusercontent.com/assets/15011431/14142022/b3a054de-f68b-11e5-8996-259aca0fba93.png)
 
