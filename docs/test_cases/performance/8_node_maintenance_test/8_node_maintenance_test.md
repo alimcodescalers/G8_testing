@@ -1,7 +1,6 @@
 ## Node Maintenance Test
 
 ### Test case description
-
 - Create an account
 - Create a cloud space
 - Create a virtual machine on a node x (type of virtual machine needs to be selectable in the test parameters) --> do a random read write action of files on that virtual machine

@@ -1,4 +1,4 @@
-## Standard Unixbech Test
+## Standard UnixBench Test
 
 ### Prerequisites
 - Have a G8 run the latest version of OpenvCloud
@@ -8,20 +8,26 @@
 - Create an account
 - Create 2 cloud spaces per node
 - Create 7 virtual machines per cloud space (4GB RAM, 2 Core), so 14 virtual machines per node
-- Install Unixbench on 2 virtual nachines per cloud space (4x UnixBench per node)
+- Install UnixBench on 2 virtual machines per cloud space (4x UnixBench per node)
 - Start UnixBench with a random time interval on all virtual machines using all available cores
-- Run this UnixBench test in loop per virtual machine for a variable amount of iterations --> Run unixbench --> Finish, store result --> Run UnixBench --> Finish, store result --> Run unixbench --> Finish, store result ...
+- Run this UnixBench test in loop per virtual machine for a variable amount of iterations:
+  - Run UnixBench --> Finish
+  - Store result
+  - Run UnixBench --> Finish
+  - Store result
+  - Run UnixBench --> Finish
+  - Store result
+  - ...
 
 ### Expected result
-- Create a result table providing the average unixbench score per virtual machine:
+- Create a result table providing the average UnixBench score per virtual machine:
 
 |vm name  | CPU's  | Memory | HDD | Iteration 1 | Iteration 2 | ... | iteration x | Avg Unixbench score|
 
-- Result needs to be compared to other similar vm scores in the market
-http://serverbear.com/benchmarks/cloud
+- Result needs to be compared to other similar virtual machines scores in the market: http://serverbear.com/benchmarks/cloud
 
 ### Running the test
-- Go to performance testing directory: 
+- Go to performance testing directory:
 ```
 cd G8_testing/Environment_testing/performance_testing
 ```

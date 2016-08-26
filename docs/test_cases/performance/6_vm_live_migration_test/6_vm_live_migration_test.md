@@ -13,7 +13,7 @@
 - Select virtual machines
 - Choose action: **Move to another CPU node**
 - Select new CPU node
-- Seyt force option to "no"
+- Set force option to "no"
 
 ### Expected result
 - Virtual machine should be installed on another CPU node
