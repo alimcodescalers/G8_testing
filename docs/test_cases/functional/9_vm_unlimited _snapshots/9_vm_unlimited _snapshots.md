@@ -1,5 +1,9 @@
 ## Snapshots Limit Test
 
+### Prerequisites
+- Have a G8 running the latest version of OpenvCloud
+- Clean the G8, so no virtual machines are running on it
+
 ### Test case description
 - Create a virtual machine in a cloud space 
   - virtual machine name: unlimited_snapshotvm

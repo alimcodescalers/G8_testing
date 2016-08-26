@@ -2,7 +2,7 @@
 
 ### Prerequisites
 - Have a G8 running the latest version of OpenvCloud
-- Clean the G8 so no virtual machines are running on it
+- Clean the G8, so no virtual machines are running on it
 
 ### Test case description
 - Create an account
