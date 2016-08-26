@@ -7,7 +7,6 @@
 ### FIO settings
 When running the test we are writing 3GB of data per disk. This means if we have defined 5 disks we will write 3GB x 5 per iteration. The amount of data to be written is settable in the Perf_parameters.cfg file.
 
-
 ### Running the test script
 Prior to running the script we need to make sure that the environment is clean. To clean the environment we need to use the tear down script.
 

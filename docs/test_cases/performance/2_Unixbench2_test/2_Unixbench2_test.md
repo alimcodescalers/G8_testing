@@ -1,4 +1,4 @@
-## UnixBench 2 Test
+## UnixBench Test
 
 ### Prerequisites
 - Have a G8 running the latest version of OpenvCloud
