@@ -1,35 +1,35 @@
 ## Cloud Space Limitation Test
 
-note: In a public setup the number of created cloudspaces or VDC's are limited to the number of available public IP adresses.
+> Note: In a public setup the number of created cloud spaces or VDCs are limited to the number of available public IP adresses.
 
-### Prerequisite
+### Prerequisites
 
-Have a gener8 run the latest version of openvcloud.
-Have admin rights as a user
+- Have a G8 run the latest version of OpenvCloud
+- Have admin rights as a user
 
-### Test Scenario
-
-create an account
-create a clouspace
-create a vm with minimum specs on the cloudspace made
-create another cloudspace
-create a new vm with minimum specs on the new cloudspace made
-
-repeat above iterations untill the system provides a message stating that there are no more recourses available to deploy a new cloudspace.
+### Test case description
+- Create an account
+- Create a cloud space
+- Create a virtual machine with minimum specs on the new cloud space
+- Create another cloud space
+- Create a new virtual machine with minimum specs on the new cloud space
+- Repeat above iterations until the system provides a message stating that there are no more resources available to deploy a new cloudspace
 
 ### Expected result
 
-a file should be created with all cloudspaces made. The number of created cloudspaces should be equal to the number of free public IP addresses.  
+A file should be created with all created cloud spaces. The number of created cloud spaces should be equal to the number of free public IP addresses.  
 
-### Running the Test
-
-Go to performance testing directory:  
+### Running the test
+- Go to performance testing directory:  
 ```
 cd G8_testing/Environment_testing/performance_testing
 ```
-
-From inside that directory:  
+- From inside that directory:  
 ```
 jspython Testsuite/5_cloudspace_limits_test/5_cs_limits_test.py
 ```
-After the test has been completed, the test will clean itself.
+- After the test has been completed, the test will clean itself
+
+### Result sample
+
+@todo

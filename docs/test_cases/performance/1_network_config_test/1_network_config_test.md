@@ -5,20 +5,20 @@
 - Create a user
 - Create a cloud space
 
---> Check public network connectivity of the cloud space, the cloud space should have a public IP address.
+> Check public network connectivity of the cloud space, the cloud space should have a public IP address.
 
 - Create a virtual machine on each available node in the cloud space
 - Create port forwarding on all virtual machines and check public access
 
---> All virtual machines should be accessible on the public network over SSH.
+> All virtual machines should be accessible on the public network over SSH.
 
 - Write a file from public network to the created virtual machines in the cloud space using the `scp`command.
 
---> File should be transferred having no data loss.
+> File should be transferred having no data loss.
 
 - Write a file from all available virtual machines to all the other virtual machines in the same cloud space.
 
---> File should be transferred having no data loss.
+> File should be transferred having no data loss.
 
 ### Expected result
 PASS: All files should be completely available on all virtual machines. A test succeed message is presented.  
