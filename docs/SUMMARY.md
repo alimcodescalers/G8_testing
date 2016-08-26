@@ -4,7 +4,7 @@
 * [Functional Testing](test_cases/functional/functional.md)
 * [Performance Testing](test_cases/performance/performance.md)
   * [Network Configuration Test](test_cases/performance/1_network_config_test/1_network_config_test.md)
-  * [Unixbench2 Test](test_cases/performance/2_Unixbench2_test/2_Unixbench2_test.md)
+  * [UnixBench2 Test](test_cases/performance/2_Unixbench2_test/2_Unixbench2_test.md)
   * [Environment Limit Test](test_cases/performance/3_Env_Limit_test/3_Env_Limit_test.md)
   * [Unixbench Test](test_cases/performance/4_Unixbench_test/4_Unixbench_test.md)
   * [Cloud Space Limits Test](test_cases/performance/5_cloudspace_limits_test/5_cloudspace_limits_test.md)
