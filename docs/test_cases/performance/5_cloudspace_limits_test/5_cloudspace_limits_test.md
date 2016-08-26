@@ -1,4 +1,4 @@
-## Cloud Space Limitation Test
+## Cloud Space Limit Test
 
 > Note: In a public setup the number of created cloud spaces or VDCs are limited to the number of available public IP adresses.
 

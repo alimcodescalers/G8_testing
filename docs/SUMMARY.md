@@ -7,7 +7,7 @@
   * [UnixBench2 Test](test_cases/performance/2_Unixbench2_test/2_Unixbench2_test.md)
   * [Environment Limits Test](test_cases/performance/3_Env_Limit_test/3_Env_Limit_test.md)
   * [Unixbench Test](test_cases/performance/4_Unixbench_test/4_Unixbench_test.md)
-  * [Cloud Space Limits Test](test_cases/performance/5_cloudspace_limits_test/5_cloudspace_limits_test.md)
+  * [Cloud Space Limit Test](test_cases/performance/5_cloudspace_limits_test/5_cloudspace_limits_test.md)
   * [VM Live Migration Test](test_cases/performance/6_vm_live_migration_test/6_vm_live_migration_test.md)
   * [Node Maintenance Test](test_cases/performance/8_node_maintenance_test/8_node_maintenance_test.md)
   * [VM Unlimited Snapshots Test](test_cases/performance/9_vm_unlimited _snapshots/9_vm_unlimited _snapshots.md)
