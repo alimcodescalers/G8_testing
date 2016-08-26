@@ -11,7 +11,7 @@
 - Create a virtual machine running UnixBench
 - When the test is done store the UnixBench score
 - Create a second virtual machine in the same cloud space and run UnixBench with a random time interval on both virtual machines
-- When the test is done store the unixbech score of both virtual machines
+- When the test is done store the UnixBench score of both virtual machines
 - Create a third virtual machine in the same cloud space and run UnixBench with a random time interval on all virtual machines
 - When the test is done store the UnixBech score of all virtual machines
 - Repeat above until the UnixBench score of the first virtual machines is devided by 2
