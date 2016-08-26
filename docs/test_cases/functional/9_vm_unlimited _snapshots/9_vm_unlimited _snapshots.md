@@ -1,4 +1,4 @@
-## VM Unlimited Snapshots Test
+## Snapshots Limit Test
 
 ### Test case description
 - Create a virtual machine in a cloud space 

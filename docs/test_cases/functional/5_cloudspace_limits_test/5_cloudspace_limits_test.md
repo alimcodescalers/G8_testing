@@ -1,4 +1,4 @@
-## Cloud Space Limit Test
+## Cloud Spaces Limit Test
 
 > Note: In a public setup the number of created cloud spaces or VDCs are limited to the number of available public IP adresses.
 
@@ -12,7 +12,7 @@
 - Create a virtual machine with minimum specs on the new cloud space
 - Create another cloud space
 - Create a new virtual machine with minimum specs on the new cloud space
-- Repeat above iterations until the system provides a message stating that there are no more resources available to deploy a new cloudspace
+- Repeat above iterations until the system provides a message stating that there are no more resources available to deploy a new cloud space
 
 ### Expected result
 A file should be created with all created cloud spaces. The number of created cloud spaces should be equal to the number of free public IP addresses.  
