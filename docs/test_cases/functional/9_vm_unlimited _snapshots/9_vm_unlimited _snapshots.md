@@ -3,6 +3,7 @@
 ### Prerequisites
 - Have a G8 running the latest version of OpenvCloud
 - Clean the G8, so no virtual machines are running on it
+- Have admin access to one of the physical compute nodes
 
 ### Test case description
 - Create a virtual machine in a cloud space 
@@ -26,14 +27,15 @@
 - All later snapshots than the one selected should be removed from the portal...
 
 ### Running the Test
-- Go to performance testing directory: 
-```
-cd G8_testing/Environment_testing/performance_testing
-```
-- From inside that directory:  
-```
-jspython Testsuite/9_vm_unlimited_snapshots/9_vm_snapshots_test.py **6**
-```
+- Go to the `functional_testing` directory:
+  ```bash
+  cd G8_testing/Environment_testing/functional_testing
+  ```
+
+- Run the test:  
+  ```
+  jspython Testsuite/9_vm_unlimited_snapshots/9_vm_snapshots_test.py **6**
+  ```
 -  '**6**' is the number of snapshots to be created
 - Any number of snapshots can be provided to figure out the max number of snapshots that can be created for a virtual machine
 - After the test has been completed, the test will clean itself

@@ -2,7 +2,8 @@
 
 ### Prerequisites
 - Have a G8 running the latest version of OpenvCloud
-- Clean the G8, so no vm's are running on it
+- Clean the G8, so no virtual machines are running on it
+- Have admin access to one of the physical compute nodes
 
 ### FIO settings
 When running the test we are writing 3GB of data per disk. This means if we have defined 5 disks we will write 3GB x 5 per iteration. The amount of data to be written is settable in the Perf_parameters.cfg file.

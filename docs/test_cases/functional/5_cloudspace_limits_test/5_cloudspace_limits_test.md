@@ -2,7 +2,7 @@
 
 ### Prerequisites
 - Have a G8 run the latest version of OpenvCloud
-- Have admin rights as a user
+- Have admin access to one of the physical compute nodes
 
 ### Test case description
 - Create an account
@@ -18,14 +18,16 @@ A file should be created with all created cloud spaces.
 > The number of created cloud spaces should be equal to the number of free public IP addresses.  
 
 ### Running the test
-- Go to performance testing directory:  
-```
-cd G8_testing/Environment_testing/performance_testing
-```
-- From inside that directory:  
-```
-jspython Testsuite/5_cloudspace_limits_test/5_cs_limits_test.py
-```
+- Go to the `functional_testing` directory:
+  ```bash
+  cd G8_testing/Environment_testing/functional_testing
+  ```
+
+- Run the test:  
+  ```
+  jspython Testsuite/5_cloudspace_limits_test/5_cs_limits_test.py
+  ```
+
 - After the test has been completed, the test will clean itself
 
 ### Result sample

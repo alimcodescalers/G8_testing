@@ -3,6 +3,7 @@
 ### Prerequisites
 - Have a G8 running the latest version of OpenvCloud
 - Clean the G8, so no virtual machines are running on it
+- Have admin access to one of the physical compute nodes
 
 ### Test case description
 - Create an account
@@ -19,18 +20,21 @@
 | VM Number | vm name  | CPU's  | Memory | HDD | Node |
 
 ### Running the test
+- Go to the `functional_testing` directory:
+  ```bash
+  cd G8_testing/Environment_testing/functional_testing
+  ```
+
 - For changing the test parameters:
-```
-vim Testsuite/3_Env_Limit_test/parameters.cfg
-```
-- Go to performance testing directory:
-```
-cd org_quality/Environment_testing/performance_testing
-```
-- From inside that directory:
-```
-jspython Testsuite/3_Env_Limit_test/3_env_limitation_test.py 
-```
+  ```
+  vim Testsuite/3_Env_Limit_test/parameters.cfg
+  ```
+
+- Run the test:
+  ```
+  jspython Testsuite/3_Env_Limit_test/3_env_limitation_test.py 
+  ```
+
 - After the test has been completed, the test will clean itself.
 
 ### Result sample

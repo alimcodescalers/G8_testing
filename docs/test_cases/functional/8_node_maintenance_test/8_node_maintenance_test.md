@@ -3,6 +3,7 @@
 ### Prerequisites
 - Have a G8 running the latest version of OpenvCloud
 - Clean the G8, so no virtual machines are running on it
+- Have admin access to one of the physical compute nodes
 
 ### Test case description
 - Create an account
@@ -19,16 +20,14 @@
 - Virtual machine should not have data loss
 
 ### Run the test
-- Connect to one of the cpun odes of the environment
-```
-git clone git@github.com:gig-projects/org_quality.git
-```
-- Go to performance testing directory:
-```
-cd org_quality/Environment_testing/performance\ testing/
-```
-- From inside that directory:
-```
-jspython Testsuite/8_node_maintenance_test/8_node_maintenance_test.py
-```
+- Go to the `functional_testing` directory:
+  ```bash
+  cd G8_testing/Environment_testing/functional_testing
+  ```
+  
+- Run the test:
+  ```
+  jspython Testsuite/8_node_maintenance_test/8_node_maintenance_test.py
+  ```
+
 - After the test has been completed, the test will clean itself

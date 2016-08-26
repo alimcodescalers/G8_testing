@@ -3,6 +3,7 @@
 ### Prerequisites
 - Have a G8 running the latest version of OpenvCloud
 - Clean the G8, so no virtual machines are running on it
+- Have admin access to one of the physical compute nodes
 
 ### Test case description
 - Create an account
@@ -29,9 +30,9 @@ PASS: All files should be completely available on all virtual machines. A test s
 FAIL: If there is too much latency, if virtual machines fails to send or receive data...
 
 ### Running the test
-- Go to the performance testing directory:
+- Go to the `functional_testing` directory:
   ```bash
-  cd G8_testing/Environment_testing/performance_testing
+  cd G8_testing/Environment_testing/functional_testing
   ```
 
 - From inside that directory:

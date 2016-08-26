@@ -2,7 +2,8 @@
 
 ### Prerequisites
 - Have a G8 running the latest version of OpenvCloud
-- Clean the G8, so no vm's are running on it
+- Clean the G8, so no virtual machines are running on it
+- Have admin access to one of the physical compute nodes
 
 ### Test case description
 - Create an account
