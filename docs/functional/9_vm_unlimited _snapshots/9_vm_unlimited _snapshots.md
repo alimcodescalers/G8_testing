@@ -29,7 +29,7 @@
 ### Running the Test
 - Go to the `functional_testing` directory:
   ```bash
-  cd G8_testing/Environment_testing/functional_testing
+  cd G8_testing/functional_testing
   ```
 
 - Run the test:  

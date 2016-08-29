@@ -84,7 +84,7 @@ IO_type: write
 
 
 # Results Directory : write absolute directory
-Res_dir: /root/org_quality/Environment_testing/tests_results/FIO_test
+Res_dir: /root/org_quality/tests_results/FIO_test
 
 # username
 username: perftestuser
@@ -129,7 +129,7 @@ Iteration 3:
 ### Check the test results
 If we want to check the results of the test we need to check the following file:
 ```
-cd /org_quality/Environment_testing/tests_results/FIO_test/(date)_(cpu_name).(env_name)_testresults(run_number)/
+cd /org_quality/tests_results/FIO_test/(date)_(cpu_name).(env_name)_testresults(run_number)/
 vim (date)_(cpu_name).(env_name)_testresults(run_number).csv
 ```
 

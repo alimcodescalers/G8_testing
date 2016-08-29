@@ -24,7 +24,7 @@
 ### Running the test
 - Go to performance testing directory: 
   ```
-  cd org_quality/Environment_testing/performance_testing
+  cd org_quality/performance_testing
   ```
   
 - For changing the test parameters:

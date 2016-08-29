@@ -22,7 +22,7 @@
 ### Running the test
 - Go to the `functional_testing` directory:
   ```bash
-  cd G8_testing/Environment_testing/functional_testing
+  cd G8_testing/functional_testing
   ```
 
 - For changing the test parameters:
