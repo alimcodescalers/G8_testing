@@ -6,7 +6,7 @@ How to get access to a physical compute node is documented in the [OpenvCloud Op
 
 Following subdirectories exist:
 
-- [demolition_testing](./demolition), documented [here](/docs/test_cases/demolition/demolition.md)
+- [demolition_testing](./demolition_testing), documented [here](/docs/test_cases/demolition/demolition.md)
 - [functional_testing](./functional_testing), documented [here](/docs/test_cases/functional/functional.md)
 - [installation_testing](./installation_testing), documented [here]()
 - [performance_testing](./performance_testing), documented [here](/docs/test_cases/performance)
