@@ -1,13 +1,18 @@
-# Goal
-This repo will be used for testing our Gener8
-- Installation test --> Auto Installation testing should be added in this repo
-- Performance testing --> All testing that result in providing Performance information of an environment
-- Upgrade testing --> Automated upgrade script tests should be added into this repo
+## Environment Testing
+
+This directory contains all tests that require physical access to the physical compute nodes.
+
+How to get access to a physical compute node is documented in the [OpenvCloud Operator's Guide](https://www.gitbook.com/book/gig/ovcdoc_public/details), see the [Connect to an Environement](https://gig.gitbooks.io/ovcdoc_public/content/Sysadmin/Connect/connect.html) section.
+
+Following subdirectories exist:
+
+- [functional_testing](./functional_testing), documented [here](/docs/test_cases/functional/functional.md)
+- [installation_testing](./installation_testing), documented [here]()
+- [performance_testing](./performance_testing), documented [here](/docs/test_cases/performance)
+- [tests_results](./tests_results)
+- [upgrade_testing](./upgrade_testing)
 
 
-## usefull info
-
-To start the performance test we should connect to one of the physical nodes of the environment that needs to be tested. To connect to a physical node, follow the steps as described in the [connect documentation](https://gig.gitbooks.io/ovcdoc_public/content/Sysadmin/Connect/connect.html).
 
 
 First we need to get the latest test scripts on the physical machine in the root directory by pulling the G8_testing repo to the node where we want to test
