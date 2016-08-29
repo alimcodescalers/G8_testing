@@ -30,9 +30,5 @@ Once installed - the first task is to executed the automated testing of the basi
 @TODO
 
 
-#### Automated testing for Itsyou.Online
-@TODO
-
-
 ### Manual testing
 @TODO
