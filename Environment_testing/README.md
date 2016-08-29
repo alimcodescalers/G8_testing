@@ -1,8 +1,8 @@
 ## Environment Testing
 
-This directory contains all tests that require physical access to the physical compute nodes.
+This directory contains all tests that require access to the physical compute nodes.
 
-How to get access to a physical compute node is documented in the [OpenvCloud Operator's Guide](https://www.gitbook.com/book/gig/ovcdoc_public/details), see the [Connect to an Environement](https://gig.gitbooks.io/ovcdoc_public/content/Sysadmin/Connect/connect.html) section.
+How to get access to a physical compute node is documented in the [OpenvCloud Operator's Guide](https://www.gitbook.com/book/gig/ovcdoc_public/details), see the [Connect to an Environement](https://gig.gitbooks.io/ovcdoc_public/content/Sysadmin/Connect/connect.html) section for all details.
 
 Following subdirectories exist:
 
