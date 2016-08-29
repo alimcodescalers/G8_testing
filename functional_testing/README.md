@@ -11,6 +11,6 @@ In this section of the repository we have a Testsuite directory with the scripts
 [8_node_maintenance_test](./Testsuite/8_node_maintenance_test)  
 [9_vm_unlimited _snapshots](./Testsuite/9_vm_unlimited%20_snapshots)
 
-The documentation as picked up in the public [G8 Testing Guide](https://www.gitbook.com/book/gig/g8-testing-guide/details) is in the [docs](/docs/test_cases/functional) directory.
+The documentation as picked up in the public [G8 Testing Guide](https://www.gitbook.com/book/gig/g8-testing-guide/details) is in the [docs](/docs/functional) directory.
 
 Please only add here **internal** documentation, all other (public) documentation should be added into the [docs](/docs) directory.
