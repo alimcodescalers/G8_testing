@@ -121,12 +121,17 @@ username: perftestuser
 
 
 ### Check the test results
-If we want to check the results of the test we need to check the following file:
+- If we want to check the results of the test we need to check the following file:
 ```
 cd /G8_testing/tests_results/FIO_test/(date)_(cpu_name).(env_name)_testresults(run_number)/
 vim (date)_(cpu_name).(env_name)_testresults(run_number).csv
 ```
-
-In the test result file we can view the following information:
-- Total IOPS per virtual machine per iteration
-- Avergage CPU Load
+-  If we want to check the parameters used for that test we need to check the following file:
+```
+cd /G8_testing/tests_results/FIO_test/(date)_(cpu_name).(env_name)_testresults(run_number)/Perf_parameters.cfg
+```
+- In the test result file we can view the following information:
+  - Total IOPS per virtual machine per iteration
+  - Avergage CPU Load
+  
+- For each run of the demo_run_fio.py,  there is a separated folder that is created which has its own csv file and parameters file as discribed in the first point 
