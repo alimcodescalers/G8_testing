@@ -20,12 +20,12 @@ A file should be created with all created cloud spaces.
 ### Running the test
 - Go to the `functional_testing` directory:
   ```bash
-  cd G8_testing/functional_testing
+  cd G8_testing/
   ```
 
 - Run the test:  
   ```
-  jspython Testsuite/5_cloudspace_limits_test/5_cs_limits_test.py
+  jspython functional_testing/Testsuite/5_cloudspace_limits_test/5_cs_limits_test.py
   ```
 
 - After the test has been completed, the test will clean itself
