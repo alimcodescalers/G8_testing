@@ -1,10 +1,10 @@
-## Functional tests hosted on ovc_master
+## Functional Tests Hosted on ovc_master
 
 Two types of automated functional tests are available for OpenvCloud:
 - Tests that run on **ovc_master**, discussed below
 - Tests that run on a physical **compute node**, discussed [here](../compute_node_hosted/compute_node_hosted.md)
 
-> Remember: **ovc_master** is the virtual machine in the master cloud space where Cloud Broker Portal is running, and all other OpenvCloud portals
+> Remember: **ovc_master** is the virtual machine in the master cloud space where the Cloud Broker Portal is running, and all other OpenvCloud portals
 
 Following test suites are available:
 - Access Control List API 
