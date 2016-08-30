@@ -1,6 +1,6 @@
-## Local Setup of Functional Tests
+## Local Setup of the OpenvCloud Functional Tests
 
-For setting up the functional tests, you have two options:
+For setting up the OpenvCloud functional tests, you have two options:
 - Install everything directly on the master cloud space, so locally from the perspecitive where the tests will actually run
 - Install everything on your local machine, so remotely from the perspective of where the tests will actually run
 
