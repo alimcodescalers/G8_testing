@@ -30,9 +30,13 @@ jspython scripts/tear_down.py --clean
   
   2- demo_run_fio.py: runs FIO tests on all vms in parallel
 
+- Steps to run the test
     1- cd G8_testing/Environment_testing/performance_testing/
+
     2- jspython scripts/demo_create_vms.py 25 (25 = number of vms need to be created)
-    3- jspython scripts/demo_run_fio.py 10 (10 = number of vms need to run FIO on .. (bet (1-25)) 
+    
+    3- jspython scripts/demo_run_fio.py 10 (10 = number of vms need to run FIO on (between (1-25)) 
+    
 - You can rerun demo_run_fio.py as much as needed for different parameters
 - After finishing the test, make sure that the test is teared down 
   ```
