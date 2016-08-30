@@ -39,8 +39,8 @@
 
 ### Result sample
 - Rsults can be found in 
-``
-cd G8_testing/tests_results/3_env_limitation/(date)_(cpu_name).(env_name)_testresults(run_number)`
+```
+   cd G8_testing/tests_results/3_env_limitation/(date)_(cpu_name).(env_name)_testresults(run_number)`
    vim (date)_(cpu_name).(env_name)_testresults(run_number).csv
 ```
 - Test output:
