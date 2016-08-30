@@ -18,14 +18,14 @@ A file should be created with all created cloud spaces.
 > The number of created cloud spaces should be equal to the number of free public IP addresses.  
 
 ### Running the test
-- Go to the `G8_testing` directory:
+- Go to the `functional_testing` directory:
   ```bash
-  cd G8_testing/
+  cd G8_testing/functional_testing
   ```
 
 - Run the test:  
   ```
-  jspython functional_testing/Testsuite/5_cloudspace_limits_test/5_cs_limits_test.py
+  jspython Testsuite/5_cloudspace_limits_test/5_cs_limits_test.py
   ```
 
 - After the test has been completed, the test will clean itself

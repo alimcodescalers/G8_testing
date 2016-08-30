@@ -20,29 +20,25 @@
 | VM Number | vm name  | CPU's  | Memory | HDD | Node |
 
 ### Running the test
-- Go to the `G8_testing` directory:
+- Go to the `functional_testing` directory:
   ```bash
-  cd G8_testing/
+  cd G8_testing/functional_testing
   ```
 
 - For changing the test parameters:
   ```
-  vim functional_testing/Testsuite/3_Env_Limit_test/parameters.cfg
+  vim Testsuite/3_Env_Limit_test/parameters.cfg
   ```
 
 - Run the test:
   ```
-  jspython functional_testing/Testsuite/3_Env_Limit_test/3_env_limitation_test.py 
+  jspython Testsuite/3_Env_Limit_test/3_env_limitation_test.py 
   ```
 
 - After the test has been completed, the test will clean itself.
 
 ### Result sample
-- Rsults can be found in 
-```
-   cd G8_testing/tests_results/3_env_limitation/(date)_(cpu_name).(env_name)_testresults(run_number)`
-   vim (date)_(cpu_name).(env_name)_testresults(run_number).csv
-```
+- Results can be found in `/Env_limitation_results/results.table`
 - Test output:
 
 ![env](https://cloud.githubusercontent.com/assets/15011431/14171111/e85dcee6-f739-11e5-86ea-8537bd7187f5.png)
