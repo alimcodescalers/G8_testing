@@ -18,7 +18,7 @@ A file should be created with all created cloud spaces.
 > The number of created cloud spaces should be equal to the number of free public IP addresses.  
 
 ### Running the test
-- Go to the `functional_testing` directory:
+- Go to the `G8_testing` directory:
   ```bash
   cd G8_testing/
   ```
