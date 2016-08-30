@@ -30,7 +30,7 @@ PASS: All files should be completely available on all virtual machines. A test s
 FAIL: If there is too much latency, if virtual machines fails to send or receive data...
 
 ### Running the test
-- Go to the `functional_testing` directory:
+- Go to the `G8_testing` directory:
   ```bash
   cd G8_testing/
   ```
