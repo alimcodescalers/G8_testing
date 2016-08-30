@@ -22,7 +22,7 @@ def main():
     scl = j.clients.osis.getNamespace('system')
 
     sys.path.append(os.getcwd())
-    from utils import utils
+    from performance_testing.utils import utils
     USERNAME = 'vmlivemigrateuser'
     email = "%s@test.com" % str(uuid.uuid4())[0:8]
     utils.create_user(USERNAME, email,  pcl, scl)
@@ -54,9 +54,9 @@ def main():
             connection.apt_get('update')
             connection.apt_get('install fio')
 
-        j.do.execute('sshpass -p%s scp -o \'StrictHostKeyChecking=no\' -P %s Testsuite/6_vm_live_migration_test/machine_script.py %s@%s:'
+        j.do.execute('sshpass -p%s scp -o \'StrictHostKeyChecking=no\' -P %s functional_testing/Testsuite/6_vm_live_migration_test/machine_script.py %s@%s:'
                              %(account['password'], cloudspace_publicport, account['login'], cloudspace_publicip))
-        j.do.execute('sshpass -p%s scp -o \'StrictHostKeyChecking=no\' -P %s Testsuite/6_vm_live_migration_test/check_script.py %s@%s:'
+        j.do.execute('sshpass -p%s scp -o \'StrictHostKeyChecking=no\' -P %s functional_testing/Testsuite/6_vm_live_migration_test/check_script.py %s@%s:'
                              %(account['password'], cloudspace_publicport, account['login'], cloudspace_publicip))
 
         network.disconnect_all()
@@ -105,7 +105,7 @@ if __name__ == "__main__":
     try:
         test_result = main()
     finally:
-        j.do.execute('jspython scripts/tear_down.py vmlivemigrateuser')
+        j.do.execute('jspython performance_testing/scripts/tear_down.py vmlivemigrateuser')
         try:
             if test_result == 'Two files are identical':
                 print ('################ \n# Test succeed #\n################')
