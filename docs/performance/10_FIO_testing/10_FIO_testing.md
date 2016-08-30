@@ -5,7 +5,7 @@
 - Clean the G8, so no virtual machines are running on it
 - Have admin access to one of the physical compute nodes
 
-### Test description:
+### Test description
 -  Create a user
   - username: perftestuser.
   - password: gig12345
@@ -15,7 +15,6 @@
   - VM's name is formatted like "nodex_y", where x = the stackId where the VM is installed and y = the number of the virtual machine
 - Install flexible I/O tester tool (FIO) and create data disks 
 - Make sure to update the `Perf_parameters.cfg` file with the parameters needed
-
 
 
 
@@ -30,7 +29,7 @@ jspython scripts/tear_down.py --clean
   1- demo_create_vms.py: create all vms on the environment
   2- demo_run_fio.py: runs FIO tests on all vms in parallel
 
-    1- cd G8_testing/Environment_testing/performance\ testing/
+    1- cd G8_testing/Environment_testing/performance_testing/
     2- jspython scripts/demo_create_vms.py 25 (25 = number of vms need to be created)
     3- jspython scripts/demo_run_fio.py 10 (10 = number of vms need to run FIO on .. (bet (1-25)) 
 - You can rerun demo_run_fio.py as much as needed for different parameters
@@ -45,7 +44,7 @@ perftestuser =  username used for that test
 
 Now we need to set up the required parameters:
 ```
-cd G8_testing/Environment_testing/performance\ testing/
+cd G8_testing/Environment_testing/performance_testing/
 vim Perf_parameters.cfg
 ```
 
@@ -143,4 +142,4 @@ vim (date)_(cpu_name).(env_name)_testresults(run_number).csv
 
 In the test result file we can view the following information:
 - Total IOPS per virtual machine per iteration
-- Avergage CPU usage
+- Avergage CPU Load
