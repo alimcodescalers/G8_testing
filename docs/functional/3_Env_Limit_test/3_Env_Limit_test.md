@@ -20,7 +20,7 @@
 | VM Number | vm name  | CPU's  | Memory | HDD | Node |
 
 ### Running the test
-- Go to the `functional_testing` directory:
+- Go to the `G8_testing` directory:
   ```bash
   cd G8_testing/
   ```
