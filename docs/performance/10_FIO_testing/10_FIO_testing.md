@@ -55,9 +55,6 @@ vim Perf_parameters.cfg
 ```
    - Following paramenters are settable in the config file:
 ```
-# Number of Iterations --> each iteration create one VM per cpunode(stack)
-iterations: 1
-
 # No of cloudspaces --> an account is created for each cloudspace and Number of cloudspaces should be
 #less than or equal that of cpu nodes
 No_of_cloudspaces: 1
@@ -65,7 +62,6 @@ No_of_cloudspaces: 1
 # Number of cpu nodes which will be used for the test (must be less than environment_cpu_nodes-1 )
 used_stacks: 2
 
-no_of_vms_per_stack_per_iteration: 3
 
 # Parameters required for VM
 # RAM and cpu are coupled together,
