@@ -48,13 +48,12 @@ perftestuser =  username used for that test
     
 
 
-Now we need to set up the required parameters:
+- Before running the test we need to set up the required parameters in the config file:
 ```
 cd G8_testing/Environment_testing/performance_testing/
 vim Perf_parameters.cfg
 ```
-
-Following paramenters are settable in the config file:
+   - Following paramenters are settable in the config file:
 ```
 # Number of Iterations --> each iteration create one VM per cpunode(stack)
 iterations: 1
@@ -120,24 +119,6 @@ Res_dir: /root/G8_testing/tests_results/FIO_test
 username: perftestuser
 ```
 
-When the config file is set, there are two steps in order to actually run the test:
-1. Create all virtual machines with `demo_create_vms.py`
-2. Start the FIO tests on all virtual machines in parallel with `demo_run_fio.py`
-
-So first you create all virtual machines, for instance in order to create 25 virtual machines:
-```
-cd G8_testing/Environment_testing/performance\ testing/ 
-demo_create_vms.py 25
-```
-
-> Note: After creating the virtual machines make sure that the assigned IP addresses match the IP addresses you see in the Cloud Broker Portal.
-
-
-
-Next start the test using `demo_run_fio.py`, here with the parameter 10 to indicate that you want to use 10 virtual machines (needs to be between 1 and 25):
-```
-jspython scripts/demo_run_fio.py 10
-```
 
 ### Check the test results
 If we want to check the results of the test we need to check the following file:
