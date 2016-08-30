@@ -3,7 +3,7 @@ import time
 import random
 
 from JumpScale import j
-from Openvcloud.utils.utils import BasicACLTest
+from functional_testing.Openvcloud.utils.utils import BasicACLTest
 
 
 class NetworkBasicTests(BasicACLTest):

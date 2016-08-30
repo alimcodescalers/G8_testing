@@ -1,0 +1,826 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>functional_testing.Openvcloud.ACL.a_basic_operations.acl_machine_test &mdash; OpenVCloud Testsuite 1.0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="OpenVCloud Testsuite 1.0 documentation" href="../../../../../index.html"/>
+        <link rel="up" title="Module code" href="../../../../index.html"/> 
+
+  
+  <script src="../../../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../../../index.html" class="icon icon-home"> OpenVCloud Testsuite
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../acl.html">Access Control List Basic Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../acl.html#access-control-list-extended-tests">Access Control List Extended Tests</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../ovc.html">OpenVcloud APIs Test Suite:</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../portal.html">End user Portal Test Suite</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../portal.html#admin-user-portal-test-suite">Admin user Portal Test Suite</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../../../../index.html">OpenVCloud Testsuite</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../../../../index.html">Module code</a> &raquo;</li>
+      
+    <li>functional_testing.Openvcloud.ACL.a_basic_operations.acl_machine_test</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for functional_testing.Openvcloud.ACL.a_basic_operations.acl_machine_test</h1><div class="highlight"><pre>
+<span></span><span class="c1"># coding=utf-8</span>
+<span class="kn">import</span> <span class="nn">uuid</span>
+
+<span class="kn">from</span> <span class="nn">functional_testing.Openvcloud.utils.utils</span> <span class="k">import</span> <span class="n">BasicACLTest</span>
+<span class="kn">from</span> <span class="nn">JumpScale.portal.portal.PortalClient2</span> <span class="k">import</span> <span class="n">ApiError</span>
+
+
+<span class="k">class</span> <span class="nc">ACLMACHINE</span><span class="p">(</span><span class="n">BasicACLTest</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">setUp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">ACLMACHINE</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">setUp</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">acl_setup</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">machine_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cloudapi_create_machine</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cloudspace_id</span><span class="p">,</span>
+                                                       <span class="bp">self</span><span class="o">.</span><span class="n">account_owner_api</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Read"><a class="viewcode-back" href="../../../../../acl.html#functional_testing.Openvcloud.ACL.a_basic_operations.acl_machine_test.Read">[docs]</a><span class="k">class</span> <span class="nc">Read</span><span class="p">(</span><span class="n">ACLMACHINE</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Read.test003_machine_get_list"><a class="viewcode-back" href="../../../../../acl.html#functional_testing.Openvcloud.ACL.a_basic_operations.acl_machine_test.Read.test003_machine_get_list">[docs]</a>    <span class="k">def</span> <span class="nf">test003_machine_get_list</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; ACL-52</span>
+<span class="sd">        *Test case for get/list machine api with user has read access on machine level.*</span>
+
+<span class="sd">        **Test Scenario:**</span>
+
+<span class="sd">        #. try to get machine with new user [user], should return 403</span>
+<span class="sd">        #. try to list machines with new user [user], should return 403</span>
+<span class="sd">        #. add user to the machine with read access</span>
+<span class="sd">        #. get machine with new user [user], should succeed</span>
+<span class="sd">        #. list machines with new user [user], should succeed</span>
+<span class="sd">        #. create new machine with user2, should succeed</span>
+<span class="sd">        #. get machine with user2, should succeed</span>
+<span class="sd">        #. list machines with new user [user] still see 1 machine, should succeed</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> STARTED&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_testID</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;- try to get machine with new user [user], should return 403&#39;</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">user_api</span><span class="o">.</span><span class="n">cloudapi</span><span class="o">.</span><span class="n">machines</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">machineId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">machine_id</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">ApiError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;- expected error raised </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">e</span><span class="o">.</span><span class="n">message</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">message</span><span class="p">,</span> <span class="s1">&#39;403 Forbidden&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;- try to list machines with new user [user], should return 403&#39;</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">user_api</span><span class="o">.</span><span class="n">cloudapi</span><span class="o">.</span><span class="n">machines</span><span class="o">.</span><span class="n">list</span><span class="p">(</span><span class="n">cloudspaceId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cloudspace_id</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">ApiError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;- expected error raised </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">e</span><span class="o">.</span><span class="n">message</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">message</span><span class="p">,</span> <span class="s1">&#39;403 Forbidden&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;- add user to the machine with read access&#39;</span><span class="p">)</span>
+        <span class="n">accesstype</span> <span class="o">=</span> <span class="s1">&#39;R&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;- add user1 to the machine owned by user2 with access type [</span><span class="si">%s</span><span class="s1">]&#39;</span> <span class="o">%</span> <span class="n">accesstype</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_user_to_machine</span><span class="p">(</span><span class="n">machine_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">machine_id</span><span class="p">,</span>
+                                 <span class="n">user</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="p">,</span>
+                                 <span class="n">accesstype</span><span class="o">=</span><span class="n">accesstype</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;- get machine with new user [user], should succeed&#39;</span><span class="p">)</span>
+        <span class="n">machine</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">user_api</span><span class="o">.</span><span class="n">cloudapi</span><span class="o">.</span><span class="n">machines</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">machineId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">machine_id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">machine</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">machine_id</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;- list machines with new user [user], should succeed&#39;</span><span class="p">)</span>
+        <span class="n">machines</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">user_api</span><span class="o">.</span><span class="n">cloudapi</span><span class="o">.</span><span class="n">machines</span><span class="o">.</span><span class="n">list</span><span class="p">(</span><span class="n">cloudspaceId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cloudspace_id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">machines</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">machines</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;id&#39;</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">machine_id</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;- create new machine with user2, should succeed&#39;</span><span class="p">)</span>
+        <span class="n">new_machine_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cloudapi_create_machine</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cloudspace_id</span><span class="p">,</span>
+                                                      <span class="bp">self</span><span class="o">.</span><span class="n">account_owner_api</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;- get machine with user2, should succeed&#39;</span><span class="p">)</span>
+        <span class="n">new_machine</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">account_owner_api</span><span class="o">.</span><span class="n">cloudapi</span><span class="o">.</span><span class="n">machines</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">machineId</span><span class="o">=</span><span class="n">new_machine_id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">new_machine</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">],</span> <span class="n">new_machine_id</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;- list machines with new user [user] still see 1 machine, should succeed&#39;</span><span class="p">)</span>
+        <span class="n">machines</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">user_api</span><span class="o">.</span><span class="n">cloudapi</span><span class="o">.</span><span class="n">machines</span><span class="o">.</span><span class="n">list</span><span class="p">(</span><span class="n">cloudspaceId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cloudspace_id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">machines</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">machines</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;id&#39;</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">machine_id</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> ENDED&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_testID</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Read.test004_machine_getConsoleUrl_listSnapshots_getHistory"><a class="viewcode-back" href="../../../../../acl.html#functional_testing.Openvcloud.ACL.a_basic_operations.acl_machine_test.Read.test004_machine_getConsoleUrl_listSnapshots_getHistory">[docs]</a>    <span class="k">def</span> <span class="nf">test004_machine_getConsoleUrl_listSnapshots_getHistory</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; ACL-53</span>
+<span class="sd">        *Test case for getConsoleUrl/listSnapshots/getHistory machine api with user has read access on machine level.*</span>
+
+<span class="sd">        **Test Scenario:**</span>
+
+<span class="sd">        #. try to getConsoleUrl machine with new user [user], should return 403</span>
+<span class="sd">        #. create snapshot for a machine with the account user, should succeed</span>
+<span class="sd">        #. try to listSnapshots of created machine with new user [user], should return 403</span>
+<span class="sd">        #. try to getHistory of created machine with new user [user], should return 403</span>
+<span class="sd">        #. add user to the machine with read access</span>
+<span class="sd">        #. getConsoleUrl machine with new user [user], should succeed</span>
+<span class="sd">        #. listSnapshots of created machine with new user [user], should succeed</span>
+<span class="sd">        #. getHistory of created machine with new user [user], should succeed</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> STARTED&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_testID</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;- try to getConsoleUrl machine with new user [user], should return 403&#39;</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">user_api</span><span class="o">.</span><span class="n">cloudapi</span><span class="o">.</span><span class="n">machines</span><span class="o">.</span><span class="n">getConsoleUrl</span><span class="p">(</span><span class="n">machineId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">machine_id</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">ApiError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;- expected error raised </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">e</span><span class="o">.</span><span class="n">message</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">message</span><span class="p">,</span> <span class="s1">&#39;403 Forbidden&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;- create snapshot for a machine with the account user, should succeed&#39;</span><span class="p">)</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">())</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">:</span><span class="mi">10</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">account_owner_api</span><span class="o">.</span><span class="n">cloudapi</span><span class="o">.</span><span class="n">machines</span><span class="o">.</span><span class="n">snapshot</span><span class="p">(</span><span class="n">machineId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">machine_id</span><span class="p">,</span>
+                                                          <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">snapshot</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">cloudapi</span><span class="o">.</span><span class="n">machines</span><span class="o">.</span><span class="n">listSnapshots</span><span class="p">(</span><span class="n">machineId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">machine_id</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">snapshot</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span> <span class="n">name</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;- try to listSnapshots of created machine with new user [user], should return 403&#39;</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">user_api</span><span class="o">.</span><span class="n">cloudapi</span><span class="o">.</span><span class="n">machines</span><span class="o">.</span><span class="n">listSnapshots</span><span class="p">(</span><span class="n">machineId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">machine_id</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">ApiError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;- expected error raised </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">e</span><span class="o">.</span><span class="n">message</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">message</span><span class="p">,</span> <span class="s1">&#39;403 Forbidden&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;- try to getHistory of created machine with new user [user], should return 403&#39;</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">user_api</span><span class="o">.</span><span class="n">cloudapi</span><span class="o">.</span><span class="n">machines</span><span class="o">.</span><span class="n">getHistory</span><span class="p">(</span><span class="n">machineId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">machine_id</span><span class="p">,</span>
+                                                       <span class="n">size</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">ApiError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;- expected error raised </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">e</span><span class="o">.</span><span class="n">message</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">message</span><span class="p">,</span> <span class="s1">&#39;403 Forbidden&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;- add user to the machine with read access&#39;</span><span class="p">)</span>
+        <span class="n">accesstype</span> <span class="o">=</span> <span class="s1">&#39;R&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;- add user1 to the machine owned by user2 with access type [</span><span class="si">%s</span><span class="s1">]&#39;</span> <span class="o">%</span> <span class="n">accesstype</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_user_to_machine</span><span class="p">(</span><span class="n">machine_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">machine_id</span><span class="p">,</span>
+                                 <span class="n">user</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="p">,</span>
+                                 <span class="n">accesstype</span><span class="o">=</span><span class="n">accesstype</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;- getConsoleUrl machine with new user [user], should succeed&#39;</span><span class="p">)</span>
+        <span class="n">consol_url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">user_api</span><span class="o">.</span><span class="n">cloudapi</span><span class="o">.</span><span class="n">machines</span><span class="o">.</span><span class="n">getConsoleUrl</span><span class="p">(</span><span class="n">machineId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">machine_id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">consol_url</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;- listSnapshots of created machine with new user [user], should succeed&#39;</span><span class="p">)</span>
+        <span class="n">snapshots</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">user_api</span><span class="o">.</span><span class="n">cloudapi</span><span class="o">.</span><span class="n">machines</span><span class="o">.</span><span class="n">listSnapshots</span><span class="p">(</span><span class="n">machineId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">machine_id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">snapshots</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">snapshots</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;name&#39;</span><span class="p">],</span> <span class="n">name</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;- getHistory of created machine with new user [user], should succeed&#39;</span><span class="p">)</span>
+        <span class="n">histories</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">user_api</span><span class="o">.</span><span class="n">cloudapi</span><span class="o">.</span><span class="n">machines</span><span class="o">.</span><span class="n">getHistory</span><span class="p">(</span><span class="n">machineId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">machine_id</span><span class="p">,</span>
+                                                               <span class="n">size</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="s1">&#39;Created&#39;</span><span class="p">,</span> <span class="p">[</span><span class="n">history</span><span class="p">[</span><span class="s1">&#39;message&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">history</span> <span class="ow">in</span> <span class="n">histories</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="s1">&#39;Snapshot created&#39;</span><span class="p">,</span> <span class="p">[</span><span class="n">history</span><span class="p">[</span><span class="s1">&#39;message&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">history</span> <span class="ow">in</span> <span class="n">histories</span><span class="p">])</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> ENDED&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_testID</span><span class="p">)</span></div></div>
+
+<div class="viewcode-block" id="Write"><a class="viewcode-back" href="../../../../../acl.html#functional_testing.Openvcloud.ACL.a_basic_operations.acl_machine_test.Write">[docs]</a><span class="k">class</span> <span class="nc">Write</span><span class="p">(</span><span class="n">ACLMACHINE</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Write.test003_machine_start_stop_reboot_reset"><a class="viewcode-back" href="../../../../../acl.html#functional_testing.Openvcloud.ACL.a_basic_operations.acl_machine_test.Write.test003_machine_start_stop_reboot_reset">[docs]</a>    <span class="k">def</span> <span class="nf">test003_machine_start_stop_reboot_reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; ACL-40</span>
+<span class="sd">        *Test case for start/stop/reboot/reset machine api with user has write access on machine level.*</span>
+
+<span class="sd">        **Test Scenario:**</span>
+
+<span class="sd">        #. try to stop machine with new user [user], should return 403</span>
+<span class="sd">        #. try to reboot machine with new user [user], should return 403</span>
+<span class="sd">        #. try to reset machine with new user [user], should return 403</span>
+<span class="sd">        #. stop machine with the account user, should succeed</span>
+<span class="sd">        #. try to start machine with new user [user], should return 403</span>
+<span class="sd">        #. add user to the machine with write access</span>
+<span class="sd">        #. start machine with new user [user], should succeed</span>
+<span class="sd">        #. reboot machine with new user [user], should succeed</span>
+<span class="sd">        #. reset machine with new user [user], should succeed</span>
+<span class="sd">        #. stop machine with new user [user], should succeed</span>
+<span class="sd">        #. start machine with new user [user], should succeed</span>
+<span class="sd">        #. disable the machine account and check the machine status, should be Halted</span>
+<span class="sd">        #. enable the machine account and check the machine status, should be Halted</span>
+<span class="sd">        #. start machine with new user [user], should succeed</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> STARTED&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_testID</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;- try to stop machine with new user [user], should return 403 &#39;</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">user_api</span><span class="o">.</span><span class="n">cloudapi</span><span class="o">.</span><span class="n">machines</span><span class="o">.</span><span class="n">stop</span><span class="p">(</span><span class="n">machineId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">machine_id</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">ApiError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;- expected error raised </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">e</span><span class="o">.</span><span class="n">message</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">message</span><span class="p">,</span> <span class="s1">&#39;403 Forbidden&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;- try to reboot machine with new user [user], should return 403 &#39;</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">user_api</span><span class="o">.</span><span class="n">cloudapi</span><span class="o">.</span><span class="n">machines</span><span class="o">.</span><span class="n">reboot</span><span class="p">(</span><span class="n">machineId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">machine_id</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">ApiError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;- expected error raised </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">e</span><span class="o">.</span><span class="n">message</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">message</span><span class="p">,</span> <span class="s1">&#39;403 Forbidden&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;- try to reset machine with new user [user], should return 403 &#39;</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">user_api</span><span class="o">.</span><span class="n">cloudapi</span><span class="o">.</span><span class="n">machines</span><span class="o">.</span><span class="n">reset</span><span class="p">(</span><span class="n">machineId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">machine_id</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">ApiError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;- expected error raised </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">e</span><span class="o">.</span><span class="n">message</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">message</span><span class="p">,</span> <span class="s1">&#39;403 Forbidden&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;- stop machine with the account user, should succeed&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">account_owner_api</span><span class="o">.</span><span class="n">cloudapi</span><span class="o">.</span><span class="n">machines</span><span class="o">.</span><span class="n">stop</span><span class="p">(</span><span class="n">machineId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">machine_id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">cloudapi</span><span class="o">.</span><span class="n">machines</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">machineId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">machine_id</span><span class="p">)[</span><span class="s1">&#39;status&#39;</span><span class="p">],</span>
+                         <span class="s1">&#39;HALTED&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;- try to start machine with new user [user], should return 403 &#39;</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">user_api</span><span class="o">.</span><span class="n">cloudapi</span><span class="o">.</span><span class="n">machines</span><span class="o">.</span><span class="n">start</span><span class="p">(</span><span class="n">machineId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">machine_id</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">ApiError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;- expected error raised </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">e</span><span class="o">.</span><span class="n">message</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">message</span><span class="p">,</span> <span class="s1">&#39;403 Forbidden&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;- add user to the machine with write access&#39;</span><span class="p">)</span>
+        <span class="n">accesstype</span> <span class="o">=</span> <span class="s1">&#39;CRX&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;- add user1 to the machine owned by user2 with access type [</span><span class="si">%s</span><span class="s1">]&#39;</span> <span class="o">%</span> <span class="n">accesstype</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_user_to_machine</span><span class="p">(</span><span class="n">machine_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">machine_id</span><span class="p">,</span>
+                                 <span class="n">user</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="p">,</span>
+                                 <span class="n">accesstype</span><span class="o">=</span><span class="n">accesstype</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;- start machine with new user [user], should succeed&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">user_api</span><span class="o">.</span><span class="n">cloudapi</span><span class="o">.</span><span class="n">machines</span><span class="o">.</span><span class="n">start</span><span class="p">(</span><span class="n">machineId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">machine_id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">cloudapi</span><span class="o">.</span><span class="n">machines</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">machineId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">machine_id</span><span class="p">)[</span><span class="s1">&#39;status&#39;</span><span class="p">],</span>
+                         <span class="s1">&#39;RUNNING&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;- reboot machine with new user [user], should succeed&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">user_api</span><span class="o">.</span><span class="n">cloudapi</span><span class="o">.</span><span class="n">machines</span><span class="o">.</span><span class="n">reboot</span><span class="p">(</span><span class="n">machineId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">machine_id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">cloudapi</span><span class="o">.</span><span class="n">machines</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">machineId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">machine_id</span><span class="p">)[</span><span class="s1">&#39;status&#39;</span><span class="p">],</span>
+                         <span class="s1">&#39;RUNNING&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;- reset machine with new user [user], should succeed&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">user_api</span><span class="o">.</span><span class="n">cloudapi</span><span class="o">.</span><span class="n">machines</span><span class="o">.</span><span class="n">reset</span><span class="p">(</span><span class="n">machineId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">machine_id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">cloudapi</span><span class="o">.</span><span class="n">machines</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">machineId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">machine_id</span><span class="p">)[</span><span class="s1">&#39;status&#39;</span><span class="p">],</span>
+                         <span class="s1">&#39;RUNNING&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;- stop machine with new user [user], should succeed&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">user_api</span><span class="o">.</span><span class="n">cloudapi</span><span class="o">.</span><span class="n">machines</span><span class="o">.</span><span class="n">stop</span><span class="p">(</span><span class="n">machineId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">machine_id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">cloudapi</span><span class="o">.</span><span class="n">machines</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">machineId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">machine_id</span><span class="p">)[</span><span class="s1">&#39;status&#39;</span><span class="p">],</span>
+                         <span class="s1">&#39;HALTED&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;- start machine with new user [user], should succeed&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">user_api</span><span class="o">.</span><span class="n">cloudapi</span><span class="o">.</span><span class="n">machines</span><span class="o">.</span><span class="n">start</span><span class="p">(</span><span class="n">machineId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">machine_id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">cloudapi</span><span class="o">.</span><span class="n">machines</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">machineId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">machine_id</span><span class="p">)[</span><span class="s1">&#39;status&#39;</span><span class="p">],</span>
+                         <span class="s1">&#39;RUNNING&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;- disable the machine account and check the machine status, should be Halted&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">cloudbroker</span><span class="o">.</span><span class="n">account</span><span class="o">.</span><span class="n">disable</span><span class="p">(</span><span class="n">accountId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">account_id</span><span class="p">,</span>
+                                             <span class="n">reason</span><span class="o">=</span><span class="s1">&#39;Test </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_testID</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">cloudapi</span><span class="o">.</span><span class="n">machines</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">machineId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">machine_id</span><span class="p">)[</span><span class="s1">&#39;status&#39;</span><span class="p">],</span>
+                         <span class="s1">&#39;HALTED&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;- enable the machine account and check the machine status, should be Halted&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">cloudbroker</span><span class="o">.</span><span class="n">account</span><span class="o">.</span><span class="n">enable</span><span class="p">(</span><span class="n">accountId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">account_id</span><span class="p">,</span>
+                                            <span class="n">reason</span><span class="o">=</span><span class="s1">&#39;Test </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_testID</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">cloudapi</span><span class="o">.</span><span class="n">machines</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">machineId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">machine_id</span><span class="p">)[</span><span class="s1">&#39;status&#39;</span><span class="p">],</span>
+                         <span class="s1">&#39;HALTED&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;- start machine with new user [user], should succeed&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">user_api</span><span class="o">.</span><span class="n">cloudapi</span><span class="o">.</span><span class="n">machines</span><span class="o">.</span><span class="n">start</span><span class="p">(</span><span class="n">machineId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">machine_id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">cloudapi</span><span class="o">.</span><span class="n">machines</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">machineId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">machine_id</span><span class="p">)[</span><span class="s1">&#39;status&#39;</span><span class="p">],</span>
+                         <span class="s1">&#39;RUNNING&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> ENDED&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_testID</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Write.test004_machine_pause_resume"><a class="viewcode-back" href="../../../../../acl.html#functional_testing.Openvcloud.ACL.a_basic_operations.acl_machine_test.Write.test004_machine_pause_resume">[docs]</a>    <span class="k">def</span> <span class="nf">test004_machine_pause_resume</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; ACL-41</span>
+<span class="sd">        *Test case for pause/resume machine api with user has write access on machine level.*</span>
+
+<span class="sd">        **Test Scenario:**</span>
+
+<span class="sd">        #. try to pause machine with new user [user], should return 403</span>
+<span class="sd">        #. pause machine with the account user, should succeed</span>
+<span class="sd">        #. try to resume machine with new user [user], should return 403</span>
+<span class="sd">        #. add user to the machine with write access</span>
+<span class="sd">        #. resume machine with new user [user], should succeed</span>
+<span class="sd">        #. pause machine with new user [user], should succeed</span>
+<span class="sd">        #. disable the machine account and check the machine status, should be Halted</span>
+<span class="sd">        #. enable the machine account and check the machine status, should be Halted</span>
+<span class="sd">        #. start machine with new user [user], should succeed</span>
+<span class="sd">        #. pause machine with new user [user], should succeed</span>
+<span class="sd">        #. resume machine with new user [user], should succeed</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> STARTED&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_testID</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;- try to pause machine with new user [user], should return 403&#39;</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">user_api</span><span class="o">.</span><span class="n">cloudapi</span><span class="o">.</span><span class="n">machines</span><span class="o">.</span><span class="n">pause</span><span class="p">(</span><span class="n">machineId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">machine_id</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">ApiError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;- expected error raised </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">e</span><span class="o">.</span><span class="n">message</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">message</span><span class="p">,</span> <span class="s1">&#39;403 Forbidden&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;- pause machine with the account user, should succeed&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">account_owner_api</span><span class="o">.</span><span class="n">cloudapi</span><span class="o">.</span><span class="n">machines</span><span class="o">.</span><span class="n">pause</span><span class="p">(</span><span class="n">machineId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">machine_id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">cloudapi</span><span class="o">.</span><span class="n">machines</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">machineId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">machine_id</span><span class="p">)[</span><span class="s1">&#39;status&#39;</span><span class="p">],</span> 
+                         <span class="s1">&#39;PAUSED&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;- try to resume machine with new user [user], should return 403&#39;</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">user_api</span><span class="o">.</span><span class="n">cloudapi</span><span class="o">.</span><span class="n">machines</span><span class="o">.</span><span class="n">resume</span><span class="p">(</span><span class="n">machineId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">machine_id</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">ApiError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;- expected error raised </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">e</span><span class="o">.</span><span class="n">message</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">message</span><span class="p">,</span> <span class="s1">&#39;403 Forbidden&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;- add user to the machine with write access&#39;</span><span class="p">)</span>
+        <span class="n">accesstype</span> <span class="o">=</span> <span class="s1">&#39;CRX&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;- add user1 to the machine owned by user2 with access type [</span><span class="si">%s</span><span class="s1">]&#39;</span> <span class="o">%</span> <span class="n">accesstype</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_user_to_machine</span><span class="p">(</span><span class="n">machine_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">machine_id</span><span class="p">,</span>
+                                 <span class="n">user</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="p">,</span>
+                                 <span class="n">accesstype</span><span class="o">=</span><span class="n">accesstype</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;- resume machine with new user [user], should succeed&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">user_api</span><span class="o">.</span><span class="n">cloudapi</span><span class="o">.</span><span class="n">machines</span><span class="o">.</span><span class="n">resume</span><span class="p">(</span><span class="n">machineId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">machine_id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">cloudapi</span><span class="o">.</span><span class="n">machines</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">machineId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">machine_id</span><span class="p">)[</span><span class="s1">&#39;status&#39;</span><span class="p">],</span>
+                         <span class="s1">&#39;RUNNING&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;- pause machine with new user [user], should succeed&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">user_api</span><span class="o">.</span><span class="n">cloudapi</span><span class="o">.</span><span class="n">machines</span><span class="o">.</span><span class="n">pause</span><span class="p">(</span><span class="n">machineId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">machine_id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">cloudapi</span><span class="o">.</span><span class="n">machines</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">machineId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">machine_id</span><span class="p">)[</span><span class="s1">&#39;status&#39;</span><span class="p">],</span>
+                         <span class="s1">&#39;PAUSED&#39;</span><span class="p">)</span> 
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;- disable the machine account and check the machine status, should be Halted&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">cloudbroker</span><span class="o">.</span><span class="n">account</span><span class="o">.</span><span class="n">disable</span><span class="p">(</span><span class="n">accountId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">account_id</span><span class="p">,</span>
+                                             <span class="n">reason</span><span class="o">=</span><span class="s1">&#39;Test </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_testID</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">cloudapi</span><span class="o">.</span><span class="n">machines</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">machineId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">machine_id</span><span class="p">)[</span><span class="s1">&#39;status&#39;</span><span class="p">],</span>
+                         <span class="s1">&#39;HALTED&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;- enable the machine account and check the machine status, should be Halted&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">cloudbroker</span><span class="o">.</span><span class="n">account</span><span class="o">.</span><span class="n">enable</span><span class="p">(</span><span class="n">accountId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">account_id</span><span class="p">,</span>
+                                            <span class="n">reason</span><span class="o">=</span><span class="s1">&#39;Test </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_testID</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">cloudapi</span><span class="o">.</span><span class="n">machines</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">machineId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">machine_id</span><span class="p">)[</span><span class="s1">&#39;status&#39;</span><span class="p">],</span>
+                         <span class="s1">&#39;HALTED&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;- start machine with new user [user], should succeed&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">user_api</span><span class="o">.</span><span class="n">cloudapi</span><span class="o">.</span><span class="n">machines</span><span class="o">.</span><span class="n">start</span><span class="p">(</span><span class="n">machineId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">machine_id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">cloudapi</span><span class="o">.</span><span class="n">machines</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">machineId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">machine_id</span><span class="p">)[</span><span class="s1">&#39;status&#39;</span><span class="p">],</span>
+                         <span class="s1">&#39;RUNNING&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;- pause machine with new user [user], should succeed&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">user_api</span><span class="o">.</span><span class="n">cloudapi</span><span class="o">.</span><span class="n">machines</span><span class="o">.</span><span class="n">pause</span><span class="p">(</span><span class="n">machineId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">machine_id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">cloudapi</span><span class="o">.</span><span class="n">machines</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">machineId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">machine_id</span><span class="p">)[</span><span class="s1">&#39;status&#39;</span><span class="p">],</span>
+                         <span class="s1">&#39;PAUSED&#39;</span><span class="p">)</span> 
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;- resume machine with new user [user], should succeed&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">user_api</span><span class="o">.</span><span class="n">cloudapi</span><span class="o">.</span><span class="n">machines</span><span class="o">.</span><span class="n">resume</span><span class="p">(</span><span class="n">machineId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">machine_id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">cloudapi</span><span class="o">.</span><span class="n">machines</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">machineId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">machine_id</span><span class="p">)[</span><span class="s1">&#39;status&#39;</span><span class="p">],</span>
+                         <span class="s1">&#39;RUNNING&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> ENDED&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_testID</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Write.test005_machine_snapshot_create_rollback_delete"><a class="viewcode-back" href="../../../../../acl.html#functional_testing.Openvcloud.ACL.a_basic_operations.acl_machine_test.Write.test005_machine_snapshot_create_rollback_delete">[docs]</a>    <span class="k">def</span> <span class="nf">test005_machine_snapshot_create_rollback_delete</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; ACL-42</span>
+<span class="sd">        *Test case for snapshot create/rollback/delete machine api with user has write access on machine level.*</span>
+
+<span class="sd">        **Test Scenario:**</span>
+
+<span class="sd">        #. try to create snapshot for a machine with new user [user], should return 403</span>
+<span class="sd">        #. create snapshot for a machine with the account user, should succeed</span>
+<span class="sd">        #. stop machine with account user, should succeed</span>
+<span class="sd">        #. try to rollback snapshot for a machine with new user [user], should return 403</span>
+<span class="sd">        #. try to delete snapshot for a machine with new user [user], should return 403</span>
+<span class="sd">        #. add user to the machine with write access</span>
+<span class="sd">        #. start machine with new user [user], should succeed</span>
+<span class="sd">        #. create snapshot for a machine with new user [user], should succeed</span>
+<span class="sd">        #. stop machine with new user [user], should succeed</span>
+<span class="sd">        #. rollback snapshot for a machine with new user [user], should succeed</span>
+<span class="sd">        #. start machine with new user [user], should succeed</span>
+<span class="sd">        #. delete snapshot for a machine with new user [user], should succeed</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> STARTED&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_testID</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;- try to create snapshot for a machine with new user [user], should return 403&#39;</span><span class="p">)</span>
+        <span class="n">first_name</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">())</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">:</span><span class="mi">10</span><span class="p">]</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">user_api</span><span class="o">.</span><span class="n">cloudapi</span><span class="o">.</span><span class="n">machines</span><span class="o">.</span><span class="n">snapshot</span><span class="p">(</span><span class="n">machineId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">machine_id</span><span class="p">,</span>
+                                                     <span class="n">name</span><span class="o">=</span><span class="n">first_name</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">ApiError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;- expected error raised </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">e</span><span class="o">.</span><span class="n">message</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">message</span><span class="p">,</span> <span class="s1">&#39;403 Forbidden&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;- create snapshot for a machine with the account user, should succeed&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">account_owner_api</span><span class="o">.</span><span class="n">cloudapi</span><span class="o">.</span><span class="n">machines</span><span class="o">.</span><span class="n">snapshot</span><span class="p">(</span><span class="n">machineId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">machine_id</span><span class="p">,</span>
+                                                          <span class="n">name</span><span class="o">=</span><span class="n">first_name</span><span class="p">)</span>
+        <span class="n">first_snapshot</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">cloudapi</span><span class="o">.</span><span class="n">machines</span><span class="o">.</span><span class="n">listSnapshots</span><span class="p">(</span><span class="n">machineId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">machine_id</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">first_snapshot</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span> <span class="n">first_name</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;- stop machine with account user, should succeed&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">account_owner_api</span><span class="o">.</span><span class="n">cloudapi</span><span class="o">.</span><span class="n">machines</span><span class="o">.</span><span class="n">stop</span><span class="p">(</span><span class="n">machineId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">machine_id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">cloudapi</span><span class="o">.</span><span class="n">machines</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">machineId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">machine_id</span><span class="p">)[</span><span class="s1">&#39;status&#39;</span><span class="p">],</span>
+                         <span class="s1">&#39;HALTED&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;- try to rollback snapshot for a machine with new user [user], should return 403&#39;</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">user_api</span><span class="o">.</span><span class="n">cloudapi</span><span class="o">.</span><span class="n">machines</span><span class="o">.</span><span class="n">rollbackSnapshot</span><span class="p">(</span><span class="n">machineId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">machine_id</span><span class="p">,</span>
+                                                             <span class="n">epoch</span><span class="o">=</span><span class="n">first_snapshot</span><span class="p">[</span><span class="s1">&#39;epoch&#39;</span><span class="p">])</span>
+        <span class="k">except</span> <span class="n">ApiError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;- expected error raised </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">e</span><span class="o">.</span><span class="n">message</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">message</span><span class="p">,</span> <span class="s1">&#39;403 Forbidden&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;- try to delete snapshot for a machine with new user [user], should return 403&#39;</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">user_api</span><span class="o">.</span><span class="n">cloudapi</span><span class="o">.</span><span class="n">machines</span><span class="o">.</span><span class="n">deleteSnapshot</span><span class="p">(</span><span class="n">machineId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">machine_id</span><span class="p">,</span>
+                                                           <span class="n">epoch</span><span class="o">=</span><span class="n">first_snapshot</span><span class="p">[</span><span class="s1">&#39;epoch&#39;</span><span class="p">])</span>
+        <span class="k">except</span> <span class="n">ApiError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;- expected error raised </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">e</span><span class="o">.</span><span class="n">message</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">message</span><span class="p">,</span> <span class="s1">&#39;403 Forbidden&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;- add user to the machine with write access&#39;</span><span class="p">)</span>
+        <span class="n">accesstype</span> <span class="o">=</span> <span class="s1">&#39;CRX&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;- add user1 to the machine owned by user2 with access type [</span><span class="si">%s</span><span class="s1">]&#39;</span> <span class="o">%</span> <span class="n">accesstype</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_user_to_machine</span><span class="p">(</span><span class="n">machine_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">machine_id</span><span class="p">,</span>
+                                 <span class="n">user</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="p">,</span>
+                                 <span class="n">accesstype</span><span class="o">=</span><span class="n">accesstype</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;- start machine with new user [user], should succeed&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">user_api</span><span class="o">.</span><span class="n">cloudapi</span><span class="o">.</span><span class="n">machines</span><span class="o">.</span><span class="n">start</span><span class="p">(</span><span class="n">machineId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">machine_id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">cloudapi</span><span class="o">.</span><span class="n">machines</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">machineId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">machine_id</span><span class="p">)[</span><span class="s1">&#39;status&#39;</span><span class="p">],</span>
+                         <span class="s1">&#39;RUNNING&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;- create snapshot for a machine with new user [user], should succeed&#39;</span><span class="p">)</span>
+        <span class="n">second_name</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">())</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">:</span><span class="mi">10</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">account_owner_api</span><span class="o">.</span><span class="n">cloudapi</span><span class="o">.</span><span class="n">machines</span><span class="o">.</span><span class="n">snapshot</span><span class="p">(</span><span class="n">machineId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">machine_id</span><span class="p">,</span>
+                                                          <span class="n">name</span><span class="o">=</span><span class="n">second_name</span><span class="p">)</span>
+        <span class="n">snapshots</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">cloudapi</span><span class="o">.</span><span class="n">machines</span><span class="o">.</span><span class="n">listSnapshots</span><span class="p">(</span><span class="n">machineId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">machine_id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">snapshots</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="n">second_name</span><span class="p">,</span> <span class="p">[</span><span class="n">snapshot</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">snapshot</span> <span class="ow">in</span> <span class="n">snapshots</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="n">first_name</span><span class="p">,</span> <span class="p">[</span><span class="n">snapshot</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">snapshot</span> <span class="ow">in</span> <span class="n">snapshots</span><span class="p">])</span>
+        <span class="n">second_snapshot</span> <span class="o">=</span> <span class="p">[</span><span class="n">snapshot</span> <span class="k">for</span> <span class="n">snapshot</span> <span class="ow">in</span> <span class="n">snapshots</span> <span class="k">if</span> <span class="n">second_name</span> <span class="o">==</span> <span class="n">snapshot</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]][</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;- stop machine with new user [user], should succeed&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">user_api</span><span class="o">.</span><span class="n">cloudapi</span><span class="o">.</span><span class="n">machines</span><span class="o">.</span><span class="n">stop</span><span class="p">(</span><span class="n">machineId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">machine_id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">cloudapi</span><span class="o">.</span><span class="n">machines</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">machineId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">machine_id</span><span class="p">)[</span><span class="s1">&#39;status&#39;</span><span class="p">],</span>
+                         <span class="s1">&#39;HALTED&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;- rollback snapshot for a machine with new user [user], should succeed&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">user_api</span><span class="o">.</span><span class="n">cloudapi</span><span class="o">.</span><span class="n">machines</span><span class="o">.</span><span class="n">rollbackSnapshot</span><span class="p">(</span><span class="n">machineId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">machine_id</span><span class="p">,</span>
+                                                         <span class="n">epoch</span><span class="o">=</span><span class="n">first_snapshot</span><span class="p">[</span><span class="s1">&#39;epoch&#39;</span><span class="p">])</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;- start machine with new user [user], should succeed&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">user_api</span><span class="o">.</span><span class="n">cloudapi</span><span class="o">.</span><span class="n">machines</span><span class="o">.</span><span class="n">start</span><span class="p">(</span><span class="n">machineId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">machine_id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">cloudapi</span><span class="o">.</span><span class="n">machines</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">machineId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">machine_id</span><span class="p">)[</span><span class="s1">&#39;status&#39;</span><span class="p">],</span>
+                         <span class="s1">&#39;RUNNING&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;- delete snapshot for a machine with new user [user], should succeed&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">user_api</span><span class="o">.</span><span class="n">cloudapi</span><span class="o">.</span><span class="n">machines</span><span class="o">.</span><span class="n">deleteSnapshot</span><span class="p">(</span><span class="n">machineId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">machine_id</span><span class="p">,</span>
+                                                       <span class="n">epoch</span><span class="o">=</span><span class="n">second_snapshot</span><span class="p">[</span><span class="s1">&#39;epoch&#39;</span><span class="p">])</span>
+
+        <span class="n">snapshots</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">cloudapi</span><span class="o">.</span><span class="n">machines</span><span class="o">.</span><span class="n">listSnapshots</span><span class="p">(</span><span class="n">machineId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">machine_id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">snapshots</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertNotIn</span><span class="p">(</span><span class="n">second_name</span><span class="p">,</span> <span class="p">[</span><span class="n">snapshot</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">snapshot</span> <span class="ow">in</span> <span class="n">snapshots</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">first_name</span><span class="p">,</span> <span class="n">snapshots</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;name&#39;</span><span class="p">])</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> ENDED&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_testID</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Write.test006_machine_update"><a class="viewcode-back" href="../../../../../acl.html#functional_testing.Openvcloud.ACL.a_basic_operations.acl_machine_test.Write.test006_machine_update">[docs]</a>    <span class="k">def</span> <span class="nf">test006_machine_update</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; ACL-43</span>
+<span class="sd">        *Test case for update machine api with user has write access on machine level.*</span>
+
+<span class="sd">        **Test Scenario:**</span>
+
+<span class="sd">        #. try to update machine name with new user [user], should return 403</span>
+<span class="sd">        #. add user to the machine with write access</span>
+<span class="sd">        #. update machine name with new user [user], should succeed</span>
+<span class="sd">        #. update machine description with new user [user], should succeed</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> STARTED&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_testID</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;- try to update machine name with new user [user], should return 403&#39;</span><span class="p">)</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">())</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">:</span><span class="mi">10</span><span class="p">]</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">user_api</span><span class="o">.</span><span class="n">cloudapi</span><span class="o">.</span><span class="n">machines</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">machineId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">machine_id</span><span class="p">,</span>
+                                                   <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">ApiError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;- expected error raised </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">e</span><span class="o">.</span><span class="n">message</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">message</span><span class="p">,</span> <span class="s1">&#39;403 Forbidden&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;- add user to the machine with write access&#39;</span><span class="p">)</span>
+        <span class="n">accesstype</span> <span class="o">=</span> <span class="s1">&#39;CRX&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;- add user1 to the machine owned by user2 with access type [</span><span class="si">%s</span><span class="s1">]&#39;</span> <span class="o">%</span> <span class="n">accesstype</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_user_to_machine</span><span class="p">(</span><span class="n">machine_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">machine_id</span><span class="p">,</span>
+                                 <span class="n">user</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="p">,</span>
+                                 <span class="n">accesstype</span><span class="o">=</span><span class="n">accesstype</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;- update machine name with new user [user], should succeed&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">user_api</span><span class="o">.</span><span class="n">cloudapi</span><span class="o">.</span><span class="n">machines</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">machineId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">machine_id</span><span class="p">,</span>
+                                               <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">cloudapi</span><span class="o">.</span><span class="n">machines</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">machineId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">machine_id</span><span class="p">)[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span>
+                         <span class="n">name</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;- update machine description with new user [user], should succeed&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">user_api</span><span class="o">.</span><span class="n">cloudapi</span><span class="o">.</span><span class="n">machines</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">machineId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">machine_id</span><span class="p">,</span>
+                                               <span class="n">description</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">cloudapi</span><span class="o">.</span><span class="n">machines</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">machineId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">machine_id</span><span class="p">)[</span><span class="s1">&#39;description&#39;</span><span class="p">],</span>
+                         <span class="n">name</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> ENDED&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_testID</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="Admin"><a class="viewcode-back" href="../../../../../acl.html#functional_testing.Openvcloud.ACL.a_basic_operations.acl_machine_test.Admin">[docs]</a><span class="k">class</span> <span class="nc">Admin</span><span class="p">(</span><span class="n">ACLMACHINE</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Admin.test003_machine_add_update_delete_User"><a class="viewcode-back" href="../../../../../acl.html#functional_testing.Openvcloud.ACL.a_basic_operations.acl_machine_test.Admin.test003_machine_add_update_delete_User">[docs]</a>    <span class="k">def</span> <span class="nf">test003_machine_add_update_delete_User</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; ACL-44</span>
+<span class="sd">        *Test case for add/update/delete user api with user has admin access on machine level.*</span>
+
+<span class="sd">        **Test Scenario:**</span>
+
+<span class="sd">        #. add user2 to the machine with admin access</span>
+<span class="sd">        #. create user3</span>
+<span class="sd">        #. add user3 to the created machine by user2 with read access, should succeed</span>
+<span class="sd">        #. update user3 access on machine by user2 with write access, should succeed</span>
+<span class="sd">        #. delete machine user3 with user1, should succeed</span>
+<span class="sd">        #. get machine users, user3 not in the returened list</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> STARTED&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_testID</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;1- add user2 to the machine with admin access&#39;</span><span class="p">)</span>
+        <span class="n">accesstype</span> <span class="o">=</span> <span class="s1">&#39;ACDRUX&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;- add user1 to the machine owned by user2 with access type [</span><span class="si">%s</span><span class="s1">]&#39;</span> <span class="o">%</span> <span class="n">accesstype</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_user_to_machine</span><span class="p">(</span><span class="n">machine_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">machine_id</span><span class="p">,</span>
+                                 <span class="n">user</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="p">,</span>
+                                 <span class="n">accesstype</span><span class="o">=</span><span class="n">accesstype</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;2- create user3&#39;</span><span class="p">)</span>
+        <span class="n">user3</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cloudbroker_user_create</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;3- add user3 to the created machine by user2 with read access, should succeed&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">user_api</span><span class="o">.</span><span class="n">cloudapi</span><span class="o">.</span><span class="n">machines</span><span class="o">.</span><span class="n">addUser</span><span class="p">(</span><span class="n">machineId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">machine_id</span><span class="p">,</span>
+                                                <span class="n">userId</span><span class="o">=</span><span class="n">user3</span><span class="p">,</span>
+                                                <span class="n">accesstype</span><span class="o">=</span><span class="s1">&#39;R&#39;</span><span class="p">)</span>
+        <span class="n">machine</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">cloudapi</span><span class="o">.</span><span class="n">machines</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">machine_id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="n">user3</span><span class="p">,</span> <span class="p">[</span><span class="n">acl</span><span class="p">[</span><span class="s1">&#39;userGroupId&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">acl</span> <span class="ow">in</span> <span class="n">machine</span><span class="p">[</span><span class="s1">&#39;acl&#39;</span><span class="p">]])</span>
+        <span class="n">acl_user3</span> <span class="o">=</span> <span class="p">[</span><span class="n">acl</span> <span class="k">for</span> <span class="n">acl</span> <span class="ow">in</span> <span class="n">machine</span><span class="p">[</span><span class="s1">&#39;acl&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="n">acl</span><span class="p">[</span><span class="s1">&#39;userGroupId&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">user3</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">acl_user3</span><span class="p">[</span><span class="s1">&#39;right&#39;</span><span class="p">],</span> <span class="s1">&#39;R&#39;</span><span class="p">)</span>                                                   
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;4- update user3 access on machine by user2 with write access, should succeed&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">user_api</span><span class="o">.</span><span class="n">cloudapi</span><span class="o">.</span><span class="n">machines</span><span class="o">.</span><span class="n">updateUser</span><span class="p">(</span><span class="n">machineId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">machine_id</span><span class="p">,</span>
+                                                   <span class="n">userId</span><span class="o">=</span><span class="n">user3</span><span class="p">,</span>
+                                                   <span class="n">accesstype</span><span class="o">=</span><span class="s1">&#39;CRX&#39;</span><span class="p">)</span>
+        <span class="n">machine</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">cloudapi</span><span class="o">.</span><span class="n">machines</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">machine_id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="n">user3</span><span class="p">,</span> <span class="p">[</span><span class="n">acl</span><span class="p">[</span><span class="s1">&#39;userGroupId&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">acl</span> <span class="ow">in</span> <span class="n">machine</span><span class="p">[</span><span class="s1">&#39;acl&#39;</span><span class="p">]])</span>
+        <span class="n">acl_user3</span> <span class="o">=</span> <span class="p">[</span><span class="n">acl</span> <span class="k">for</span> <span class="n">acl</span> <span class="ow">in</span> <span class="n">machine</span><span class="p">[</span><span class="s1">&#39;acl&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="n">acl</span><span class="p">[</span><span class="s1">&#39;userGroupId&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">user3</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">acl_user3</span><span class="p">[</span><span class="s1">&#39;right&#39;</span><span class="p">],</span> <span class="s1">&#39;CRX&#39;</span><span class="p">)</span>        
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;5- delete machine user3 with user1, should succeed&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">user_api</span><span class="o">.</span><span class="n">cloudapi</span><span class="o">.</span><span class="n">machines</span><span class="o">.</span><span class="n">deleteUser</span><span class="p">(</span><span class="n">machineId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">machine_id</span><span class="p">,</span>
+                                                   <span class="n">userId</span><span class="o">=</span><span class="n">user3</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;6- get machine users, user3 not in the returened list&#39;</span><span class="p">)</span>
+        <span class="n">machine</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">cloudapi</span><span class="o">.</span><span class="n">machines</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">machine_id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertNotIn</span><span class="p">(</span><span class="n">user3</span><span class="p">,</span> <span class="p">[</span><span class="n">acl</span><span class="p">[</span><span class="s1">&#39;userGroupId&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">acl</span> <span class="ow">in</span> <span class="n">machine</span><span class="p">[</span><span class="s1">&#39;acl&#39;</span><span class="p">]])</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> ENDED&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_testID</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Admin.test004_machine_add_update_delete_User_wrong"><a class="viewcode-back" href="../../../../../acl.html#functional_testing.Openvcloud.ACL.a_basic_operations.acl_machine_test.Admin.test004_machine_add_update_delete_User_wrong">[docs]</a>    <span class="k">def</span> <span class="nf">test004_machine_add_update_delete_User_wrong</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; ACL-45</span>
+<span class="sd">        *Test case for add/update/delete user api wrong with user has admin access on machine level.*</span>
+
+<span class="sd">        **Test Scenario:**</span>
+
+<span class="sd">        #. add user2 to the cloudspace created by user1 as admin</span>
+<span class="sd">        #. create user3</span>
+<span class="sd">        #. use username not_registered_user which not exists</span>
+<span class="sd">        #. try add not_registered_user to the machine by admin user with read access, should return 404</span>
+<span class="sd">        #. try update not_registered_user access on machine by admin user with write access, should return 404</span>
+<span class="sd">        #. try update user3 access on machine by admin user with write access, should return 404</span>
+<span class="sd">        #. try delete machine not_registered_user with admin user, should return 404</span>
+<span class="sd">        #. try to delete user3 from the machine using admin user api, should return 404</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> STARTED&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_testID</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;1- add user to the machine with admin access&#39;</span><span class="p">)</span>
+        <span class="n">accesstype</span> <span class="o">=</span> <span class="s1">&#39;ACDRUX&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;- add user1 to the machine owned by user2 with access type [</span><span class="si">%s</span><span class="s1">]&#39;</span> <span class="o">%</span> <span class="n">accesstype</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_user_to_machine</span><span class="p">(</span><span class="n">machine_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">machine_id</span><span class="p">,</span>
+                                 <span class="n">user</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="p">,</span>
+                                 <span class="n">accesstype</span><span class="o">=</span><span class="n">accesstype</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;2- create user3&#39;</span><span class="p">)</span>
+        <span class="n">user3</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cloudbroker_user_create</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;3- use username not_registered_user which not exists&#39;</span><span class="p">)</span>
+        <span class="n">not_registered_user</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">())</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">:</span><span class="mi">10</span><span class="p">]</span>  <span class="c1"># non registered user</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;4- try add not_registered_user to the machine by admin user with read access&#39;</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">user_api</span><span class="o">.</span><span class="n">cloudapi</span><span class="o">.</span><span class="n">machines</span><span class="o">.</span><span class="n">addUser</span><span class="p">(</span><span class="n">machineId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">machine_id</span><span class="p">,</span>
+                                                    <span class="n">userId</span><span class="o">=</span><span class="n">not_registered_user</span><span class="p">,</span>
+                                                    <span class="n">accesstype</span><span class="o">=</span><span class="s1">&#39;R&#39;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">ApiError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;- expected error raised </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">e</span><span class="o">.</span><span class="n">message</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">message</span><span class="p">,</span> <span class="s1">&#39;404 Not Found&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;5- try update not_registered_user access on machine by admin user with write access&#39;</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">user_api</span><span class="o">.</span><span class="n">cloudapi</span><span class="o">.</span><span class="n">machines</span><span class="o">.</span><span class="n">updateUser</span><span class="p">(</span><span class="n">machineId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">machine_id</span><span class="p">,</span> 
+                                                       <span class="n">userId</span><span class="o">=</span><span class="n">not_registered_user</span><span class="p">,</span>
+                                                       <span class="n">accesstype</span><span class="o">=</span><span class="s1">&#39;RCX&#39;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">ApiError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;- expected error raised </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">e</span><span class="o">.</span><span class="n">message</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">message</span><span class="p">,</span> <span class="s1">&#39;404 Not Found&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;- get machine users, not_registered_user not in the returened list&#39;</span><span class="p">)</span>
+        <span class="n">machine</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">cloudapi</span><span class="o">.</span><span class="n">machines</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">machine_id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertNotIn</span><span class="p">(</span><span class="n">not_registered_user</span><span class="p">,</span> <span class="p">[</span><span class="n">acl</span><span class="p">[</span><span class="s1">&#39;userGroupId&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">acl</span> <span class="ow">in</span> <span class="n">machine</span><span class="p">[</span><span class="s1">&#39;acl&#39;</span><span class="p">]])</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;6- try update user3 access on machine by admin user with write access&#39;</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">user_api</span><span class="o">.</span><span class="n">cloudapi</span><span class="o">.</span><span class="n">machines</span><span class="o">.</span><span class="n">updateUser</span><span class="p">(</span><span class="n">machineId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">machine_id</span><span class="p">,</span> 
+                                                       <span class="n">userId</span><span class="o">=</span><span class="n">user3</span><span class="p">,</span>
+                                                       <span class="n">accesstype</span><span class="o">=</span><span class="s1">&#39;RCX&#39;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">ApiError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;- expected error raised </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">e</span><span class="o">.</span><span class="n">message</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">message</span><span class="p">,</span> <span class="s1">&#39;404 Not Found&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;- get machine users, user3 not in the returened list&#39;</span><span class="p">)</span>
+        <span class="n">machine</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">cloudapi</span><span class="o">.</span><span class="n">machines</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">machine_id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertNotIn</span><span class="p">(</span><span class="n">user3</span><span class="p">,</span> <span class="p">[</span><span class="n">acl</span><span class="p">[</span><span class="s1">&#39;userGroupId&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">acl</span> <span class="ow">in</span> <span class="n">machine</span><span class="p">[</span><span class="s1">&#39;acl&#39;</span><span class="p">]])</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;7- try delete machine not_registered_user with admin user&#39;</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">user_api</span><span class="o">.</span><span class="n">cloudapi</span><span class="o">.</span><span class="n">machines</span><span class="o">.</span><span class="n">deleteUser</span><span class="p">(</span><span class="n">machineId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">machine_id</span><span class="p">,</span> 
+                                                       <span class="n">userId</span><span class="o">=</span><span class="n">not_registered_user</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">ApiError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;- expected error raised </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">e</span><span class="o">.</span><span class="n">message</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">message</span><span class="p">,</span> <span class="s1">&#39;404 Not Found&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;8- try to delete user3 from the machine using admin user api&#39;</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">user_api</span><span class="o">.</span><span class="n">cloudapi</span><span class="o">.</span><span class="n">machines</span><span class="o">.</span><span class="n">deleteUser</span><span class="p">(</span><span class="n">machineId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">machine_id</span><span class="p">,</span> 
+                                                       <span class="n">userId</span><span class="o">=</span><span class="n">user3</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">ApiError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;- expected error raised </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">e</span><span class="o">.</span><span class="n">message</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">message</span><span class="p">,</span> <span class="s1">&#39;404 Not Found&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> ENDED&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_testID</span><span class="p">)</span> </div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, CodeScalers.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../../../',
+            VERSION:'1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

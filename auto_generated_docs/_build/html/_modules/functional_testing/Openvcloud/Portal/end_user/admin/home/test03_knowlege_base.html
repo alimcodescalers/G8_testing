@@ -1,0 +1,637 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>functional_testing.Openvcloud.Portal.end_user.admin.home.test03_knowlege_base &mdash; OpenVCloud Testsuite 1.0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../../../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="OpenVCloud Testsuite 1.0 documentation" href="../../../../../../../index.html"/>
+        <link rel="up" title="Module code" href="../../../../../../index.html"/> 
+
+  
+  <script src="../../../../../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../../../../../index.html" class="icon icon-home"> OpenVCloud Testsuite
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../acl.html">Access Control List Basic Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../acl.html#access-control-list-extended-tests">Access Control List Extended Tests</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../ovc.html">OpenVcloud APIs Test Suite:</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../portal.html">End user Portal Test Suite</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../portal.html#admin-user-portal-test-suite">Admin user Portal Test Suite</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../../../../../../index.html">OpenVCloud Testsuite</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../../../../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../../../../../../index.html">Module code</a> &raquo;</li>
+      
+    <li>functional_testing.Openvcloud.Portal.end_user.admin.home.test03_knowlege_base</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for functional_testing.Openvcloud.Portal.end_user.admin.home.test03_knowlege_base</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">....utils.utils</span> <span class="k">import</span> <span class="n">BaseTest</span>
+<span class="kn">from</span> <span class="nn">...page_elements_xpath</span> <span class="k">import</span> <span class="n">home_page</span>
+
+<div class="viewcode-block" id="KnowledgeBase"><a class="viewcode-back" href="../../../../../../../portal.html#functional_testing.Openvcloud.Portal.end_user.admin.home.test03_knowlege_base.KnowledgeBase">[docs]</a><span class="k">class</span> <span class="nc">KnowledgeBase</span><span class="p">(</span><span class="n">BaseTest</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">KnowledgeBase</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">elements</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">home_page</span><span class="o">.</span><span class="n">elements</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">setUp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">KnowledgeBase</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">setUp</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">login</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">click</span><span class="p">(</span><span class="s2">&quot;knowledge_base_button&quot;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="KnowledgeBase.test01_technical_tutorials"><a class="viewcode-back" href="../../../../../../../portal.html#functional_testing.Openvcloud.Portal.end_user.admin.home.test03_knowlege_base.KnowledgeBase.test01_technical_tutorials">[docs]</a>    <span class="k">def</span> <span class="nf">test01_technical_tutorials</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; PRTL-010</span>
+<span class="sd">        *Test case for check user potal technical tutorials.*</span>
+
+<span class="sd">        **Test Scenario:**</span>
+
+<span class="sd">        #. check all technical tutorials page elements, should succeed</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> STARTED&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_testID</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_header_label&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;Technical Tutorials&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line1_tab&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;Access your Cloud Space using OpenVPN&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line2_tab&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;How to configure Ubuntu to connect to OpenVPN&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line3_tab&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;My First Machine Linux&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line4_tab&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;Enable Root access on ubuntu over SSH&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line5_tab&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;My First Machine Windows&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line6_tab&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;Setup a PPTP connection in Windows 10 to your cloud space&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line7_tab&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;Getting Started with JumpScale&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_subheader_label&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;Welcome&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_subheader_email&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;support@greenitglobe.com&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_subheader_text&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;Welcome to the OpenvCloud Knowledge Base. The Knowledge Base is &quot;</span>
+                         <span class="s2">&quot;growing based on customer questions. In case you do not find a reply, &quot;</span>
+                         <span class="s2">&quot;do not hesitate to contact the support team at: &quot;</span>
+                         <span class="s2">&quot;support@greenitglobe.com.&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> ENDED&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_testID</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="KnowledgeBase.test02_technical_tutorials_first_tab"><a class="viewcode-back" href="../../../../../../../portal.html#functional_testing.Openvcloud.Portal.end_user.admin.home.test03_knowlege_base.KnowledgeBase.test02_technical_tutorials_first_tab">[docs]</a>    <span class="k">def</span> <span class="nf">test02_technical_tutorials_first_tab</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; PRTL-011</span>
+<span class="sd">        *Test case for check user potal technical tutorials first tab.*</span>
+
+<span class="sd">        **Test Scenario:**</span>
+
+<span class="sd">        #. check all technical tutorials first tab page elements, should succeed</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> STARTED&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_testID</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_header_label&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;Technical Tutorials&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line1_tab&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;Access your Cloud Space using OpenVPN&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">click</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line1_tab&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line1_tab_header&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;Access your Cloud Space using OpenVPN&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line1_tab_line1&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;Go to: OpenVPN Downloads Page.&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line1_tab_line2&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;Choose your installer according to your architect </span><span class="se">\&quot;</span><span class="s2">Windows Installer &quot;</span>
+                         <span class="s2">&quot;(32-bit)|Windows Installer (64-bit)</span><span class="se">\&quot;</span><span class="s2">.&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line1_tab_line3&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;Right-click on the installer and choose: </span><span class="se">\&quot;</span><span class="s2">Run as administrator</span><span class="se">\&quot;</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line1_tab_line4&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;Press </span><span class="se">\&quot;</span><span class="s2">Yes</span><span class="se">\&quot;</span><span class="s2"> in the confirmation windows&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line1_tab_line5&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;Click </span><span class="se">\&quot;</span><span class="s2">Next</span><span class="se">\&quot;</span><span class="s2"> on the welcome page&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line1_tab_line6&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;Click </span><span class="se">\&quot;</span><span class="s2">I Agree</span><span class="se">\&quot;</span><span class="s2"> on the license page&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line1_tab_line7&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;Click </span><span class="se">\&quot;</span><span class="s2">Next</span><span class="se">\&quot;</span><span class="s2"> for the default components&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line1_tab_line8&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;Click </span><span class="se">\&quot;</span><span class="s2">Install</span><span class="se">\&quot;</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line1_tab_line9&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;Click </span><span class="se">\&quot;</span><span class="s2">Next</span><span class="se">\&quot;</span><span class="s2"> after the installation in completed&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line1_tab_line10&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;Download our OpenVPN configuration zip from the Network Deck&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line1_tab_line11&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;Unzip the </span><span class="se">\&quot;</span><span class="s2">OpenVPN configuration zip</span><span class="se">\&quot;</span><span class="s2"> at: </span><span class="se">\&quot;</span><span class="s2">C:Program Files&quot;</span>
+                         <span class="s2">&quot;OpenVPNconfig</span><span class="se">\&quot;</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line1_tab_line12&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;Right-click on the </span><span class="se">\&quot;</span><span class="s2">OpenVPN GUI</span><span class="se">\&quot;</span><span class="s2"> icon and choose: </span><span class="se">\&quot;</span><span class="s2">Run as &quot;</span>
+                         <span class="s2">&quot;administrator</span><span class="se">\&quot;</span><span class="s2">.&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> ENDED&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_testID</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="KnowledgeBase.test03_technical_tutorials_second_tab"><a class="viewcode-back" href="../../../../../../../portal.html#functional_testing.Openvcloud.Portal.end_user.admin.home.test03_knowlege_base.KnowledgeBase.test03_technical_tutorials_second_tab">[docs]</a>    <span class="k">def</span> <span class="nf">test03_technical_tutorials_second_tab</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; PRTL-012</span>
+<span class="sd">        *Test case for check user potal technical tutorials second tab.*</span>
+
+<span class="sd">        **Test Scenario:**</span>
+
+<span class="sd">        #. check all technical tutorials second tab page elements, should succeed</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> STARTED&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_testID</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_header_label&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;Technical Tutorials&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line2_tab&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;How to configure Ubuntu to connect to OpenVPN&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">click</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line2_tab&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line2_tab_header&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;How to configure Ubuntu to connect to OpenVPN&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line2_tab_line1&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;Open Terminal</span><span class="se">\n</span><span class="s2">In Unity</span><span class="se">\n</span><span class="s2">Dash -&gt; Search for Terminal</span><span class="se">\n</span><span class="s2">In Gnome</span><span class="se">\n</span><span class="s2">&quot;</span>
+                         <span class="s2">&quot;Application menu -&gt; Accessories -&gt; Terminal</span><span class="se">\n</span><span class="s2">or</span><span class="se">\n</span><span class="s2">&quot;</span>
+                         <span class="s2">&quot;Keyboard Shortcut: Ctrl + Alt + T&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line2_tab_line2&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;Run the following command apt-get install network-manager-openvpn&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line2_tab_line3&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;Right-click on the network icon on the system tray&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line2_tab_line4&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;Choose: </span><span class="se">\&quot;</span><span class="s2">Edit Connections</span><span class="se">\&quot;</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line2_tab_line5&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;Click Add&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wait_element</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line2_tab_image5&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line2_tab_line6&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;Choose Connection Type : openvpn&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wait_element</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line2_tab_image6&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line2_tab_line7&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;The following window will open:&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wait_element</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line2_tab_image7&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line2_tab_line7_sub1&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;Enter the connection name as example </span><span class="se">\&quot;</span><span class="s2">VPN connection</span><span class="se">\&quot;</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line2_tab_line7_sub2&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;Enter the Gateway&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line2_tab_line7_sub3&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;Under the Authentication -&gt; Type -&gt; choose Passowrd&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wait_element</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line2_tab_line7_image3&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line2_tab_line7_sub4&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;Download our CA certificate&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line2_tab_line7_sub5&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;Enter the username and the passowrd&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line2_tab_line7_sub6&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;Import the CA certificate you just downloaded&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line2_tab_line8&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;Click </span><span class="se">\&quot;</span><span class="s2">Advanced</span><span class="se">\&quot;</span><span class="s2"> the following window will open:&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wait_element</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line2_tab_image8&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line2_tab_line8_sub1&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;Set </span><span class="se">\&quot;</span><span class="s2">Use Custom gateway port </span><span class="se">\&quot;</span><span class="s2"> to 999&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line2_tab_line8_sub2&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;Mark </span><span class="se">\&quot;</span><span class="s2">Use a TCP connection</span><span class="se">\&quot;</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line2_tab_line8_sub3&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;Click </span><span class="se">\&quot;</span><span class="s2">OK</span><span class="se">\&quot;</span><span class="s2"> and then Save&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line2_tab_line9&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;Right-click on the network icon on the system tray&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line2_tab_line10&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;Choose </span><span class="se">\&quot;</span><span class="s2"> VPN Connection then choose the new connection&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> ENDED&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_testID</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="KnowledgeBase.test04_technical_tutorials_third_tab"><a class="viewcode-back" href="../../../../../../../portal.html#functional_testing.Openvcloud.Portal.end_user.admin.home.test03_knowlege_base.KnowledgeBase.test04_technical_tutorials_third_tab">[docs]</a>    <span class="k">def</span> <span class="nf">test04_technical_tutorials_third_tab</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; PRTL-013</span>
+<span class="sd">        *Test case for check user potal technical tutorials third tab.*</span>
+
+<span class="sd">        **Test Scenario:**</span>
+
+<span class="sd">        #. check all technical tutorials third tab page elements, should succeed</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> STARTED&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_testID</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_header_label&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;Technical Tutorials&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line3_tab&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;My First Machine Linux&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">click</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line3_tab&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line3_tab_header&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;My First Machine Linux&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line3_tab_line1&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;Login to the OpenvCloud User Portal:&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wait_element</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line3_tab_image1&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line3_tab_line2&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;To create a virtual machine go to Machines, and click on&quot;</span>
+                         <span class="s2">&quot; &#39;Create Machine&#39;&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wait_element</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line3_tab_image2&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line3_tab_line3&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;Select your properties in this example:&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line3_tab_line3_sub1&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;Ubuntu 14.04 64 bit&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line3_tab_line3_sub2&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;1 GB memory&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line3_tab_line3_sub3&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;Std disk size&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wait_element</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line3_tab_image3&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wait_element</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line3_tab_image4&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line3_tab_line4&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;Within seconds the machine is active.&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wait_element</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line3_tab_image5&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wait_element</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line3_tab_image6&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line3_tab_line5&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;Unlike other clouds, OpenvCloud puts every virtual machine &quot;</span>
+                         <span class="s2">&quot;behind a private firewall.&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line3_tab_line6&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;To have access to your virtual machine you can create a VPN &quot;</span>
+                         <span class="s2">&quot;connection (see other tutorials) or configure a&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line3_tab_line7&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;port forwarding (means forward a port from your private firewall &quot;</span>
+                         <span class="s2">&quot;to the port on your virtual machine).&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line3_tab_line8&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;Here we will choose for the later option.&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line3_tab_line9&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;In order to configure the port forwarding, click on Port Forwards tab:&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wait_element</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line3_tab_image7&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line3_tab_line10&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;Click the Add button, and specify that you want to forward port 3022 &quot;</span>
+                         <span class="s2">&quot;to you port 22 on your virtual machine:&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wait_element</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line3_tab_image8&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line3_tab_line11&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;As a result you will see the below:&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wait_element</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line3_tab_image9&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line3_tab_line12&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;We will now use an ssh client to connect to the virtual machine &quot;</span>
+                         <span class="s2">&quot;e.g. putty&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wait_element</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line3_tab_image10&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wait_element</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line3_tab_image11&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wait_element</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line3_tab_image12&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wait_element</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line3_tab_image13&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line3_tab_line14&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;Congrats, you are on your machine.&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line3_tab_header1&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;Tip 1&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line3_tab_line15&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;To change password of root user do sudo passwd root&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wait_element</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line3_tab_image14&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line3_tab_header2&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;Tip 2&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line3_tab_line16&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;To connect over ssh you always need to login as cloudscalers and then &quot;</span>
+                         <span class="s2">&quot;use sudo -s to get root access.&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line3_tab_line17&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;You can now deploy whatever apps &amp; through port forwarding (like done &quot;</span>
+                         <span class="s2">&quot;above) give access to your apps.&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> ENDED&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_testID</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="KnowledgeBase.test05_technical_tutorials_forth_tab"><a class="viewcode-back" href="../../../../../../../portal.html#functional_testing.Openvcloud.Portal.end_user.admin.home.test03_knowlege_base.KnowledgeBase.test05_technical_tutorials_forth_tab">[docs]</a>    <span class="k">def</span> <span class="nf">test05_technical_tutorials_forth_tab</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; PRTL-014</span>
+<span class="sd">        *Test case for check user potal technical tutorials forth tab.*</span>
+
+<span class="sd">        **Test Scenario:**</span>
+
+<span class="sd">        #. check all technical tutorials forth tab page elements, should succeed</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> STARTED&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_testID</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_header_label&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;Technical Tutorials&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line4_tab&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;Enable Root access on ubuntu over SSH&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">click</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line4_tab&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line4_tab_header&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;Enable Root access on ubuntu over SSH&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line4_tab_line1&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;Create new password for root&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line4_tab_line2&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;Enabling root login from ssh config (default is to deny root access)&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line4_tab_line3&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;Restarting ssh:&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> ENDED&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_testID</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="KnowledgeBase.test06_technical_tutorials_fifth_tab"><a class="viewcode-back" href="../../../../../../../portal.html#functional_testing.Openvcloud.Portal.end_user.admin.home.test03_knowlege_base.KnowledgeBase.test06_technical_tutorials_fifth_tab">[docs]</a>    <span class="k">def</span> <span class="nf">test06_technical_tutorials_fifth_tab</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; PRTL-015</span>
+<span class="sd">        *Test case for check user potal technical tutorials fifth tab.*</span>
+
+<span class="sd">        **Test Scenario:**</span>
+
+<span class="sd">        #. check all technical tutorials fifth tab page elements, should succeed</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> STARTED&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_testID</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_header_label&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;Technical Tutorials&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line5_tab&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;My First Machine Windows&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">click</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line5_tab&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line5_tab_header&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;My First Machine Windows&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line5_tab_line1&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;Login to the OpenvCloud User Portal:&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wait_element</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line5_tab_image1&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wait_element</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line5_tab_image2&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line5_tab_line3&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;Select your properties in this example:&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line5_tab_line3_sub1&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;Windows 2012r2 Standard&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line5_tab_line3_sub2&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;1 GB memory, 1 core(s)&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line5_tab_line3_sub3&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;Default disk size of 50 GB at SSD speed&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wait_element</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line5_tab_image3&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wait_element</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line5_tab_image4&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line5_tab_line4&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;Within seconds the machine is active.&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wait_element</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line5_tab_image5&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wait_element</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line5_tab_image6&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line5_tab_line5&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;Unlike other clouds, OpenvCloud puts every virtual machine &quot;</span>
+                         <span class="s2">&quot;behind a private firewall.&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line5_tab_line6&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;To have access to your virtual machine you can create a VPN &quot;</span>
+                         <span class="s2">&quot;connection (see other tutorials) or configure a&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line5_tab_line7&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;port forwarding (means forward a port from your private firewall &quot;</span>
+                         <span class="s2">&quot;to the port on your virtual machine).&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line5_tab_line8&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;Here we will choose for the later option.&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line5_tab_line9&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;In order to configure the port forwarding, click on Port Forwards tab:&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wait_element</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line5_tab_image7&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line5_tab_line10&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;Click the Add button, and specify that you want to forward port 3389:&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wait_element</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line5_tab_image8&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line5_tab_line11&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;As a result you will see the below:&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wait_element</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line5_tab_image9&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line5_tab_line12&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;On your Windows open&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wait_element</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line5_tab_image10&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line5_tab_line13&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;Click connect and you should see your Windows&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> ENDED&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_testID</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="KnowledgeBase.test07_technical_tutorials_sixth_tab"><a class="viewcode-back" href="../../../../../../../portal.html#functional_testing.Openvcloud.Portal.end_user.admin.home.test03_knowlege_base.KnowledgeBase.test07_technical_tutorials_sixth_tab">[docs]</a>    <span class="k">def</span> <span class="nf">test07_technical_tutorials_sixth_tab</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; PRTL-016</span>
+<span class="sd">        *Test case for check user potal technical tutorials sixth tab.*</span>
+
+<span class="sd">        **Test Scenario:**</span>
+
+<span class="sd">        #. check all technical tutorials sixth tab page elements, should succeed</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> STARTED&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_testID</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_header_label&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;Technical Tutorials&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line6_tab&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;Setup a PPTP connection in Windows 10 to your cloud space&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">click</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line6_tab&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line6_tab_header&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;PPTP Connection to Cloud Space from Windows 10&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line6_tab_line1&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;Go to Settings:&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wait_element</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line6_tab_image1&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line6_tab_line2&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;In Settings go to Network &amp; Internet:&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wait_element</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line6_tab_image2&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line6_tab_line3&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;Click Add a VPN Connection:&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wait_element</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line6_tab_image3&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line6_tab_line4&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;Here you will need to specify the public IP address of the cloud space.&quot;</span>
+                         <span class="s2">&quot; For this you first need to go to the End User Portal:&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wait_element</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line6_tab_image4&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line6_tab_line5&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;In the End User Portal select Defense Shield:&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wait_element</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line6_tab_image5&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line6_tab_line6&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;Here click the Advanced Shield Configuration button:&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wait_element</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line6_tab_image6&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line6_tab_line7&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;Under IP | Addresses you will see the public IP address of your cloud &quot;</span>
+                         <span class="s2">&quot;space:&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wait_element</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line6_tab_image7&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line6_tab_line8&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;Going back to configuration of the new VPN connection in Windows, &quot;</span>
+                         <span class="s2">&quot;select the built-in VPN provider, specify a connection name and the &quot;</span>
+                         <span class="s2">&quot;public IP address of your cloud space, in this case: 85.255.197.118.&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wait_element</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line6_tab_image8&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line6_tab_line9&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;Hit the Save button and see the newly added VPN configuration listed:&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wait_element</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line6_tab_image9&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line6_tab_line10&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;When you click Connect you will be asked to specify for credentials, &quot;</span>
+                         <span class="s2">&quot;for we first need to go back to the Advanced Defense Shield &quot;</span>
+                         <span class="s2">&quot;Configuration, this time under PPP | Secrets:&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wait_element</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line6_tab_image10&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line6_tab_line11&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;Here click Add New and specify a username and password:&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wait_element</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line6_tab_image11&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line6_tab_line12&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;After click OK, use these credentials in the Sign in screen of Windows:&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wait_element</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line6_tab_image12&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line6_tab_line13&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;When you OK you should get connected:&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wait_element</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line6_tab_image13&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line6_tab_line14&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;Also in the Advanced Defense Shield Configuration under PPP | Active &quot;</span>
+                         <span class="s2">&quot;Connections you will see that the connection was successful:&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wait_element</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line6_tab_image14&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line6_tab_line15&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;In this case you see that the Windows client did receive IP address &quot;</span>
+                         <span class="s2">&quot;192.168.103.244.&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line6_tab_line16&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;As a final test you will want to ping from your Windows machine another&quot;</span>
+                         <span class="s2">&quot; (virtual) machine in the same cloud space.&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> ENDED&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_testID</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="KnowledgeBase.test08_technical_tutorials_seventh_tab"><a class="viewcode-back" href="../../../../../../../portal.html#functional_testing.Openvcloud.Portal.end_user.admin.home.test03_knowlege_base.KnowledgeBase.test08_technical_tutorials_seventh_tab">[docs]</a>    <span class="k">def</span> <span class="nf">test08_technical_tutorials_seventh_tab</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; PRTL-017</span>
+<span class="sd">        *Test case for check user potal technical tutorials seventh tab.*</span>
+
+<span class="sd">        **Test Scenario:**</span>
+
+<span class="sd">        #. check all technical tutorials seventh tab page elements, should succeed</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> STARTED&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_testID</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_header_label&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;Technical Tutorials&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line7_tab&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;Getting Started with JumpScale&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">click</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line7_tab&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line7_tab_header&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;Getting Started with JumpScale&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line7_tab_header1&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;To Install JSBOX&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line7_tab_line1&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;(Tested on 13.10 &amp; 14.04 64 bit. Also works on equavelant mint &quot;</span>
+                         <span class="s2">&quot;distro 64 bit)&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line7_tab_header2&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;Update your apt repository &amp; make sure some basic requirements are met&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line7_tab_line2&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;In your terminal:&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line7_tab_header3&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;Install the sandbox&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line7_tab_line3&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;This installs JumpScale and puts it in sandboxed mode.&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line7_tab_header4&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;To be able to use all tools from sandbox:&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line7_tab_header5&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;Update the jpackage metadata&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line7_tab_line4&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;Now you&#39;ll have the automation framework JumpScale installed and &quot;</span>
+                         <span class="s2">&quot;sandboxed and jpackages ready to use!&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line7_tab_line5&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;To know more about JumpScale, see JumpScale&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">element_link</span><span class="p">(</span><span class="s2">&quot;knowledge_base_line7_tab_line5_link&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;http://www.jumpscale.org/&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> ENDED&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_testID</span><span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, CodeScalers.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../../../../../',
+            VERSION:'1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../../../../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../../../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../../../../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../../../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

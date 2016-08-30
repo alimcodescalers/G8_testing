@@ -4,7 +4,7 @@ import uuid
 import random
 import time
 
-from Openvcloud.utils.utils import BasicACLTest
+from functional_testing.Openvcloud.utils.utils import BasicACLTest
 from nose_parameterized import parameterized
 from JumpScale.portal.portal.PortalClient2 import ApiError
 from JumpScale.baselib.http_client.HttpClient import HTTPError
@@ -75,10 +75,10 @@ class BasicTests(BasicACLTest):
         size = random.choice(self.api.cloudapi.sizes.list(cloudspaceId=self.cloudspace_id))
         self.lg('- using image [%s] with memory size [%s]' % (image_name, size['memory']))
         if 'Windows' in image_name:
-               while True:
-                   disksize = random.choice(size['disks'])
-                   if disksize > 25:
-                        break
+            while True:
+                disksize = random.choice(size['disks'])
+                if disksize > 25:
+                    break
         else:
             disksize = random.choice(size['disks'])
         self.lg('- using image [%s] with memory size [%s] with disk '
@@ -208,7 +208,7 @@ class BasicTests(BasicACLTest):
                            'Windows 2012r2 Standard'])
     def test005_add_disks_to_vmachine(self, image_name):
         """ OVC-005
-        *Test case for create machine with different Windows/Linux images available and add all disks to it.
+        *Test case for create machine with different Windows/Linux images available and add all disks to it.*
 
         **Test Scenario:**
 
@@ -263,6 +263,7 @@ class BasicTests(BasicACLTest):
 
         self.lg('%s ENDED' % self._testID)
 
+    @unittest.skip("https://github.com/gig-projects/org_quality/issues/446")
     def test006_machine_snapshots(self):
         """ OVC-006
         *Test case  for restoring certain snapshots for multiple snapshots*
@@ -532,7 +533,7 @@ class BasicTests(BasicACLTest):
 
     def test009_access_docker_on_vm(self):
         """ OVC-009
-        *Test case  for publically accessing docker  on vm *
+        *Test case for publically accessing docker on vm*
 
         **Test Scenario:**
 
@@ -542,8 +543,6 @@ class BasicTests(BasicACLTest):
         #. get a physical node ID
         #. write a machine script on a physical node
         #. run the machine script , should return True
-
-
         """
         self.lg('- create virtual machine with name: \'dockervm\'')
         machine_id = self.cloudapi_create_machine(self.cloudspace_id, self.account_owner_api,

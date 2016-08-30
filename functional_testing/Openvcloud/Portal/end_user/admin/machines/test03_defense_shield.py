@@ -1,7 +1,7 @@
 import os
 import unittest
 from testconfig import config
-from ....utils.utils import BaseTest
+from .....utils.utils import BaseTest
 from ...page_elements_xpath import defense_shield_page
 
 

@@ -2,7 +2,7 @@
 import uuid
 import time
 
-from Openvcloud.utils.utils import BasicACLTest
+from functional_testing.Openvcloud.utils.utils import BasicACLTest
 from JumpScale.portal.portal.PortalClient2 import ApiError
 
 

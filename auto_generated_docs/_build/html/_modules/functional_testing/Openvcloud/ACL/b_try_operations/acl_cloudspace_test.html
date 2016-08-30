@@ -1,0 +1,704 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>functional_testing.Openvcloud.ACL.b_try_operations.acl_cloudspace_test &mdash; OpenVCloud Testsuite 1.0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="OpenVCloud Testsuite 1.0 documentation" href="../../../../../index.html"/>
+        <link rel="up" title="Module code" href="../../../../index.html"/> 
+
+  
+  <script src="../../../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../../../index.html" class="icon icon-home"> OpenVCloud Testsuite
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../acl.html">Access Control List Basic Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../acl.html#access-control-list-extended-tests">Access Control List Extended Tests</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../ovc.html">OpenVcloud APIs Test Suite:</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../portal.html">End user Portal Test Suite</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../portal.html#admin-user-portal-test-suite">Admin user Portal Test Suite</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../../../../index.html">OpenVCloud Testsuite</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../../../../index.html">Module code</a> &raquo;</li>
+      
+    <li>functional_testing.Openvcloud.ACL.b_try_operations.acl_cloudspace_test</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for functional_testing.Openvcloud.ACL.b_try_operations.acl_cloudspace_test</h1><div class="highlight"><pre>
+<span></span><span class="c1"># coding=utf-8</span>
+<span class="kn">from</span> <span class="nn">nose_parameterized</span> <span class="k">import</span> <span class="n">parameterized</span>
+
+<span class="kn">from</span> <span class="nn">functional_testing.Openvcloud.utils.utils</span> <span class="k">import</span> <span class="n">BasicACLTest</span>
+<span class="kn">from</span> <span class="nn">functional_testing.Openvcloud.utils.acl_try_operations</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">JumpScale.portal.portal.PortalClient2</span> <span class="k">import</span> <span class="n">ApiError</span>
+
+
+<span class="k">class</span> <span class="nc">ACLCLOUDSPACE</span><span class="p">(</span><span class="n">BasicACLTest</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">setUp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">ACLCLOUDSPACE</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">setUp</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">acl_setup</span><span class="p">()</span>
+
+
+<div class="viewcode-block" id="Read"><a class="viewcode-back" href="../../../../../acl.html#functional_testing.Openvcloud.ACL.b_try_operations.acl_cloudspace_test.Read">[docs]</a><span class="k">class</span> <span class="nc">Read</span><span class="p">(</span><span class="n">ACLCLOUDSPACE</span><span class="p">):</span>
+
+
+    <span class="nd">@parameterized</span><span class="o">.</span><span class="n">expand</span><span class="p">([</span><span class="s1">&#39;get&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;list&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;getCreditBalance&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;getCreditHistory&#39;</span><span class="p">])</span>
+    <span class="k">def</span> <span class="nf">test000a_try_account_account_read_operations</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">operation</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; ACL-7</span>
+<span class="sd">        *Test case for try to use read operations read access, on upper level.*</span>
+
+<span class="sd">        **Test Scenario:**</span>
+
+<span class="sd">        #. add user1 to the cloudspace created by user2 with write access</span>
+<span class="sd">        #. try read operation account with user1, should fail &#39;403 Forbidden&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> STARTED&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_testID</span><span class="p">)</span>
+
+        <span class="n">accesstype</span> <span class="o">=</span> <span class="s1">&#39;R&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;- add user1 to the cloudspace owned by user2 with access type [</span><span class="si">%s</span><span class="s1">]&#39;</span> <span class="o">%</span> <span class="n">accesstype</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_user_to_cloudspace</span><span class="p">(</span><span class="n">cloudspace_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cloudspace_id</span><span class="p">,</span>
+                                    <span class="n">user</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="p">,</span>
+                                    <span class="n">accesstype</span><span class="o">=</span><span class="n">accesstype</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertRaises</span><span class="p">(</span><span class="n">ApiError</span><span class="p">,</span> <span class="n">try_account_read</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="n">operation</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> ENDED&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_testID</span><span class="p">)</span>
+
+    <span class="nd">@parameterized</span><span class="o">.</span><span class="n">expand</span><span class="p">([</span><span class="s1">&#39;machine_get&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;machine_list&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;machine_getConsoleUrl&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;machine_listSnapshots&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;machine_getHistory&#39;</span><span class="p">])</span>
+    <span class="k">def</span> <span class="nf">test000b_try_machine_read_operations</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">operation</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; ACL-50</span>
+<span class="sd">        *Test case for try to use read operations with read access, on upper level.*</span>
+
+<span class="sd">        **Test Scenario:**</span>
+
+<span class="sd">        #. add user1 to the cloudspace created by user2 with admin access</span>
+<span class="sd">        #. try read operation machine with user1, should succeed</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> STARTED&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_testID</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">machine_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cloudapi_create_machine</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cloudspace_id</span><span class="p">,</span>
+                                                       <span class="bp">self</span><span class="o">.</span><span class="n">account_owner_api</span><span class="p">)</span>
+        <span class="n">accesstype</span> <span class="o">=</span> <span class="s1">&#39;R&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;- add user1 to the cloudspace owned by user2 with access type [</span><span class="si">%s</span><span class="s1">]&#39;</span> <span class="o">%</span> <span class="n">accesstype</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_user_to_cloudspace</span><span class="p">(</span><span class="n">cloudspace_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cloudspace_id</span><span class="p">,</span>
+                                    <span class="n">user</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="p">,</span>
+                                    <span class="n">accesstype</span><span class="o">=</span><span class="n">accesstype</span><span class="p">)</span>
+        <span class="n">try_machine_read</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">operation</span><span class="p">)</span>
+
+    <span class="nd">@parameterized</span><span class="o">.</span><span class="n">expand</span><span class="p">([</span><span class="s1">&#39;cloudspaceDeploy&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;cloudspaceDefenseshield&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;cloudspacePortforwardingAdd&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;cloudspacePortforwardingUpdate&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;cloudspacePortforwardingDelete&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;cloudspaceMachineCreate&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;cloudspaceMachineClone&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;cloudspaceMachineDelete&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;cloudspaceMachineResize&#39;</span><span class="p">])</span>
+    <span class="k">def</span> <span class="nf">test001a_try_cloudspace_write_operations</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">operation</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; ACL-34</span>
+<span class="sd">        *Test case for try to use write operations with read access.*</span>
+
+<span class="sd">        **Test Scenario:**</span>
+
+<span class="sd">        #. add user1 to the cloudspace created by user2 with read access</span>
+<span class="sd">        #. try write operation on user2 with user1, should fail &#39;403 Forbidden&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> STARTED&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_testID</span><span class="p">)</span>
+
+        <span class="n">accesstype</span> <span class="o">=</span> <span class="s1">&#39;R&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;- add user1 to the cloudspace owned by user2 with access type [</span><span class="si">%s</span><span class="s1">]&#39;</span> <span class="o">%</span> <span class="n">accesstype</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_user_to_cloudspace</span><span class="p">(</span><span class="n">cloudspace_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cloudspace_id</span><span class="p">,</span>
+                                    <span class="n">user</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="p">,</span>
+                                    <span class="n">accesstype</span><span class="o">=</span><span class="n">accesstype</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertRaises</span><span class="p">(</span><span class="n">ApiError</span><span class="p">,</span> <span class="n">try_cloudspace_write</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="n">operation</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> ENDED&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_testID</span><span class="p">)</span>
+
+    <span class="nd">@parameterized</span><span class="o">.</span><span class="n">expand</span><span class="p">([</span><span class="s1">&#39;start_machine&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;stop_machine&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;reboot_machine&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;reset_machine&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;pause_machine&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;resume_machine&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;snapshot_create&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;snapshot_rollback&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;snapshot_delete&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;update_machine_name&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;update_machine_description&#39;</span><span class="p">])</span>
+    <span class="k">def</span> <span class="nf">test001b_try_machine_write_operations</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">operation</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; ACL-46</span>
+<span class="sd">        *Test case for try to use write operations with read access.*</span>
+
+<span class="sd">        **Test Scenario:**</span>
+
+<span class="sd">        #. add user1 to the cloudspace created by user2 with read access</span>
+<span class="sd">        #. try write operation on user2 with user1, should fail &#39;403 Forbidden&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> STARTED&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_testID</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">machine_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cloudapi_create_machine</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cloudspace_id</span><span class="p">,</span>
+                                                       <span class="bp">self</span><span class="o">.</span><span class="n">account_owner_api</span><span class="p">)</span>
+        <span class="n">accesstype</span> <span class="o">=</span> <span class="s1">&#39;R&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;- add user1 to the cloudspace owned by user2 with access type [</span><span class="si">%s</span><span class="s1">]&#39;</span> <span class="o">%</span> <span class="n">accesstype</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_user_to_cloudspace</span><span class="p">(</span><span class="n">cloudspace_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cloudspace_id</span><span class="p">,</span>
+                                    <span class="n">user</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="p">,</span>
+                                    <span class="n">accesstype</span><span class="o">=</span><span class="n">accesstype</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertRaises</span><span class="p">(</span><span class="n">ApiError</span><span class="p">,</span> <span class="n">try_machine_write</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="n">operation</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> ENDED&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_testID</span><span class="p">)</span>
+
+    <span class="nd">@parameterized</span><span class="o">.</span><span class="n">expand</span><span class="p">([</span><span class="s1">&#39;cloudspaceAdduser&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;cloudspaceUpdateuser&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;cloudspaceDeleteuser&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;cloudspaceUpdate&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;cloudspaceDelete&#39;</span><span class="p">])</span>
+    <span class="k">def</span> <span class="nf">test002a_try_cloudspace_admin_operations</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">operation</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; ACL-35</span>
+<span class="sd">        *Test case for try to use admin operations with read access.*</span>
+
+<span class="sd">        **Test Scenario:**</span>
+
+<span class="sd">        #. add user1 to the cloudspace created by user2 with read access</span>
+<span class="sd">        #. try admin operation with user1, should fail &#39;403 Forbidden&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> STARTED&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_testID</span><span class="p">)</span>
+
+        <span class="n">accesstype</span> <span class="o">=</span> <span class="s1">&#39;R&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;- add user1 to the cloudspace owned by user2 with access type [</span><span class="si">%s</span><span class="s1">]&#39;</span> <span class="o">%</span> <span class="n">accesstype</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_user_to_cloudspace</span><span class="p">(</span><span class="n">cloudspace_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cloudspace_id</span><span class="p">,</span>
+                                    <span class="n">user</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="p">,</span>
+                                    <span class="n">accesstype</span><span class="o">=</span><span class="n">accesstype</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertRaises</span><span class="p">(</span><span class="n">ApiError</span><span class="p">,</span> <span class="n">try_cloudspace_admin</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="n">operation</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> ENDED&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_testID</span><span class="p">)</span>
+
+    <span class="nd">@parameterized</span><span class="o">.</span><span class="n">expand</span><span class="p">([</span><span class="s1">&#39;machine_adduser&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;machine_updateuser&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;machine_deleteuser&#39;</span><span class="p">])</span>
+    <span class="k">def</span> <span class="nf">test002b_try_machine_admin_operations</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">operation</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; ACL-47</span>
+<span class="sd">        *Test case for try to use admin operations with read access.*</span>
+
+<span class="sd">        **Test Scenario:**</span>
+
+<span class="sd">        #. add user1 to the cloudspace created by user2 with read access</span>
+<span class="sd">        #. try admin operation with user1, should fail &#39;403 Forbidden&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> STARTED&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_testID</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">machine_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cloudapi_create_machine</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cloudspace_id</span><span class="p">,</span>
+                                                       <span class="bp">self</span><span class="o">.</span><span class="n">account_owner_api</span><span class="p">)</span>
+        <span class="n">accesstype</span> <span class="o">=</span> <span class="s1">&#39;R&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;- add user1 to the cloudspace owned by user2 with access type [</span><span class="si">%s</span><span class="s1">]&#39;</span> <span class="o">%</span> <span class="n">accesstype</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_user_to_cloudspace</span><span class="p">(</span><span class="n">cloudspace_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cloudspace_id</span><span class="p">,</span>
+                                    <span class="n">user</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="p">,</span>
+                                    <span class="n">accesstype</span><span class="o">=</span><span class="n">accesstype</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertRaises</span><span class="p">(</span><span class="n">ApiError</span><span class="p">,</span> <span class="n">try_machine_admin</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="n">operation</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> ENDED&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_testID</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Write"><a class="viewcode-back" href="../../../../../acl.html#functional_testing.Openvcloud.ACL.b_try_operations.acl_cloudspace_test.Write">[docs]</a><span class="k">class</span> <span class="nc">Write</span><span class="p">(</span><span class="n">ACLCLOUDSPACE</span><span class="p">):</span>
+
+    <span class="nd">@parameterized</span><span class="o">.</span><span class="n">expand</span><span class="p">([</span><span class="s1">&#39;create_cloudspace&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;create_machineTemplate&#39;</span>
+                           <span class="p">])</span>
+    <span class="k">def</span> <span class="nf">test000a_try_account_write_operations</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">operation</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; ACL-1</span>
+<span class="sd">        *Test case for try to use write operations with write access, on upper level.*</span>
+
+<span class="sd">        **Test Scenario:**</span>
+
+<span class="sd">        #. add user1 to the cloudspace created by user2 with write access</span>
+<span class="sd">        #. try write operation on user2 with user1, should fail &#39;403 Forbidden&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> STARTED&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_testID</span><span class="p">)</span>
+
+        <span class="n">accesstype</span> <span class="o">=</span> <span class="s1">&#39;CRX&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;- add user1 to the cloudspace owned by user2 with access type [</span><span class="si">%s</span><span class="s1">]&#39;</span> <span class="o">%</span> <span class="n">accesstype</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_user_to_cloudspace</span><span class="p">(</span><span class="n">cloudspace_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cloudspace_id</span><span class="p">,</span>
+                                    <span class="n">user</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="p">,</span>
+                                    <span class="n">accesstype</span><span class="o">=</span><span class="n">accesstype</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertRaises</span><span class="p">(</span><span class="n">ApiError</span><span class="p">,</span> <span class="n">try_account_write</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="n">operation</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> ENDED&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_testID</span><span class="p">)</span>
+
+    <span class="nd">@parameterized</span><span class="o">.</span><span class="n">expand</span><span class="p">([</span><span class="s1">&#39;start_machine&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;stop_machine&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;reboot_machine&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;reset_machine&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;pause_machine&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;resume_machine&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;snapshot_create&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;snapshot_rollback&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;snapshot_delete&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;update_machine_name&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;update_machine_description&#39;</span><span class="p">])</span>
+    <span class="k">def</span> <span class="nf">test000b_try_machine_write_operations</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">operation</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; ACL-51</span>
+<span class="sd">        *Test case for try to use write operations with write access, on upper level.*</span>
+
+<span class="sd">        **Test Scenario:**</span>
+
+<span class="sd">        #. add user1 to the cloudspace created by user2 with write access</span>
+<span class="sd">        #. try write operation on user2 with user1, should succeed</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> STARTED&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_testID</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">machine_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cloudapi_create_machine</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cloudspace_id</span><span class="p">,</span>
+                                                       <span class="bp">self</span><span class="o">.</span><span class="n">account_owner_api</span><span class="p">)</span>
+        <span class="n">accesstype</span> <span class="o">=</span> <span class="s1">&#39;CRX&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;- add user1 to the cloudspace owned by user2 with access type [</span><span class="si">%s</span><span class="s1">]&#39;</span> <span class="o">%</span> <span class="n">accesstype</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_user_to_cloudspace</span><span class="p">(</span><span class="n">cloudspace_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cloudspace_id</span><span class="p">,</span>
+                                    <span class="n">user</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="p">,</span>
+                                    <span class="n">accesstype</span><span class="o">=</span><span class="n">accesstype</span><span class="p">)</span>
+        <span class="n">try_machine_write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">operation</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> ENDED&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_testID</span><span class="p">)</span>
+
+    <span class="nd">@parameterized</span><span class="o">.</span><span class="n">expand</span><span class="p">([</span><span class="s1">&#39;getCloudspace&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;listCloudspaces&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;listMachines&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;listPortforwarding&#39;</span><span class="p">])</span>
+    <span class="k">def</span> <span class="nf">test001a_try_cloudspace_read_operations</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">operation</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; ACL-36</span>
+<span class="sd">        *Test case for try to use read operations with write access.*</span>
+
+<span class="sd">        **Test Scenario:**</span>
+
+<span class="sd">        #. add user1 to the cloudspace created by user2 with write access</span>
+<span class="sd">        #. try read operation cloudspace with user1, should succeed</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> STARTED&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_testID</span><span class="p">)</span>
+
+        <span class="n">accesstype</span> <span class="o">=</span> <span class="s1">&#39;CRX&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;- add user1 to the cloudspace owned by user2 with access type [</span><span class="si">%s</span><span class="s1">]&#39;</span> <span class="o">%</span> <span class="n">accesstype</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_user_to_cloudspace</span><span class="p">(</span><span class="n">cloudspace_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cloudspace_id</span><span class="p">,</span>
+                                    <span class="n">user</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="p">,</span>
+                                    <span class="n">accesstype</span><span class="o">=</span><span class="n">accesstype</span><span class="p">)</span>
+        <span class="n">try_cloudspace_read</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">operation</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> ENDED&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_testID</span><span class="p">)</span>
+
+
+    <span class="nd">@parameterized</span><span class="o">.</span><span class="n">expand</span><span class="p">([</span><span class="s1">&#39;machine_get&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;machine_list&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;machine_getConsoleUrl&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;machine_listSnapshots&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;machine_getHistory&#39;</span><span class="p">])</span>
+    <span class="k">def</span> <span class="nf">test001b_try_machine_read_operations</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">operation</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; ACL-48</span>
+<span class="sd">        *Test case for try to use read operations with write access.*</span>
+
+<span class="sd">        **Test Scenario:**</span>
+
+<span class="sd">        #. add user1 to the cloudspace created by user2 with write access</span>
+<span class="sd">        #. try read operation machine with user1, should succeed</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> STARTED&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_testID</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">machine_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cloudapi_create_machine</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cloudspace_id</span><span class="p">,</span>
+                                                       <span class="bp">self</span><span class="o">.</span><span class="n">account_owner_api</span><span class="p">)</span>
+        <span class="n">accesstype</span> <span class="o">=</span> <span class="s1">&#39;CRX&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;- add user1 to the cloudspace owned by user2 with access type [</span><span class="si">%s</span><span class="s1">]&#39;</span> <span class="o">%</span> <span class="n">accesstype</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_user_to_cloudspace</span><span class="p">(</span><span class="n">cloudspace_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cloudspace_id</span><span class="p">,</span>
+                                    <span class="n">user</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="p">,</span>
+                                    <span class="n">accesstype</span><span class="o">=</span><span class="n">accesstype</span><span class="p">)</span>
+        <span class="n">try_machine_read</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">operation</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> ENDED&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_testID</span><span class="p">)</span>
+
+    <span class="nd">@parameterized</span><span class="o">.</span><span class="n">expand</span><span class="p">([</span><span class="s1">&#39;cloudspaceAdduser&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;cloudspaceUpdateuser&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;cloudspaceDeleteuser&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;cloudspaceUpdate&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;cloudspaceDelete&#39;</span><span class="p">])</span>
+    <span class="k">def</span> <span class="nf">test002a_try_cloudspace_admin_operations</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">operation</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; ACL-37</span>
+<span class="sd">        *Test case for try to use admin operations with write access.*</span>
+
+<span class="sd">        **Test Scenario:**</span>
+
+<span class="sd">        #. add user1 to the cloudspace created by user2 with write access</span>
+<span class="sd">        #. try admin operation with user1, should fail &#39;403 Forbidden&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> STARTED&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_testID</span><span class="p">)</span>
+
+        <span class="n">accesstype</span> <span class="o">=</span> <span class="s1">&#39;CRX&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;- add user1 to the cloudspace owned by user2 with access type [</span><span class="si">%s</span><span class="s1">]&#39;</span> <span class="o">%</span> <span class="n">accesstype</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_user_to_cloudspace</span><span class="p">(</span><span class="n">cloudspace_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cloudspace_id</span><span class="p">,</span>
+                                    <span class="n">user</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="p">,</span>
+                                    <span class="n">accesstype</span><span class="o">=</span><span class="n">accesstype</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertRaises</span><span class="p">(</span><span class="n">ApiError</span><span class="p">,</span> <span class="n">try_cloudspace_admin</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="n">operation</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> ENDED&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_testID</span><span class="p">)</span>
+
+    <span class="nd">@parameterized</span><span class="o">.</span><span class="n">expand</span><span class="p">([</span><span class="s1">&#39;machine_adduser&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;machine_updateuser&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;machine_deleteuser&#39;</span><span class="p">])</span>
+    <span class="k">def</span> <span class="nf">test002b_try_machine_admin_operations</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">operation</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; ACL-49</span>
+<span class="sd">        *Test case for try to use admin operations with write access.*</span>
+
+<span class="sd">        **Test Scenario:**</span>
+
+<span class="sd">        #. add user1 to the cloudspace created by user2 with write access</span>
+<span class="sd">        #. try admin operation with user1, should succeed</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> STARTED&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_testID</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">machine_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cloudapi_create_machine</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cloudspace_id</span><span class="p">,</span>
+                                                       <span class="bp">self</span><span class="o">.</span><span class="n">account_owner_api</span><span class="p">)</span>
+        <span class="n">accesstype</span> <span class="o">=</span> <span class="s1">&#39;CRX&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;- add user1 to the cloudspace owned by user2 with access type [</span><span class="si">%s</span><span class="s1">]&#39;</span> <span class="o">%</span> <span class="n">accesstype</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_user_to_cloudspace</span><span class="p">(</span><span class="n">cloudspace_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cloudspace_id</span><span class="p">,</span>
+                                    <span class="n">user</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="p">,</span>
+                                    <span class="n">accesstype</span><span class="o">=</span><span class="n">accesstype</span><span class="p">)</span>
+        <span class="n">try_machine_admin</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">operation</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> ENDED&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_testID</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Admin"><a class="viewcode-back" href="../../../../../acl.html#functional_testing.Openvcloud.ACL.b_try_operations.acl_cloudspace_test.Admin">[docs]</a><span class="k">class</span> <span class="nc">Admin</span><span class="p">(</span><span class="n">ACLCLOUDSPACE</span><span class="p">):</span>
+
+    <span class="nd">@parameterized</span><span class="o">.</span><span class="n">expand</span><span class="p">([</span><span class="s1">&#39;add_user&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;update&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;delete_user&#39;</span><span class="p">])</span>
+    <span class="k">def</span> <span class="nf">test000a_try_account_admin_operations</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">operation</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; ACL-2</span>
+<span class="sd">        *Test case for try to use admin operations with admin access, on upper level.*</span>
+
+<span class="sd">        **Test Scenario:**</span>
+
+<span class="sd">        #. add user1 to the cloudspace created by user2 with read access</span>
+<span class="sd">        #. try admin operation with user1, should fail &#39;403 Forbidden&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> STARTED&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_testID</span><span class="p">)</span>
+
+        <span class="n">accesstype</span> <span class="o">=</span> <span class="s1">&#39;ACDRUX&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;- add user1 to the cloudspace owned by user2 with access type [</span><span class="si">%s</span><span class="s1">]&#39;</span> <span class="o">%</span> <span class="n">accesstype</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_user_to_cloudspace</span><span class="p">(</span><span class="n">cloudspace_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cloudspace_id</span><span class="p">,</span>
+                                    <span class="n">user</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="p">,</span>
+                                    <span class="n">accesstype</span><span class="o">=</span><span class="n">accesstype</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertRaises</span><span class="p">(</span><span class="n">ApiError</span><span class="p">,</span> <span class="n">try_account_admin</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="n">operation</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> ENDED&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_testID</span><span class="p">)</span>
+
+    <span class="nd">@parameterized</span><span class="o">.</span><span class="n">expand</span><span class="p">([</span><span class="s1">&#39;machine_adduser&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;machine_updateuser&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;machine_deleteuser&#39;</span><span class="p">])</span>
+    <span class="k">def</span> <span class="nf">test000b_try_machine_admin_operations</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">operation</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; ACL-49</span>
+<span class="sd">        *Test case for try to use admin operations with admin access, on upper level.*</span>
+
+<span class="sd">        **Test Scenario:**</span>
+
+<span class="sd">        #. add user1 to the cloudspace created by user2 with write access</span>
+<span class="sd">        #. try admin operation with user1, should succeed</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> STARTED&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_testID</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">machine_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cloudapi_create_machine</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cloudspace_id</span><span class="p">,</span>
+                                                       <span class="bp">self</span><span class="o">.</span><span class="n">account_owner_api</span><span class="p">)</span>
+        <span class="n">accesstype</span> <span class="o">=</span> <span class="s1">&#39;ACDRUX&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;- add user1 to the cloudspace owned by user2 with access type [</span><span class="si">%s</span><span class="s1">]&#39;</span> <span class="o">%</span> <span class="n">accesstype</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_user_to_cloudspace</span><span class="p">(</span><span class="n">cloudspace_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cloudspace_id</span><span class="p">,</span>
+                                    <span class="n">user</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="p">,</span>
+                                    <span class="n">accesstype</span><span class="o">=</span><span class="n">accesstype</span><span class="p">)</span>
+        <span class="n">try_machine_admin</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">operation</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> ENDED&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_testID</span><span class="p">)</span>
+
+    <span class="nd">@parameterized</span><span class="o">.</span><span class="n">expand</span><span class="p">([</span><span class="s1">&#39;getCloudspace&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;listCloudspaces&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;listMachines&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;listPortforwarding&#39;</span><span class="p">])</span>
+    <span class="k">def</span> <span class="nf">test001a_try_cloudspace_read_operations</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">operation</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; ACL-38</span>
+<span class="sd">        *Test case for try to use read operations with admin access.*</span>
+
+<span class="sd">        **Test Scenario:**</span>
+
+<span class="sd">        #. add user1 to the cloudspace created by user2 with admin access</span>
+<span class="sd">        #. try read operation cloudspace with user1, should succeed</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> STARTED&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_testID</span><span class="p">)</span>
+
+        <span class="n">accesstype</span> <span class="o">=</span> <span class="s1">&#39;ACDRUX&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;- add user1 to the cloudspace owned by user2 with access type [</span><span class="si">%s</span><span class="s1">]&#39;</span> <span class="o">%</span> <span class="n">accesstype</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_user_to_cloudspace</span><span class="p">(</span><span class="n">cloudspace_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cloudspace_id</span><span class="p">,</span>
+                                    <span class="n">user</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="p">,</span>
+                                    <span class="n">accesstype</span><span class="o">=</span><span class="n">accesstype</span><span class="p">)</span>
+        <span class="n">try_cloudspace_read</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">operation</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> ENDED&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_testID</span><span class="p">)</span>
+
+    <span class="nd">@parameterized</span><span class="o">.</span><span class="n">expand</span><span class="p">([</span><span class="s1">&#39;machine_get&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;machine_list&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;machine_getConsoleUrl&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;machine_listSnapshots&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;machine_getHistory&#39;</span><span class="p">])</span>
+    <span class="k">def</span> <span class="nf">test001b_try_machine_read_operations</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">operation</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; ACL-50</span>
+<span class="sd">        *Test case for try to use read operations with admin access.*</span>
+
+<span class="sd">        **Test Scenario:**</span>
+
+<span class="sd">        #. add user1 to the cloudspace created by user2 with admin access</span>
+<span class="sd">        #. try read operation machine with user1, should succeed</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> STARTED&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_testID</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">machine_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cloudapi_create_machine</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cloudspace_id</span><span class="p">,</span>
+                                                       <span class="bp">self</span><span class="o">.</span><span class="n">account_owner_api</span><span class="p">)</span>
+        <span class="n">accesstype</span> <span class="o">=</span> <span class="s1">&#39;ACDRUX&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;- add user1 to the cloudspace owned by user2 with access type [</span><span class="si">%s</span><span class="s1">]&#39;</span> <span class="o">%</span> <span class="n">accesstype</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_user_to_cloudspace</span><span class="p">(</span><span class="n">cloudspace_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cloudspace_id</span><span class="p">,</span>
+                                    <span class="n">user</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="p">,</span>
+                                    <span class="n">accesstype</span><span class="o">=</span><span class="n">accesstype</span><span class="p">)</span>
+        <span class="n">try_machine_read</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">operation</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> ENDED&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_testID</span><span class="p">)</span>
+
+    <span class="nd">@parameterized</span><span class="o">.</span><span class="n">expand</span><span class="p">([</span><span class="s1">&#39;cloudspaceDeploy&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;cloudspaceDefenseshield&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;cloudspacePortforwardingAdd&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;cloudspacePortforwardingUpdate&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;cloudspacePortforwardingDelete&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;cloudspaceMachineCreate&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;cloudspaceMachineClone&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;cloudspaceMachineDelete&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;cloudspaceMachineResize&#39;</span><span class="p">])</span>
+    <span class="k">def</span> <span class="nf">test002a_try_cloudspace_write_operations</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">operation</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; ACL-39</span>
+<span class="sd">        *Test case for try to use write operations with admin access.*</span>
+
+<span class="sd">        **Test Scenario:**</span>
+
+<span class="sd">        #. add user1 to the cloudspace created by user2 with admin access</span>
+<span class="sd">        #. try write operation on user2 with user1, should succeed</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> STARTED&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_testID</span><span class="p">)</span>
+
+        <span class="n">accesstype</span> <span class="o">=</span> <span class="s1">&#39;ACDRUX&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;- add user1 to the cloudspace owned by user2 with access type [</span><span class="si">%s</span><span class="s1">]&#39;</span> <span class="o">%</span> <span class="n">accesstype</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_user_to_cloudspace</span><span class="p">(</span><span class="n">cloudspace_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cloudspace_id</span><span class="p">,</span>
+                                    <span class="n">user</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="p">,</span>
+                                    <span class="n">accesstype</span><span class="o">=</span><span class="n">accesstype</span><span class="p">)</span>
+        <span class="n">try_cloudspace_write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">operation</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> ENDED&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_testID</span><span class="p">)</span>
+
+
+    <span class="nd">@parameterized</span><span class="o">.</span><span class="n">expand</span><span class="p">([</span><span class="s1">&#39;start_machine&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;stop_machine&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;reboot_machine&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;reset_machine&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;pause_machine&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;resume_machine&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;snapshot_create&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;snapshot_rollback&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;snapshot_delete&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;update_machine_name&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;update_machine_description&#39;</span><span class="p">])</span>
+    <span class="k">def</span> <span class="nf">test002b_try_machine_write_operations</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">operation</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; ACL-51</span>
+<span class="sd">        *Test case for try to use write operations with admin access.*</span>
+
+<span class="sd">        **Test Scenario:**</span>
+
+<span class="sd">        #. add user1 to the cloudspace created by user2 with admin access</span>
+<span class="sd">        #. try write operation on user2 with user1, should succeed</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> STARTED&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_testID</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">machine_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cloudapi_create_machine</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cloudspace_id</span><span class="p">,</span>
+                                                       <span class="bp">self</span><span class="o">.</span><span class="n">account_owner_api</span><span class="p">)</span>
+        <span class="n">accesstype</span> <span class="o">=</span> <span class="s1">&#39;ACDRUX&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;- add user1 to the cloudspace owned by user2 with access type [</span><span class="si">%s</span><span class="s1">]&#39;</span> <span class="o">%</span> <span class="n">accesstype</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_user_to_cloudspace</span><span class="p">(</span><span class="n">cloudspace_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cloudspace_id</span><span class="p">,</span>
+                                    <span class="n">user</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="p">,</span>
+                                    <span class="n">accesstype</span><span class="o">=</span><span class="n">accesstype</span><span class="p">)</span>
+        <span class="n">try_machine_write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">operation</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> ENDED&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_testID</span><span class="p">)</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, CodeScalers.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../../../',
+            VERSION:'1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
