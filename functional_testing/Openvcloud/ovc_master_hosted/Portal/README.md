@@ -1,5 +1,7 @@
+## Portal Test Suite
 
-# Portal testsuite:
+See the documentation [here](/docs/functional/openvcloud/ovc_master_hosted/ovc_master_hosted.md)
+
 This section of the repo is used to execute our automated tests for the cloud portal.
 
 Tests are performed using the descriptions in the Folders
