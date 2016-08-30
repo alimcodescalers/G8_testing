@@ -1,8 +1,8 @@
 # coding=utf-8
 from nose_parameterized import parameterized
 
-from Openvcloud.utils.utils import BasicACLTest
-from Openvcloud.utils.acl_try_operations import *
+from functional_testing.Openvcloud.utils.utils import BasicACLTest
+from functional_testing.Openvcloud.utils.acl_try_operations import *
 from JumpScale.portal.portal.PortalClient2 import ApiError
 
 

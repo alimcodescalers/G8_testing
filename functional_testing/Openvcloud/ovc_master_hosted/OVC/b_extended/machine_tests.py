@@ -1,6 +1,6 @@
 # coding=utf-8
 from nose_parameterized import parameterized
-from Openvcloud.utils.utils import BasicACLTest
+from functional_testing.Openvcloud.utils.utils import BasicACLTest
 
 from JumpScale.portal.portal.PortalClient2 import ApiError
 from JumpScale.baselib.http_client.HttpClient import HTTPError

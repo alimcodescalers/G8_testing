@@ -88,7 +88,7 @@ class Read(BaseTest):
 
         #. create new machine, should succeed
         #. delete the new machine
-        :param image_name:
+        
         """
         self.lg('%s STARTED' % self._testID)
         self.click("end_user")

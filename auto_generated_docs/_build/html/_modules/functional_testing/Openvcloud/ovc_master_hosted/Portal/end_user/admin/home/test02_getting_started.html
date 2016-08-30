@@ -1,0 +1,349 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>functional_testing.Openvcloud.ovc_master_hosted.Portal.end_user.admin.home.test02_getting_started &mdash; OpenVCloud Testsuite 1.0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../../../../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="OpenVCloud Testsuite 1.0 documentation" href="../../../../../../../../index.html"/>
+        <link rel="up" title="Module code" href="../../../../../../../index.html"/> 
+
+  
+  <script src="../../../../../../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../../../../../../index.html" class="icon icon-home"> OpenVCloud Testsuite
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../acl.html">Access Control List Basic Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../acl.html#access-control-list-extended-tests">Access Control List Extended Tests</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../ovc.html">OpenVcloud APIs Test Suite:</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../portal.html">End user Portal Test Suite</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../portal.html#admin-user-portal-test-suite">Admin user Portal Test Suite</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../../../../../../../index.html">OpenVCloud Testsuite</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../../../../../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../../../../../../../index.html">Module code</a> &raquo;</li>
+      
+    <li>functional_testing.Openvcloud.ovc_master_hosted.Portal.end_user.admin.home.test02_getting_started</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for functional_testing.Openvcloud.ovc_master_hosted.Portal.end_user.admin.home.test02_getting_started</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">....utils.utils</span> <span class="k">import</span> <span class="n">BaseTest</span>
+<span class="kn">from</span> <span class="nn">...page_elements_xpath</span> <span class="k">import</span> <span class="n">home_page</span>
+
+
+<div class="viewcode-block" id="QuickTutorialGuide"><a class="viewcode-back" href="../../../../../../../../portal.html#functional_testing.Openvcloud.ovc_master_hosted.Portal.end_user.admin.home.test02_getting_started.QuickTutorialGuide">[docs]</a><span class="k">class</span> <span class="nc">QuickTutorialGuide</span><span class="p">(</span><span class="n">BaseTest</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">QuickTutorialGuide</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">elements</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">home_page</span><span class="o">.</span><span class="n">elements</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">setUp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">QuickTutorialGuide</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">setUp</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">login</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">click</span><span class="p">(</span><span class="s2">&quot;getting_started_button&quot;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="QuickTutorialGuide.test01_intro"><a class="viewcode-back" href="../../../../../../../../portal.html#functional_testing.Openvcloud.ovc_master_hosted.Portal.end_user.admin.home.test02_getting_started.QuickTutorialGuide.test01_intro">[docs]</a>    <span class="k">def</span> <span class="nf">test01_intro</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; PRTL-006</span>
+<span class="sd">        *Test case for check user potal intro tab.*</span>
+
+<span class="sd">        **Test Scenario:**</span>
+
+<span class="sd">        #. check all intro page elements, should succeed</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> STARTED&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_testID</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">click</span><span class="p">(</span><span class="s2">&quot;intro_tab&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;intro_header_label&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;Welcome to your OpenvCloud Cloud Space!&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;intro_line1_label&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;Before you start, maybe some things that are good to know:&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;intro_line2_label&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;The Cloud Space provides access to different Cloud Decks:&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;intro_line3_label&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;Machines: Virtual Machines creation and management via the &quot;</span>
+                         <span class="s2">&quot;web portal or API.&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;intro_line4_label&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;The Cloud Space is protected by the Defense Shield, your &quot;</span>
+                         <span class="s2">&quot;personal firewall that handles all incoming and outgoing &quot;</span>
+                         <span class="s2">&quot;traffic for your Cloud Space, your routing, &quot;</span>
+                         <span class="s2">&quot;port fowards and firewall settings.&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;intro_subheader_label&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;Questions?&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;intro_line5_label&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;In case of any questions, go to our Documentation Center or &quot;</span>
+                         <span class="s2">&quot;contact Support&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">element_link</span><span class="p">(</span><span class="s2">&quot;intro_spport_link&quot;</span><span class="p">),</span>
+                        <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">wiki_gcb/support&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">environment_url</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;http:&#39;</span><span class="p">,</span> <span class="s1">&#39;https:&#39;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> ENDED&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_testID</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="QuickTutorialGuide.test02_cloudspace"><a class="viewcode-back" href="../../../../../../../../portal.html#functional_testing.Openvcloud.ovc_master_hosted.Portal.end_user.admin.home.test02_getting_started.QuickTutorialGuide.test02_cloudspace">[docs]</a>    <span class="k">def</span> <span class="nf">test02_cloudspace</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; PRTL-007</span>
+<span class="sd">        *Test case for check user potal cloudspace tab.*</span>
+
+<span class="sd">        **Test Scenario:**</span>
+
+<span class="sd">        #. check all cloudspace page elements, should succeed</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> STARTED&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_testID</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">click</span><span class="p">(</span><span class="s2">&quot;cloudspace_tab&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;cloudspace_header_label&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;Cloud Space&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;cloudspace_line1_label&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;Optionally Go to Cloud Space Settings to provide access to other &quot;</span>
+                         <span class="s2">&quot;registered users in the OpenvCloud cloud.&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;cloudspace_line2_label&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;Optionally create an additional Cloud Space, allowing you to divide &quot;</span>
+                         <span class="s2">&quot;your resources into 2 private networks, managed from the same portal!&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;cloudspace_subheader_label&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;Questions?&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;cloudspace_line3_label&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;In case of any questions, go to our Documentation Center or contact &quot;</span>
+                         <span class="s2">&quot;Support&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">element_link</span><span class="p">(</span><span class="s2">&quot;cloudspace_spport_link&quot;</span><span class="p">),</span>
+                        <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">wiki_gcb/support&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">environment_url</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;http:&#39;</span><span class="p">,</span> <span class="s1">&#39;https:&#39;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> ENDED&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_testID</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="QuickTutorialGuide.test03_machines"><a class="viewcode-back" href="../../../../../../../../portal.html#functional_testing.Openvcloud.ovc_master_hosted.Portal.end_user.admin.home.test02_getting_started.QuickTutorialGuide.test03_machines">[docs]</a>    <span class="k">def</span> <span class="nf">test03_machines</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; PRTL-008</span>
+<span class="sd">        *Test case for check user potal machines tab.*</span>
+
+<span class="sd">        **Test Scenario:**</span>
+
+<span class="sd">        #. check all machines page elements, should succeed</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> STARTED&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_testID</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">click</span><span class="p">(</span><span class="s2">&quot;machines_tab&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;machines_header_label&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;Machines&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;machines_line1_label&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;Click on Machines, hit Create Machine&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;machines_line2_label&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;Set the name for your Virtual Machine&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;machines_line3_label&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;Choose one of the packages, delivering CPU, RAM and 10GB SSD&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;machines_line4_label&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;Expand your SSD size&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;machines_line5_label&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;Hit Create&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;machines_line6_label&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;Go to Console tab&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;machines_line7_label&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;Login and take control (Windows Images need to load some minutes &quot;</span>
+                         <span class="s2">&quot;to finish all initalisations before you can login)&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;machines_line8_label&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;After maximum a few minutes you will see the IP address that will &quot;</span>
+                         <span class="s2">&quot;be provisioned by your Defense Shield. By default this is a private &quot;</span>
+                         <span class="s2">&quot;IP address&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;machines_line9_label&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;Use the Port Fowards in the Machines submenu page to quickly enable &quot;</span>
+                         <span class="s2">&quot;public access to a specific port of your virtual machine&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;machines_line10_label&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;Your virtual machine is charged once created per hour, for minimal &quot;</span>
+                         <span class="s2">&quot;an hour. You can delete anytime and the charging stops.&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;machines_subheader_label&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;Questions?&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;machines_line11_label&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;In case of any questions, go to our Documentation Center or contact &quot;</span>
+                         <span class="s2">&quot;Support&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">element_link</span><span class="p">(</span><span class="s2">&quot;machines_spport_link&quot;</span><span class="p">),</span>
+                        <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">wiki_gcb/support&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">environment_url</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;http:&#39;</span><span class="p">,</span> <span class="s1">&#39;https:&#39;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> ENDED&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_testID</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="QuickTutorialGuide.test04_defense_shield"><a class="viewcode-back" href="../../../../../../../../portal.html#functional_testing.Openvcloud.ovc_master_hosted.Portal.end_user.admin.home.test02_getting_started.QuickTutorialGuide.test04_defense_shield">[docs]</a>    <span class="k">def</span> <span class="nf">test04_defense_shield</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; PRTL-009</span>
+<span class="sd">        *Test case for check user potal defense shield tab.*</span>
+
+<span class="sd">        **Test Scenario:**</span>
+
+<span class="sd">        #. check all defense shield page elements, should succeed</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> STARTED&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_testID</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">click</span><span class="p">(</span><span class="s2">&quot;defense_shield_tab&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;defense_shield_header_label&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;Defense Shield&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;defense_shield_line1_label&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;Go to Defense Shield&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;defense_shield_line2_label&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;Login with user &#39;admin&#39; and your portal password&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;defense_shield_line3_label&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;Configure what you like, it`s private it`s yours&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;defense_shield_line4_label&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;Each Cloud Space has its own Defense Shield&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;defense_shield_line5_label&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;For more simple tasks, use the Port Fowards in the Machines submenu&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;defense_shield_subheader_label&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;Questions?&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;defense_shield_line6_label&quot;</span><span class="p">),</span>
+                         <span class="s2">&quot;In case of any questions, go to our Documentation Center or contact &quot;</span>
+                         <span class="s2">&quot;Support&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">element_link</span><span class="p">(</span><span class="s2">&quot;defense_shield_spport_link&quot;</span><span class="p">),</span>
+                        <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">wiki_gcb/support&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">environment_url</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;http:&#39;</span><span class="p">,</span> <span class="s1">&#39;https:&#39;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> ENDED&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_testID</span><span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, CodeScalers.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../../../../../../',
+            VERSION:'1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../../../../../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../../../../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../../../../../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../../../../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

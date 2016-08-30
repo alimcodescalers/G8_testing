@@ -1,0 +1,441 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>functional_testing.Openvcloud.ovc_master_hosted.OVC.a_basic.network_tests &mdash; OpenVCloud Testsuite 1.0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="OpenVCloud Testsuite 1.0 documentation" href="../../../../../../index.html"/>
+        <link rel="up" title="Module code" href="../../../../../index.html"/> 
+
+  
+  <script src="../../../../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../../../../index.html" class="icon icon-home"> OpenVCloud Testsuite
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../acl.html">Access Control List Basic Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../acl.html#access-control-list-extended-tests">Access Control List Extended Tests</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../ovc.html">OpenVcloud APIs Test Suite:</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../portal.html">End user Portal Test Suite</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../portal.html#admin-user-portal-test-suite">Admin user Portal Test Suite</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../../../../../index.html">OpenVCloud Testsuite</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../../../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../../../../../index.html">Module code</a> &raquo;</li>
+      
+    <li>functional_testing.Openvcloud.ovc_master_hosted.OVC.a_basic.network_tests</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for functional_testing.Openvcloud.ovc_master_hosted.OVC.a_basic.network_tests</h1><div class="highlight"><pre>
+<span></span><span class="c1"># coding=utf-8</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">random</span>
+
+<span class="kn">from</span> <span class="nn">JumpScale</span> <span class="k">import</span> <span class="n">j</span>
+<span class="kn">from</span> <span class="nn">functional_testing.Openvcloud.utils.utils</span> <span class="k">import</span> <span class="n">BasicACLTest</span>
+
+
+<div class="viewcode-block" id="NetworkBasicTests"><a class="viewcode-back" href="../../../../../../ovc.html#functional_testing.Openvcloud.ovc_master_hosted.OVC.a_basic.network_tests.NetworkBasicTests">[docs]</a><span class="k">class</span> <span class="nc">NetworkBasicTests</span><span class="p">(</span><span class="n">BasicACLTest</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">setUp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">NetworkBasicTests</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">setUp</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">acl_setup</span><span class="p">()</span>
+
+<div class="viewcode-block" id="NetworkBasicTests.test001_release_networkId"><a class="viewcode-back" href="../../../../../../ovc.html#functional_testing.Openvcloud.ovc_master_hosted.OVC.a_basic.network_tests.NetworkBasicTests.test001_release_networkId">[docs]</a>    <span class="k">def</span> <span class="nf">test001_release_networkId</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; OVC-010</span>
+<span class="sd">        * Test case for check that deleting Account with multiple Cloud Spaces will release all Cloud Spaces network IDs*</span>
+
+<span class="sd">        **Test Scenario:**</span>
+
+<span class="sd">        #. create three cloudspaces with user1 and get its network ID</span>
+<span class="sd">        #. Delete the first cloudspace</span>
+<span class="sd">        #. Check the release network ID after destroying the first cloudspace</span>
+<span class="sd">        #. Delete the account</span>
+<span class="sd">        #. Check the release network ID are in the free network IDs list</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> STARTED&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_testID</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;1- create three cloudspaces with user1 and get its network ID&#39;</span><span class="p">)</span>
+        <span class="n">cloud_space_networkId</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">ccl</span> <span class="o">=</span> <span class="n">j</span><span class="o">.</span><span class="n">clients</span><span class="o">.</span><span class="n">osis</span><span class="o">.</span><span class="n">getNamespace</span><span class="p">(</span><span class="s1">&#39;cloudbroker&#39;</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">csNumbers</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cloudspaceId</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cloudapi_cloudspace_create</span><span class="p">(</span><span class="n">account_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">account_id</span><span class="p">,</span>
+                                                                <span class="n">location</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="p">,</span>
+                                                                <span class="n">access</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">account_owner</span><span class="p">,</span>
+                                                                <span class="n">api</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">account_owner_api</span><span class="p">)</span>
+            <span class="n">cloud_space_networkId</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ccl</span><span class="o">.</span><span class="n">cloudspace</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cloudspaceId</span><span class="p">)</span><span class="o">.</span><span class="n">networkId</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;2- Delete the third cloudspace&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">account_owner_api</span><span class="o">.</span><span class="n">cloudapi</span><span class="o">.</span><span class="n">cloudspaces</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">cloudspaceId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cloudspaceId</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;3- Check the release network ID after destroying the third cloudspace&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">timeDelay</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">ccl</span><span class="o">.</span><span class="n">cloudspace</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cloudspaceId</span><span class="p">)</span><span class="o">.</span><span class="n">networkId</span><span class="p">:</span>
+                <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">break</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="n">ccl</span><span class="o">.</span><span class="n">cloudspace</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cloudspaceId</span><span class="p">)</span><span class="o">.</span><span class="n">networkId</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;4- delete account: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">account_id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">cloudbroker</span><span class="o">.</span><span class="n">account</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">accountId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">account_id</span><span class="p">,</span> <span class="n">reason</span><span class="o">=</span><span class="s1">&#39;testing&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;5- Check the release network ID are in the free network IDs list&#39;</span><span class="p">)</span>
+        <span class="n">lcl</span> <span class="o">=</span> <span class="n">j</span><span class="o">.</span><span class="n">clients</span><span class="o">.</span><span class="n">osis</span><span class="o">.</span><span class="n">getNamespace</span><span class="p">(</span><span class="s1">&#39;libcloud&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">csNumbers</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">timeDelay</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">):</span>
+                <span class="n">released_network_Id</span> <span class="o">=</span> <span class="n">lcl</span><span class="o">.</span><span class="n">libvirtdomain</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;networkids_</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">j</span><span class="o">.</span><span class="n">application</span><span class="o">.</span><span class="n">whoAmI</span><span class="o">.</span><span class="n">gid</span><span class="p">)</span>
+                <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">cloud_space_networkId</span><span class="p">[</span><span class="n">csNumbers</span><span class="p">])</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">released_network_Id</span><span class="p">:</span>
+                    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">break</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">cloud_space_networkId</span><span class="p">[</span><span class="n">csNumbers</span><span class="p">])</span> <span class="ow">in</span> <span class="n">released_network_Id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> ENDED&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_testID</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="NetworkBasicTests.test002_clean_ovs_bridge"><a class="viewcode-back" href="../../../../../../ovc.html#functional_testing.Openvcloud.ovc_master_hosted.OVC.a_basic.network_tests.NetworkBasicTests.test002_clean_ovs_bridge">[docs]</a>    <span class="k">def</span> <span class="nf">test002_clean_ovs_bridge</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39; OVC-011</span>
+<span class="sd">         * Test case verify the cleaning OVS bridges when deleting a cloudspace operation</span>
+
+<span class="sd">        **Test Scenario:**</span>
+
+<span class="sd">        #. Create a new cloudspace and deploy it</span>
+<span class="sd">        #. Get the cloudspace Network ID and convert it to hex</span>
+<span class="sd">        #. Make sure that the bridge is created</span>
+<span class="sd">        #. Delete this cloudspace</span>
+<span class="sd">        #. make sure that the bridge is released</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> STARTED&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_testID</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;1- Create a new cloudspace and deployed it&#39;</span><span class="p">)</span>
+        <span class="n">cloudspace_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cloudapi_cloudspace_create</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">account_id</span><span class="p">,</span>
+                                                <span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="p">,</span>
+                                                <span class="bp">self</span><span class="o">.</span><span class="n">account_owner</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">cloudbroker</span><span class="o">.</span><span class="n">cloudspace</span><span class="o">.</span><span class="n">deployVFW</span><span class="p">(</span><span class="n">cloudspace_id</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;2- Get the cloudspace network ID and convert it to hex&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hexNetworkID</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%04x</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_cloudspace_network_id</span><span class="p">(</span><span class="n">cloudspace_id</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;- Get the cloudspace physical node ID&#39;</span><span class="p">)</span>
+        <span class="n">nodID</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_physical_node_id</span><span class="p">(</span><span class="n">cloudspace_id</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;3- Make sure that the bridge is created&#39;</span><span class="p">)</span>
+        <span class="n">command</span> <span class="o">=</span> <span class="s1">&#39;ls /sys/class/net&#39;</span>  <span class="c1"># All created bridges in this node</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">execute_command_on_physical_node</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="n">nodID</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="s1">&#39;space_&#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">hexNetworkID</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;4- Delete this cloudspace&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">account_owner_api</span><span class="o">.</span><span class="n">cloudapi</span><span class="o">.</span><span class="n">cloudspaces</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">cloudspaceId</span><span class="o">=</span><span class="n">cloudspace_id</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;5- Make sure that the bridge is deleted&#39;</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">execute_command_on_physical_node</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="n">nodID</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertNotIn</span><span class="p">(</span><span class="s1">&#39;space_&#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">hexNetworkID</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> ENDED&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_testID</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="NetworkBasicTests.test003_port_forwarding_creation"><a class="viewcode-back" href="../../../../../../ovc.html#functional_testing.Openvcloud.ovc_master_hosted.OVC.a_basic.network_tests.NetworkBasicTests.test003_port_forwarding_creation">[docs]</a>    <span class="k">def</span> <span class="nf">test003_port_forwarding_creation</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;OVC- 007</span>
+<span class="sd">        * Test case verify the adding port forward to a machine</span>
+
+<span class="sd">        #. Create a cloudspace and get its public ip</span>
+<span class="sd">        #. Create a virtual machine</span>
+<span class="sd">        #. Check that the cloudspace has a public IP</span>
+<span class="sd">        #. Create a ssh / 22 port forwarding</span>
+<span class="sd">        #. Check the port forwarding list is updated</span>
+<span class="sd">        #. Check connection to the VM over this port</span>
+<span class="sd">        #. Create a ftp / 21 port forwarding</span>
+<span class="sd">        #. Check the port forwarding list is updated</span>
+<span class="sd">        #. Check connection to the VM over this port</span>
+<span class="sd">        #. Create a HTTP / 80 port forwarding</span>
+<span class="sd">        #. Check the port forwarding list is updated</span>
+<span class="sd">        #. Check connection to the VM over this port</span>
+<span class="sd">        #. Create HTTPS / 443 port forwarding</span>
+<span class="sd">        #. Check the port forwarding list is updated</span>
+<span class="sd">        #. Check connection to the VM over this port</span>
+<span class="sd">        #. port forwarding RDP / 3389 port forwarding</span>
+<span class="sd">        #. Check the port forwarding list is updated</span>
+<span class="sd">        #. Check connection to the VM over this port</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> STARTED&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_testID</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;1- Create a new cloudspace&#39;</span><span class="p">)</span>
+        <span class="n">cloudspaceId</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cloudapi_cloudspace_create</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">account_id</span><span class="p">,</span>
+                                                       <span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="p">,</span>
+                                                       <span class="bp">self</span><span class="o">.</span><span class="n">account_owner</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;- deploy cloudspace, should succeed&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">cloudapi</span><span class="o">.</span><span class="n">cloudspaces</span><span class="o">.</span><span class="n">deploy</span><span class="p">(</span><span class="n">cloudspaceId</span><span class="o">=</span><span class="n">cloudspaceId</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wait_for_status</span><span class="p">(</span><span class="s1">&#39;DEPLOYED&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">cloudapi</span><span class="o">.</span><span class="n">cloudspaces</span><span class="o">.</span><span class="n">get</span><span class="p">,</span>
+                         <span class="n">cloudspaceId</span><span class="o">=</span><span class="n">cloudspaceId</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;Check the cloudspace has a public ip&#39;</span><span class="p">)</span>
+        <span class="n">cloudspace_puplicIp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">cloudapi</span><span class="o">.</span><span class="n">cloudspaces</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">cloudspaceId</span><span class="p">)[</span><span class="s1">&#39;publicipaddress&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertNotEqual</span><span class="p">(</span><span class="n">cloudspace_puplicIp</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+
+        <span class="n">images</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">cloudapi</span><span class="o">.</span><span class="n">images</span><span class="o">.</span><span class="n">list</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">image</span> <span class="ow">in</span> <span class="n">images</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;- Create a new machine&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="s1">&#39;Windows&#39;</span> <span class="ow">in</span> <span class="n">image</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]:</span>
+                <span class="n">machineId</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cloudapi_create_machine</span><span class="p">(</span><span class="n">cloudspaceId</span><span class="p">,</span><span class="n">image_id</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">image</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]),</span><span class="n">disksize</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">machineId</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cloudapi_create_machine</span><span class="p">(</span><span class="n">cloudspaceId</span><span class="p">,</span><span class="n">image_id</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">image</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]))</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;- Make sure that the machine got an IP&#39;</span><span class="p">)</span>
+            <span class="n">machineIp</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">300</span><span class="p">):</span>
+                <span class="n">machineIp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">cloudapi</span><span class="o">.</span><span class="n">machines</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">machineId</span><span class="p">)[</span><span class="s1">&#39;interfaces&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;ipAddress&#39;</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">machineIp</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+                    <span class="k">break</span>
+                <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertNotEqual</span><span class="p">(</span><span class="n">machineIp</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;Create a port forwarding which is covering all combinations&#39;</span><span class="p">)</span>
+            <span class="n">localPorts</span> <span class="o">=</span> <span class="p">[</span><span class="mi">21</span><span class="p">,</span> <span class="mi">22</span><span class="p">,</span> <span class="mi">80</span><span class="p">,</span> <span class="mi">442</span><span class="p">,</span> <span class="mi">21</span><span class="p">,</span> <span class="mi">3389</span><span class="p">]</span>
+            <span class="n">publicPort</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">4000</span><span class="p">,</span><span class="mi">5000</span><span class="p">)</span>
+            <span class="n">protocolItems</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;tcp&#39;</span><span class="p">,</span> <span class="s1">&#39;udp&#39;</span><span class="p">]</span>
+            <span class="n">lastAddedIndex</span> <span class="o">=</span> <span class="mi">0</span>
+
+            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">60</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">proctocl</span> <span class="ow">in</span> <span class="n">protocolItems</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">localPort</span> <span class="ow">in</span> <span class="n">localPorts</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s2">&quot;Create portforward for port </span><span class="si">%s</span><span class="s2"> to public port </span><span class="si">%s</span><span class="s2"> &quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">localPort</span><span class="p">,</span><span class="n">publicPort</span><span class="p">))</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">cloudapi</span><span class="o">.</span><span class="n">portforwarding</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">cloudspaceId</span><span class="o">=</span><span class="n">cloudspaceId</span><span class="p">,</span> <span class="n">publicIp</span><span class="o">=</span><span class="n">cloudspace_puplicIp</span><span class="p">,</span>
+                                                            <span class="n">publicPort</span><span class="o">=</span><span class="n">publicPort</span><span class="p">,</span> <span class="n">machineId</span><span class="o">=</span><span class="n">machineId</span><span class="p">,</span>
+                                                            <span class="n">localPort</span><span class="o">=</span><span class="n">localPort</span><span class="p">,</span> <span class="n">protocol</span><span class="o">=</span><span class="n">proctocl</span><span class="p">)</span>
+
+                    <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">cloudapi</span><span class="o">.</span><span class="n">portforwarding</span><span class="o">.</span><span class="n">list</span><span class="p">(</span><span class="n">cloudspaceId</span><span class="o">=</span><span class="n">cloudspaceId</span><span class="p">,</span>
+                                                                           <span class="n">machineId</span><span class="o">=</span><span class="n">machineId</span><span class="p">)[</span><span class="n">lastAddedIndex</span><span class="p">][</span>
+                                         <span class="s1">&#39;localPort&#39;</span><span class="p">],</span>
+                                     <span class="nb">str</span><span class="p">(</span><span class="n">localPort</span><span class="p">))</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">cloudapi</span><span class="o">.</span><span class="n">portforwarding</span><span class="o">.</span><span class="n">list</span><span class="p">(</span><span class="n">cloudspaceId</span><span class="o">=</span><span class="n">cloudspaceId</span><span class="p">,</span>
+                                                                           <span class="n">machineId</span><span class="o">=</span><span class="n">machineId</span><span class="p">)[</span><span class="n">lastAddedIndex</span><span class="p">][</span>
+                                         <span class="s1">&#39;publicPort&#39;</span><span class="p">],</span>
+                                     <span class="nb">str</span><span class="p">(</span><span class="n">publicPort</span><span class="p">))</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">cloudapi</span><span class="o">.</span><span class="n">portforwarding</span><span class="o">.</span><span class="n">list</span><span class="p">(</span><span class="n">cloudspaceId</span><span class="o">=</span><span class="n">cloudspaceId</span><span class="p">,</span>
+                                                                           <span class="n">machineId</span><span class="o">=</span><span class="n">machineId</span><span class="p">)[</span><span class="n">lastAddedIndex</span><span class="p">][</span>
+                                         <span class="s1">&#39;protocol&#39;</span><span class="p">],</span>
+                                     <span class="n">proctocl</span><span class="p">)</span>
+
+                    <span class="n">publicPort</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="n">lastAddedIndex</span> <span class="o">+=</span> <span class="mi">1</span>
+
+                    <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;test ssh connection&#39;</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">localPort</span> <span class="o">==</span> <span class="mi">22</span><span class="p">:</span>
+                        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">60</span><span class="p">)</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;Get the virtual machine user name and password&#39;</span><span class="p">)</span>
+                        <span class="n">username</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">cloudapi</span><span class="o">.</span><span class="n">machines</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">machineId</span><span class="p">)[</span><span class="s1">&#39;accounts&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;login&#39;</span><span class="p">]</span>
+                        <span class="n">password</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">cloudapi</span><span class="o">.</span><span class="n">machines</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">machineId</span><span class="p">)[</span><span class="s1">&#39;accounts&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;password&#39;</span><span class="p">]</span>
+                        <span class="n">command</span> <span class="o">=</span> <span class="s2">&quot;sshpass -p &quot;</span> <span class="o">+</span> <span class="n">password</span> <span class="o">+</span> <span class="s2">&quot; ssh -p &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">publicPort</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="n">username</span> <span class="o">+</span> <span class="s2">&quot;@&quot;</span> <span class="o">+</span> <span class="n">cloudspace_puplicIp</span> <span class="o">+</span> <span class="s1">&#39;; uname -a; &#39;</span>
+                        <span class="n">acl</span> <span class="o">=</span> <span class="n">j</span><span class="o">.</span><span class="n">clients</span><span class="o">.</span><span class="n">agentcontroller</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+                        <span class="n">output</span> <span class="o">=</span> <span class="n">acl</span><span class="o">.</span><span class="n">executeJumpscript</span><span class="p">(</span><span class="s1">&#39;jumpscale&#39;</span><span class="p">,</span> <span class="s1">&#39;exec&#39;</span><span class="p">,</span> <span class="n">nid</span><span class="o">=</span><span class="mi">3</span> <span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;cmd&#39;</span><span class="p">:</span> <span class="n">command</span><span class="p">})</span>
+                        <span class="k">if</span> <span class="n">output</span><span class="p">[</span><span class="s1">&#39;state&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;OK&#39;</span><span class="p">:</span>
+                           <span class="k">if</span> <span class="s1">&#39;Linux&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">output</span><span class="p">[</span><span class="s1">&#39;result&#39;</span><span class="p">][</span><span class="mi">1</span><span class="p">]:</span>
+                                <span class="k">raise</span> <span class="ne">NameError</span><span class="p">(</span><span class="s2">&quot;This command:&quot;</span><span class="o">+</span><span class="n">command</span><span class="o">+</span><span class="s2">&quot;is wrong&quot;</span><span class="p">)</span>
+            
+        <span class="bp">self</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">cloudapi</span><span class="o">.</span><span class="n">machines</span><span class="o">.</span><span class="n">stop</span><span class="p">(</span><span class="n">machineId</span><span class="o">=</span><span class="n">machineId</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">cloudapi</span><span class="o">.</span><span class="n">machines</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">machineId</span><span class="o">=</span><span class="n">machineId</span><span class="p">)[</span><span class="s1">&#39;status&#39;</span><span class="p">],</span>
+                         <span class="s1">&#39;HALTED&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> ENDED&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_testID</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="NetworkBasicTests.test004_move_virtual_firewall"><a class="viewcode-back" href="../../../../../../ovc.html#functional_testing.Openvcloud.ovc_master_hosted.OVC.a_basic.network_tests.NetworkBasicTests.test004_move_virtual_firewall">[docs]</a>    <span class="k">def</span> <span class="nf">test004_move_virtual_firewall</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; OVC-014</span>
+<span class="sd">        * Test case for moving virtual firewall form one node to another</span>
+
+<span class="sd">        **Test Scenario:**</span>
+
+<span class="sd">        #. create account and cloudspace</span>
+<span class="sd">        #. deploy the created cloudspace</span>
+<span class="sd">        #. get nodeId of the cloudspace virtual firewall</span>
+<span class="sd">        #. get another nodeId to move the virtual firewall to</span>
+<span class="sd">        #. move virtual firewall to another node, should succeed</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> STARTED&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_testID</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;1- deploy the created cloudspace&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">cloudbroker</span><span class="o">.</span><span class="n">cloudspace</span><span class="o">.</span><span class="n">deployVFW</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cloudspace_id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wait_for_status</span><span class="p">(</span><span class="s1">&#39;DEPLOYED&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">account_owner_api</span><span class="o">.</span><span class="n">cloudapi</span><span class="o">.</span><span class="n">cloudspaces</span><span class="o">.</span><span class="n">get</span><span class="p">,</span>
+                             <span class="n">cloudspaceId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cloudspace_id</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;2- get nodeId of the cloudspace virtual firewall&#39;</span><span class="p">)</span>
+        <span class="n">nodeId</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_physical_node_id</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cloudspace_id</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;3- get another nodeId to move the virtual firewall to&#39;</span><span class="p">)</span>
+        <span class="n">other_nodeId</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_nodeId_to_move_VFW_to</span><span class="p">(</span><span class="n">nodeId</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertNotEqual</span><span class="p">(</span><span class="n">other_nodeId</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">msg</span><span class="o">=</span><span class="s2">&quot;No active node to move the VFW to&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;4- move virtual firewall to another node&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">cloudbroker</span><span class="o">.</span><span class="n">cloudspace</span><span class="o">.</span><span class="n">moveVirtualFirewallToFirewallNode</span><span class="p">(</span><span class="n">cloudspaceId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cloudspace_id</span><span class="p">,</span>
+                                                                          <span class="n">targetNid</span><span class="o">=</span><span class="n">other_nodeId</span><span class="p">)</span>
+        <span class="n">new_nodeId</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_physical_node_id</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cloudspace_id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">other_nodeId</span><span class="p">,</span> <span class="n">new_nodeId</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">wait_for_status</span><span class="p">(</span><span class="s1">&#39;DEPLOYED&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">account_owner_api</span><span class="o">.</span><span class="n">cloudapi</span><span class="o">.</span><span class="n">cloudspaces</span><span class="o">.</span><span class="n">get</span><span class="p">,</span>
+                             <span class="n">cloudspaceId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cloudspace_id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> ENDED&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_testID</span><span class="p">)</span>        </div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, CodeScalers.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../../../../',
+            VERSION:'1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../../../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../../../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

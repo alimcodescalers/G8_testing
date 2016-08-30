@@ -1,4 +1,4 @@
-from Openvcloud.utils.utils import BasicACLTest
+from functional_testing.Openvcloud.utils.utils import BasicACLTest
 from JumpScale.portal.portal.PortalClient2 import ApiError
 from JumpScale.baselib.http_client.HttpClient import HTTPError
 
@@ -15,6 +15,7 @@ class ExtendedTests(BasicACLTest):
         *Test case for testing basic resource limits on account and cloudspace limits.*
 
         **Test Scenario:**
+
         #. create account with passing negative values in the account's limitation, should fail
         #. create account with certain limits, should succeed
         #. create cloudspace with passing negative values in the cloudspace's limitation, should fail
@@ -23,8 +24,7 @@ class ExtendedTests(BasicACLTest):
         #. create cloudspace that exceeds account's max_vdisks, should fail
         #. create cloudspace that exceeds account's max_IPs, should fail
         #. create cloudspace without exceeding account limits, should succeed
-        #. Try to create another cloudspace without exceeding account limits,
-        should fail as account\'s maxIPs=1
+        #. Try to create another cloudspace without exceeding account limits, should fail as account\'s maxIPs=1
         #. create VM with exceeding cloudspace\'s cores number, should fail
         #. create VM with exceeding cloudspace\'s Memory, should fail
         #. create VM with exceeding cloudspace\'s disks capacity, should fail
@@ -136,7 +136,6 @@ class ExtendedTests(BasicACLTest):
 
 
     def test002_resource_limits_on_account_level(self):
-
         """ OVC-017
         *Test case for testing basic resource limits on account and cloudspace limits.*
 
@@ -146,14 +145,12 @@ class ExtendedTests(BasicACLTest):
         #. create 1st cloudspace that doesn't exceed account limits
         #. create 2nd cloudspace that doesn't exceed account limits
         #. create VM on the 1st cloudspace without exceeding account limits , should succeed
-        #. create VM on the 2nd cloudspace, should fail
-        as total VMs Memory and cores exceeds that of the account
-        #. create VM on the 2nd cloudspace, should fail
-        as total VMs disks capacity exceeds that of the account
+        #. create VM on the 2nd cloudspace, should fail (as total VMs Memory and cores exceeds that of the account)
+        #. create VM on the 2nd cloudspace, should fail (as total VMs disks capacity exceeds that of the account)
         #. create 2nd VM  on the 2nd cloudspace without exceeding account total limits, should succeed
         #. Add publicip to the 2nd VM, should fail as acoount total IPs=2
-        """
 
+        """
         self.lg('- create account with certain limits, should succeed')
         self.account_id = self.cloudbroker_account_create(self.account_owner, self.account_owner, self.email,
                                                           self.location, maxMemoryCapacity=12,
@@ -211,7 +208,6 @@ class ExtendedTests(BasicACLTest):
 
 
     def test003_resource_limits_on_cloudspace_level(self):
-
         """ OVC-018
         *Test case for testing basic resource limits on account and cloudspace limits.*
 
@@ -220,14 +216,12 @@ class ExtendedTests(BasicACLTest):
         #. create account with certain limits, should succeed
         #. create cloudspace that doesn't exceed account limits
         #. create 1st VM on the created cloudspace without exceeding its limits, should succeed
-        #. create another VM on the created cloudspace, should fail
-        as total VMs Memory and cores exceeds that of the cloudspace
-        #. create another VM on the created cloudspace, should fail
-        as total VMs disks capacity exceeds that of the cloudspace
+        #. create another VM on the created cloudspace, should fail (as total VMs Memory and cores exceeds that of the cloudspace)
+        #. create another VM on the created cloudspace, should fail (as total VMs disks capacity exceeds that of the cloudspace)
         #. create 2nd VM on the created cloudspace, should succeed
         #. Add publicip to the 2nd VM, should fail as total cloudspace IPs=1
-        """
 
+        """
         self.lg('- create account with certain limits, should succeed')
         self.account_id = self.cloudbroker_account_create(self.account_owner, self.account_owner, self.email,
                                                           self.location, maxMemoryCapacity=200,
