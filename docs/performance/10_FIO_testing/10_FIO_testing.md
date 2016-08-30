@@ -38,7 +38,7 @@ jspython scripts/tear_down.py --clean
     
     3- jspython scripts/demo_run_fio.py 10 (10 = number of vms need to run FIO on (between (1-25)) 
     
-- You can rerun demo_run_fio.py as much as needed for different parameters
+- You can rerun demo_run_fio.py as much as needed against different parameters
 - After finishing the test, make sure that the test is teared down 
   ```
  cd G8_testing/Environment_testing/performance_testing 
