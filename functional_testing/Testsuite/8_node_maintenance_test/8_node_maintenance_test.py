@@ -21,7 +21,7 @@ def main():
     scl = j.clients.osis.getNamespace('system')
 
     sys.path.append(os.getcwd())
-    from utils import utils
+    from performance_testing.utils import utils
     USERNAME = 'nodemaintenanceuser'
     email = "%s@test.com" % str(uuid.uuid4())[0:8]
     utils.create_user(USERNAME, email,  pcl, scl)
@@ -43,9 +43,9 @@ def main():
 
     machine = pcl.actors.cloudapi.machines.get(machineId)
     account = machine['accounts'][0]
-    j.do.execute('sshpass -p%s scp -o \'StrictHostKeyChecking=no\' -P %s Testsuite/8_node_maintenance_test/machine_script.py %s@%s:'
+    j.do.execute('sshpass -p%s scp -o \'StrictHostKeyChecking=no\' -P %s functional_testing/Testsuite/8_node_maintenance_test/machine_script.py %s@%s:'
                          %(account['password'], cloudspace_publicport, account['login'], cloudspace_publicip))
-    j.do.execute('sshpass -p%s scp -o \'StrictHostKeyChecking=no\' -P %s Testsuite/6_vm_live_migration_test/check_script.py %s@%s:'
+    j.do.execute('sshpass -p%s scp -o \'StrictHostKeyChecking=no\' -P %s functional_testing/Testsuite/6_vm_live_migration_test/check_script.py %s@%s:'
                          %(account['password'], cloudspace_publicport, account['login'], cloudspace_publicip))
 
 
@@ -98,7 +98,7 @@ if __name__ == "__main__":
     try:
         [test_result, stackid, gid] = main()
     finally:
-        j.do.execute('jspython scripts/tear_down.py nodemaintenanceuser')
+        j.do.execute('jspython performance_testing/scripts/tear_down.py nodemaintenanceuser')
         try:
             pcl = j.clients.portal.getByInstance('main')
             pcl.actors.cloudbroker.computenode.enable(id=stackid, gid=gid, message='testing')
