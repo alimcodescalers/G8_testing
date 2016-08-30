@@ -23,14 +23,14 @@ When above is OK then the test is PASS
 When one of the above actions failed then it's a FAIL
 
 ### Running the test
-- Go to the `functional_testing` directory:
+- Go to the `G8_testing` directory:
   ```bash
-  cd G8_testing/functional_testing
+  cd G8_testing/
   ```
 
 - Run the rest:  
   ```
-  jspython Testsuite/6_vm_live_migration_test/6_vm_live_migration_test.py 
+  jspython functional_testing/Testsuite/6_vm_live_migration_test/6_vm_live_migration_test.py 
   ```
 
 - After the test has been completed, the test will clean itself.
