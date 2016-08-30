@@ -32,12 +32,12 @@ FAIL: If there is too much latency, if virtual machines fails to send or receive
 ### Running the test
 - Go to the `functional_testing` directory:
   ```bash
-  cd G8_testing/functional_testing
+  cd G8_testing/
   ```
 
 - From inside that directory:
   ```bash
-  jspython Testsuite/1_Network_config_test/1_Network_conf_test.py 
+  jspython functional_testing/Testsuite/1_Network_config_test/1_Network_conf_test.py 
   ```
 
 - After the test has completed, the test will clean itself.
