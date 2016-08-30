@@ -13,8 +13,8 @@ Following test suites are available:
 - Portal
 
 In order to install them you have two options:
-- Install and run them directly on the master cloud spaces, using the `setup_run_tests_local.sh` script, as documented [here]()
-- Install and run them from a remote machine, using the `run_tests_remote.sh` script, as documented [here]()
+- Install and run them directly on the master cloud spaces, using the `setup_run_tests_local.sh` script, as documented [here](local_setup.md)
+- Install and run them from a remote machine, using the `run_tests_remote.sh` script, as documented [here](remote_setup.md)
 
 
 remote: used to run the testsuite from ur local laptop to any remote env
