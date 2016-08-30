@@ -57,8 +57,9 @@ Bdisksize: 100
 - After the test has been completed, the test will clean itself.
 
 ### Result sample
-- Results can be found in /Unixbench_results/results.table
-- This sample is only for 2 iterations:
+- Results can be found in /G8_testing/tests_results/Unixbench_results/(date)_(cpu_name).(env_name)_testresults(run_number)/
+vim (date)_(cpu_name).(env_name)_testresults(run_number).csv
+
 
 ![unixbench](https://cloud.githubusercontent.com/assets/15011431/14142022/b3a054de-f68b-11e5-8996-259aca0fba93.png)
 
