@@ -27,6 +27,7 @@ jspython scripts/tear_down.py --clean
 - This test is divided into 2 scripts :
 
   1- demo_create_vms.py: create all vms on the environment
+  
   2- demo_run_fio.py: runs FIO tests on all vms in parallel
 
     1- cd G8_testing/Environment_testing/performance_testing/
