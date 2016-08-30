@@ -31,7 +31,28 @@
   ```
   vim Testsuite/2_Unixbench2_test/parameters.cfg 
   ```
+  - Following parameters can be configured:
+```  
+# Results Directory : write absolute directory
+Res_dir: /root/org_quality/Environment_testing/tests_results/2_unixbench2
 
+#Number of VMS to run unixbench on
+VMs:2
+
+#Numbers of unixbench_running_times on the created vms
+unixbench_run_times:1
+
+# Time difference (in secs) between starting running unixbench on VMs
+vms_time_diff: 1
+
+# please choose between these values [RAM, vcpu] = [512,1] or [1024,1] or [4096,2] or [2048,2] or [8192,4] or [16384,8]
+# RAM specifications
+memory: 8192
+#vcpu cores
+cpus: 4
+#Boot Disk size(in GB), please choose between these values [10, 20, 50, 100, 250, 500, 1000, 2000]
+Bdisksize: 100
+```
 - From inside that directory:
   ```
   jspython Testsuite/2_Unixbench2_test/2_unixbench2.0_test.py 
