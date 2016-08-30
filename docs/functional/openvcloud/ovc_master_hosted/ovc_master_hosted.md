@@ -1,1 +1,34 @@
 ## Functional tests hosted on ovc_master
+
+Two types of automated functional tests are available for OpenvCloud:
+- Tests that run on **ovc_master**, discussed below
+- Tests that run on a physical **compute node**, discussed [here](../compute_node_hosted/compute_node_hosted.md)
+
+> Remember: **ovc_master** is the virtual machine in the master cloud space where Cloud Broker Portal is running, and all other OpenvCloud portals
+
+
+Following test suites are available:
+- Access Control List API 
+- OpenvCloud API
+- End User Portal
+
+All test suites are auto-documented with Sphinx. In order to access the documentation, you need to do the following:
+- Pull the G8_test repository:
+  ```
+  git clone https://github.com/0-complexity/G8_testing.git
+  ```
+- Run the build script:
+  ```
+  bash G8_testing/Openvcloud/tools/build_docs.sh
+  ```
+- Open the generated `index.html` in your browser of choice:
+  ```
+  firefox /auto_generated_docs/_build/html/index.html
+  ````
+
+![](documentation.png)
+
+
+In order to install them you have two options:
+- Install and run them directly on the master cloud spaces, using the `setup_run_tests_local.sh` script, as documented [here](local_setup.md)
+- Install and run them from a remote machine, using the `run_tests_remote.sh` script, as documented [here](remote_setup.md)
