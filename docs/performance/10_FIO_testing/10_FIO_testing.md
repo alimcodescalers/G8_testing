@@ -111,7 +111,7 @@ This script will actually do the following:
 
 Next start the test using `demo_run_fio.py`, here with the parameter 10 to indicate that you want to use 10 virtual machines (needs to be between 1 and 25):
 ```
-jspython scripts/demo_run_fio.py 10 (10 = number of vms need to run FIO on .. (bet (1-25))  
+jspython scripts/demo_run_fio.py 10
 ```
 
 ### Check the test results
