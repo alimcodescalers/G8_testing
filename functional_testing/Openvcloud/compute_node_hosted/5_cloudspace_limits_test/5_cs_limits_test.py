@@ -15,7 +15,7 @@ def main():
     if j.do.exists('/root/.ssh/known_hosts'):
         j.do.execute('rm /root/.ssh/known_hosts')
     sys.path.append(os.getcwd())
-    from utils import utils
+    from performance_testing.utils import utils
 
     ccl = j.clients.osis.getNamespace('cloudbroker')
     pcl = j.clients.portal.getByInstance('main')
@@ -57,7 +57,7 @@ if __name__ == "__main__":
         titles = ['VM_CPU\'s', 'VM_Memory(MB)', 'HDD(GB)', 'Total cloudspaces created']
         utils.collect_results(titles, results, '/CS_limits_results')
     finally:
-        j.do.execute('jspython scripts/tear_down.py cslimitsuser')
+        j.do.execute('jspython performance_testing/scripts/tear_down.py cslimitsuser')
 
 
 

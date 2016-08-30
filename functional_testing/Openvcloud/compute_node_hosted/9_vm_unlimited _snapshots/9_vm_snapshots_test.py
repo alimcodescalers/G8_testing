@@ -16,7 +16,7 @@ def main(snapshots_number):
     scl = j.clients.osis.getNamespace('system')
 
     sys.path.append(os.getcwd())
-    from utils import utils
+    from performance_testing.utils import utils
     USERNAME = 'vmsnapshotsuser'
     email = "%s@test.com" % str(uuid.uuid4())[0:8]
     utils.create_user(USERNAME, email,  pcl, scl)
@@ -75,7 +75,7 @@ if __name__ == "__main__":
         snapshots_number = int(sys.argv[1])
         count = main(snapshots_number)
     finally:
-        j.do.execute('jspython scripts/tear_down.py vmsnapshotsuser')
+        j.do.execute('jspython performance_testing/scripts/tear_down.py vmsnapshotsuser')
         compare = str(snapshots_number-1)
         try:
             if count == compare:

@@ -12,7 +12,7 @@ pcl = j.clients.portal.getByInstance('main')
 scl = j.clients.osis.getNamespace('system')
 
 sys.path.append(os.getcwd())
-from utils import utils
+from performance_testing.utils import utils
 USERNAME = 'networktestuser'
 email = "%s@test.com" % str(uuid.uuid4())[0:8]
 utils.create_user(USERNAME, email,  pcl, scl)
@@ -49,7 +49,7 @@ for vm in machines:
     account = machine['accounts'][0]
     j.do.execute('sshpass -p%s scp -o \'StrictHostKeyChecking=no\' -P %s noerror.txt  %s@%s:'
                  %(account['password'], cloudspace_publicport, account['login'], cloudspace_publicIP))
-    j.do.execute('sshpass -p%s scp -o \'StrictHostKeyChecking=no\' -P %s Testsuite/1_Network_config_test/machine_script.py  %s@%s:'
+    j.do.execute('sshpass -p%s scp -o \'StrictHostKeyChecking=no\' -P %s functional_testing/Testsuite/1_Network_config_test/machine_script.py  %s@%s:'
                  %(account['password'], cloudspace_publicport, account['login'], cloudspace_publicIP))
     connection = j.remote.cuisine.connect(cloudspace_publicIP, cloudspace_publicport, account['password'], account['login'])
     connection.user(account['login'])
@@ -111,7 +111,7 @@ for vm in machines:
     cloudspace_publicport = vm[1]
     j.do.execute('ssh-keygen -f "/root/.ssh/known_hosts" -R [%s]:%s'%(cloudspace_publicIP, cloudspace_publicport))
 j.do.execute('rm final.txt')
-j.do.execute('jspython scripts/tear_down.py networktestuser')
+j.do.execute('jspython performance_testing/scripts/tear_down.py networktestuser')
 
 
 

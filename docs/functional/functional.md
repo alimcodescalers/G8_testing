@@ -4,27 +4,42 @@ This section describes the tests to be executed in order validate the basic func
 
 Functional testing requires that the system was installed properly, as documented in the [OpenvCloud Operator's Guide](https://www.gitbook.com/book/gig/ovcdoc_public/details), more specifically in the section [Installation of an OpenvCloud Environment](https://gig.gitbooks.io/ovcdoc_public/content/Installation/Installation.html).
 
+Two types of automated functional tests are available:
+- Tests that run on ovc_master, that is the virtual machine in the master cloud space where Cloud Broker Portal is running, and all other OpenvCloud portals
+- Tests that run on a physical compute node 
 
-### Automated testing
+### Functional tests hosted on ovc_master
 
 Following test suites are available:
-- ACL
-- OVC
-- Portal
+- Access Control List API 
+- OpenvCloud API
+- End User Portal
+
+All test suites are auto-documented with Sphinx. In order to access the documentation, you need to do the following:
+- Pull the G8_test repository:
+  ```
+  git clone https://github.com/0-complexity/G8_testing.git
+  ```
+- Run the build script:
+  ```
+  bash G8_testing/Openvcloud/tools/build_docs.sh
+  ```
+- Open the generated `index.html` in your browser of choice:
+  ```
+  firefox /auto_generated_docs/_build/html/index.html
+  ````
+
+![](documentation.png)
+
 
 In order to install them you have two options:
 - Install and run them directly on the master cloud spaces, using the `setup_run_tests_local.sh` script, as documented [here](local_setup.md)
 - Install and run them from a remote machine, using the `run_tests_remote.sh` script, as documented [here](remote_setup.md)
 
 
-remote: used to run the testsuite from ur local laptop to any remote env
-local: u must be logged into the master node of the env and call the tests from there
+### Functional tests hosted on a compute node
 
-
-
-
-
-#### Other functional tests
+The differences with these tests is that they have been designed to run on a physical compute node.
 
 Following tests require access to the physical compute nodes:
 

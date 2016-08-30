@@ -36,5 +36,7 @@ In the above example:
 - **Test case**: "test003_account_get_with_readonly_user"
 
 What actually will happen:
-- It will connect to the master cloud space where it will clone the G8_testing repository 
-- It will call the `setup_run_tests_local.sh` which is discussed [here](local_setup.md)
+- It will connect to the master cloud space where it will clone the G8_testing repository
+  - As the script will lookup to SSH key from the environment repository, make sure that you have access to it
+- It will call the `setup_run_tests_local.sh` which is discussed [here](local_setup.md) passing the test case parameters
+- The result will be fed back in the file `testresults.xml` and all collected log information in the `logs/` directory

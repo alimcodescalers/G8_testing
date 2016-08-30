@@ -9,7 +9,7 @@ import datetime
 
 def main():
     config = ConfigParser.ConfigParser()
-    config.read("Testsuite/3_Env_Limit_test/parameters.cfg")
+    config.read("functional_testing/Testsuite/3_Env_Limit_test/parameters.cfg")
     cpu = int(config.get("parameters", "cpu"))
     memory = int(config.get("parameters", "memory"))
     Bdisksize = int(config.get("parameters", "Bdisksize"))
@@ -80,14 +80,14 @@ def main():
 
 if __name__ == "__main__":
     sys.path.append(os.getcwd())
-    from utils import utils
+    from performance_testing.utils import utils
     try:
         results = main()
         titles = ['VM_CPU\'s', 'VM_Memory(MB)', 'HDD(GB)', 'Total VMs created']
         utils.collect_results(titles, results[0], '%s' %results[1])
         utils.push_results_to_repo(results[1])
     finally:
-        j.do.execute('jspython scripts/tear_down.py envlimittestuser')
+        j.do.execute('jspython performance_testing/scripts/tear_down.py envlimittestuser')
 
 
 
