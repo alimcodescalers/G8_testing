@@ -5,18 +5,47 @@
 - Clean the G8, so no virtual machines are running on it
 - Have admin access to one of the physical compute nodes
 
-### FIO settings
-When running the test we are writing 3 GB of data per disk. This means if we have defined 5 disks we will write 5 x 3 GB iteration. The amount of data to be written is settable in the `Perf_parameters.cfg` file.
+### Test description:
+-  Create a user
+  - username: perftestuser.
+  - password: gig12345
+- Create a cloud space, with a randomly generated name
+- Create the required number of virtual machines
+  - The virtual machines will we spread over the number of nodes you indicated in `Perf_parameters.cfg`
+  - VM's name is formatted like "nodex_y", where x = the stackId where the VM is installed and y = the number of the virtual machine
+- Install flexible I/O tester tool (FIO) and create data disks 
+- Make sure to update the `Perf_parameters.cfg` file with the parameters needed
+
+
+
 
 ### Running the test
-Prior to running the script we need to make sure that the environment is clean. To clean the environment we need to use the `tear_down.py` script:
+- Prior to running the script we need to make sure that the environment is clean. To clean the environment we need to use the `tear_down.py` script:
 ```
 cd G8_testing/Environment_testing/performance_testing
 jspython scripts/tear_down.py --clean
 ```
+- This test is divided into 2 scripts :
+
+  1- demo_create_vms.py: create all vms on the environment
+  2- demo_run_fio.py: runs FIO tests on all vms in parallel
+
+    1- cd G8_testing/Environment_testing/performance\ testing/
+    2- jspython scripts/demo_create_vms.py 25 (25 = number of vms need to be created)
+    3- jspython scripts/demo_run_fio.py 10 (10 = number of vms need to run FIO on .. (bet (1-25)) 
+- You can rerun demo_run_fio.py as much as needed for different parameters
+- After finishing the test, make sure that the test is teared down 
+  ```
+ cd G8_testing/Environment_testing/performance_testing 
+ jspython scripts/tear_down.py perftestuser 
+ ```
+perftestuser =  username used for that test 
+    
+
 
 Now we need to set up the required parameters:
 ```
+cd G8_testing/Environment_testing/performance\ testing/
 vim Perf_parameters.cfg
 ```
 
@@ -98,16 +127,7 @@ demo_create_vms.py 25
 
 > Note: After creating the virtual machines make sure that the assigned IP addresses match the IP addresses you see in the Cloud Broker Portal.
 
-This script will actually do the following:
 
--  Create a user
-  - username: perftest
-  - password: gig12345
-- Create a cloud space, with a randomly generated name
-- Create virtual machines
-  - the virtual machines will we spread over the number of nodes you indicated in `Perf_parameters.cfg`
-  - name in formatted like "nodex_y", where x = the node/stack where the VM is installed and y the number of the virtual machine
-- Moint the disks
 
 Next start the test using `demo_run_fio.py`, here with the parameter 10 to indicate that you want to use 10 virtual machines (needs to be between 1 and 25):
 ```
