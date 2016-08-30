@@ -4,8 +4,8 @@ The performance testing section was created to validate an OpenvCloud environmen
 
 In this section of the repository we have a Testsuite directory with the scripts running the actual performance tests:
  
-[2_Unixbench2_test](https://github.com/0-complexity/G8_testing/tree/master/Environment_testing/performance_testing/Testsuite/2_Unixbench2_test)    
-[10_FIO_testing](https://github.com/0-complexity/G8_testing/blob/master/Environment_testing/performance_testing/Testsuite/10_fio_alba)
+[2_Unixbench2_test](./Testsuite/2_Unixbench2_test)    
+[10_FIO_testing](./Testsuite/10_fio_alba)
 
 The documentation as picked up in the public [G8 Testing Guide](https://www.gitbook.com/book/gig/g8-testing-guide/details) is in the [docs](/docs/test_cases/performance/performance.md) directory.
 
