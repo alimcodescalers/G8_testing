@@ -2,8 +2,10 @@
 
 * [Introduction](README.md)
 * [Functional Testing](functional/functional.md)
-  * [Functional tests hosted on ovc_master](functional/openvcloud/ovc_master_hosted/ovc_master_hosted.md)
-  * [Functional tests hosted on a compute node](functional/openvcloud/compute_node_hosted/compute_node_hosted.md)
+  * [Functional Tests Hosted on ovc_master](functional/openvcloud/ovc_master_hosted/ovc_master_hosted.md)
+    * [Installing on ovc_master](functional/openvcloud/ovc_master_hosted/local_setup.md)
+    * [Installing from a Remote Machine](functional/openvcloud/ovc_master_hosted/remote_setup.md)
+  * [Functional Tests Hosted on a Compute Node](functional/openvcloud/compute_node_hosted/compute_node_hosted.md)
     * [Network Configuration Test](functional/openvcloud/compute_node_hosted/1_network_config_test/1_network_config_test.md)
     * [Virtual Machines Limit Test](functional/openvcloud/compute_node_hosted/3_Env_Limit_test/3_Env_Limit_test.md)
     * [Cloud Spaces Limit Test](functional/openvcloud/compute_node_hosted/5_cloudspace_limits_test/5_cloudspace_limits_test.md)
