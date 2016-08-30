@@ -1,5 +1,5 @@
-Welcome to OpenVCloud Testsuite's Coverage documentation!
-=========================================================
+Welcome to the OpenvCloud Test Suite Coverage Documentation
+===========================================================
 
 Access Control List APIs Test Suite
 -----------------------------------
@@ -8,7 +8,7 @@ Access Control List APIs Test Suite
 
    acl
 
-OpenVcloud APIs Test Suite
+Openvcloud APIs Test Suite
 --------------------------
 .. toctree::
    :maxdepth: 2
