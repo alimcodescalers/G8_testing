@@ -1,5 +1,5 @@
 from JumpScale import j
-from functional_testing.Openvcloud.utils.utils import BaseTest
+from ....utils.utils import BaseTest
 
 
 class JumpscaleTests(BaseTest):

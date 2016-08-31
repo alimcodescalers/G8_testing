@@ -3,7 +3,7 @@ import time
 import random
 
 from JumpScale import j
-from functional_testing.Openvcloud.utils.utils import BasicACLTest
+from ....utils.utils import BasicACLTest
 
 
 class NetworkBasicTests(BasicACLTest):
@@ -101,7 +101,7 @@ class NetworkBasicTests(BasicACLTest):
 
         self.lg('%s ENDED' % self._testID)
 
-
+    @unittest.skip("https://github.com/gig-projects/org_quality/issues/452")
     def test003_port_forwarding_creation(self):
         '''OVC- 007
         * Test case verify the adding port forward to a machine
@@ -206,6 +206,7 @@ class NetworkBasicTests(BasicACLTest):
                          'HALTED')
         self.lg('%s ENDED' % self._testID)
 
+    @unittest.skip("https://github.com/gig-projects/org_quality/issues/452")
     def test004_move_virtual_firewall(self):
         """ OVC-014
         * Test case for moving virtual firewall form one node to another
