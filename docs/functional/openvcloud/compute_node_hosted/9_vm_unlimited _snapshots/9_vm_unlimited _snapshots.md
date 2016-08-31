@@ -7,20 +7,12 @@
 
 ### Test case description
 - Create a virtual machine in a cloud space 
-  - virtual machine name: unlimited_snapshotvm
-  - Package: 512 MB
-  - Disk size: 10 GB
-  - Create disk: 10GB
-- Create a new directory "snapshots" on the new virtual machine
-- Create a new text file called "snapshot"
-- In actions menu: Take snapshot called "snapshot x"
-- Add a new text file in the snapshot directory called "snapshot x"
-- From to snapshots menu: Take "Snapshot x+1"  
-- Add a new text file in the snapshot directory called snapshot x+1
-- Repeat above steps depending on the variable chosen
-- Stop machine
-- Revert to the latest snapshot -1
-- Start machine  
+- Create a new text file on any directory on the new virtual machine
+- Take a snapshot for this VM
+- Repeat above 2 steps depending on the the number of snapshots need to be created
+- Stop the virtual machine
+- Revert to the latest_snapshot -1
+- Start the virtual machine
 
 ### Expected behavior
 - Data of the latest snapshot -1 should be on the virtual machine
