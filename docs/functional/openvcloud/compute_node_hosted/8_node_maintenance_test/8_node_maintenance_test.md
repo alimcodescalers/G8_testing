@@ -20,14 +20,14 @@
 - Virtual machine should not have data loss
 
 ### Run the test
-- Go to the `functional_testing/Openvcloud/compute_node_hosted/8_node_maintenance_test/` directory:
+- Go to the `G8_testing` directory:
   ```bash
-  cd functional_testing/Openvcloud/compute_node_hosted/8_node_maintenance_test/
+  cd G8_testing 
   ```
   
 - Run the test:
   ```
-  jspython 8_node_maintenance_test.py
+  jspython functional_testing/Openvcloud/compute_node_hosted/8_node_maintenance_test/8_node_maintenance_test.py
   ```
 
 - After the test has been completed, the test will clean itself
