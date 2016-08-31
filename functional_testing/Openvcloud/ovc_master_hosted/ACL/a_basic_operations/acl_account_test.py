@@ -1,8 +1,9 @@
 # coding=utf-8
 import uuid
 import time
+import unittest
 
-from functional_testing.Openvcloud.utils.utils import BasicACLTest
+from ...utils.utils import BasicACLTest
 from JumpScale.portal.portal.PortalClient2 import ApiError
 
 
@@ -195,6 +196,7 @@ class Write(ACLACCOUNT):
 
         self.lg('%s ENDED' % self._testID)
 
+    @unittest.skip("https://github.com/0-complexity/openvcloud/issues/353")
     def test004_machine_createTemplate(self):
         """ ACL-10
         *Test case for machine_createTemplate api with user has write access.*
@@ -247,6 +249,7 @@ class Write(ACLACCOUNT):
                                                                        templatename=str(uuid.uuid4()).replace('-', '')[
                                                                                     0:10],
                                                                        basename=basename1))
+        #To Do: this step create template take time and we should wait until the image created so we can delete the account in the next step.
         time.sleep(30)
         self.lg('6- delete user1 account: %s' % self.account_id)
         self.api.cloudbroker.account.delete(accountId=self.account_id, reason='testing')

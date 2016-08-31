@@ -4,7 +4,7 @@ import uuid
 import random
 import time
 
-from functional_testing.Openvcloud.utils.utils import BasicACLTest
+from ....utils.utils import BasicACLTest
 from nose_parameterized import parameterized
 from JumpScale.portal.portal.PortalClient2 import ApiError
 from JumpScale.baselib.http_client.HttpClient import HTTPError
@@ -453,11 +453,12 @@ class BasicTests(BasicACLTest):
 
         self.lg('%s ENDED' % self._testID)
 
-    @parameterized.expand(['تست_عربى',
-                           'утрчиогфрыуи',
-                           'é€èêëâæüéêæâàâ',
-                           'ωβνμκλπιυρσζαωθ',
-                           'îöşüû«»“âç'])
+    #@parameterized.expand(['تست_عربى',
+    #                       'утрчиогфрыуи',
+    #                       'é€èêëâæüéêæâàâ',
+    #                       'ωβνμκλπιυρσζαωθ',
+    #                       'îöşüû«»“âç'])
+    @unittest.skip("https://github.com/gig-projects/org_quality/issues/452")
     def test008_test_different_Language(self, language):
         """ OVC-008
         *Test case  for testing different language*

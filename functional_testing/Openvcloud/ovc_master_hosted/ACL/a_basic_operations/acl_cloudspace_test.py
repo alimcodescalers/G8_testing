@@ -4,7 +4,7 @@ from random import randint
 import uuid
 import unittest
 
-from functional_testing.Openvcloud.utils.utils import BasicACLTest
+from ...utils.utils import BasicACLTest
 from JumpScale import j
 from JumpScale.portal.portal.PortalClient2 import ApiError
 from JumpScale.baselib.http_client.HttpClient import HTTPError
