@@ -31,7 +31,7 @@ And finally run the test, for instance:
 bash setup_run_tests_local.sh master /opt/code/github/0-complexity be-g8-3 ovc_master_hosted/ACL/a_basic_operations/acl_account_test.py:Read.test003_account_get_with_readonly_user
 ```
 
-This will run the **test003\_account\_get\_with\_readonly\_user()** test case of the **Read()** class that is implemented in the **ovc_master_hosted/ACL/a_basic_operations/acl_account_test.py**.
+This will run the **test003\_account\_get\_with\_readonly\_user()** test case of the **Read()** class that is implemented in the **acl_account_test.py**, located in the directory **ovc\_master\_hosted/ACL/a\_basic\_operations/**.
 
 The result will be fed back in the file `testresults.xml` and all collected log information in the `logs/` directory.
 
