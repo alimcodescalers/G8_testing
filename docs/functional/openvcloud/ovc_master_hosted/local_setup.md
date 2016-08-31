@@ -7,17 +7,19 @@ For setting up the OpenvCloud functional tests, you have two options:
 Here we discuss the first option.
 
 There are three simple steps:
+
 1. Clone the G8_testing repository to the environment master node (ovc_master):
 
   ```
   git clone git@github.com:0-complexity/G8_testing.git
   ```
-
+  
 2. Change directory to Openvcloud:
 
   ```
   $ cd G8_testing/functional_testing/Openvcloud/
   ```
+
 3. Run the `setup_run_tests_local.sh` script with the required parameters:
 
   ```
