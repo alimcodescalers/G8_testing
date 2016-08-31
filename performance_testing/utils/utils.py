@@ -172,7 +172,7 @@ def FIO_test(vm_pubip_pubport, pcl, data_size, testrun_time, Res_dir, iteration,
         connection.user(account['login'])
         connection.fabric.state.output["running"]=False
         connection.fabric.state.output["stdout"]=False
-        j.do.execute('sshpass -p%s scp -o \'StrictHostKeyChecking=no\' -P %s scripts/Machine_script.py  %s@%s:'
+        j.do.execute('sshpass -p%s scp -o \'StrictHostKeyChecking=no\' -P %s Testsuite/1_fio_vms/Machine_script.py  %s@%s:'
                      %(account['password'], cs_publicport, account['login'], cloudspace_publicip))
         connection.run('python Machine_script.py %s %s %s %s %s %s %s %s %s %s %s' %(testrun_time, machineId,
                         account['password'], iteration, no_of_disks, data_size, write_type, bs, iodepth, direct_io, rwmixwrite))
