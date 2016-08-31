@@ -19,19 +19,24 @@ There are two simple steps:
 
 So first we clone the G8_testing repository:
 ```
-git clone https://github.com/0-complexity/G8_testing.git
+git clone git@github.com:0-complexity/G8_testing.git
+```
+
+Change directory to Openvcloud:
+```
+$ cd G8_testing/functional_testing/Openvcloud/
 ```
 
 And then we execute the `run_tests_remote.sh` script, for instance:
 ```
-bash tools/run_tests_remote.sh -b master gig be-conv-2 ACL/a_basic_operations/acl_account_test.py:Read.test003_account_get_with_readonly_user
+Ex.: bash tools/run_tests_remote.sh -b master gig be-conv-2 ovc_master_hosted/ACL/a_basic_operations/acl_account_test.py:Read.test003_account_get_with_readonly_user
 ```
 
 In the above example:
 - **Branch**: "master"
 - **Grid**: "gig"
 - **Environment**: "be-conv-2""
-- **Python script**: "ACL/a_basic_operations/acl_account_test.py"
+- **Python script**: "ovc_master_hosted/ACL/a_basic_operations/acl_account_test.py"
 - **Class**: "Read"
 - **Test case**: "test003_account_get_with_readonly_user"
 
