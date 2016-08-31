@@ -1,7 +1,7 @@
 #!/bin/bash
 
 usage(){
-	echo "This script to run OpenVCloud test suite on remote grid"
+	echo "This script to run Openvcloud test suite on remote grid"
 	echo -e "\nUsage:\n$0 [options] [grid] \n"
 	echo "Options:"
 	echo "    -n    node on the grid"
@@ -37,7 +37,7 @@ node=${node:-ovc_master}
 branch=${branch:-master}
 directory=${directory:-/opt/code}
 
-su jenkins
+#su jenkins
 eval $(ssh-agent -s)
 private_key="$HOME/.ssh/id_awesomo"
 if [ ! -e $private_key ]; then
@@ -47,17 +47,17 @@ echo $private_key
 ssh-add $private_key
 ssh-add -l
 
-python3 Openvcloud/tools/sshconfigen.py -r $grid >> .ssh/config
-eval $(bash Openvcloud/tools/gen_connection_params.sh $grid $node) # This script returns SSHKEY, PROXY and HOST
+python3 tools/sshconfigen.py -r $grid >> ~/.ssh/config
+eval $(bash tools/gen_connection_params.sh $grid $node) # This script returns SSHKEY, PROXY and HOST
 
 
-script="'bash -s' < Openvcloud/tools/setup_run_tests_local.sh $branch $directory $environment $testsuite "
+script="'bash -s' < tools/setup_run_tests_local.sh $branch $directory $environment $testsuite "
 eval "ssh -A -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -M -l root -i $SSHKEY -o ProxyCommand=\"$PROXY\" $HOST $script"
 
 # Collect result
 rm -rf logs/
 mkdir logs/
-eval "scp -r -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -i $SSHKEY -o ProxyCommand=\"$PROXY\" root@$HOST:$directory/org_quality/logs/* logs/"
+eval "scp -r -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -i $SSHKEY -o ProxyCommand=\"$PROXY\" root@$HOST:$directory/G8_testing/functional_testing/Openvcloud/logs/* logs/"
 
 # Copy test results
-eval "scp -r -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -i $SSHKEY -o ProxyCommand=\"$PROXY\" root@$HOST:$directory/org_quality/testresults.xml ."
+eval "scp -r -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -i $SSHKEY -o ProxyCommand=\"$PROXY\" root@$HOST:$directory/G8_testing/functional_testing/Openvcloud/testresults.xml ."
