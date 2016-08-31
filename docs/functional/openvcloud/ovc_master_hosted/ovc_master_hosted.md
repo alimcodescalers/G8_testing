@@ -17,6 +17,11 @@ In order to install them you have two options:
 
 All test suites are auto-documented with Sphinx. Do the following to access it:
 
+- Make sure that *pip* and *virtualenv* are installed to your system:
+  ```shell
+  sudo apt-get install python-pip
+  sudo pip install virtualenv
+  ```
 - Pull the G8_test repository:
   ```
   git clone https://github.com/0-complexity/G8_testing.git
