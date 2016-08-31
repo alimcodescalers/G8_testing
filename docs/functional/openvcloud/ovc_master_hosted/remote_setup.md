@@ -6,11 +6,9 @@ For setting up the functional tests, you have two options:
 
 Here we discuss the second option.
 
-There are three steps:
-1. Get access to **ovc\_master**
-  - See the [How to Connect to an OpenvCloud Environment](https://gig.gitbooks.io/ovcdoc_public/content/Sysadmin/Connect/connect.html) documentation in the [OpenvCloud Operator's Guide](https://www.gitbook.com/book/gig/ovcdoc_public/details)
-2. Clone the **G8_testing** repository to the remote machine, probably your local machine
-3. Run the `run_tests_remote.sh` script with the required parameters:
+There are two steps:
+1. Clone the **G8_testing** repository to the remote machine, probably your local machine
+2. Run the `run_tests_remote.sh` script with the required parameters:
   - [grid_name] specifies the name of the grid
   - [env_name] specifies the name of the environment
   - [test_suite] specifies the test suite to execute, optionally indicating that you only want to run a specific vest case of the test suite, all formatted as:
