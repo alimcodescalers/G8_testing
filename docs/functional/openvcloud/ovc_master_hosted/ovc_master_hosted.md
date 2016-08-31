@@ -24,15 +24,15 @@ Do the following to install a locale version and keep it up to date:
   sudo apt-get install python-pip
   sudo pip install virtualenv
   ```
-- Pull the G8_test repository:
+- Clone the **G8_testing** repository:
   ```
-  git clone https://github.com/0-complexity/G8_testing.git
+  git clone git@github.com:0-complexity/G8_testing.git
   ```
 - Run the build script:
   ```
   bash G8_testing/functional_testing/Openvcloud/tools/build_docs.sh
   ```
-- Open the generated `index.html` in your browser of choice:
+- Open the generated **index.html** in your browser of choice:
   ```
   firefox G8_testing/auto_generated_docs/_build/html/index.html
   ````
