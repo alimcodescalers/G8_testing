@@ -10,7 +10,7 @@ There are three steps:
 1. Get access to **ovc\_master**
   - See the [How to Connect to an OpenvCloud Environment](https://gig.gitbooks.io/ovcdoc_public/content/Sysadmin/Connect/connect.html) documentation in the [OpenvCloud Operator's Guide](https://www.gitbook.com/book/gig/ovcdoc_public/details)
 2. Clone the **G8_testing** repository on **ovc\_master** in the directory `/opt/code/github/0-complexity`:
-3. Run the `setup_run_tests_local.sh` script with the required pareameters:
+3. Run the **setup\_run\_tests\_local.sh** script with the required pareameters:
   - [test_suite branch] specifies the branch of the test suite to be used
   - [local\_directory] speficies the directory on ovc_master where you want the specified branch be cloned
   - [env_name] specifies the name of the environment
