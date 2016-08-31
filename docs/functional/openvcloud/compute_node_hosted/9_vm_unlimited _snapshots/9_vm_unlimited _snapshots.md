@@ -27,15 +27,15 @@
 - All later snapshots than the one selected should be removed from the portal...
 
 ### Running the Test
-- Go to the `functional_testing` directory:
+- Go to the `functional_testing/Openvcloud/compute_node_hosted/9_vm_unlimited_snapshots/` directory:
   ```bash
-  cd G8_testing/functional_testing
+  cd functional_testing/Openvcloud/compute_node_hosted/9_vm_unlimited_snapshots/
   ```
 
 - Run the test:  
   ```
-  jspython Testsuite/9_vm_unlimited_snapshots/9_vm_snapshots_test.py **6**
+  jspython 9_vm_snapshots_test.py 6
   ```
 -  '**6**' is the number of snapshots to be created
-- Any number of snapshots can be provided to figure out the max number of snapshots that can be created for a virtual machine
+- Any number of snapshots can be specified to figure out the maximum number of snapshots that can be created of a virtual machine
 - After the test has been completed, the test will clean itself

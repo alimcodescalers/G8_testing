@@ -30,14 +30,14 @@ PASS: All files should be completely available on all virtual machines. A test s
 FAIL: If there is too much latency, if virtual machines fails to send or receive data...
 
 ### Running the test
-- Go to the `functional_testing` directory:
+- Go to the `functional_testing/Openvcloud/compute_node_hosted/1_Network_config_test/` directory:
   ```bash
-  cd G8_testing/functional_testing
+  cd functional_testing/Openvcloud/compute_node_hosted/1_Network_config_test/
   ```
 
 - From inside that directory:
   ```bash
-  jspython Testsuite/1_Network_config_test/1_Network_conf_test.py 
+  jspython 1_Network_conf_test.py 
   ```
 
 - After the test has completed, the test will clean itself.
