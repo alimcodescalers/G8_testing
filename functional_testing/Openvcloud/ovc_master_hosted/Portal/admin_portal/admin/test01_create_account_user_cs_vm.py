@@ -12,15 +12,13 @@ class Account(BaseTest):
     def setUp(self):
         super(Account, self).setUp()
         self.login()
-        if not self.element_is_displayed("left_menu"):
-            self.click("left_menu_button")
-
 
     def test01_create_account_user_cs_vm(self):
         """ PRTL-010
         *Test case for create new user and change his password*
 
         **Test Scenario:**
+
         #. Create new user
         #. create new account
         #. open the account page
