@@ -29,7 +29,7 @@ OpenvCloud Testsuite runs continuously on [Jenkins CI](http://ci.codescalers.com
 2. Change directory to Openvcloud:
 
   ```
-  $ cd G8_testing/Openvcloud/
+  $ cd G8_testing/
   ```
 
 3. Run the build script to generate the documentation locally:
