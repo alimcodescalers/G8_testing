@@ -26,4 +26,4 @@ which pip || apt-get install -y python-pip
 echo -e "${GREEN}** Installing G8_testing requirements ...${NC}"
 pip install -r requirements.txt
 echo -e "${GREEN}** Running tests ...${NC}"
-nosetests $testsuite --with-xunit --xunit-file='testresults.xml' --with-progressive --tc-file=Openvcloud/config.ini
+nosetests $testsuite --with-xunit --xunit-file='testresults.xml' --with-progressive --tc-file=functional_testing/Openvcloud/config.ini
