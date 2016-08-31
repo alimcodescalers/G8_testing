@@ -12,9 +12,10 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.action_chains import ActionChains
-from selenium.webdriver.support.ui import Select
 
 from . import utils_xpath
+from pytractor.exceptions import AngularNotFoundException
+from selenium.webdriver.support.ui import Select
 
 
 class BaseTest(unittest.TestCase):
@@ -24,7 +25,8 @@ class BaseTest(unittest.TestCase):
         self.admin_username = config['main']['admin']
         self.admin_password = config['main']['passwd']
         self.browser = config['main']['browser']
-        self.base_page = config['main']['base_page']
+        self.base_page = self.environment_url + '/ays'
+        self.environment_storage = config['main']['storage']
         self.elements = utils_xpath.elements.copy()
 
     def setUp(self):
@@ -35,9 +37,23 @@ class BaseTest(unittest.TestCase):
         self.lg('Testcase %s Started at %s' % (self._testID, self._startTime))
         self.set_browser()
         self.wait = WebDriverWait(self.driver, 30)
-        self.driver.get(self.environment_url)
+        for temp in range(5):
+            try:
+                self.driver.get(self.environment_url)
+                break
+            except AngularNotFoundException:
+                pass
+        else:
+            raise AngularNotFoundException
         self.driver.maximize_window()
-        self.wait_until_element_located(self.elements["username_textbox"])
+        for temp in range(5):
+            if self.wait_until_element_located(self.elements["username_textbox"]):
+                break
+            else:
+                self.driver.refresh()
+        else:
+            raise NameError("The login page isn't loading well.")
+
 
     def tearDown(self):
         """
@@ -84,10 +100,18 @@ class BaseTest(unittest.TestCase):
         else:
             raise AssertionError("Invalid broswer configuration [%s]" % self.browser)
 
+    def get_page(self, page_url):
+        try:
+            self.driver.get(page_url)
+        except AngularNotFoundException:
+            self.driver.ignore_synchronization = True
+            self.driver.get(page_url)
+
     def element_is_enabled(self, element):
         return self.driver.find_element_by_xpath(self.elements[element]).is_enabled()
 
     def element_is_displayed(self, element):
+        self.wait_until_element_located(self.elements[element])
         return self.driver.find_element_by_xpath(self.elements[element]).is_displayed()
 
     def element_background_color(self, element):
@@ -98,15 +122,15 @@ class BaseTest(unittest.TestCase):
         for temp in range(3):
             try:
                 self.wait.until(EC.visibility_of_element_located((By.XPATH, name)))
-                break
+                return True
             except (TimeoutException, StaleElementReferenceException):
                 time.sleep(1)
         else:
-            raise TimeoutException
+            return False
 
     def wait_element(self, element):
-        self.wait_until_element_located(self.elements[element])
-        return True
+        if self.wait_until_element_located(self.elements[element]):
+            return True
 
     def wait_until_element_located_and_has_text(self, xpath, text):
         for temp in range(3):
@@ -126,11 +150,13 @@ class BaseTest(unittest.TestCase):
                 time.sleep(1)
             else:
                 return True
+        else:
+            raise StaleElementReferenceException
 
     def click(self, element):
         element = self.elements[element]
-        self.wait_until_element_located(element)
-        self.wait_unti_element_clickable(element)
+        #self.wait_until_element_located(element)
+        #self.wait_unti_element_clickable(element)
         for temp in range(10):
             try:
                 self.driver.find_element_by_xpath(element).click()
@@ -142,12 +168,15 @@ class BaseTest(unittest.TestCase):
         time.sleep(1)
 
     def click_link(self, link):
-        self.driver.get(link)
+        self.get_page(link)
 
     def get_text(self, element):
         element = self.elements[element]
-        self.wait_until_element_located(element)
-        return self.driver.find_element_by_xpath(element).text
+        for temp in range(3):
+            try:
+                return self.driver.find_element_by_xpath(element).text
+            except:
+                time.sleep(0.5)
 
     def get_size(self, element):
         element = self.elements[element]
@@ -168,6 +197,9 @@ class BaseTest(unittest.TestCase):
         self.wait_until_element_located(element)
         return self.driver.find_element_by_xpath(element).get_attribute(attribute)
 
+    def get_url(self):
+        return self.driver.current_url
+
     def set_text(self, element, value):
         element = self.elements[element]
         self.wait_until_element_located(element)
@@ -180,19 +212,15 @@ class BaseTest(unittest.TestCase):
         ActionChains(self.driver).move_to_element(location).perform()
 
     def check_element_is_exist(self, element):
-        if self.wait_element(element) == True:
+        if self.wait_element(element):
             return True
         else:
             return False
-
-    def get_url(self):
-        return self.driver.current_url
 
     def select(self, list_element, item_value):
         list_xpath = self.elements[list_element]
         self.select_obeject = Select(self.driver.find_element_by_xpath(list_xpath))
         self.select_list = self.select_obeject.options
-        self.lg("Debug Test" + str(self.select_list) + str(self.select_list[1].text))
 
         for option in self.select_list:
             self.lg("Debug Test" + str(option.text))
@@ -200,8 +228,26 @@ class BaseTest(unittest.TestCase):
                 self.select_obeject.select_by_visible_text(option.text)
                 item_value = option.text
                 break
-
+        else:
+            raise Exception("This %s item isn't an option in %s list" % (item_value, list_element))
         self.assertEqual(item_value, self.select_obeject.first_selected_option.text)
+
+    def get_list_items(self, list_element):
+        element = self.elements[list_element]
+        html_list = self.driver.find_element_by_xpath(element)
+        return html_list.find_elements_by_tag_name("li")
+
+    def get_list_items_text(self, list_element):
+        compo_menu = self.get_list_items(list_element)
+        compo_menu_exist = []
+        for item in compo_menu:
+            if item.text != "":
+                if '\n' in item.text:
+                    data = item.text.split('\n')
+                    compo_menu_exist += data
+                else:
+                    compo_menu_exist.append(item.text)
+        return compo_menu_exist
 
     def element_in_url(self, text_item):
         for temp in range(100):
@@ -215,12 +261,20 @@ class BaseTest(unittest.TestCase):
 
         return True
 
-    def open_base_page(self, menu_item='', sub_menu_item=''):
-        self.driver.get(self.base_page)
-        if not self.element_is_displayed("left_menu"):
-            self.click("left_menu_button")
+    def check_side_list(self):
+        for temp in range(3):
+            try:
+                if self.driver.find_element_by_xpath(self.elements["left_menu"]).location["x"] < 0:
+                    self.click("left_menu_button")
+                break
+            except:
+                self.lg("can't locate the left menu")
 
+    def open_base_page(self, menu_item='', sub_menu_item=''):
+        self.get_page(self.base_page)
+        self.check_side_list()
         self.click(menu_item)
+        self.check_side_list()
         self.click(sub_menu_item)
 
     def create_new_user(self, username='', password='', email='', group=''):
@@ -369,16 +423,20 @@ class BaseTest(unittest.TestCase):
         self.click('cloudspace_delete')
         self.set_text('cloudspace_delete_reason', "Test")
         self.click("cloudspace_delete_confirm")
-        time.sleep(1)
+        time.sleep(0.5)
         self.driver.refresh()
-        self.wait_until_element_located_and_has_text(self.elements["cloudspace_page_status"],
-                                                     "DESTROYED")
+        for temp in range(5):
+            try:
+                self.wait_until_element_located_and_has_text(self.elements["cloudspace_page_status"], "DESTROYED")
+            except TimeoutException:
+                time.sleep(1)
+                self.driver.refresh()
 
     def create_virtual_machine(self, account='', cloudspace='', machine_name='', image='', memory='', disk=''):
         self.account = account
         self.cloudspace = cloudspace
         self.machine_name = machine_name or str(uuid.uuid4()).replace('-', '')[0:10]
-        self.image = image or 'Ubuntu 15.10'
+        self.image = image or 'Ubuntu 14.04'
         self.memory = memory or '1024 MB'
         self.disk = disk or '50 GB'
 
@@ -442,3 +500,28 @@ class BaseTest(unittest.TestCase):
         self.click("virtual_machine_delete_confirm")
         self.wait_until_element_located_and_has_text(self.elements["virtual_machine_page_status"],
                                                      "DESTROYED")
+    def get_storage_list(self):
+        '''
+        This method to read the storage list from config file and return list of storage
+        :return:
+        '''
+        item = ''
+        storage_menu = []
+        for _ in self.environment_storage:
+            if _ != "," and self.environment_storage.index(_) != len(self.environment_storage)-1:
+                item += _
+            elif self.environment_storage.index(_) == len(self.environment_storage)-1:
+                item +=_
+                storage_menu.append(item)
+            else:
+                storage_menu.append(item)
+                item = ''
+        return storage_menu
+
+    def compare_original_list_with_exist_list(self, menu_click, menu_element, original_list):
+        self.check_side_list()
+        self.click(menu_click)
+        exist_menu = self.get_list_items_text(menu_element)
+        for item in original_list:
+            if not item in exist_menu:
+                raise NameError("This %s list item isn't exist" % item)

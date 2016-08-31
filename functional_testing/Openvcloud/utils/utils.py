@@ -7,7 +7,7 @@ import time
 import netaddr
 import signal
 from nose.tools import TimeExpired
-
+from testconfig import config
 SESSION_DATA = {'vms': []}
 
 
@@ -146,9 +146,15 @@ class BaseTest(unittest.TestCase):
         return SESSION_DATA['cloudspaceid']
 
     def get_location(self):
+        env_location = config['main']['environment']
+        self.assertTrue(env_location)
         locations = self.api.cloudapi.locations.list()
         self.assertTrue(locations)
-        return locations[0]
+        for location in locations:
+            if env_location == location['locationCode']:
+                return location
+        else:
+            raise Exception("can't find the %s environment location in grid" % env_location)
 
     def stop_vm(self, vmid):
         self.api.cloudapi.machines.stop(vmid)

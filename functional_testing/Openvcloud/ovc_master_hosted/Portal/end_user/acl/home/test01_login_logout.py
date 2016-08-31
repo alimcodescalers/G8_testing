@@ -1,6 +1,7 @@
-from ....utils.utils import *
+from ....utils.utils import BaseTest
+import unittest
 
-
+@unittest.skip("bug #344")
 class BasicPortalTests(BaseTest):
 
     def test001_login_and_portal_title(self):
@@ -15,7 +16,7 @@ class BasicPortalTests(BaseTest):
         """
         self.lg('%s STARTED' % self._testID)
         self.lg('check the login page title, should succeed')
-        self.assertEqual(self.driver.title, 'GreenITGlobe Login')
+        self.assertEqual(self.driver.title, 'Green IT Globe Login')
         self.lg('do login using admin username/password, should succeed')
         self.login()
         self.lg('check the home page title, should succeed')

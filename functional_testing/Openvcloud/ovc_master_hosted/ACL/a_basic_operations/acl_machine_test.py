@@ -2,7 +2,7 @@
 import uuid
 import unittest
 
-from ...utils.utils import BasicACLTest
+from ....utils.utils import BasicACLTest
 from JumpScale.portal.portal.PortalClient2 import ApiError
 
 
