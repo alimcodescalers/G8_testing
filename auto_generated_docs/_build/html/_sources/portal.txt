@@ -58,6 +58,7 @@ Machine Page
 Admin user Portal Test Suite
 -----------------------------
 used to test the Admin user portal (writen with wiki) by get the x-paths for every clickable link and test it.
+(work in progress)
 
 .. automodule:: functional_testing.Openvcloud.ovc_master_hosted.Portal.admin_portal.admin.test01_create_account_user_cs_vm
 .. autoclass:: functional_testing.Openvcloud.ovc_master_hosted.Portal.admin_portal.admin.test01_create_account_user_cs_vm.Account

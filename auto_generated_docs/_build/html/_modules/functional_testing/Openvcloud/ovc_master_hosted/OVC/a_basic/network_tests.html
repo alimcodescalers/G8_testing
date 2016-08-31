@@ -138,9 +138,10 @@
 <span></span><span class="c1"># coding=utf-8</span>
 <span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">unittest</span>
 
 <span class="kn">from</span> <span class="nn">JumpScale</span> <span class="k">import</span> <span class="n">j</span>
-<span class="kn">from</span> <span class="nn">functional_testing.Openvcloud.utils.utils</span> <span class="k">import</span> <span class="n">BasicACLTest</span>
+<span class="kn">from</span> <span class="nn">....utils.utils</span> <span class="k">import</span> <span class="n">BasicACLTest</span>
 
 
 <div class="viewcode-block" id="NetworkBasicTests"><a class="viewcode-back" href="../../../../../../ovc.html#functional_testing.Openvcloud.ovc_master_hosted.OVC.a_basic.network_tests.NetworkBasicTests">[docs]</a><span class="k">class</span> <span class="nc">NetworkBasicTests</span><span class="p">(</span><span class="n">BasicACLTest</span><span class="p">):</span>
@@ -238,7 +239,7 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> ENDED&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_testID</span><span class="p">)</span></div>
 
-
+    <span class="nd">@unittest</span><span class="o">.</span><span class="n">skip</span><span class="p">(</span><span class="s2">&quot;https://github.com/gig-projects/org_quality/issues/452&quot;</span><span class="p">)</span>
 <div class="viewcode-block" id="NetworkBasicTests.test003_port_forwarding_creation"><a class="viewcode-back" href="../../../../../../ovc.html#functional_testing.Openvcloud.ovc_master_hosted.OVC.a_basic.network_tests.NetworkBasicTests.test003_port_forwarding_creation">[docs]</a>    <span class="k">def</span> <span class="nf">test003_port_forwarding_creation</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;OVC- 007</span>
 <span class="sd">        * Test case verify the adding port forward to a machine</span>
@@ -343,6 +344,7 @@
                          <span class="s1">&#39;HALTED&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">lg</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> ENDED&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_testID</span><span class="p">)</span></div>
 
+    <span class="nd">@unittest</span><span class="o">.</span><span class="n">skip</span><span class="p">(</span><span class="s2">&quot;https://github.com/gig-projects/org_quality/issues/452&quot;</span><span class="p">)</span>
 <div class="viewcode-block" id="NetworkBasicTests.test004_move_virtual_firewall"><a class="viewcode-back" href="../../../../../../ovc.html#functional_testing.Openvcloud.ovc_master_hosted.OVC.a_basic.network_tests.NetworkBasicTests.test004_move_virtual_firewall">[docs]</a>    <span class="k">def</span> <span class="nf">test004_move_virtual_firewall</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; OVC-014</span>
 <span class="sd">        * Test case for moving virtual firewall form one node to another</span>

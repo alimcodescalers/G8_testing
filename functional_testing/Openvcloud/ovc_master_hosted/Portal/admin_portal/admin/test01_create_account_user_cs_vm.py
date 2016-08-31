@@ -15,7 +15,7 @@ class Account(BaseTest):
 
     def test01_create_account_user_cs_vm(self):
         """ PRTL-010
-        *Test case for create new user and change his password*
+        *Test case for create new user and update his password*
 
         **Test Scenario:**
 

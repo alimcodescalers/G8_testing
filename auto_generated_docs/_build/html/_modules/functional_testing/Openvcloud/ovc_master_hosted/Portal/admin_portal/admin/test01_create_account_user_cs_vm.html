@@ -149,15 +149,13 @@
     <span class="k">def</span> <span class="nf">setUp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">Account</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">setUp</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">login</span><span class="p">()</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">element_is_displayed</span><span class="p">(</span><span class="s2">&quot;left_menu&quot;</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">click</span><span class="p">(</span><span class="s2">&quot;left_menu_button&quot;</span><span class="p">)</span>
-
 
 <div class="viewcode-block" id="Account.test01_create_account_user_cs_vm"><a class="viewcode-back" href="../../../../../../../portal.html#functional_testing.Openvcloud.ovc_master_hosted.Portal.admin_portal.admin.test01_create_account_user_cs_vm.Account.test01_create_account_user_cs_vm">[docs]</a>    <span class="k">def</span> <span class="nf">test01_create_account_user_cs_vm</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; PRTL-010</span>
-<span class="sd">        *Test case for create new user and change his password*</span>
+<span class="sd">        *Test case for create new user and update his password*</span>
 
 <span class="sd">        **Test Scenario:**</span>
+
 <span class="sd">        #. Create new user</span>
 <span class="sd">        #. create new account</span>
 <span class="sd">        #. open the account page</span>
