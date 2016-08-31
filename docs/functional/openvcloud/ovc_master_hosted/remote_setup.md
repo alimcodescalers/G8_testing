@@ -16,7 +16,6 @@ There are three steps:
   - [test_suite] specifies the test suite to execute, optionally indicating that you only want to run a specific vest case of the test suite, all formatted as:
     - [python\_script\_name]:[class\_name].[test\_case\_name]
   - Use the `-b` option to specify the branch of the test suite
-  - Use the `-n` option to specify the environment
 
 So first, clone the G8_testing repository:
 ```
