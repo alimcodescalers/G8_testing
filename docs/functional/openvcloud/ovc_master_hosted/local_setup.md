@@ -2,12 +2,13 @@
 
 For setting up the OpenvCloud functional tests, you have two options:
 - Install directly on **ovc\_master**, so locally from the perspective of where the tests will run
-- Install on your local machine, so remotely from the perspective of where the tests will actually run
+- Install on your local machine, so remotely from the perspective of where the tests will run
 
 Here we discuss the first option.
 
 There are three steps:
-1. Get access to **ovc\_master**, see the [How to Connect to an OpenvCloud Environment](https://gig.gitbooks.io/ovcdoc_public/content/Sysadmin/Connect/connect.html) documentation in the [OpenvCloud Operator's Guide](https://www.gitbook.com/book/gig/ovcdoc_public/details)
+1. Get access to **ovc\_master**
+  - See the [How to Connect to an OpenvCloud Environment](https://gig.gitbooks.io/ovcdoc_public/content/Sysadmin/Connect/connect.html) documentation in the [OpenvCloud Operator's Guide](https://www.gitbook.com/book/gig/ovcdoc_public/details)
 2. Clone the **G8_testing** repository on **ovc\_master** in the directory `/opt/code/github/0-complexity`:
 3. Run the `setup_run_tests_local.sh` script with the required pareameters:
   - [test_suite branch] specifies the branch of the test suite to be used
