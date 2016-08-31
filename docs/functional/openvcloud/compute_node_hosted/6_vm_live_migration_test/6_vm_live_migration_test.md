@@ -9,14 +9,11 @@
 - Create a cloud space
 - Create a virtual machine (type of virtual machine need to be selectable in the test parameters)
 - Do a random read write action of files on that virtual machine
-- During the read/write action go to the **Cloud Broker Portal**, and got to the **Virtual Machines** page
-- Choose action: **Move to another CPU node**
-  - Select new CPU node
-  - Set force option to "no"
+- During the read/write action , move the vm to another CPU node with option "force_option=no"
 
 ### Expected result
-- Virtual machine should be installed on another CPU node
-- Virtual machine should not have experienced any downtime
+- Virtual machine should be moved to another CPU node
+- Virtual machine should have experienced approximately no downtime
 - Virtual machine should not have data loss  
 
 When above is OK then the test is PASS
