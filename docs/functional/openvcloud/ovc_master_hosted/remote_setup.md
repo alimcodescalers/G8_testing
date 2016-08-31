@@ -17,17 +17,17 @@ There are three steps:
     - [python\_script\_name]:[class\_name].[test\_case\_name]
   - Use the `-b` option to specify the branch of the test suite
 
-So first, clone the G8_testing repository:
+So first, clone the **G8_testing** repository:
 ```
 git clone git@github.com:0-complexity/G8_testing.git
 ```
 
-Then go to the `Openvcloud` directory:
+Then go to the **Openvcloud** directory:
 ```
-cd cd G8_testing/functional_testing/Openvcloud/
+cd G8_testing/functional_testing/Openvcloud/
 ```
 
-And finally execute the `run_tests_remote.sh` script with the required parameters, for instance:
+And finally execute the **run_tests_remote.sh** script with the required parameters, for instance:
 ```
 bash tools/run_tests_remote.sh -b master gig be-conv-2 ovc_master_hosted/ACL/a_basic_operations/acl_account_test.py:Read.test003_account_get_with_readonly_user
 ```

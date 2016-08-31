@@ -22,12 +22,12 @@ cd /opt/code/github/0-complexity
 git clone git@github.com:0-complexity/G8_testing.git
 ```
 
-Then go to the `Openvcloud` directory:
+Then go to the **Openvcloud** directory:
 ```
 cd cd G8_testing/functional_testing/Openvcloud/
 ```
 
-And finally run the test, for instance:
+And finally execute the **setup\_run\_tests\_local.sh** script with the required parameters, for instance:
 ```
 bash setup_run_tests_local.sh master /opt/code/github/0-complexity be-g8-3 ovc_master_hosted/ACL/a_basic_operations/acl_account_test.py:Read.test003_account_get_with_readonly_user
 ```
