@@ -12,8 +12,8 @@ Following test suites are available:
 - End User Portal
 
 In order to install them you have two options:
-- Install and run them directly on **ovc_master**, using the **setup\_run\_tests\_local.sh** script, as documented [here](local_setup.md)
-- Install and run them from a remote machine, using the **run\_tests\_remote.sh** script, as documented [here](remote_setup.md)
+- Install and run directly on **ovc_master**, using **setup\_run\_tests\_local.sh**, as documented [here](local_setup.md)
+- Install and run from a remote machine, using **run\_tests\_remote.sh**, as documented [here](remote_setup.md)
 
 All test suites are auto-documented with **Sphinx**, [click here](http://85.255.197.106:8888/) to see an online version.
 
