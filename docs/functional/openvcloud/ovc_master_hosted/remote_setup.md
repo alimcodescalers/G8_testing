@@ -27,7 +27,7 @@ cd G8_testing/functional_testing/Openvcloud/
 
 And finally execute the **run_tests_remote.sh** script with the required parameters, for instance:
 ```
-bash tools/run_tests_remote.sh -b master gig be-conv-2 ovc_master_hosted/ACL/a_basic_operations/acl_account_test.py:Read.test003_account_get_with_readonly_user
+bash tools/run_tests_remote.sh -b master gig be-g8-3 ovc_master_hosted/ACL/a_basic_operations/acl_account_test.py:Read.test003_account_get_with_readonly_user
 ```
 
 In the above example:
