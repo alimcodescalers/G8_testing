@@ -74,7 +74,7 @@ def main():
         network.disconnect_all()
 
         print('creating %s vms'%VMs)
-        cloudspace_publicport = 2001
+        cloudspace_publicport = cloudspace_publicport +1
         iteration=2
         for k in range(1,VMs):
             [machineId, cloudspace_ip] = utils.create_machine_onStack(select_stackid(), cloudspace, iteration, ccl, pcl, scl, vm_specs, cloudspace_publicport, Res_dir='test_res')

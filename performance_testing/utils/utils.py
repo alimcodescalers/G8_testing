@@ -222,7 +222,8 @@ def Install_unixbench(machineId, cloudspace, cs_publicport, pcl, sendscript=None
         connection.user(account['login'])
         connection.apt_get('update')
         connection.apt_get('install build-essential libx11-dev libgl1-mesa-dev libxext-dev')
-        connection.run('echo %s | sudo -S wget http://byte-unixbench.googlecode.com/files/UnixBench5.1.3.tgz' %account['password'])
+        connection.run('echo %s | sudo -S wget https://storage.googleapis.com/google-code-archive-downloads/v2/'
+                       'code.google.com/byte-unixbench/UnixBench5.1.3.tgz' %account['password'])
         connection.run('echo %s | sudo -S tar xvfz UnixBench5.1.3.tgz' %account['password'])
         if sendscript:
             j.do.execute('sshpass -p%s scp -o \'StrictHostKeyChecking=no\' -P %s %s  %s@%s:'
@@ -244,7 +245,6 @@ def Run_unixbench(VM, cpu_cores, pcl, queue=None):
         connection.run('cd /home/cloudscalers/UnixBench; echo %s | sudo -S ./Run -c %s -i 3 > /home/cloudscalers/test_res.txt' %(account['password'],cpu_cores))
         score = connection.run('python 2_machine_script.py')
         print('   |--finished running UnixBench on machine:%s' %machineId)
-        #connection.run('rm /test_res.txt')
         if queue:
             queue.put([machineId, score])
         score = float(score)
@@ -324,20 +324,20 @@ def push_results_to_repo(Res_dir, test_type=''):
     Res_file = Res_dir + match.group(1) + '.csv'
     if j.do.exists('%s' %Res_file):
        print('Pushing resutls to the repo')
-       str = j.do.execute('cd ../../ && git stash')
-       j.do.execute('cd ../../ && git pull')
+       str = j.do.execute('cd ../ && git stash')
+       j.do.execute('cd ../ && git pull')
        if str[1] != 'No local changes to save\n':
-            j.do.execute('cd ../../ && git stash pop')
-       j.do.execute('cd ../../ && git add %s' %Res_file)
+            j.do.execute('cd ../ && git stash pop')
+       j.do.execute('cd ../ && git add %s' %Res_file)
        if test_type =='FIO_test':
-           j.do.execute('cd ../../ && git add %s/Perf_parameters.cfg' %Res_dir)
+           j.do.execute('cd ../ && git add %s/Perf_parameters.cfg' %Res_dir)
        if test_type == 'demo_run_fio':
-           j.do.execute('cd ../../ && git add %s/Perf_parameters.cfg' %Res_dir)
-           j.do.execute('cd ../../ && git add %s/VMs_creation_time.csv' %Res_dir)
+           j.do.execute('cd ../ && git add %s/Perf_parameters.cfg' %Res_dir)
+           j.do.execute('cd ../ && git add %s/VMs_creation_time.csv' %Res_dir)
        if test_type == 'fio_alba':
-           j.do.execute('cd ../../ && git add %s/Perf_parameters.cfg' %Res_dir)
-       j.do.execute('cd ../../ && git commit -m \'Pushing: %s  \'' %Res_file)
-       j.do.execute('cd ../../ && git push')
+           j.do.execute('cd ../ && git add %s/Perf_parameters.cfg' %Res_dir)
+       j.do.execute('cd ../ && git commit -m \'Pushing: %s  \'' %Res_file)
+       j.do.execute('cd ../ && git push')
     else:
        print('Found problems during running the test.. removing results directory..')
        j.do.execute('rm -rf %s' %Res_dir)
