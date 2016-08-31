@@ -4,9 +4,11 @@ All OpenvCloud functional tests designed to run on ovc_master are documented [he
 
 Below only **internal** documentation please.
 
-### Continues Integration
+## Continues Integration
 
 OpenvCloud Testsuite runs continuously on [Jenkins CI](http://ci.codescalers.com/view/Integration%20Testing/)
+
+## Instructions on how to update the coverage documentation
 
 #### Prerequisites
 
@@ -18,12 +20,13 @@ OpenvCloud Testsuite runs continuously on [Jenkins CI](http://ci.codescalers.com
     $ sudo pip install virtualenv
     ```
 
-#### Instructions on how to update the coverage documentation
+
+#### Steps to update
 
 1. Pull the testsuite repository:
 
   ```
-  git clone https://github.com/gig-projects/org_quality.git
+  git clone git@github.com:0-complexity/G8_testing.git
   ```
 
 2. Change directory to Openvcloud:
@@ -35,11 +38,11 @@ OpenvCloud Testsuite runs continuously on [Jenkins CI](http://ci.codescalers.com
 3. Run the build script to generate the documentation locally:
 
   ```
-  $ bash tools/build_docs.sh
+  $ bash functional_testing/Openvcloud/tools/build_docs.sh
   ```
 
 4. Open the documentation using any browser
 
   ```
-  $ firefox docs/_build/html/index.html
+  $ firefox auto_generated_docs/_build/html/index.html
   ```
