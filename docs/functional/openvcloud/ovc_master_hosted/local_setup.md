@@ -7,8 +7,8 @@ For setting up the OpenvCloud functional tests, you have two options:
 Here we discuss the first option.
 
 There are three simple steps:
-- Clone the G8_testing repository to the remote machine, which will most probably actually be your local machine
-```
-git clone https://github.com/0-complexity/G8_testing.git
-```
+- Clone the G8_testing repository to the remote machine, which will most probably actually be your local machine:
+  ```
+  git clone git@github.com:0-complexity/G8_testing.git
+  ```
 - Run the `setup_run_tests_local.sh` script with the required pareameters
