@@ -27,14 +27,14 @@
 - All later snapshots than the one selected should be removed from the portal...
 
 ### Running the Test
-- Go to the `functional_testing/Openvcloud/compute_node_hosted/9_vm_unlimited_snapshots/` directory:
+- Go to the `G8_testing` directory:
   ```bash
-  cd functional_testing/Openvcloud/compute_node_hosted/9_vm_unlimited_snapshots/
+  cd G8_testing 
   ```
 
 - Run the test:  
   ```
-  jspython 9_vm_snapshots_test.py 6
+  jspython functional_testing/Openvcloud/compute_node_hosted/9_vm_unlimited_snapshots/9_vm_snapshots_test.py 6
   ```
 -  '**6**' is the number of snapshots to be created
 - Any number of snapshots can be specified to figure out the maximum number of snapshots that can be created of a virtual machine
