@@ -3,6 +3,7 @@
 End user Portal Test Suite
 --------------------------
 used to test the end user portal which is written with AngularJs by getting the x-paths for every clickable link and test it.
+(work in progress)
 
 Home Page
 =========

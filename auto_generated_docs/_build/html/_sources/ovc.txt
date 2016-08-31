@@ -2,7 +2,7 @@
 
 Openvcloud APIs Test Suite:
 ---------------------------
-Used to test the basic cloud_api for the openVcloud component
+Used to test the basic cloud_api for the openvcloud component
 
 Basic Tests
 ===========
