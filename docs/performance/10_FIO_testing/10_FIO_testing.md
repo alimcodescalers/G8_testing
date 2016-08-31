@@ -124,7 +124,7 @@ vim (date)_(cpu_name).(env_name)_testresults(run_number).csv
 ```
 -  If we want to check the parameters used for that test we need to check the following file:
 ```
-cd /G8_testing/tests_results/FIO_test/(date)_(cpu_name).(env_name)_testresults(run_number)/Perf_parameters.cfg
+vim /G8_testing/tests_results/FIO_test/(date)_(cpu_name).(env_name)_testresults(run_number)/Perf_parameters.cfg
 ```
 - In the test result file we can view the following information:
   - Total IOPS per virtual machine per iteration
