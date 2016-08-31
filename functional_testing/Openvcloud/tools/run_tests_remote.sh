@@ -1,10 +1,10 @@
 #!/bin/bash
 
 usage(){
-	echo "This script to run OpenVCloud test suite on remote environment"
-	echo -e "\nUsage:\n$0 [options] [environment] \n"
+	echo "This script to run OpenVCloud test suite on remote grid"
+	echo -e "\nUsage:\n$0 [options] [grid] \n"
 	echo "Options:"
-	echo "    -n    node on the environment"
+	echo "    -n    node on the grid"
 	echo "    -b    testsuite branch to run tests from"
 	echo "    -d    directory to install the testsuite"
 }
@@ -30,8 +30,9 @@ then
     usage
     exit 1
 fi
-environment=$1
-testsuite=$2
+grid=$1
+environment=$2
+testsuite=$3
 node=${node:-ovc_master}
 branch=${branch:-master}
 directory=${directory:-/opt/code}
@@ -46,11 +47,11 @@ echo $private_key
 ssh-add $private_key
 ssh-add -l
 
-python3 Openvcloud/tools/sshconfigen.py -r $environment >> .ssh/config
-eval $(bash Openvcloud/tools/gen_connection_params.sh $environment $node) # This script returns SSHKEY, PROXY and HOST
+python3 Openvcloud/tools/sshconfigen.py -r $grid >> .ssh/config
+eval $(bash Openvcloud/tools/gen_connection_params.sh $grid $node) # This script returns SSHKEY, PROXY and HOST
 
 
-script="'bash -s' < Openvcloud/tools/setup_run_tests_local.sh $branch $directory $testsuite"
+script="'bash -s' < Openvcloud/tools/setup_run_tests_local.sh $branch $directory $environment $testsuite "
 eval "ssh -A -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -M -l root -i $SSHKEY -o ProxyCommand=\"$PROXY\" $HOST $script"
 
 # Collect result
