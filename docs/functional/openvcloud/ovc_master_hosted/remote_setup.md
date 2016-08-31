@@ -35,13 +35,13 @@ bash tools/run_tests_remote.sh -b master gig be-conv-2 ovc_master_hosted/ACL/a_b
 In the above example:
 - **Branch**: "master"
 - **Grid**: "gig"
-- **Environment**: "be-conv-2""
+- **Environment**: "be-conv-2"
 - **Python script**: "ovc_master_hosted/ACL/a_basic_operations/acl_account_test.py"
 - **Class**: "Read()"
 - **Test case**: "test003\_account\_get\_with\_readonly\_user()"
 
 What actually will happen:
-- It will connect to the master cloud space where it will clone the G8_testing repository
+- It will connect to **ovc\_master** where it will clone the **G8_testing** repository
   - As the script will lookup to SSH key from the environment repository, make sure that you have access to it
-- It will call the `setup_run_tests_local.sh` which is discussed [here](local_setup.md) passing the test case parameters
-- The result will be fed back in the file `testresults.xml` and all collected log information in the `logs/` directory
+- It will call the **setup_run_tests_local.sh** which is discussed [here](local_setup.md) passing the test case parameters
+- The result will be fed back in the file **testresults.xml** and all collected log information in the **logs** directory

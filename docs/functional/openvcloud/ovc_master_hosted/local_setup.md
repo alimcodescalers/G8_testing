@@ -16,7 +16,7 @@ There are three steps:
   - [env_name] specifies the name of the environment
   - [test_path] specifies the actual test to be used, this path is formatted as [full path of the Python script]:[Class of the test suite][test case]
 
-So first, clone the G8_testing repository:
+So first, clone the **G8_testing** repository:
 ```
 cd /opt/code/github/0-complexity
 git clone git@github.com:0-complexity/G8_testing.git
@@ -34,9 +34,9 @@ bash setup_run_tests_local.sh master /opt/code/github/0-complexity be-g8-3 ovc_m
 
 This will run the **test003\_account\_get\_with\_readonly\_user()** test case of the **Read()** class that is implemented in the **acl_account_test.py**, located in the directory **ovc\_master\_hosted/ACL/a\_basic\_operations/**.
 
-The result will be fed back in the file `testresults.xml` and all collected log information in the `logs/` directory.
+The result will be fed back in the file **testresults.xml** and all collected log information in the **logs** directory.
 
-You might want to install and use **tidy** in order to nicely formatted `testresults.xml`:
+You might want to install and use **tidy** in order to nicely format **testresults.xml**:
 ```
 apt-get install tidy
 tidy -xml -i testresults.xml > output.xml
