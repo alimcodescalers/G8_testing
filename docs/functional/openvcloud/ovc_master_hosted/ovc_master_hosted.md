@@ -23,11 +23,11 @@ All test suites are auto-documented with Sphinx. Do the following to access it:
   ```
 - Run the build script:
   ```
-  bash G8_testing/Openvcloud/tools/build_docs.sh
+  bash G8_testing/functional_testing/Openvcloud/tools/build_docs.sh
   ```
 - Open the generated `index.html` in your browser of choice:
   ```
-  firefox /auto_generated_docs/_build/html/index.html
+  firefox G8_testing/auto_generated_docs/_build/html/index.html
   ````
   
-  ![](documentation.png)
+  ![](sphinx.png)
