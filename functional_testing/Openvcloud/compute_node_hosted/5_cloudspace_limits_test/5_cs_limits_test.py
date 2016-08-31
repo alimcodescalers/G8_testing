@@ -3,19 +3,14 @@ from JumpScale import j
 import uuid
 import sys
 import os
-
+import datetime
 
 def main():
     cpus = 1; memory =  1024; Bdisksize = 10; no_of_disks=0; data_disksize=0;
     vm_specs = [no_of_disks, data_disksize, Bdisksize, memory, cpus]
 
-
-    j.do.execute('mkdir -p /CS_limits_results')
-    j.do.execute('rm -rf /CS_limits_results/*')
-    if j.do.exists('/root/.ssh/known_hosts'):
-        j.do.execute('rm /root/.ssh/known_hosts')
     sys.path.append(os.getcwd())
-    from performance_testing.utils import utils
+    from utils import utils
 
     ccl = j.clients.osis.getNamespace('cloudbroker')
     pcl = j.clients.portal.getByInstance('main')
@@ -42,6 +37,10 @@ def main():
             try:
                 pcl.actors.cloudbroker.cloudspace.deployVFW(cloudspaceId)
                 cloudspace = ccl.cloudspace.get(cloudspaceId).dump()
+            except:
+                print('   |-- No more cloudspaces can be created')
+                return [[cpus, memory, Bdisksize, cs_No]]
+            try:
                 utils.create_machine_onStack(stackid, cloudspace, 0, ccl, pcl, scl, vm_specs, cs_publicport=0, Res_dir='wait_for_VMIP')
                 cs_No += 1
             except:
@@ -52,12 +51,18 @@ def main():
 if __name__ == "__main__":
     sys.path.append(os.getcwd())
     from utils import utils
+
+    Res_dir = '/root/org_quality/Environment_testing/tests_results/CS_limits_results'
+    j.do.execute("mkdir -p %s" % Res_dir)
+    hostname = j.do.execute('hostname')[1].replace("\n", "")
+    test_num = len(os.listdir('%s' % Res_dir)) + 1
+    test_folder = "/" + datetime.datetime.today().strftime('%Y-%m-%d') + "_" + hostname + "_testresults_%s" % test_num
+    Res_dir = Res_dir + test_folder
+    j.do.execute("mkdir -p %s" % Res_dir)
+
     try:
         results = main()
         titles = ['VM_CPU\'s', 'VM_Memory(MB)', 'HDD(GB)', 'Total cloudspaces created']
-        utils.collect_results(titles, results, '/CS_limits_results')
+        utils.collect_results(titles, results, Res_dir)
     finally:
-        j.do.execute('jspython performance_testing/scripts/tear_down.py cslimitsuser')
-
-
-
+        j.do.execute('jspython scripts/tear_down.py cslimitsuser')

@@ -13,7 +13,7 @@ from utils import utils
 
 vms_to_run_fio_on = int(sys.argv[1])
 config = ConfigParser.ConfigParser()
-config.read("Perf_parameters.cfg")
+config.read("Testsuite/1_fio_vms/Perf_parameters.cfg")
 USERNAME = config.get("perf_parameters", "username")
 vms_time_diff = float(config.get("perf_parameters", "vms_time_diff"))
 data_size = int(config.get("perf_parameters", "data_size"))
@@ -32,7 +32,7 @@ Res_dir = Res_dir + test_folder
 
 if not j.do.exists('%s' % Res_dir):
     j.do.execute('mkdir -p %s' % Res_dir)
-j.do.execute('cp Perf_parameters.cfg %s' %Res_dir)
+j.do.execute('cp Testsuite/1_fio_vms/Perf_parameters.cfg %s' %Res_dir)
 j.do.execute('cp /test_results/VMs_creation_time.csv %s' %Res_dir)
 
 ccl = j.clients.osis.getNamespace('cloudbroker')
@@ -75,7 +75,7 @@ for vm in vms_list:
     j.do.execute('ssh-keygen -f "/root/.ssh/known_hosts" -R [%s]:%s'
                  %(cloudspace_publicip, cloudspace_publicport))
 
-j.do.execute('cp scripts/collect_results.py %s' %Res_dir)
+j.do.execute('cp Testsuite/1_fio_vms/collect_results.py %s' %Res_dir)
 j.do.chdir('%s' %Res_dir)
 j.do.execute('python collect_results.py %s' %Res_dir)
 utils.push_results_to_repo(Res_dir, test_type='demo_run_fio')
