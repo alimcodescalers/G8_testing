@@ -15,7 +15,9 @@ In order to install them you have two options:
 - Install and run them directly on ovc_master, using the `setup_run_tests_local.sh` script, as documented [here](local_setup.md)
 - Install and run them from a remote machine, using the `run_tests_remote.sh` script, as documented [here](remote_setup.md)
 
-All test suites are auto-documented with Sphinx. Do the following to update and access it:
+All test suites are auto-documented with Sphinx, [click here](http://85.255.197.106:8888/) to see an online version.
+
+Do the following to install a locale version and keep it up to date:
 
 - Make sure that **pip** and **virtualenv** are installed to your system:
   ```shell
