@@ -20,19 +20,19 @@
 | VM Number | vm name  | CPU's  | Memory | HDD | Node |
 
 ### Running the test
-- Go to the `functional_testing` directory:
+- Go to the `functional_testing/Openvcloud/compute_node_hosted/3_env_limitation_test/` directory:
   ```bash
-  cd G8_testing/functional_testing
+  cd functional_testing/Openvcloud/compute_node_hosted/3_env_limitation_test/
   ```
 
 - For changing the test parameters:
   ```
-  vim Testsuite/3_Env_Limit_test/parameters.cfg
+  vim 3_Env_Limit_test/parameters.cfg
   ```
 
 - Run the test:
   ```
-  jspython Testsuite/3_Env_Limit_test/3_env_limitation_test.py 
+  jspython 3_env_limitation_test.py 
   ```
 
 - After the test has been completed, the test will clean itself.

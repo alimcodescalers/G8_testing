@@ -21,7 +21,7 @@
 ### Running the test
 - Go to performance testing directory: 
   ```
-  cd org_quality/performance_testing
+  cd G8_testing/performance_testing
   ```
   
 - For changing the test parameters:
@@ -30,8 +30,8 @@
   ```
 - Following parameters can be configured:
 ```  
-# Results Directory : write absolute directory
-Res_dir: /root/org_quality/Environment_testing/tests_results/2_unixbench2
+# Results Directory: write absolute directory
+Res_dir: /root/G8_testing/tests_results/2_unixbench2
 
 #Number of VMS to run unixbench on
 VMs:2
@@ -50,6 +50,7 @@ cpus: 4
 #Boot Disk size(in GB), please choose between these values [10, 20, 50, 100, 250, 500, 1000, 2000]
 Bdisksize: 100
 ```
+
 - From inside that directory:
   ```
   jspython Testsuite/2_Unixbench2_test/2_unixbench2.0_test.py 
