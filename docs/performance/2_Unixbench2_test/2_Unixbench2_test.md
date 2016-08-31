@@ -10,7 +10,8 @@
 - Create a cloud space for all nodes
 - Create the number of vms you want to run unixbench on
 - Install unixbench on the created virtual machines then run unixbench on them
-- When the test is done ,Unixbench scores for all VMs will be stored
+- Run unixbench on the first VM only and store its score
+- Run unixbench on all VMs , then store all VMs unixbench scores
 
 
 ### Expected result
