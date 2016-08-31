@@ -8,16 +8,14 @@
 ### Test case description
 - Create an account
 - Create a cloud space
-- Create a virtual machine on a node x (type of virtual machine needs to be selectable in the test parameters) --> do a random read write action of files on that virtual machine
-- During the read/write action go to the Cloud Broker Portal
-- Select stacks
-- Select one of the CPU node x
-- Choose Action: **Put in Maintenance** (with option move VMs)
+- Create a virtual machine on a node x (type of virtual machine needs to be selectable in the test parameters) 
+- Do a random read write action of files on that virtual machine
+- During the read/write action, put node x in Maintenance with option "move VMs"
 
 ### Expected result
-- All virtual machines on that node should be installed on another CPU node
-- Virtual machine should not have experienced any downtime
-- Virtual machine should not have data loss
+- Virtual machine on that node should be moved to another CPU node
+- Virtual machine should approximately experience no downtime
+- Virtual machine shouldn't have data loss
 
 ### Run the test
 - Go to the `G8_testing` directory:
