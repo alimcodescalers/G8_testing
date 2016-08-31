@@ -42,7 +42,7 @@ class BaseTest(unittest.TestCase):
                 self.driver.get(self.environment_url)
                 break
             except AngularNotFoundException:
-                pass
+                time.sleep(1)
         else:
             raise AngularNotFoundException
         self.driver.maximize_window()
@@ -53,7 +53,6 @@ class BaseTest(unittest.TestCase):
                 self.driver.refresh()
         else:
             raise NameError("The login page isn't loading well.")
-
 
     def tearDown(self):
         """
@@ -103,6 +102,7 @@ class BaseTest(unittest.TestCase):
     def get_page(self, page_url):
         try:
             self.driver.get(page_url)
+            self.driver.ignore_synchronization = False
         except AngularNotFoundException:
             self.driver.ignore_synchronization = True
             self.driver.get(page_url)
@@ -155,8 +155,8 @@ class BaseTest(unittest.TestCase):
 
     def click(self, element):
         element = self.elements[element]
-        #self.wait_until_element_located(element)
-        #self.wait_unti_element_clickable(element)
+        # self.wait_until_element_located(element)
+        # self.wait_unti_element_clickable(element)
         for temp in range(10):
             try:
                 self.driver.find_element_by_xpath(element).click()
@@ -177,6 +177,8 @@ class BaseTest(unittest.TestCase):
                 return self.driver.find_element_by_xpath(element).text
             except:
                 time.sleep(0.5)
+        else:
+            raise NoSuchElementException(element)
 
     def get_size(self, element):
         element = self.elements[element]
@@ -250,16 +252,16 @@ class BaseTest(unittest.TestCase):
         return compo_menu_exist
 
     def element_in_url(self, text_item):
-        for temp in range(100):
+        if " " in text_item:
+            text_item = text_item.replace(" ", "%20")
+        for temp in range(10):
             try:
                 if text_item in self.get_url():
-                    break
-            except NoSuchElementException:
+                    return True
+            except:
                 time.sleep(1)
         else:
-            raise NoSuchElementException("this %s item isn't exist" % text_item)
-
-        return True
+            raise NoSuchElementException("this %s item isn't exist in this url: %s" % (text_item, self.get_url()))
 
     def check_side_list(self):
         for temp in range(3):
@@ -424,7 +426,7 @@ class BaseTest(unittest.TestCase):
         self.set_text('cloudspace_delete_reason', "Test")
         self.click("cloudspace_delete_confirm")
         time.sleep(0.5)
-        self.driver.refresh()
+        self.get_page(self.driver.current_url)
         for temp in range(5):
             try:
                 self.wait_until_element_located_and_has_text(self.elements["cloudspace_page_status"], "DESTROYED")
@@ -500,6 +502,7 @@ class BaseTest(unittest.TestCase):
         self.click("virtual_machine_delete_confirm")
         self.wait_until_element_located_and_has_text(self.elements["virtual_machine_page_status"],
                                                      "DESTROYED")
+
     def get_storage_list(self):
         '''
         This method to read the storage list from config file and return list of storage
@@ -508,10 +511,10 @@ class BaseTest(unittest.TestCase):
         item = ''
         storage_menu = []
         for _ in self.environment_storage:
-            if _ != "," and self.environment_storage.index(_) != len(self.environment_storage)-1:
+            if _ != "," and self.environment_storage.index(_) != len(self.environment_storage) - 1:
                 item += _
-            elif self.environment_storage.index(_) == len(self.environment_storage)-1:
-                item +=_
+            elif self.environment_storage.index(_) == len(self.environment_storage) - 1:
+                item += _
                 storage_menu.append(item)
             else:
                 storage_menu.append(item)
@@ -520,8 +523,9 @@ class BaseTest(unittest.TestCase):
 
     def compare_original_list_with_exist_list(self, menu_click, menu_element, original_list):
         self.check_side_list()
-        self.click(menu_click)
+        if menu_click != "":
+            self.click(menu_click)
         exist_menu = self.get_list_items_text(menu_element)
         for item in original_list:
             if not item in exist_menu:
-                raise NameError("This %s list item isn't exist" % item)
+                raise NameError("This %s list item isn't exist in %s" % (item, exist_menu))

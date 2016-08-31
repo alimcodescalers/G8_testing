@@ -1,4 +1,4 @@
-from ....utils.utils import BaseTest
+from .....utils.utils import BaseTest
 from ...page_elements_xpath import machines_page
 import time
 import uuid
