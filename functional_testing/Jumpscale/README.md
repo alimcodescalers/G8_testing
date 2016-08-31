@@ -1,2 +1,3 @@
-## Goal
-This repo will be used to have the JumpScale tested automatically
+## JumpScale Functional Tests
+
+This directory will contain all test suites for functionally testing JumpScale.

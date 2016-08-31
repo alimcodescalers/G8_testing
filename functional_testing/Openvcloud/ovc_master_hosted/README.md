@@ -1,4 +1,4 @@
-## Functional Tests Hosted on ovc_master
+## OpenvCloud Functional Tests Hosted on ovc_master
 
 All OpenvCloud functional tests designed to run on ovc_master are documented [here](/docs/functional/openvcloud/ovc_master_hosted/ovc_master_hosted.md).
 
