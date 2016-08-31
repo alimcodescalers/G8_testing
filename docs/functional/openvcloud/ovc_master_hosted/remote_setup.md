@@ -1,7 +1,7 @@
 ## Remote Setup of the OpenvCloud Functional Tests
 
 For setting up the functional tests, you have two options:
-- Install directly on **ovc\_master**, so locally from the perspecitive where the tests will actually run
+- Install directly on **ovc\_master**, so locally from the perspective of where the tests will run
 - Install on your local machine, so remotely from the perspective of where the tests will actually run
 
 Here we discuss the second option.
