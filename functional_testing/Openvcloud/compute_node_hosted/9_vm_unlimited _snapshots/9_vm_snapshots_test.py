@@ -39,7 +39,7 @@ def main(snapshots_number):
     for i in range(snapshots_number):
         utils.writefile_on_vm(account, cloudspace_publicip, cloudspace_publicport, 'snapshot%s.txt' %(i+1))
         time.sleep(6)
-        utils.run_again_if_failed(pcl.actors.cloudapi.machines.stop, machineId=machineId)
+        #utils.run_again_if_failed(pcl.actors.cloudapi.machines.stop, machineId=machineId)
         print('   |--creating snapshot No.%s ...' %(i+1))
         try:
             pcl.actors.cloudapi.machines.snapshot(machineId=machineId, name='snapshot%s'%(i+1))
@@ -51,8 +51,8 @@ def main(snapshots_number):
             print('snapshots length: %s'%len(snapshots))
             continue
         time.sleep(5)
-        utils.run_again_if_failed(pcl.actors.cloudapi.machines.start, machineId=machineId)
-        time.sleep(20)
+        #utils.run_again_if_failed(pcl.actors.cloudapi.machines.start, machineId=machineId)
+        #time.sleep(20)
 
     print('Rolling back to snapshot No.%s ...' %(snapshots_number-1))
     utils.run_again_if_failed(pcl.actors.cloudapi.machines.stop, machineId=machineId)
