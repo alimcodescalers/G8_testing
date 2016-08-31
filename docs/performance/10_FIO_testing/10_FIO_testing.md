@@ -32,16 +32,16 @@ jspython scripts/tear_down.py --clean
 
 - Steps to run the test:
 
-    1- cd G8_testing/Environment_testing/performance_testing/
+    1- cd G8_testing/performance_testing/
 
-    2- jspython scripts/demo_create_vms.py 25 (25 = number of vms need to be created)
+    2- jspython Testsuite/1_fio_vms/demo_create_vms.py 25 (25 = number of vms need to be created)
     
-    3- jspython scripts/demo_run_fio.py 10 (10 = number of vms need to run FIO on (between (1-25)) 
+    3- jspython Testsuite/1_fio_vms/demo_run_fio.py 10 (10 = number of vms need to run FIO on (between (1-25)) 
     
 - You can rerun demo_run_fio.py as much as needed against different parameters
 - After finishing the test, make sure that the test is teared down 
   ```
- cd G8_testing/Environment_testing/performance_testing 
+ cd G8_testing/performance_testing 
  jspython scripts/tear_down.py perftestuser 
  ```
 perftestuser =  username used for that test 
@@ -50,7 +50,7 @@ perftestuser =  username used for that test
 
 - Before running the test we need to set up the required parameters in the config file:
 ```
-cd G8_testing/Environment_testing/performance_testing/
+cd G8_testing/performance_testing/Testsuite/1_fio_vms
 vim Perf_parameters.cfg
 ```
    - Following paramenters are settable in the config file:
