@@ -15,7 +15,7 @@ def main():
 
     #run the setup_test from inside the repo so the file could be parsed
     config = ConfigParser.ConfigParser()
-    config.read("Perf_parameters.cfg")
+    config.read("Testsuite/1_fio_vms/Perf_parameters.cfg")
     used_stacks = int(config.get("perf_parameters", "used_stacks"))
     memory = int(config.get("perf_parameters", "memory"))
     cpu = int(config.get("perf_parameters", "cpu"))
