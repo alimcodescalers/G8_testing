@@ -1,5 +1,8 @@
 #!/bin/bash
 
+GREEN='\033[0;32m' # Green color
+NC='\033[0m'       # No color
+
 usage(){
 	echo "This script to run Openvcloud test suite on remote grid"
 	echo -e "\nUsage:\n$0 [options] [grid] \n"
@@ -37,6 +40,7 @@ node=${node:-ovc_master}
 branch=${branch:-master}
 dir=`uuidgen`
 directory=${directory:-/opt/code/$dir}
+echo -e "${GREEN}** Session working dir is: [$directory]${NC}"
 
 su jenkins
 eval $(ssh-agent -s)
