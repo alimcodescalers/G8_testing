@@ -1,5 +1,8 @@
 #!/bin/bash
 
+GREEN='\033[0;32m' # Green color
+NC='\033[0m'       # No color
+
 usage(){
 	echo "This script to run Openvcloud test suite on remote grid"
 	echo -e "\nUsage:\n$0 [options] [grid] \n"
@@ -35,9 +38,11 @@ environment=$2
 testsuite=$3
 node=${node:-ovc_master}
 branch=${branch:-master}
-directory=${directory:-/opt/code}
+dir=`uuidgen`
+directory=${directory:-/opt/code/$dir}
+echo -e "${GREEN}** Session working directory is: [$directory]${NC}"
 
-#su jenkins
+su jenkins
 eval $(ssh-agent -s)
 private_key="$HOME/.ssh/id_awesomo"
 if [ ! -e $private_key ]; then
@@ -54,10 +59,17 @@ eval $(bash tools/gen_connection_params.sh $grid $node) # This script returns SS
 script="'bash -s' < tools/setup_run_tests_local.sh $branch $directory $environment $testsuite "
 eval "ssh -A -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -M -l root -i $SSHKEY -o ProxyCommand=\"$PROXY\" $HOST $script"
 
+echo -e "${GREEN}** Collect logs and result..${NC}"
 # Collect result
 rm -rf logs/
 mkdir logs/
-eval "scp -r -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -i $SSHKEY -o ProxyCommand=\"$PROXY\" root@$HOST:$directory/G8_testing/functional_testing/Openvcloud/logs/* logs/"
+eval "scp -r -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -i $SSHKEY -o ProxyCommand=\"$PROXY\" root@$HOST:$directory/G8_testing/functional_testing/Openvcloud/logs/* logs/" 2> /dev/null
 
 # Copy test results
-eval "scp -r -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -i $SSHKEY -o ProxyCommand=\"$PROXY\" root@$HOST:$directory/G8_testing/functional_testing/Openvcloud/testresults.xml ."
+eval "scp -r -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -i $SSHKEY -o ProxyCommand=\"$PROXY\" root@$HOST:$directory/G8_testing/functional_testing/Openvcloud/testresults.xml ." 2> /dev/null
+
+#delete test suite directory from the environment node
+script="rm -rf $directory"
+eval "ssh -A -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -M -l root -i $SSHKEY -o ProxyCommand=\"$PROXY\" $HOST $script" 2> /dev/null
+echo -e "${GREEN}** Done **${NC}"
+
