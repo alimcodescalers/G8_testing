@@ -66,3 +66,7 @@ eval "scp -r -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -i $SSH
 
 # Copy test results
 eval "scp -r -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -i $SSHKEY -o ProxyCommand=\"$PROXY\" root@$HOST:$directory/G8_testing/functional_testing/Openvcloud/testresults.xml ."
+
+#delete test suite directory from the env
+eval "rm -rf -r -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -i $SSHKEY -o ProxyCommand=\"$PROXY\" root@$HOST:$directory"
+
