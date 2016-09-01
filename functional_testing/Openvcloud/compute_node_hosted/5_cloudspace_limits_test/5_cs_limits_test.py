@@ -65,4 +65,4 @@ if __name__ == "__main__":
         titles = ['VM_CPU\'s', 'VM_Memory(MB)', 'HDD(GB)', 'Total cloudspaces created']
         utils.collect_results(titles, results, Res_dir)
     finally:
-        j.do.execute('jspython scripts/tear_down.py cslimitsuser')
+        j.do.execute('jspython performance_testing/scripts/tear_down.py cslimitsuser')
