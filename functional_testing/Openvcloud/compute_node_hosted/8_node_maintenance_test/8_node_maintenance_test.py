@@ -69,6 +69,7 @@ def main():
             machine_db = ccl.vmachine.get(machineId)
             if machine_db.stackId==stackid:
                 print('VM didn\'t move to another stackId')
+                return [None, stackid, gid]
             else:
                 if machine_db.status=='RUNNING':
                     print('The VM have been successfully installed on other node with approximately no downtime during cpu node maintenance')
