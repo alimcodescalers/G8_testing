@@ -50,7 +50,7 @@ def main():
         for stackId in stacks:
             cloudspace_publicport += 1
             [machineId, cloudspace_publicip] = utils.create_machine_onStack(stackId, cloudspace, '_%s' %i, ccl, pcl, scl,
-                                                                          vm_specs, cloudspace_publicport, Res_dir='/test_results', telegraf='install')
+                                                                          vm_specs, cloudspace_publicport, Res_dir='/test_results')
             vms_list.append({machineId: [cloudspace_publicip, cloudspace_publicport]})
             i += 1
             if i == No_of_vms:
