@@ -1,1 +1,1 @@
-Documented [here](/docs/test_cases/performance/5_cloudspace_limits_test/5_cloudspace_limits_test.md)
+Documented [here](/docs/functional/openvcloud/compute_node_hosted/5_cloudspace_limits_test/5_cloudspace_limits_test.md)
