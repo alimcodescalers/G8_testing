@@ -9,7 +9,7 @@ import datetime
 
 def main():
     config = ConfigParser.ConfigParser()
-    config.read("functional_testing/Testsuite/3_Env_Limit_test/parameters.cfg")
+    config.read("functional_testing/Openvcloud/compute_node_hosted/3_Env_Limit_test/3_Env_Limit_test/parameters.cfg")
     cpu = int(config.get("parameters", "cpu"))
     memory = int(config.get("parameters", "memory"))
     Bdisksize = int(config.get("parameters", "Bdisksize"))
