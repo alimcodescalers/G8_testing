@@ -29,13 +29,13 @@ cd G8_testing/functional_testing/Openvcloud/
 
 And finally execute the **run_tests_remote.sh** script with the required parameters, for instance:
 ```
-bash tools/run_tests_remote.sh -b master gig be-g8-3 ovc_master_hosted/ACL/a_basic_operations/acl_account_test.py:Read.test003_account_get_with_readonly_user
+bash tools/run_tests_remote.sh -b master be-g8-3 be-g8-3 ovc_master_hosted/ACL/a_basic_operations/acl_account_test.py:Read.test003_account_get_with_readonly_user
 ```
 
 In the above example:
 - **Branch**: "master"
-- **Grid**: "gig"
-- **Environment**: "be-conv-2"
+- **Grid**: "be-g8-3"
+- **Environment**: "be-g8-3"
 - **Python script**: "ovc_master_hosted/ACL/a_basic_operations/acl_account_test.py"
 - **Class**: "Read()"
 - **Test case**: "test003\_account\_get\_with\_readonly\_user()"
@@ -45,3 +45,15 @@ What actually will happen:
   - As the script will lookup to SSH key from the environment repository, make sure that you have access to it
 - It will call the **setup_run_tests_local.sh** which is discussed [here](local_setup.md) passing the test case parameters
 - The result will be fed back in the file **testresults.xml** and all collected log information in the **logs** directory
+
+You might want to install and use **tidy** in order to nicely format **testresults.xml**:
+```
+apt-get install tidy
+tidy -xml -i testresults.xml > output.xml
+cat output.xml
+<?xml version="1.0" encoding="utf-8"?>
+<testsuite name="nosetests" tests="1" errors="0" failures="0" skip="0">
+  <testcase classname="functional_testing.Openvcloud.ovc_master_hosted.ACL.a_basic_operations.acl_account_test.Read" name="test003_account_get_with_readonly_user" time="4.151">
+  </testcase>
+</testsuite>
+```
