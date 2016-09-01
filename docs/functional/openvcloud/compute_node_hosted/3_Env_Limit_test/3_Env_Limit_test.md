@@ -32,7 +32,7 @@
 
 - Run the test:
   ```
-  jspython functional_testing/Openvcloud/compute_node_hosted/3_env_limitation_test/3_env_limitation_test.py 
+  jspython functional_testing/Openvcloud/compute_node_hosted/3_Env_Limit_test/3_env_limitation_test.py
   ```
 
 - After the test has been completed, the test will clean itself.
