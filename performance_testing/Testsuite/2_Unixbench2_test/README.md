@@ -1,1 +1,1 @@
-Documentented [here](/docs/test_cases/performance/2_Unixbench2_test/2_Unixbench2_test.md)
+Documentented [here](/docs/performance/2_Unixbench2_test/2_Unixbench2_test.md)
