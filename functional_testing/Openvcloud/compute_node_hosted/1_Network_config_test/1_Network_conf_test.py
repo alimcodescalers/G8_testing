@@ -50,7 +50,7 @@ for vm in machines:
     account = machine['accounts'][0]
     j.do.execute('sshpass -p%s scp -o \'StrictHostKeyChecking=no\' -P %s noerror.txt  %s@%s:'
                  %(account['password'], cloudspace_publicport, account['login'], cloudspace_publicIP))
-    j.do.execute('sshpass -p%s scp -o \'StrictHostKeyChecking=no\' -P %s functional_testing/Testsuite/1_Network_config_test/machine_script.py  %s@%s:'
+    j.do.execute('sshpass -p%s scp -o \'StrictHostKeyChecking=no\' -P %s functional_testing/Openvcloud/compute_node_hosted/1_Network_config_test/machine_script.py  %s@%s:'
                  %(account['password'], cloudspace_publicport, account['login'], cloudspace_publicIP))
     connection = j.remote.cuisine.connect(cloudspace_publicIP, cloudspace_publicport, account['password'], account['login'])
     connection.user(account['login'])
