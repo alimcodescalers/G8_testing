@@ -9,7 +9,7 @@ import multiprocessing
 
 def main():
     config = ConfigParser.ConfigParser()
-    config.read("Testsuite/8_node_maintenance_test/parameters.cfg")
+    config.read("functional_testing/Openvcloud/compute_node_hosted/8_node_maintenance_test/parameters.cfg")
     cpu = int(config.get("parameters", "cpu"))
     memory = int(config.get("parameters", "memory"))
     Bdisksize = int(config.get("parameters", "Bdisksize"))
@@ -44,9 +44,9 @@ def main():
 
     machine = pcl.actors.cloudapi.machines.get(machineId)
     account = machine['accounts'][0]
-    j.do.execute('sshpass -p%s scp -o \'StrictHostKeyChecking=no\' -P %s functional_testing/Testsuite/8_node_maintenance_test/machine_script.py %s@%s:'
+    j.do.execute('sshpass -p%s scp -o \'StrictHostKeyChecking=no\' -P %s functional_testing/Openvcloud/compute_node_hosted/8_node_maintenance_test/machine_script.py %s@%s:'
                          %(account['password'], cloudspace_publicport, account['login'], cloudspace_publicip))
-    j.do.execute('sshpass -p%s scp -o \'StrictHostKeyChecking=no\' -P %s functional_testing/Testsuite/6_vm_live_migration_test/check_script.py %s@%s:'
+    j.do.execute('sshpass -p%s scp -o \'StrictHostKeyChecking=no\' -P %s functional_testing/Openvcloud/compute_node_hosted/6_vm_live_migration_test/check_script.py %s@%s:'
                          %(account['password'], cloudspace_publicport, account['login'], cloudspace_publicip))
 
 
