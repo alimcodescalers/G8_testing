@@ -11,6 +11,7 @@ ccl = j.clients.osis.getNamespace('cloudbroker')
 pcl = j.clients.portal.getByInstance('main')
 scl = j.clients.osis.getNamespace('system')
 
+j.do.execute('apt-get install sshpass')
 sys.path.append(os.getcwd())
 from performance_testing.utils import utils
 USERNAME = 'networktestuser'

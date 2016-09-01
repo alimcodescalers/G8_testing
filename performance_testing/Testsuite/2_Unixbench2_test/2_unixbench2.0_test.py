@@ -23,6 +23,7 @@ def main():
     vm_specs = [no_of_disks, data_disksize, Bdisksize, memory, cpus]
     Res_dir = config.get("parameters", "Res_dir")
 
+    j.do.execute('apt-get install sshpass')
     j.do.execute("mkdir -p %s" %Res_dir)
     hostname = j.do.execute('hostname')[1].replace("\n","")
     test_num = len(os.listdir('%s'%Res_dir))+1

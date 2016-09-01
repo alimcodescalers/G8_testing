@@ -31,6 +31,7 @@ def main():
     j.do.execute('mkdir -p /test_results')
     sys.path.append(os.getcwd())
     from utils import utils
+    j.do.execute('apt-get install sshpass')
 
     stacks = utils.remove_ovsnodes_from_stacks(utils.get_stacks(ccl), ccl)
     #current_stack = ccl.stack.search({'referenceId': str(j.application.whoAmI.nid), 'gid': j.application.whoAmI.gid})[1]
