@@ -7,13 +7,8 @@ Two types of automated functional tests are available for OpenvCloud:
 > Remember: **ovc_master** is the virtual machine in the master cloud space where the Cloud Broker Portal is running, and all other OpenvCloud portals
 
 Following test suites are available:
-- Access Control List API 
-- OpenvCloud API
-- End User Portal
-
-In order to install them you have two options:
-- Install and run directly on **ovc_master**, using **setup\_run\_tests\_local.sh**, as documented [here](local_setup.md)
-- Install and run from a remote machine, using **run\_tests\_remote.sh**, as documented [here](remote_setup.md)
+- Access Control List APIs & OpenvCloud APIs, both documented [here](API/API.md)
+- End User Portal, documented [here](portal/portal.md)
 
 All test suites are auto-documented with **Sphinx**, [click here](http://85.255.197.106:8888/) to see an online version.
 
