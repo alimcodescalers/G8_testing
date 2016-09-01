@@ -2,7 +2,7 @@
 
 For setting up the functional tests, you have two options:
 - Install directly on **ovc\_master**, so locally from the perspective of where the tests will run
-- Install on your local machine, so remotely from the perspective of where the tests will run
+- Install from your local machine, so remotely from the perspective of where the tests will run
 
 Here we discuss the second option.
 
@@ -14,6 +14,8 @@ There are two steps:
   - [test_suite] specifies the test suite to execute, optionally indicating that you only want to run a specific vest case of the test suite, all formatted as:
     - [python\_script\_name]:[class\_name].[test\_case\_name]
   - Use the `-b` option to specify the branch of the test suite
+
+> **Note**: Make sure that your private SSH key is stored in the **.ssh** directory on the remote machine, since the **run\_tests\_remote.sh** script will look for it there, ignoring the private key that has been loaded in the memory of **ssh-agent**. So using the -A option when connecting over SSH to a remote machine where your SSH keys are not in the **.ssh** directory will result in **run\_tests\_remote.sh** not being able to get to access your private SSH key, and not being able to connect to GitHub.
 
 So first, clone the **G8_testing** repository:
 ```
