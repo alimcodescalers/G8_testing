@@ -50,9 +50,9 @@ def main():
 
 if __name__ == "__main__":
     sys.path.append(os.getcwd())
-    from utils import utils
+    from performance_testing.utils import utils
 
-    Res_dir = '/root/org_quality/Environment_testing/tests_results/CS_limits_results'
+    Res_dir = 'tests_results/CS_limits_results'
     j.do.execute("mkdir -p %s" % Res_dir)
     hostname = j.do.execute('hostname')[1].replace("\n", "")
     test_num = len(os.listdir('%s' % Res_dir)) + 1
