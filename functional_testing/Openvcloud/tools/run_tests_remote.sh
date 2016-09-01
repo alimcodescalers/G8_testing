@@ -39,7 +39,6 @@ dir=`uuidgen`
 directory=${directory:-/opt/code/$dir}
 
 su jenkins
-mkdir $directory
 eval $(ssh-agent -s)
 private_key="$HOME/.ssh/id_awesomo"
 if [ ! -e $private_key ]; then
