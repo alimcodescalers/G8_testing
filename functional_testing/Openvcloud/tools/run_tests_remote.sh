@@ -37,7 +37,7 @@ node=${node:-ovc_master}
 branch=${branch:-master}
 directory=${directory:-/opt/code}
 
-#su jenkins
+su jenkins
 eval $(ssh-agent -s)
 private_key="$HOME/.ssh/id_awesomo"
 if [ ! -e $private_key ]; then
