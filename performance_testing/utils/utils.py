@@ -66,19 +66,17 @@ def create_machine_onStack(stackid, cloudspace, iteration, ccl, pcl, scl, vm_spe
                                                              name='node%s%s' % (stackid, iteration), imageId=imageId, sizeId=sizeId,
                                                              disksize=boot_diskSize, stackid=stackid, datadisks=datadisks_list)
     except:
-        try:
-            print('   |--failed to create the machine with error')
-            vm = ccl.vmachine.search({'name': 'node%s%s'% (stackid, iteration), 'cloudspaceId': cloudspace['id']})
-            if vm[0] != 0:
-                ccl.vmachine.delete(vm[1]['id'])
-            print('   |--trying to create the machine once more')
-            machineId = pcl.actors.cloudbroker.machine.createOnStack(cloudspaceId=cloudspace['id'],
+        print('   |--failed to create the machine with error')
+        vm = ccl.vmachine.search({'name': 'node%s%s'% (stackid, iteration), 'cloudspaceId': cloudspace['id']})
+        if vm[0] != 0:
+            ccl.vmachine.delete(vm[1]['id'])
+        print('   |--trying to create the machine once more')
+        machineId = pcl.actors.cloudbroker.machine.createOnStack(cloudspaceId=cloudspace['id'],
                                                                      name='node%s%s' % (stackid, iteration),
                                                                      imageId=imageId, sizeId=sizeId,
                                                                      disksize=boot_diskSize, stackid=stackid,
                                                                      datadisks=datadisks_list)
-        except:
-            import ipdb;ipdb.set_trace()
+
     print('   |--finished creating machine: %s' % machineId)
     if queue:
         #needed for 4_unixbench for parallel execution
