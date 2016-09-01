@@ -40,12 +40,12 @@ branch=${branch:-master}
 
 mkdir -p $directory
 cd $directory
-rm -rf org_quality
+rm -rf G8_testing
 ssh-add -l
-echo -e "${GREEN}** Clone org_quality $branch branch ...${NC}"
+echo -e "${GREEN}** Clone G8_testing $branch branch ...${NC}"
 ssh-add -l
-git clone -b $branch git@github.com:gig-projects/org_quality.git
-cd org_quality/Itsyouonline_testing/api_testing
+git clone -b $branch git@github.com:0-complexity/G8_testing.git
+cd G8_testing/Itsyouonline_testing/api_testing
 echo -e "${GREEN}** Checking python-pip ...${NC}";
 which pip2 || apt-get install -y python-pip
 echo -e "${GREEN}** Activating JumpScale virtual env ...${NC}"
