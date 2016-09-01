@@ -21,12 +21,12 @@ from selenium.webdriver.support.ui import Select
 class BaseTest(unittest.TestCase):
     def __init__(self, *args, **kwargs):
         super(BaseTest, self).__init__(*args, **kwargs)
-        self.environment_url = config['main']['url']
+        self.environment_url = config['main']['env']
+        self.environment_storage = config['main']['location']
         self.admin_username = config['main']['admin']
         self.admin_password = config['main']['passwd']
         self.browser = config['main']['browser']
         self.base_page = self.environment_url + '/ays'
-        self.environment_storage = config['main']['storage']
         self.elements = utils_xpath.elements.copy()
 
     def setUp(self):
