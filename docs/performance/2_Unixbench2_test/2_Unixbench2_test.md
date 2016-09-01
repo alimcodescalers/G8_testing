@@ -22,7 +22,7 @@
 ### Running the test
 - Go to performance testing directory: 
   ```
-  cd G8_testing/performance_testing
+  cd /root/G8_testing/performance_testing
   ```
   
 - For changing the test parameters:
