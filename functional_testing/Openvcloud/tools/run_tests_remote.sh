@@ -40,7 +40,7 @@ node=${node:-ovc_master}
 branch=${branch:-master}
 dir=`uuidgen`
 directory=${directory:-/opt/code/$dir}
-echo -e "${GREEN}** Session working dir is: [$directory]${NC}"
+echo -e "${GREEN}** Session working directory is: [$directory]${NC}"
 
 su jenkins
 eval $(ssh-agent -s)
@@ -59,14 +59,17 @@ eval $(bash tools/gen_connection_params.sh $grid $node) # This script returns SS
 script="'bash -s' < tools/setup_run_tests_local.sh $branch $directory $environment $testsuite "
 eval "ssh -A -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -M -l root -i $SSHKEY -o ProxyCommand=\"$PROXY\" $HOST $script"
 
+echo -e "${GREEN}** Collect logs and result..${NC}"
 # Collect result
 rm -rf logs/
 mkdir logs/
-eval "scp -r -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -i $SSHKEY -o ProxyCommand=\"$PROXY\" root@$HOST:$directory/G8_testing/functional_testing/Openvcloud/logs/* logs/"
+eval "scp -r -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -i $SSHKEY -o ProxyCommand=\"$PROXY\" root@$HOST:$directory/G8_testing/functional_testing/Openvcloud/logs/* logs/" 2> /dev/null
 
 # Copy test results
-eval "scp -r -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -i $SSHKEY -o ProxyCommand=\"$PROXY\" root@$HOST:$directory/G8_testing/functional_testing/Openvcloud/testresults.xml ."
+eval "scp -r -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -i $SSHKEY -o ProxyCommand=\"$PROXY\" root@$HOST:$directory/G8_testing/functional_testing/Openvcloud/testresults.xml ." 2> /dev/null
 
-#delete test suite directory from the env
-eval "rm -rf -r -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -i $SSHKEY -o ProxyCommand=\"$PROXY\" root@$HOST:$directory"
+#delete test suite directory from the environment node
+script="rm -rf $directory"
+eval "ssh -A -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -M -l root -i $SSHKEY -o ProxyCommand=\"$PROXY\" $HOST $script" 2> /dev/null
+echo -e "${GREEN}** Done **${NC}"
 
