@@ -10,7 +10,7 @@ def main():
     vm_specs = [no_of_disks, data_disksize, Bdisksize, memory, cpus]
 
     sys.path.append(os.getcwd())
-    from utils import utils
+    from performance_testing.utils import utils
 
     ccl = j.clients.osis.getNamespace('cloudbroker')
     pcl = j.clients.portal.getByInstance('main')
