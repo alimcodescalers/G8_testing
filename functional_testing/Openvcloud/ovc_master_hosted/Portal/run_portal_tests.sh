@@ -1,12 +1,15 @@
 #!/bin/bash
 
+GREEN='\033[0;32m' # Green color
+NC='\033[0m'       # No color
+
 usage(){
 	echo "This script to run OVC Portal test suite on local environment"
-	echo -e "\nUsage:\n$0 [options] [environment] \n"
+	echo -e "\nUsage:\n$0 ${GREEN}[options] [environment_url] [location]${NC} \n"
 	echo "Options:"
-	echo "    -i    the admin id"
+	echo "    -i    the admin user id"
 	echo "    -p    the secret password"
-	echo "    -u    the user browser"
+	echo "    -u    the browser name"
 	echo "    -b    the testsuite branch"
 	echo "    -d    directory contains testsuite"
 }
@@ -17,48 +20,74 @@ then
 	exit 0
 fi
 
+
 OPTIND=1
 while getopts ":i:p:u:b:d:" opt; do
   case $opt in
-	i) id="$OPTARG";;
+	i) user_id="$OPTARG";;
 	p) passwd="$OPTARG";;
-	u) user="$OPTARG";;
-    b) branch="$OPTARG";;
-    d) directory="$OPTARG";;
+	u) browser="$OPTARG";;
+        b) branch="$OPTARG";;
+        d) directory="$OPTARG";;
     \?) echo "Invalid option -$OPTARG" >&2 ; exit 1;;
   esac
 done
 shift $((OPTIND-1))
+
 if [[ -z $1 ]]
 then
     usage
     exit 1
 fi
+
+if [[ -z $2 ]]
+then
+    usage
+    exit 1
+fi
+
 environment=$1
-id=${id:-gig}
-user=${user:-firefox}
+location=$2
+browser=${browser:-firefox}
 branch=${branch:-master}
 directory=${directory:-end_user}
 
-rm -rf org_quality
-ssh-add -l
-echo -e "${GREEN}** Clone org_quality $branch branch ...${NC}"
-ssh-add -l
-git clone -b $branch git@github.com:gig-projects/org_quality.git
-cd org_quality/Openvcloud/Portal
-echo -e "${GREEN}** Checking python-pip ...${NC}";
+
+echo -e "${GREEN}**  environment $environment ...${NC}"
+echo -e "${GREEN}**  location $location ...${NC}"
+echo -e "${GREEN}**  user_id $user_id ...${NC}"
+echo -e "${GREEN}**  passwd $passwd ...${NC}"
+echo -e "${GREEN}**  browser $browser ...${NC}"
+echo -e "${GREEN}**  branch $branch ...${NC}"
+echo -e "${GREEN}**  directory $directory ...${NC}"
+
 which pip2 || apt-get install -y python-pip
-echo -e "${GREEN}** Activating JumpScale virtual env ...${NC}"
-sudo pip2 install virtualenv
+echo -e "${GREEN}** Activating virtual env ...${NC}"
 virtualenv venv
 source venv/bin/activate
-echo -e "${GREEN}** Installing org_quality requirements ...${NC}"
-sudo pip2 install -r requirements.txt
+echo -e "${GREEN}** Installing portal test suite requirements ...${NC}"
+pip2 install -r requirements.txt
 echo -e "${GREEN}** Running tests ...${NC}"
-Xvfb :99 -ac
-export DISPLAY=:99
-nosetests -v $directory --tc-file config.ini --tc=main.url:$environment --tc=main.admin:$id --tc=main.passwd:$passwd --tc=main.browser:$user  --with-xunit --xunit-file='testresults.xml' --with-progressive
+#Xvfb :99 -ac
+#export DISPLAY=:99
+echo -e "${GREEN}** Start nose for $directory browser $browser...${NC}"
 
+if [[ -z $user_id ]]
+then
+    echo "read from user and passwd from config file"
+    nosetests -v $directory --tc-file=config.ini --tc=main.env:$environment --tc=main.location:$location --tc=main.browser:$browser  --with-xunit --xunit-file='testresults.xml' --with-progressive
+else
+    if [[ -z $passwd ]]
+    then
+        echo "enter passwd for user $user_id"
+    else
+        echo "update user and passwd"
+        nosetests -v $directory --tc-file=config.ini --tc=main.env:$environment --tc=main.location:$location --tc=main.browser:$browser  --tc=main.admin:$user_id --tc=main.admin:$passwd --with-xunit --xunit-file='testresults.xml' --with-progressive
+    fi
+fi
+ 
+#nosetests -v $directory --tc-file=config.ini --tc=main.env:$environment --tc=main.location:$location --tc=main.admin:$user_id --tc=main.browser:$browser  --with-xunit --xunit-file='testresults.xml' --with-progressive
+#nosetests -v $directory --tc-file=config.ini --with-xunit --xunit-file='testresults.xml' --with-progressive
 
 # Collect result
-
+echo -e "${GREEN}** DONE ** ...${NC}"
