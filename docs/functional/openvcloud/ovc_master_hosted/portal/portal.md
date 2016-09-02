@@ -8,7 +8,7 @@ Currently only the **End User Portal** is covered.
   - Chrome
   - Firefox <= 46.0
 - Current tests can only run from Ubuntu Desktop, not server
-- Make sure Pythin 2.7 is installed:
+- Make sure **Python 2.7** is installed:
   ```
   sudo apt-get update
   sudo apt-get install python2.7
@@ -22,13 +22,12 @@ Currently only the **End User Portal** is covered.
   source venv/bin/activate
   ```
 
-- Install some other dependenies:
+- Install some other dependenies listed in **requirements.txt**, for avaivalable from the **G8_testing** repository:
   ```
   git clone https://github.com/0-complexity/G8_testing.git
   cd G8_testing/functional_testing/Openvcloud/ovc_master_hosted/Portal
   pip install -r requirements.txt
   ```
-
 
 ### Running the tests
 
