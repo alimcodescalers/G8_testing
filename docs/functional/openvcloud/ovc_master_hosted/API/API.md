@@ -8,16 +8,19 @@ In order to install and run the API test suites (the first two in the list) you 
 - Install and run from a remote machine, using **run\_tests\_remote.sh**
 - Install and run directly on **ovc_master**, using **setup\_run\_tests\_local.sh**
 
+Both are discussed here below.
+
+
 ### Install and run from a remote machine
 
 There are two steps:
 1. Clone the **G8_testing** repository to the remote machine, probably your local machine
 2. Run the **run\_tests\_remote.sh** script with the required parameters:
-  - [grid_name] specifies the name of the grid
-  - [env_name] specifies the name of the environment
-  - [test_suite] specifies the test suite to execute, optionally indicating that you only want to run a specific vest case of the test suite, all formatted as:
-    - [python\_script\_name]:[class\_name].[test\_case\_name]
-  - Use the `-b` option to specify the branch of the test suite
+  - **[grid_name]** specifies the name of the grid
+  - **[env_name]** specifies the name of the environment
+  - **[test_suite]** specifies the test suite to execute, optionally indicating that you only want to run a specific vest case of the test suite, all formatted as:
+    - **[python\_script\_name]**:**[class\_name]**.**[test\_case\_name]**
+  - Use the **-b** option to specify the branch of the test suite
 
 > **Note**: Make sure that your private SSH key is stored in the **.ssh** directory on the remote machine, since the **run\_tests\_remote.sh** script will look for it there, ignoring the private key that has been loaded in the memory of **ssh-agent**. So using the -A option when connecting over SSH to a remote machine where your SSH keys are not in the **.ssh** directory will result in **run\_tests\_remote.sh** not being able to get to access your private SSH key, and not being able to connect to GitHub.
 
@@ -49,9 +52,6 @@ What actually will happen:
   - As the script will lookup to SSH key from the environment repository, make sure that you have access to it
 - It will call the **setup_run_tests_local.sh** which is discussed below passing the test case parameters
 - The result will be fed back in the file **testresults.xml** and all collected log information in the **logs** directory
-
-stsuite>
-```
 
 
 ### Install and run directly on ovc_master
