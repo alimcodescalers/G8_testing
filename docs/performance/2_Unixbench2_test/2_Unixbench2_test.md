@@ -8,27 +8,31 @@
 ### Test case description
 - Create an account
 - Create a cloud space for all nodes
-- Create the number of vms you want to run unixbench on
-- Install unixbench on the created virtual machines then run unixbench on them
-- Run unixbench on the first VM only and store its score
-- Run unixbench on all VMs , then store all VMs unixbench scores
-
+- Create the number of virtual machines you want to run UnixBench on
+- Install UnixBench on the created virtual machines
+- Run UnixBench on the first VM only and store its score
+- Run UnixBench on all VMs, then store all UnixBench scores
 
 ### Expected result
-- Create a result table providing the average UnixBench score per virtual machine  
+- Create a result table providing the average UnixBench score per virtual machine:
 
-|vm name  | CPU's  | Memory | HDD | Iteration 1 | Iteration 2 | ... | iteration x | Avg Unixbench score|
+  |VM name  | CPUs  | Memory | HDD | Iteration 1 | Iteration 2 | ... | Iteration x | Avg UnixBench Score|
 
 ### Running the test
-- Go to performance testing directory: 
+- Go to performance testing directory:
+
   ```
   cd /root/G8_testing/performance_testing
   ```
-- For changing the test parameters:
+
+- Change the test parameters:
+
   ```
   vim Testsuite/2_Unixbench2_test/parameters.cfg 
   ```
+
 - Following parameters can be configured:
+
   ```  
   # Results Directory: write absolute directory
   Res_dir: /root/G8_testing/tests_results/2_unixbench2
@@ -50,15 +54,22 @@
   #Boot Disk size(in GB), please choose between these values [10, 20, 50, 100, 250, 500, 1000, 2000]
   Bdisksize: 100
   ```
-- Finally to start the test:
+
+- Finally start the test:
+
   ```
   jspython Testsuite/2_Unixbench2_test/2_unixbench2.0_test.py 
   ```
+
 - After the test has been completed, the test will clean itself.
 
 ### Result sample
-- Results can be found in /G8_testing/tests_results/Unixbench_results/(date)_(cpu_name).(env_name)_testresults(run_number)/
+Results can be found in seperate files:
+
+```
+cd G8_testing/tests_results/Unixbench_results/(date)_(cpu_name).(env_name)_testresults(run_number)/
 vim (date)_(cpu_name).(env_name)_testresults(run_number).csv
+```
 
 
 ![unixbench](https://cloud.githubusercontent.com/assets/15011431/14142022/b3a054de-f68b-11e5-8996-259aca0fba93.png)
