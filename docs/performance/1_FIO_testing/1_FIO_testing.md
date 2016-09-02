@@ -19,17 +19,21 @@
 
 ### Running the test
 - Prior to running the script we need to make sure that the environment is clean. To clean the environment we need to use the `tear_down.py` script:
+
   ```
   cd G8_testing/Environment_testing/performance_testing
   jspython scripts/tear_down.py --clean
   ```
 
 - Before running the test we need to set up the required parameters in the config file:
+
   ```
   cd G8_testing/performance_testing/Testsuite/1_fio_vms
   vim Perf_parameters.cfg
   ```
+
 - Following paramenters are settable in the config file:
+
   ```
   # No of cloudspaces --> an account is created for each cloudspace and Number of cloudspaces should be
   #less than or equal that of cpu nodes
@@ -90,17 +94,21 @@
   # username
   username: perftestuser
   ```
+
 - The actual test is divided into 2 scripts:
   - **demo\_create\_vms.py** creates all virtual machines on the environment
   - **demo\_run\_fio.py** actually runs the FIO tests on all virtual machines in parallel
 - For instance in order to create 25 virtual machines and use 10 of the to run the test:
+
   ```
   cd G8_testing/performance_testing/
   jspython Testsuite/1_fio_vms/demo_create_vms.py 25
   jspython Testsuite/1_fio_vms/demo_run_fio.py 10 
   ```
+
 - You can rerun **demo\_run\_fio.py** as much as needed against different parameters
 - After finishing the test, make sure that the test is teared down for the user **perftestuser**:
+
   ```
   cd G8_testing/performance_testing
   jspython scripts/tear_down.py perftestuser 
@@ -108,14 +116,18 @@
 
 ### Check the test results
 - If we want to check the results of the test we need to check the following file:
+
   ```
   cd /G8_testing/tests_results/FIO_test/(date)_(cpu_name).(env_name)_testresults(run_number)/
   vim (date)_(cpu_name).(env_name)_testresults(run_number).csv
   ```
+
 - If we want to check the parameters used for that test we need to check the following file:
+
   ```
   vim /G8_testing/tests_results/FIO_test/(date)_(cpu_name).(env_name)_testresults(run_number)/Perf_parameters.cfg
   ```
+
 - In the test result file we can view the following information:
   - Total IOPS per virtual machine per iteration
   - Avergage CPU Load
