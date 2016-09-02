@@ -6,33 +6,33 @@
 - Have admin access to one of the physical compute nodes
 
 ### Test description
--  Create a user
-  - username: perftestuser.
+-  Create a user:
+  - username: perftestuser
   - password: gig12345
 - Create a cloud space, with a randomly generated name
 - Create the required number of virtual machines
-  - The virtual machines will we spread over the number of nodes you indicated in `Perf_parameters.cfg`
-  - VM's name is formatted like "nodex_y", where x = the stackId where the VM is installed and y = the number of the virtual machine
-- Install flexible I/O tester tool (FIO) and create data disks 
-- Make sure to update the `Perf_parameters.cfg` file with the parameters needed
+  - The virtual machines will we spread over the number of nodes you indicated in **Perf_parameters.cfg**
+  - The names of the virtual machines are formatted as "nodex_y", where x is the ID of the node (stack) and y is the number of the virtual machine
+- Install **Flexible I/O** (FIO) tester tool and create and mount the data disks 
+- Make sure to update **Perf_parameters.cfg** with the parameters needed
 
 
 ### Running the test
-- Prior to running the script we need to make sure that the environment is clean. To clean the environment we need to use the `tear_down.py` script:
+- Prior to running the script make sure that the environment is clean, using the **tear_down.py** script:
 
   ```
   cd G8_testing/Environment_testing/performance_testing
   jspython scripts/tear_down.py --clean
   ```
 
-- Before running the test we need to set up the required parameters in the config file:
+- Then set the required parameters in **Perf_parameters.cfg**:
 
   ```
   cd G8_testing/performance_testing/Testsuite/1_fio_vms
   vim Perf_parameters.cfg
   ```
 
-- Following paramenters are settable in the config file:
+- Following parameters are settable in **Perf_parameters.cfg**:
 
   ```
   # No of cloudspaces --> an account is created for each cloudspace and Number of cloudspaces should be
@@ -96,7 +96,7 @@
   ```
 
 - The actual test is divided into 2 scripts:
-  - **demo\_create\_vms.py** creates all virtual machines on the environment
+  - **demo\_create\_vms.py** creates all virtual machines
   - **demo\_run\_fio.py** actually runs the FIO tests on all virtual machines in parallel
 - For instance in order to create 25 virtual machines and use 10 of the to run the test:
 
@@ -106,8 +106,8 @@
   jspython Testsuite/1_fio_vms/demo_run_fio.py 10 
   ```
 
-- You can rerun **demo\_run\_fio.py** as much as needed against different parameters
-- After finishing the test, make sure that the test is teared down for the user **perftestuser**:
+- You can rerun **demo\_run\_fio.py** as many times as needed, using different parameters
+- After finishing the test, make sure that the test environments is teared down using the **tear_down.py** specifying the user **perftestuser**:
 
   ```
   cd G8_testing/performance_testing
@@ -115,14 +115,14 @@
   ```
 
 ### Check the test results
-- If we want to check the results of the test we need to check the following file:
+- The results of the tests are available in separate files:
 
   ```
-  cd /G8_testing/tests_results/FIO_test/(date)_(cpu_name).(env_name)_testresults(run_number)/
+  cd G8_testing/tests_results/FIO_test/(date)_(cpu_name).(env_name)_testresults(run_number)/
   vim (date)_(cpu_name).(env_name)_testresults(run_number).csv
   ```
 
-- If we want to check the parameters used for that test we need to check the following file:
+- For each of the results there is also a copy available of the used **Perf_parameters.cfg** file:
 
   ```
   vim /G8_testing/tests_results/FIO_test/(date)_(cpu_name).(env_name)_testresults(run_number)/Perf_parameters.cfg
@@ -132,4 +132,4 @@
   - Total IOPS per virtual machine per iteration
   - Avergage CPU Load
   
-- For each run of the **demo\_run\_fio.py**, there is a separated folder that is created which has its own CSV file and parameters file as discribed in the first point 
+- For each run of the **demo\_run\_fio.py**, there is a separated folder that is created which has its own CSV file and parameters file as discribed in the first point
