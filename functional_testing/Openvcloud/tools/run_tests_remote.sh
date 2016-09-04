@@ -71,5 +71,5 @@ eval "scp -r -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -i $SSH
 #delete test suite directory from the environment node
 script="rm -rf $directory"
 eval "ssh -A -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -M -l root -i $SSHKEY -o ProxyCommand=\"$PROXY\" $HOST $script" 2> /dev/null
-echo -e "${GREEN}** Done **${NC}"
+echo -e "${GREEN}** DONE **${NC}"
 
