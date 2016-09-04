@@ -1,4 +1,4 @@
-from Itsyouonline_testing.api_testing.utils import BaseTest
+from Itsyouonline.api_testing.utils import BaseTest
 import types
 import unittest
 
