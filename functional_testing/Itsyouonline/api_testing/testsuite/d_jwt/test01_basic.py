@@ -1,4 +1,4 @@
-from Itsyouonline_testing.api_testing.utils import BaseTest
+from functional_testing.Itsyouonline.api_testing.utils import BaseTest
 
 
 class JWTBasicTests(BaseTest):
