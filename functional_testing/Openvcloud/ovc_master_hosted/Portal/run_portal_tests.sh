@@ -61,6 +61,7 @@ echo -e "${GREEN}**  browser $browser ...${NC}"
 echo -e "${GREEN}**  branch $branch ...${NC}"
 echo -e "${GREEN}**  directory $directory ...${NC}"
 
+cd G8_testing/functional_testing/Openvcloud/ovc_master_hosted/Portal
 which pip2 || apt-get install -y python-pip
 echo -e "${GREEN}** Activating virtual env ...${NC}"
 virtualenv venv
@@ -72,21 +73,21 @@ echo -e "${GREEN}** Running tests ...${NC}"
 #export DISPLAY=:99
 echo -e "${GREEN}** Start nose for $directory browser $browser...${NC}"
 
-if [[ -z $user_id ]]
-then
-    echo "read from user and passwd from config file"
-    nosetests -v $directory --tc-file=config.ini --tc=main.env:$environment --tc=main.location:$location --tc=main.browser:$browser  --with-xunit --xunit-file='testresults.xml' --with-progressive
-else
-    if [[ -z $passwd ]]
-    then
-        echo "enter passwd for user $user_id"
-    else
-        echo "update user and passwd"
-        nosetests -v $directory --tc-file=config.ini --tc=main.env:$environment --tc=main.location:$location --tc=main.browser:$browser  --tc=main.admin:$user_id --tc=main.admin:$passwd --with-xunit --xunit-file='testresults.xml' --with-progressive
-    fi
-fi
+#if [[ -z $user_id ]]
+#then
+#    echo "read from user and passwd from config file"
+#    nosetests -v $directory --tc-file=config.ini --tc=main.env:$environment --tc=main.location:$location --tc=main.browser:$browser  --with-xunit --xunit-file='testresults.xml' --with-progressive
+#else
+#    if [[ -z $passwd ]]
+#    then
+#        echo "enter passwd for user $user_id"
+#    else
+#        echo "update user and passwd"
+#        nosetests -v $directory --tc-file=config.ini --tc=main.env:$environment --tc=main.location:$location --tc=main.browser:$browser  --tc=main.admin:$user_id --tc=main.admin:$passwd --with-xunit --xunit-file='testresults.xml' --with-progressive
+#    fi
+#fi
  
-#nosetests -v $directory --tc-file=config.ini --tc=main.env:$environment --tc=main.location:$location --tc=main.admin:$user_id --tc=main.browser:$browser  --with-xunit --xunit-file='testresults.xml' --with-progressive
+xvfb-run -a nosetests -v $directory --tc-file=config.ini --tc=main.env:$environment --tc=main.location:$location --tc=main.admin:$user_id --tc=main.browser:$browser  --with-xunit --xunit-file='testresults.xml' --with-progressive
 #nosetests -v $directory --tc-file=config.ini --with-xunit --xunit-file='testresults.xml' --with-progressive
 
 # Collect result
