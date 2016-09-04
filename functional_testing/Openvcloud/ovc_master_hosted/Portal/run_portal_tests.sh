@@ -61,8 +61,7 @@ echo -e "${GREEN}**  browser $browser ...${NC}"
 echo -e "${GREEN}**  branch $branch ...${NC}"
 echo -e "${GREEN}**  directory $directory ...${NC}"
 
-git clone -b $branch git@github.com:0-complexity/G8_testing.git
-cd G8_testing/functional_testing/Openvcloud/ovc_master_hosted/Portal
+cd functional_testing/Openvcloud/ovc_master_hosted/Portal
 which pip2 || apt-get install -y python-pip
 echo -e "${GREEN}** Activating virtual env ...${NC}"
 virtualenv venv
