@@ -35,10 +35,10 @@ class AdminMenu(BaseTest):
                        'Access Overview']
 
         self.lg("check left menu")
-        self.compare_original_list_with_exist_list("ays_arrow", "left_menu", compo_menu)
+        self.compare_original_list_with_exist_list("", "left_menu", compo_menu)
 
         self.lg("check ays menu")
-        self.compare_original_list_with_exist_list("ays_text", "ays_menu",ays_menu)
+        self.compare_original_list_with_exist_list("", "ays_menu",ays_menu)
 
         self.lg("check cloudbroker menu")
         self.compare_original_list_with_exist_list("cloudbroker_arrow", "cloudbroker_menu", cloud_broker_menu)
