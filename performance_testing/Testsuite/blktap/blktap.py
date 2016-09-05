@@ -41,8 +41,8 @@ j.do.execute('cp Testsuite/blktap/Perf_parameters.cfg %s' %Res_dir)
 
 print('Creating %s disks on the fuse file system' %no_of_disks)
 for i in range(no_of_disks):
-    j.do.execute('qemu-img create -f raw openvstorage+tcp:10.103.1.22:26203/archive/disk%s %sG'%(i+1, disk_size))
-    j.do.execute("tap-ctl create -a openvstorage+tcp:10.103.1.22:26203/archive/disk%s"%i+1)
+    j.do.execute('qemu-img create -f raw openvstorage+tcp:10.103.1.22:26203/archive/disk%s %sG'%((i+1), disk_size))
+    j.do.execute("tap-ctl create -a openvstorage+tcp:10.103.1.22:26203/archive/disk%s"%(i+1))
 
 
 #k=0
