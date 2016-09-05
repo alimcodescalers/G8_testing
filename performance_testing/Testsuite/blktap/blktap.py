@@ -24,7 +24,12 @@ rwmixwrite=int(config.get("perf_parameters", "rwmixwrite"))
 no_of_disks = int(config.get("perf_parameters", "no_of_disks"))
 disk_size = int(config.get("perf_parameters", "disk_size"))
 time_diff = int(config.get("perf_parameters", "time_diff"))
+ovs_nodes_No = int(config.get("perf_parameters", "ovs_nodes_No"))
+ovs_nodes=config.get("perf_parameters", "ovs_nodes")
+ovs_nodes_list=ovs_nodes.split('-')
+
 Res_dir = config.get("perf_parameters", "Res_dir")
+ovs_port = int(config.get("perf_parameters", "ovs_port"))
 j.do.execute('mkdir -p %s/'%Res_dir)
 
 
@@ -40,9 +45,14 @@ j.do.execute('cp Testsuite/blktap/Perf_parameters.cfg %s' %Res_dir)
 
 
 print('Creating %s disks on the fuse file system' %no_of_disks)
+ovs_nodes_list
+p=0
 for i in range(no_of_disks):
-    j.do.execute('qemu-img create -f raw openvstorage+tcp:10.103.1.22:26203/archive/disk%s %sG'%((i+1), disk_size))
-    j.do.execute("tap-ctl create -a openvstorage+tcp:10.103.1.22:26203/archive/disk%s"%(i+1))
+    j.do.execute('qemu-img create -f raw openvstorage+tcp:%s:%s/archive/disk%s %sG'%(ovs_nodes_list[p], ovs_port, (i+1), disk_size))
+    j.do.execute("tap-ctl create -a openvstorage+tcp:%s:%s/archive/disk%s"%(ovs_nodes_list[p], ovs_port, (i+1)))
+    p += 1
+    if (p==ovs_nodes_No):
+        p=0
 
 
 #k=0
@@ -98,4 +108,6 @@ utils.collect_results(titles, results, '%s' %Res_dir)
 
 #cleaning
 j.do.execute("bash Testsuite/blktap/clean")
+for i in range(ovs_nodes_No):
+    j.do.execute("sshpass -p rooter ssh root@%s 'rm -rf /mnt/vmstor/archive/*' " %ovs_nodes_list[i])
 
