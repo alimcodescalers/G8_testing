@@ -99,7 +99,7 @@ class BaseTest(unittest.TestCase):
 
     def cloudbroker_account_create(self, name, username, email, location, maxMemoryCapacity=-1,
                                    maxVDiskCapacity=-1, maxCPUCapacity=-1, maxNumPublicIP=-1):
-        accountId = self.api.cloudbroker.account.create(name, username, email, location,
+        accountId = self.api.cloudbroker.account.create(name, username, email,
                                                         maxMemoryCapacity=maxMemoryCapacity,
                                                         maxVDiskCapacity=maxVDiskCapacity,
                                                         maxCPUCapacity=maxCPUCapacity,
