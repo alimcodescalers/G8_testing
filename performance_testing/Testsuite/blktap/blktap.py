@@ -59,7 +59,7 @@ for i in range(no_of_disks):
 def run_fio(k):
     j.do.execute('fio --bs=%s --filename=/dev/xen/blktap-2/tapdev%s --iodepth=%s --direct=%s --ioengine=libaio '
                  ' --gtod_reduce=1 --name=test_iter1 --size=%sM --readwrite=%s --rwmixwrite=%s'
-                 ' --numjobs=3 --group_reporting  --runtime=%s '
+                 ' --group_reporting  --runtime=%s '
                  '--output=%s/disk_%s.out'%(bs, k, iodepth, direct_io, data_size, IO_type,
                                             rwmixwrite, testrun_time, Res_dir, k+1))
 
@@ -108,6 +108,5 @@ utils.collect_results(titles, results, '%s' %Res_dir)
 
 #cleaning
 j.do.execute("bash Testsuite/blktap/clean")
-for i in range(ovs_nodes_No):
-    j.do.execute("sshpass -p rooter ssh root@%s 'rm -rf /mnt/vmstor/archive/*' " %ovs_nodes_list[i])
+j.do.execute("sshpass -p rooter ssh root@%s 'rm -rf /mnt/vmstor/archive/*' " %ovs_nodes_list[0])
 
