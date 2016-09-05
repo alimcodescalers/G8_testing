@@ -88,6 +88,8 @@ echo -e "${GREEN}** Start nose for $directory browser $browser...${NC}"
 #fi
  
 #xvfb-run -a nosetests -v $directory --tc-file=config.ini --tc=main.env:$environment --tc=main.location:$location --tc=main.admin:$user_id --tc=main.browser:$browser  --with-xunit --xunit-file='testresults.xml' --with-progressive
+Xvfb :99 -ac
+export DISPLAY=:99
 nosetests -v $directory --tc-file=config.ini --tc=main.env:$environment --tc=main.location:$location --tc=main.admin:$user_id --tc=main.browser:$browser  --with-xunit --xunit-file='testresults.xml' --with-progressive
 
 # Collect result
