@@ -16,7 +16,6 @@ from selenium.webdriver.common.action_chains import ActionChains
 from . import utils_xpath
 from pytractor.exceptions import AngularNotFoundException
 from selenium.webdriver.support.ui import Select
-from pyvirtualdisplay import Display
 
 
 class BaseTest(unittest.TestCase):
@@ -36,8 +35,6 @@ class BaseTest(unittest.TestCase):
         self._logger = logging.LoggerAdapter(logging.getLogger('portal_testsuite'),
                                              {'testid': self.shortDescription() or self._testID})
         self.lg('Testcase %s Started at %s' % (self._testID, self._startTime))
-        self.display = Display(visible=0, size=(1024, 768))
-        self.display.start()
         self.set_browser()
         self.wait = WebDriverWait(self.driver, 30)
         for temp in range(5):
@@ -62,7 +59,6 @@ class BaseTest(unittest.TestCase):
         Environment cleanup and logs collection.
         """
         self.driver.quit()
-        self.display.stop()
         if hasattr(self, '_startTime'):
             executionTime = time.time() - self._startTime
         self.lg('Testcase %s ExecutionTime is %s sec.' % (self._testID, executionTime))
