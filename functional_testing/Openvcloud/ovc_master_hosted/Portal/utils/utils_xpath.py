@@ -79,5 +79,5 @@ elements = {
     "account_delete": "html/body/div[2]/div/div/div[1]/ul/li[4]/a",
     "account_delete_reason": ".//*[@id='action-Delete']/div/div[2]/div[3]/div/input",
     "account_delete_confirm": ".//*[@id='action-Delete']/div/div[3]/button[2]",
-    "account_page_status": "html/body/div[2]/div/div/table[1]/tbody/tr[2]/td[2]"
+    "account_page_status": "html/body/div[2]/div/div/table[1]/tbody/tr[3]/td[2]"
 }
