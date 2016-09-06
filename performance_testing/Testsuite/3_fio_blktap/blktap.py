@@ -24,10 +24,9 @@ rwmixwrite=int(config.get("perf_parameters", "rwmixwrite"))
 no_of_disks = int(config.get("perf_parameters", "no_of_disks"))
 disk_size = int(config.get("perf_parameters", "disk_size"))
 time_diff = int(config.get("perf_parameters", "time_diff"))
-ovs_nodes_No = int(config.get("perf_parameters", "ovs_nodes_No"))
 ovs_nodes=config.get("perf_parameters", "ovs_nodes")
 ovs_nodes_list=ovs_nodes.split('-')
-
+ovs_nodes_No=len(ovs_nodes_list)
 Res_dir = config.get("perf_parameters", "Res_dir")
 ovs_port = int(config.get("perf_parameters", "ovs_port"))
 j.do.execute('mkdir -p %s/'%Res_dir)
@@ -43,7 +42,6 @@ j.do.execute('cp Testsuite/3_fio_blktap/Perf_parameters.cfg %s' %Res_dir)
 
 try:
     print('Creating %s disks' %no_of_disks)
-    ovs_nodes_list
     p=0
     for i in range(no_of_disks):
         j.do.execute('qemu-img create -f raw openvstorage+tcp:%s:%s/archive/disk%s %sG'
@@ -66,7 +64,6 @@ try:
     for k in range(no_of_disks):
         p = multiprocessing.Process(target=run_fio, args=(k,))
         processes.append(p)
-        k += 1
     for k in range(len(processes)):
         processes[k].start()
         print('FIO testing has been started on /dev/xen/blktap-2/tapdev%s' %(k))
