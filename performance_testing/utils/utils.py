@@ -26,11 +26,8 @@ def create_user(USERNAME, email, pcl, scl):
     scl.user.set(user)
 
 def create_account_cloudspace(USERNAME, email, ACCOUNTNAME, ccl, pcl, scl, cs_name=''):
-
-    loc = ccl.location.search({})[1]['locationCode']
-
     print 'Creating Account with accountname %s' % ACCOUNTNAME
-    accountId = pcl.actors.cloudbroker.account.create(ACCOUNTNAME, USERNAME, email, loc)
+    accountId = pcl.actors.cloudbroker.account.create(ACCOUNTNAME, USERNAME, email)
     cloudspace = create_cloudspace(accountId, USERNAME, ccl, pcl, cs_name='')
     return cloudspace
 
@@ -188,9 +185,8 @@ def FIO_test(vm_pubip_pubport, pcl, data_size, testrun_time, Res_dir, iteration,
 
 def create_account(USERNAME, email, ACCOUNTNAME, ccl, pcl):
 
-    loc = ccl.location.search({})[1]['locationCode']
     print 'Creating Account with accountname %s' % ACCOUNTNAME
-    accountId = pcl.actors.cloudbroker.account.create(ACCOUNTNAME, USERNAME, email, loc)
+    accountId = pcl.actors.cloudbroker.account.create(ACCOUNTNAME, USERNAME, email)
     return accountId
 
 def create_cloudspace(accountId, username, ccl, pcl, cs_name=''):
