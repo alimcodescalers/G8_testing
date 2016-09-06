@@ -1,6 +1,7 @@
 from ...utils.utils import BaseTest
 from ..page_elements_xpath import menu_page
-
+import unittest
+@unittest.skip("bug#356")
 class AdminMenu(BaseTest):
     def __init__(self, *args, **kwargs):
         super(AdminMenu, self).__init__(*args, **kwargs)
