@@ -18,7 +18,7 @@ scl = j.clients.osis.getNamespace('system')
 
 def delete_accounts(accounts):
     for account in accounts:
-        if account['name'] not in ['test_storage', 'gig'] :
+        if account['name'] not in ['test_deployment', 'gig'] :
             print('   |--Deleting account: %s' % account['name'])
             pcl.actors.cloudbroker.account.delete(account['id'], reason='testing')
             for _ in xrange(600):
