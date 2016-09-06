@@ -70,11 +70,12 @@ echo -e "${GREEN}** Installing portal test suite requirements ...${NC}"
 pip2 install -r requirements.txt
 echo -e "${GREEN}** Running tests ...${NC}"
 #Xvfb :99 -ac
-export DISPLAY=:99
+#export DISPLAY=:99
 
 echo -e "${GREEN}** Start nose for $directory browser $browser...${NC}"
-#xvfb-run -a nosetests -v $directory --tc-file=config.ini --tc=main.env:$environment --tc=main.location:$location --tc=main.admin:$user_id --tc=main.browser:$browser  --with-xunit --xunit-file='testresults.xml' --with-progressive
-nosetests -v $directory --tc-file=config.ini --tc=main.env:$environment --tc=main.location:$location --tc=main.admin:$user_id --tc=main.browser:$browser  --with-xunit --xunit-file='testresults.xml' --with-progressive
+xvfb-run -a nosetests -v $directory --tc-file=config.ini --tc=main.env:$environment --tc=main.location:$location --tc=main.admin:$user_id --tc=main.browser:$browser  --with-xunit --xunit-file='testresults.xml' --with-progressive
+#nosetests -v $directory --tc-file=config.ini --tc=main.env:$environment --tc=main.location:$location --tc=main.admin:$user_id --tc=main.browser:$browser  --with-xunit --xunit-file='testresults.xml' --with-progressive
+
 
 # Collect result
 echo -e "${GREEN}** DONE ** ...${NC}"

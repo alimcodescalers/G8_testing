@@ -45,7 +45,7 @@ class BaseTest(unittest.TestCase):
                 time.sleep(1)
         else:
             raise AngularNotFoundException
-        self.driver.maximize_window()
+        self.driver.set_window_size(1920,1080)
         for temp in range(5):
             if self.wait_until_element_located(self.elements["username_textbox"]):
                 break

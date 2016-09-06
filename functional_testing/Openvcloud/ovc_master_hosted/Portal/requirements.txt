@@ -9,4 +9,5 @@ selenium
 pytractor
 mozmill
 chromedriver_installer
-pyvirtualdisplay
+xvfb
+
