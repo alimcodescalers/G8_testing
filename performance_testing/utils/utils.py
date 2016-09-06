@@ -128,7 +128,8 @@ def setup_machine(cloudspace, machineId, cs_publicport, pcl, no_of_disks, fio=No
         connection.apt_get('install fio')
         if fio != 'onlyfio':
             connection.apt_get('install sysstat')
-            machine_mount_disks(connection, account, machineId, no_of_disks)
+            #machine_mount_disks(connection, account, machineId, no_of_disks)
+            format_disks(connection, account, machineId, no_of_disks)
         if telegraf:
             connection.run('echo %s | sudo -S wget https://dl.influxdata.com/telegraf/releases/telegraf_1.0.0-beta3_amd64.deb' %account['password'])
             connection.run('echo %s | sudo -S dpkg -i telegraf_1.0.0-beta3_amd64.deb' %account['password'])
@@ -137,6 +138,13 @@ def setup_machine(cloudspace, machineId, cs_publicport, pcl, no_of_disks, fio=No
                      %(account['password'], cs_publicport, account['login'], cloudspace_publicip))
             time.sleep(2)
             connection.run('echo %s | sudo -S service telegraf restart; sleep 4' %account['password'], timeout=10)
+
+def format_disks(connection, account, machineId, no_of_disks=6):
+    list = ['b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k']
+    print('   |--formating disks for machine:%s' % machineId)
+    for i in range(no_of_disks):
+        connection.run('echo %s | sudo -S mkfs.ext4 /dev/vd%s' %(account['password'],list[i]))
+    print('   |--finished formating')
 
 
 def machine_mount_disks(connection, account, machineId, no_of_disks=6):
@@ -174,9 +182,9 @@ def FIO_test(vm_pubip_pubport, pcl, data_size, testrun_time, Res_dir, iteration,
                      %(account['password'], cs_publicport, account['login'], cloudspace_publicip, machineId, iteration, write_type, Res_dir))
         list=['b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k']
         for i in range(no_of_disks):
-            connection.run('echo %s | sudo -S umount /dev/vd%s ' %(account['password'],list[i]))
+            #connection.run('echo %s | sudo -S umount /dev/vd%s ' %(account['password'],list[i]))
             connection.run('echo %s | sudo -S mkfs.ext4 /dev/vd%s' %(account['password'],list[i]))
-            connection.run('echo %s | sudo -S mount /dev/vd%s /mnt/disk_%s' %(account['password'],list[i], list[i]))
+            #connection.run('echo %s | sudo -S mount /dev/vd%s /mnt/disk_%s' %(account['password'],list[i], list[i]))
 
 
 
