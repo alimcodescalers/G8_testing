@@ -1,7 +1,7 @@
 ## OpenvCloud API Functional Tests
 
 There are currently two test suites for the OpenvCloud APIs:
-- Access Control List API 
+- Access Control List API
 - OpenvCloud API
 
 In order to install and run the API test suites (the first two in the list) you have two options:
@@ -88,6 +88,7 @@ This will run the **test003\_account\_get\_with\_readonly\_user()** test case of
 ### Test results
 
 You might want to install and use **tidy** in order to nicely format **testresults.xml**:
+
 ```
 apt-get install tidy
 tidy -xml -i testresults.xml > output.xml
@@ -96,4 +97,5 @@ cat output.xml
 <testsuite name="nosetests" tests="1" errors="0" failures="0" skip="0">
   <testcase classname="functional_testing.Openvcloud.ovc_master_hosted.ACL.a_basic_operations.acl_account_test.Read" name="test003_account_get_with_readonly_user" time="4.151">
   </testcase>
-</te
+</testsuite>
+```
