@@ -42,7 +42,7 @@ j.do.execute('mkdir -p %s/'%Res_dir)
 j.do.execute('cp Testsuite/3_fio_blktap/Perf_parameters.cfg %s' %Res_dir)
 
 try:
-    print('Creating %s disks on the fuse file system' %no_of_disks)
+    print('Creating %s disks' %no_of_disks)
     ovs_nodes_list
     p=0
     for i in range(no_of_disks):
