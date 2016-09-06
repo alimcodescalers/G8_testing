@@ -22,6 +22,7 @@ def main():
     Bdisksize = int(config.get("perf_parameters", "Bdisksize"))
     no_of_disks = int(config.get("perf_parameters", "no_of_disks"))
     data_disksize = int(config.get("perf_parameters", "data_disksize"))
+    No_of_cloudspaces = int(config.get("perf_parameters", "No_of_cloudspaces"))
     USERNAME = config.get("perf_parameters", "username")
     ACCOUNTNAME = str(uuid.uuid4())[0:8]
     Res_dir = config.get("perf_parameters", "Res_dir")
@@ -42,15 +43,27 @@ def main():
 
     email = "%s@test.com" % str(uuid.uuid4())[0:8]
     utils.create_user(USERNAME, email,  pcl, scl)
-    cloudspace = utils.create_account_cloudspace(USERNAME, email, ACCOUNTNAME, ccl, pcl, scl)
+
+    cloudspaces_list=[]
+    accountId = utils.create_account(USERNAME, email, ACCOUNTNAME, ccl, pcl)
+    for i in range(No_of_cloudspaces):
+        cloudspace = utils.create_cloudspace(accountId, USERNAME, ccl, pcl, cs_name='default_%s'%i)
+        cloudspaces_list.append(cloudspace)
+
+
+    #cloudspace = utils.create_account_cloudspace(USERNAME, email, ACCOUNTNAME, ccl, pcl, scl)
 
     vms_list = []
     i=0
+    c=0
     while i < No_of_vms:
         for stackId in stacks:
             cloudspace_publicport += 1
-            [machineId, cloudspace_publicip] = utils.create_machine_onStack(stackId, cloudspace, '_%s' %i, ccl, pcl, scl,
+            [machineId, cloudspace_publicip] = utils.create_machine_onStack(stackId, cloudspaces_list[c], '_%s' %i, ccl, pcl, scl,
                                                                           vm_specs, cloudspace_publicport, Res_dir='/test_results')
+            c += 1
+            if c==No_of_cloudspaces:
+                c=0
             vms_list.append({machineId: [cloudspace_publicip, cloudspace_publicport]})
             i += 1
             if i == No_of_vms:
