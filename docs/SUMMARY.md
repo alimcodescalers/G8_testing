@@ -14,5 +14,5 @@
     * [Snapshots Limit Test](functional/openvcloud/compute_node_hosted/9_vm_unlimited _snapshots/9_vm_unlimited _snapshots.md)
 * [Performance Testing](performance/performance.md)
   * [UnixBench Test](performance/2_Unixbench2_test/2_Unixbench2_test.md)
-  * [FIO Test](performance/10_FIO_testing/10_FIO_testing.md)
+  * [FIO Test](performance/1_FIO_testing/1_FIO_testing.md)
 * [Demolition Testing](demolition/demolition.md)
