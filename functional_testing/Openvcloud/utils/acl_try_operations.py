@@ -53,7 +53,7 @@ def try_account_write(self, operation='create_cloudspace'):
         created = self.user_api.cloudapi.machines.createTemplate(machineId=machineId,
                   templatename=str(uuid.uuid4()).replace('-', '')[0:10], basename=basename)
         self.assertTrue(created)
-        time.sleep(10)
+        time.sleep(100)
     else:
         raise AssertionError('Un-supported operation [%s]' % operation)
 
