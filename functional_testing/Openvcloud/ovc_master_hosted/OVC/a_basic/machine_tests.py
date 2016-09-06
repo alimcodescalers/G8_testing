@@ -663,9 +663,11 @@ class BasicTests(BasicACLTest):
 
         self.lg('- ')
         images = self.api.cloudapi.images.list()
+        imageId = False
         for image in images:
             if 'Windows' in image['name']:
                 imageId = int(image['id'])
+        self.assertTrue(imageId, 'No windows image found on the environment')
         self.lg('- Get all sizes')
         diskSizes = self.api.cloudapi.sizes.list(cloudspaceId)[0]['disks']
         for diskSize in diskSizes:

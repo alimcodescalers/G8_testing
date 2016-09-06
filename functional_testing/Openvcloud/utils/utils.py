@@ -69,7 +69,7 @@ class BaseTest(unittest.TestCase):
         self.account_owner = self.username
         self.lg('- create account for :%s' % self.account_owner)
         self.account_id = self.cloudbroker_account_create(self.account_owner, self.account_owner,
-                                                          self.email, self.location)
+                                                          self.email)
 
         self.account_owner_api = self.get_authenticated_user_api(self.account_owner)
         # self.cloudspace_id = self.account_owner_api.cloudapi.cloudspaces.list()[0]['id']
@@ -97,9 +97,9 @@ class BaseTest(unittest.TestCase):
         self.assertTrue(cloudspaceId)
         return cloudspaceId
 
-    def cloudbroker_account_create(self, name, username, email, location, maxMemoryCapacity=-1,
+    def cloudbroker_account_create(self, name, username, email, maxMemoryCapacity=-1,
                                    maxVDiskCapacity=-1, maxCPUCapacity=-1, maxNumPublicIP=-1):
-        accountId = self.api.cloudbroker.account.create(name, username, email, location,
+        accountId = self.api.cloudbroker.account.create(name, username, email,
                                                         maxMemoryCapacity=maxMemoryCapacity,
                                                         maxVDiskCapacity=maxVDiskCapacity,
                                                         maxCPUCapacity=maxCPUCapacity,

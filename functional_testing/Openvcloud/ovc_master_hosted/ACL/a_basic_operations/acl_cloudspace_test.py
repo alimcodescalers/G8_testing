@@ -346,6 +346,7 @@ class Read(ACLCLOUDSPACE):
                                                          accesstype='R')
 
         self.lg('4- List portforwarding with new user [user], should return 0 portforwarding')
+        sleep(2)
         portforwarding = self.user_api.cloudapi.portforwarding.list(cloudspaceId=self.cloudspace_id,
                                                                     machineId=machine_id)
         self.assertEqual(len(portforwarding), 0, 'Failed to list all cloudspace port forwarding!')

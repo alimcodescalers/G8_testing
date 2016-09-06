@@ -34,7 +34,7 @@ class ExtendedTests(BasicACLTest):
         self.lg('- create account with passing negative values in the account\'s limitation')
         try:
             self.cloudbroker_account_create(self.account_owner, self.account_owner, self.email,
-                                            self.location, maxMemoryCapacity=-5, maxVDiskCapacity=-3,
+                                            maxMemoryCapacity=-5, maxVDiskCapacity=-3,
                                             maxCPUCapacity=-4, maxNumPublicIP= -2)
         except HTTPError as e:
             self.lg('- expected error raised %s' % e.message)
@@ -42,7 +42,7 @@ class ExtendedTests(BasicACLTest):
 
         self.lg(' - create account with certain limits, should succeed')
         self.account_id = self.cloudbroker_account_create(self.account_owner, self.account_owner,
-                                                          self.email, self.location, maxMemoryCapacity=2,
+                                                          self.email, maxMemoryCapacity=2,
                                                           maxVDiskCapacity=60 , maxCPUCapacity=4,
                                                           maxNumPublicIP= 1)
         self.account_owner_api = self.get_authenticated_user_api(self.account_owner)
@@ -153,7 +153,7 @@ class ExtendedTests(BasicACLTest):
         """
         self.lg('- create account with certain limits, should succeed')
         self.account_id = self.cloudbroker_account_create(self.account_owner, self.account_owner, self.email,
-                                                          self.location, maxMemoryCapacity=12,
+                                                          maxMemoryCapacity=12,
                                                           maxVDiskCapacity=250 , maxCPUCapacity=6,
                                                           maxNumPublicIP= 2)
         self.account_owner_api = self.get_authenticated_user_api(self.account_owner)
@@ -224,7 +224,7 @@ class ExtendedTests(BasicACLTest):
         """
         self.lg('- create account with certain limits, should succeed')
         self.account_id = self.cloudbroker_account_create(self.account_owner, self.account_owner, self.email,
-                                                          self.location, maxMemoryCapacity=200,
+                                                          maxMemoryCapacity=200,
                                                           maxVDiskCapacity=500 , maxCPUCapacity=100,
                                                           maxNumPublicIP= 10)
         self.account_owner_api = self.get_authenticated_user_api(self.account_owner)

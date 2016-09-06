@@ -570,7 +570,7 @@ class Admin(ACLACCOUNT):
         self.lg('%s ENDED' % self._testID)
 
     @parameterized.expand(['create_cloudspace',
-                           'create_machineTemplate'
+#                            'create_machineTemplate' skip until fix https://github.com/gig-projects/org_quality/issues/471
                            ])
     def test002a_try_account_write_operations(self, operation):
         """ ACL-12
