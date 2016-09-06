@@ -133,7 +133,7 @@ class BaseTest(unittest.TestCase):
             return True
 
     def wait_until_element_located_and_has_text(self, xpath, text):
-        for temp in range(3):
+        for temp in range(10):
             try:
                 self.wait.until(EC.text_to_be_present_in_element((By.XPATH, xpath), text))
                 break
@@ -143,7 +143,7 @@ class BaseTest(unittest.TestCase):
             raise TimeoutException
 
     def wait_unti_element_clickable(self, name):
-        for temp in range(3):
+        for temp in range(10):
             try:
                 self.wait.until(EC.element_to_be_clickable((By.XPATH, name)))
             except (TimeoutException, StaleElementReferenceException):
@@ -172,7 +172,7 @@ class BaseTest(unittest.TestCase):
 
     def get_text(self, element):
         element = self.elements[element]
-        for temp in range(3):
+        for temp in range(10):
             try:
                 return self.driver.find_element_by_xpath(element).text
             except:
