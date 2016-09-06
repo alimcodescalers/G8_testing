@@ -45,14 +45,14 @@ ssh-add -l
 echo -e "${GREEN}** Clone G8_testing $branch branch ...${NC}"
 ssh-add -l
 git clone -b $branch git@github.com:0-complexity/G8_testing.git
-cd G8_testing/Itsyouonline_testing/api_testing
+cd G8_testing/functional_testing/Itsyouonline/api_testing
 echo -e "${GREEN}** Checking python-pip ...${NC}";
 which pip2 || apt-get install -y python-pip
 echo -e "${GREEN}** Activating JumpScale virtual env ...${NC}"
 pip2 install virtualenv
 virtualenv venv
 source venv/bin/activate
-echo -e "${GREEN}** Installing org_quality requirements ...${NC}"
+echo -e "${GREEN}** Installing G8_testing requirements ...${NC}"
 sudo pip2 install -r requirements.txt
 echo -e "${GREEN}** Running tests ...${NC}"
 nosetests -v testsuite --tc-file config.ini --tc=main.env_url:$environment --tc=main.applicationid:$id --tc=main.secret:$passwd --tc=main.user:$user  --with-xunit --xunit-file='testresults.xml' --with-progressive
