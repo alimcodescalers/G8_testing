@@ -13,7 +13,7 @@ from utils import utils
 
 
 config = ConfigParser.ConfigParser()
-config.read("Testsuite/blktap/Perf_parameters.cfg")
+config.read("Testsuite/3_fio_blktap/Perf_parameters.cfg")
 testrun_time = int(config.get("perf_parameters", "testrun_time"))
 data_size = int(config.get("perf_parameters", "data_size"))/3
 IO_type = config.get("perf_parameters", "IO_type")
@@ -39,7 +39,7 @@ test_num = len(os.listdir('%s'%Res_dir))+1
 test_folder = "/"+datetime.datetime.today().strftime('%Y-%m-%d')+"_"+hostname+"_testresults_%s"%test_num
 Res_dir = Res_dir + test_folder
 j.do.execute('mkdir -p %s/'%Res_dir)
-j.do.execute('cp Testsuite/blktap/Perf_parameters.cfg %s' %Res_dir)
+j.do.execute('cp Testsuite/3_fio_blktap/Perf_parameters.cfg %s' %Res_dir)
 
 try:
     print('Creating %s disks on the fuse file system' %no_of_disks)
@@ -106,6 +106,6 @@ try:
 
 finally:
     #cleaning
-    j.do.execute("bash Testsuite/blktap/clean.sh")
+    j.do.execute("bash Testsuite/3_fio_blktap/clean.sh")
     j.do.execute("sshpass -p rooter ssh root@%s 'rm -rf /mnt/vmstor/archive/*' " %ovs_nodes_list[0])
 
