@@ -27,8 +27,8 @@ while getopts ":i:p:u:b:d:" opt; do
 	i) user_id="$OPTARG";;
 	p) passwd="$OPTARG";;
 	u) browser="$OPTARG";;
-        b) branch="$OPTARG";;
-        d) directory="$OPTARG";;
+    b) branch="$OPTARG";;
+    d) directory="$OPTARG";;
     \?) echo "Invalid option -$OPTARG" >&2 ; exit 1;;
   esac
 done
@@ -62,20 +62,17 @@ echo -e "${GREEN}**  branch $branch ...${NC}"
 echo -e "${GREEN}**  directory $directory ...${NC}"
 
 cd functional_testing/Openvcloud/ovc_master_hosted/Portal
-which pip2 || apt-get install -y python-pip
+which pip2 || sudo apt-get install -y python-pip
 echo -e "${GREEN}** Activating virtual env ...${NC}"
 virtualenv venv
 source venv/bin/activate
 echo -e "${GREEN}** Installing portal test suite requirements ...${NC}"
 pip2 install -r requirements.txt
 echo -e "${GREEN}** Running tests ...${NC}"
-#Xvfb :99 -ac
-#export DISPLAY=:99
 
-echo -e "${GREEN}** Start nose for $directory browser $browser...${NC}"
-xvfb-run -a nosetests -v $directory --tc-file=config.ini --tc=main.env:$environment --tc=main.location:$location --tc=main.admin:$user_id --tc=main.browser:$browser  --with-xunit --xunit-file='testresults.xml' --with-progressive
-#nosetests -v $directory --tc-file=config.ini --tc=main.env:$environment --tc=main.location:$location --tc=main.admin:$user_id --tc=main.browser:$browser  --with-xunit --xunit-file='testresults.xml' --with-progressive
 
+sudo apt-get install xvfb
+xvfb-run -a nosetests -v $directory --tc-file=config.ini --tc=main.passwd:$passwd --tc=main.env:$environment --tc=main.location:$location --tc=main.admin:$user_id --tc=main.browser:$browser  --with-xunit --xunit-file='testresults.xml' --with-progressive
 
 # Collect result
 echo -e "${GREEN}** DONE ** ...${NC}"
