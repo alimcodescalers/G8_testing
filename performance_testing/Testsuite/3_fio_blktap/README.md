@@ -1,6 +1,8 @@
+**3_fio_blktap** is an **internal** test, so only documented here below.
 
-# FIO_blktap test Purpose:
- RUN FIO on some blktap devices (disks) on which their raw files on the fuse file system (/mnt/vmstor/ )
+
+# FIO_blktap test purpose:
+ RUN FIO on some blktap devices (disks) on which their raw files on the fuse file system (/mnt/vmstor/)
  and calculate the IOPS to be able to compare it with the fio_test that runs on the top of the vms so we
  can know how much loss due to QEMU and compare it with alba as well to figure out the loss due to the edge
 
@@ -34,4 +36,3 @@
 |   disk_2   |  7012 |
 | Total_IOPS | 13983 |
 +------------+-------+
-

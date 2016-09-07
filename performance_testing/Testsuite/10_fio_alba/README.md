@@ -1,2 +1,4 @@
-Documented [here](/docs/performance/10_FIO_testing/10_FIO_testing.md)
-#This test runs from ovs node in case of fargo release
+**10_fio_alba** is an **internal** test, so only documented here below.
+
+
+This test is designed to run from an Open vStorage node, and requires the Fargo release
