@@ -37,6 +37,6 @@ Do the following to install a local version and keep it up to date:
 
   ```
   firefox G8_testing/auto_generated_docs/_build/html/index.html
-  ````
+  ```
   
   ![](sphinx.png)
