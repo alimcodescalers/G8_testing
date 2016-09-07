@@ -37,6 +37,7 @@ def main():
     stacks = utils.remove_ovsnodes_from_stacks(utils.get_stacks(ccl), ccl)
     #current_stack = ccl.stack.search({'referenceId': str(j.application.whoAmI.nid), 'gid': j.application.whoAmI.gid})[1]
     #stacks.remove(current_stack['id'])
+    stacks = stacks[0:used_stacks]
     vm_specs = [no_of_disks, data_disksize, Bdisksize, memory, cpu]
     cloudspace_publicport = 7000
 
