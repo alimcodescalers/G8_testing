@@ -72,7 +72,7 @@ echo -e "${GREEN}** Running tests ...${NC}"
 
 
 sudo apt-get install xvfb
-xvfb-run -a nosetests -v $directory --tc-file=config.ini --tc=main.passwd:KrOe6gE9K5nCQdmretfXnj --tc=main.env:$environment --tc=main.location:$location --tc=main.admin:$user_id --tc=main.browser:$browser  --with-xunit --xunit-file='testresults.xml' --with-progressive
+xvfb-run -a nosetests -v $directory --tc-file=config.ini --tc=main.passwd:$passwd --tc=main.env:$environment --tc=main.location:$location --tc=main.admin:$user_id --tc=main.browser:$browser  --with-xunit --xunit-file='testresults.xml' --with-progressive
 
 # Collect result
 echo -e "${GREEN}** DONE ** ...${NC}"
