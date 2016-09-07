@@ -11,7 +11,7 @@
     * [Cloud Spaces Limit Test](functional/openvcloud/compute_node_hosted/5_cloudspace_limits_test/5_cloudspace_limits_test.md)
     * [VM Live Migration Test](functional/openvcloud/compute_node_hosted/6_vm_live_migration_test/6_vm_live_migration_test.md)
     * [Node Maintenance Test](functional/openvcloud/compute_node_hosted/8_node_maintenance_test/8_node_maintenance_test.md)
-    * [Snapshots Limit Test](functional/openvcloud/compute_node_hosted/9_vm_unlimited _snapshots/9_vm_unlimited _snapshots.md)
+    * [Snapshots Limit Test](functional/openvcloud/compute_node_hosted/9_vm_unlimited _snapshots/9_vm_unlimited snapshots.md)
   * [Hosted on any Remote Machine](functional/openvcloud/remote_machine_hosted/remote_machine_hosted.md)
     * [Portal Testing](functional/openvcloud/remote_machine_hosted//portal/portal.md)
 * [Performance Testing](performance/performance.md)
