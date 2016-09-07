@@ -1,6 +1,7 @@
 ## Summary
 
 * [Introduction](README.md)
+* [Auto-documentation with Sphinx](functional/openvcloud/sphinx.md))
 * [Functional Testing](functional/functional.md)
   * [Hosted on ovc_master](functional/openvcloud/ovc_master_hosted/ovc_master_hosted.md)
     * [API Testing](functional/openvcloud/ovc_master_hosted/API/API.md)

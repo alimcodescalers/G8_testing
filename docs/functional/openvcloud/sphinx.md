@@ -1,17 +1,10 @@
-## Sphinx
+## Auto-documentation with Sphinx
 
-For following functional tests auto-documentation is available:
+For following tests auto-documentation generated with **Sphinx** is available:
 - [OpenvCloud API Functional Tests](ovc_master_hosted/API/API.md)
-- [OpenvCloud Portal Testing](remote_machine_hosted//portal/portal.md)
+- [OpenvCloud Portal Functional Testing](remote_machine_hosted//portal/portal.md)
 
-
-
-using **Sphinx**
-
-
-
-
-, [click here](http://85.255.197.106:8888/) to see an online version.
+Click [here](http://85.255.197.106:8888/) to see an online version.
 
 Do the following to install a local version and keep it up to date:
 
