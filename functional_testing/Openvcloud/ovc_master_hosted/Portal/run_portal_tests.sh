@@ -56,7 +56,6 @@ directory=${directory:-end_user}
 echo -e "${GREEN}**  environment $environment ...${NC}"
 echo -e "${GREEN}**  location $location ...${NC}"
 echo -e "${GREEN}**  user_id $user_id ...${NC}"
-echo -e "${GREEN}**  passwd $passwd ...${NC}"
 echo -e "${GREEN}**  browser $browser ...${NC}"
 echo -e "${GREEN}**  branch $branch ...${NC}"
 echo -e "${GREEN}**  directory $directory ...${NC}"
