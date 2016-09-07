@@ -62,18 +62,18 @@ echo -e "${GREEN}**  branch $branch ...${NC}"
 echo -e "${GREEN}**  directory $directory ...${NC}"
 
 cd functional_testing/Openvcloud/ovc_master_hosted/Portal
-which pip2 || apt-get install -y python-pip
-echo -e "${GREEN}** Activating virtual env ...${NC}"
-virtualenv venv
-source venv/bin/activate
-echo -e "${GREEN}** Installing portal test suite requirements ...${NC}"
-pip2 install -r requirements.txt
-echo -e "${GREEN}** Running tests ...${NC}"
+#which pip2 || apt-get install -y python-pip
+#echo -e "${GREEN}** Activating virtual env ...${NC}"
+#virtualenv venv
+#source venv/bin/activate
+#echo -e "${GREEN}** Installing portal test suite requirements ...${NC}"
+#pip2 install -r requirements.txt
+#echo -e "${GREEN}** Running tests ...${NC}"
 #Xvfb :99 -ac
 #export DISPLAY=:99
 
-echo -e "${GREEN}** Start nose for $directory browser $browser...${NC}"
-xvfb-run -a nosetests -v $directory --tc-file=config.ini --tc=main.env:$environment --tc=main.location:$location --tc=main.admin:$user_id --tc=main.browser:$browser  --with-xunit --xunit-file='testresults.xml' --with-progressive
+#echo -e "${GREEN}** Start nose for $directory browser $browser...${NC}"
+xvfb-run -a nosetests -v admin_portal/admin/test01_create_account_user_cs_vm.py --tc-file=config.ini --tc=main.env:$environment --tc=main.location:$location --tc=main.admin:$user_id --tc=main.browser:$browser  --with-xunit --xunit-file='testresults.xml' --with-progressive
 #nosetests -v $directory --tc-file=config.ini --tc=main.env:$environment --tc=main.location:$location --tc=main.admin:$user_id --tc=main.browser:$browser  --with-xunit --xunit-file='testresults.xml' --with-progressive
 
 
