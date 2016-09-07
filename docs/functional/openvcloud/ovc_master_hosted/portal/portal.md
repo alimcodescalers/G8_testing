@@ -7,7 +7,7 @@ Currently only the **End User Portal** is covered.
 - Supported browsers for Ubuntu:
   - Chrome
   - Firefox <= 46.0
-- Current tests can only run from Ubuntu Desktop, not server
+
 - Make sure **Python 2.7** is installed:
 
   ```
@@ -52,6 +52,7 @@ admin = gig
 passwd = 
 browser = firefox
 ```
+- run from Ubuntu Desktop
 
 Run the test using **nosetests** using the required parameters:\
 
@@ -71,4 +72,10 @@ You can also overwrite the **config.ini** parameters:
 
 ```
 nosetests -v testsuite --tc-file=config.ini --tc=main.url:http://be-conv-2.demo.greenitglobe.com/  --tc=main.admin:gig 2>testresults.log
+```
+
+- run from Ubuntu server
+```
+sudo apt-get install xvfb
+xvfb-run -a nosetests -v end_user --tc-file=config.ini 2>testresults.log
 ```
