@@ -74,10 +74,10 @@ echo -e "${GREEN}**  directory $directory ...${NC}"
 
 #echo -e "${GREEN}** Start nose for $directory browser $browser...${NC}"
 #xvfb-run -a nosetests -v admin_portal/admin/test01_create_account_user_cs_vm.py --tc-file=config.ini --tc=main.env:$environment --tc=main.location:$location --tc=main.admin:$user_id --tc=main.browser:$browser  --with-xunit --xunit-file='testresults.xml' --with-progressive
-#nosetests -v $directory --tc-file=config.ini --tc=main.env:$environment --tc=main.location:$location --tc=main.admin:$user_id --tc=main.browser:$browser  --with-xunit --xunit-file='testresults.xml' --with-progressive
+
 
 sudo apt-get install xvfb
-xvfb-run -a nosetests -v admin_portal/admin/test01_create_account_user_cs_vm.py --tc-file=config.ini --tc=main.passwd:KrOe6gE9K5nCQdmretfXnj
+xvfb-run -a nosetests -v $directory --tc-file=config.ini --tc=main.passwd:KrOe6gE9K5nCQdmretfXnj --tc=main.env:$environment --tc=main.location:$location --tc=main.admin:$user_id --tc=main.browser:$browser  --with-xunit --xunit-file='testresults.xml' --with-progressive
 
 # Collect result
 echo -e "${GREEN}** DONE ** ...${NC}"
