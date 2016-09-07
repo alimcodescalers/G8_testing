@@ -1,0 +1,11 @@
+VM_index,Machine,Test_type,IOPS(1),cpuload(1),Testruntime(1)
+1,774,randrw,14010,0.8%,30500 msec
+2,776,randrw,25337,0.9%,30068 msec
+3,778,randrw,19389,0.9%,30059 msec
+4,780,randrw,24852,1.0%,30015 msec
+5,782,randrw,17395,1.2%,30013 msec
+6,784,randrw,26288,1.1%,30003 msec
+7,786,randrw,15732,1.1%,30211 msec
+8,788,randrw,15669,1.2%,30053 msec
+9,790,randrw,15738,1.2%,30096 msec
+10,792,randrw,16044,1.4%,30014 msec
