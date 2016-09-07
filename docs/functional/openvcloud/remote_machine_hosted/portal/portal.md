@@ -4,6 +4,8 @@ There are currently two sets of functional test suites for the OpenvCloud Portal
 - One covering the **End User Portal** ("end\_user")
 - Another is covering the **Cloud Broker Portal** ("admin\_portal")
 
+The actual tests are auto-documented [here](http://85.255.197.106:8888/) using **Sphinx**. For instructions on how to set-up this auto-documentation see the [section about auto-documentation](../../sphinx.md) in this guide.
+
 ### Requirements
 
 - Supported browsers for Ubuntu:

@@ -2,14 +2,15 @@
 
 There are currently two test suites for the OpenvCloud APIs:
 - Access Control List API
-- OpenvCloud API
+- OpenvCloud API (covering all non-ACL APIs)
+
+The actual tests are auto-documented [here](http://85.255.197.106:8888/) using **Sphinx**. For instructions on how to set-up this auto-documentation see the [section about auto-documentation](../../sphinx.md) in this guide.
 
 In order to install and run the API test suites you have two options:
 - Install and run from a remote machine, using **run\_tests\_remote.sh**
 - Install and run directly on **ovc_master**, using **setup\_run\_tests\_local.sh**
 
-Both are discussed here below.
-
+Both options are discussed here below.
 
 ### Install and run from a remote machine
 
