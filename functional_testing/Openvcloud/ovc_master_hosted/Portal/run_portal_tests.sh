@@ -73,9 +73,10 @@ cd functional_testing/Openvcloud/ovc_master_hosted/Portal
 #export DISPLAY=:99
 
 #echo -e "${GREEN}** Start nose for $directory browser $browser...${NC}"
-xvfb-run -a nosetests -v admin_portal/admin/test01_create_account_user_cs_vm.py --tc-file=config.ini --tc=main.env:$environment --tc=main.location:$location --tc=main.admin:$user_id --tc=main.browser:$browser  --with-xunit --xunit-file='testresults.xml' --with-progressive
+#xvfb-run -a nosetests -v admin_portal/admin/test01_create_account_user_cs_vm.py --tc-file=config.ini --tc=main.env:$environment --tc=main.location:$location --tc=main.admin:$user_id --tc=main.browser:$browser  --with-xunit --xunit-file='testresults.xml' --with-progressive
 #nosetests -v $directory --tc-file=config.ini --tc=main.env:$environment --tc=main.location:$location --tc=main.admin:$user_id --tc=main.browser:$browser  --with-xunit --xunit-file='testresults.xml' --with-progressive
 
+xvfb-run -a nosetests -v admin_portal/admin --tc-file=config.ini --tc=main.passwd:KrOe6gE9K5nCQdmretfXnj
 
 # Collect result
 echo -e "${GREEN}** DONE ** ...${NC}"
