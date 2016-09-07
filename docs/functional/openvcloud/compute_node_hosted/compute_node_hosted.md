@@ -1,8 +1,9 @@
 ## Functional Tests Hosted on a Compute Node
 
-Two types of automated functional tests are available for OpenvCloud:
-- Tests that run on **ovc_master**, discussed [here](../ovc_master_hosted/ovc_master_hosted.md)
+Three types of automated functional tests are available for OpenvCloud:
+- Tests that run on **ovc_master**, discussed [elsewhere in this guide](../ovc_master_hosted/ovc_master_hosted.md)
 - Tests that run on a physical **compute node**, discussed here below
+- Tests that can run on any **remote machine**, discussed [elsewhere in this guide](../remote_machine_hosted/remote_machine_hosted.md)
 
 The differences with these tests is that they have been designed to run on a physical compute node.
 
