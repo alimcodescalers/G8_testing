@@ -1,4 +1,4 @@
-## Functional Tests Hosted on any Remote server
+## Functional Tests Hosted on any Remote Machine
 
 Three types of automated functional tests are available for OpenvCloud:
 - Tests that run on **ovc_master**, discussed [elsewhere in this guide](../ovc_master_hosted/ovc_master_hosted.md)
