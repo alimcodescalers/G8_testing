@@ -4,7 +4,7 @@ There are currently two test suites for the OpenvCloud APIs:
 - Access Control List API
 - OpenvCloud API
 
-In order to install and run the API test suites (the first two in the list) you have two options:
+In order to install and run the API test suites you have two options:
 - Install and run from a remote machine, using **run\_tests\_remote.sh**
 - Install and run directly on **ovc_master**, using **setup\_run\_tests\_local.sh**
 

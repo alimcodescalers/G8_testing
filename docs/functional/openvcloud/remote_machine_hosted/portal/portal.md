@@ -1,13 +1,15 @@
 ## OpenvCloud Portals Functional Tests
 
-Currently only the **End User Portal** is covered.
+There are currently two sets of functional test suites for the OpenvCloud Portals:
+- One covering the **End User Portal** ("end\_user")
+- Another is covering the **Cloud Broker Portal** ("admin\_portal")
 
 ### Requirements
 
 - Supported browsers for Ubuntu:
   - Chrome
   - Firefox <= 46.0
-
+- Current tests can only run from Ubuntu Desktop, not server
 - Make sure **Python 2.7** is installed:
 
   ```
@@ -25,17 +27,18 @@ Currently only the **End User Portal** is covered.
   source venv/bin/activate
   ```
 
-- Clone the **G8_testing** repository:
+- After making sure your SSH private key is loaded by ssh-agent, clone the **G8_testing** repository,:
 
   ```
+  ssh-add -l
   git clone git@github.com:0-complexity/G8_testing.git
   ```
 
-- Install some other dependenies listed in **requirements.txt**, avaivalable from the **G8_testing** repository:
+- Install some other dependencies listed in **requirements.txt**, available from the **G8_testing** repository:
 
   ```
   cd G8_testing/functional_testing/Openvcloud/ovc_master_hosted/Portal
-  pip install -r requirements.txt
+  sudo pip install -r requirements.txt
   ```
 
 ### Running the tests
@@ -49,12 +52,11 @@ env = http://du-conv-2.demo.greenitglobe.com
 location = du-conv-2
 #location for the environment in the grid, ex.: du-conv-2, du-conv-1, du-conv-3
 admin = gig
-passwd = 
+passwd =
 browser = firefox
 ```
-- run from Ubuntu Desktop
 
-Run the test using **nosetests** using the required parameters:\
+Run the test using **nosetests** using the required parameters:
 
 ```
 nosetests -v testsuite_name --tc-file=config.ini  2>testresults.log
@@ -72,10 +74,4 @@ You can also overwrite the **config.ini** parameters:
 
 ```
 nosetests -v testsuite --tc-file=config.ini --tc=main.url:http://be-conv-2.demo.greenitglobe.com/  --tc=main.admin:gig 2>testresults.log
-```
-
-- run from Ubuntu server
-```
-sudo apt-get install xvfb
-xvfb-run -a nosetests -v end_user --tc-file=config.ini 2>testresults.log
 ```

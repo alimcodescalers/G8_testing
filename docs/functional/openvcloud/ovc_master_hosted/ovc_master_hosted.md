@@ -6,11 +6,9 @@ Two types of automated functional tests are available for OpenvCloud:
 
 > Remember: **ovc_master** is the virtual machine in the master cloud space where the **Cloud Broker Portal** is running, and all other OpenvCloud portals
 
-Following test suites are available:
-- Access Control List APIs & OpenvCloud APIs, both documented [here](API/API.md)
-- End User Portal, documented [here](portal/portal.md)
+Currently all API test suites are designed to be installed (hosted) on and run from **ovc_master**. There are two tests suites for the OpenvCloud API, Access Control List APIs and OpenvCloud APIs, both documented [here](API/API.md).
 
-All test suites are auto-documented with **Sphinx**, [click here](http://85.255.197.106:8888/) to see an online version.
+All API test suites are auto-documented with **Sphinx**, [click here](http://85.255.197.106:8888/) to see an online version.
 
 Do the following to install a local version and keep it up to date:
 
@@ -38,5 +36,5 @@ Do the following to install a local version and keep it up to date:
   ```
   firefox G8_testing/auto_generated_docs/_build/html/index.html
   ```
-  
+
   ![](sphinx.png)

@@ -2,9 +2,10 @@
 
 * [Introduction](README.md)
 * [Functional Testing](functional/functional.md)
+  * [Hosted on any Remote Machine](functional/openvcloud/remote_machine_hosted/remote_machine_hosted.md)
+    * [Portal Testing](functional/openvcloud/remote_machine_hosted//portal/portal.md)
   * [Hosted on ovc_master](functional/openvcloud/ovc_master_hosted/ovc_master_hosted.md)
     * [API Testing](functional/openvcloud/ovc_master_hosted/API/API.md)
-    * [Portal Testing](functional/openvcloud/ovc_master_hosted/portal/portal.md)
   * [Hosted on a Compute Node](functional/openvcloud/compute_node_hosted/compute_node_hosted.md)
     * [Network Configuration Test](functional/openvcloud/compute_node_hosted/1_network_config_test/1_network_config_test.md)
     * [Virtual Machines Limit Test](functional/openvcloud/compute_node_hosted/3_Env_Limit_test/3_Env_Limit_test.md)
