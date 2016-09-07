@@ -21,10 +21,12 @@ Currently only the **End User Portal** is covered.
   virtualenv venv
   source venv/bin/activate
   ```
-
-- Install some other dependenies listed in **requirements.txt**, for avaivalable from the **G8_testing** repository:
+- Clone the **G8_testing** repository:
   ```
-  git clone https://github.com/0-complexity/G8_testing.git
+  git clone git@github.com:0-complexity/G8_testing.git
+  ```
+- Install some other dependenies listed in **requirements.txt**, avaivalable from the **G8_testing** repository:
+  ```
   cd G8_testing/functional_testing/Openvcloud/ovc_master_hosted/Portal
   pip install -r requirements.txt
   ```
