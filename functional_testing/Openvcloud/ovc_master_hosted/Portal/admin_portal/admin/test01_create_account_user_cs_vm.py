@@ -8,14 +8,21 @@ class Account(BaseTest):
     def __init__(self, *args, **kwargs):
         super(Account, self).__init__(*args, **kwargs)
         self.elements.update(account_page.elements)
+        self.username = str(uuid.uuid4()).replace('-', '')[0:10]
+        self.account = str(uuid.uuid4()).replace('-', '')[0:10]
+        self.cloudspace = str(uuid.uuid4()).replace('-', '')[0:10]
+        self.machine_name = str(uuid.uuid4()).replace('-', '')[0:10]
+        self.password = str(uuid.uuid4()).replace('-', '')[0:10]
+        self.email = str(uuid.uuid4()).replace('-', '')[0:10] + "@g.com"
+        self.group = 'user'
 
     def setUp(self):
         super(Account, self).setUp()
         self.login()
 
     def test01_create_account_user_cs_vm(self):
-        """ PRTL-010
-        *Test case for create new user and update his password*
+        """ PRTL-021
+        *Test case for create new account, user, cloud space and Vm*
 
         **Test Scenario:**
 
@@ -31,13 +38,6 @@ class Account(BaseTest):
         #. delete the account
         #. delete the user
         """
-        self.username = str(uuid.uuid4()).replace('-', '')[0:10]
-        self.account = str(uuid.uuid4()).replace('-', '')[0:10]
-        self.cloudspace = str(uuid.uuid4()).replace('-', '')[0:10]
-        self.machine_name = str(uuid.uuid4()).replace('-', '')[0:10]
-        self.password = str(uuid.uuid4()).replace('-', '')[0:10]
-        self.email = str(uuid.uuid4()).replace('-', '')[0:10] + "@g.com"
-        self.group = 'user'
 
         self.lg('Create new username, user:%s password:%s' % (self.username,self.password))
         self.create_new_user(self.username,self.password,self.email,self.group)
@@ -55,7 +55,7 @@ class Account(BaseTest):
         self.create_cloud_space(self.account,self.cloudspace)
 
         self.lg('open cloud space page')
-        self.open_cloudspace_page(self.account,self.cloudspace)
+        self.open_cloudspace_page(self.cloudspace)
 
         self.lg('create virtual machine')
         self.create_virtual_machine(self.account, self.cloudspace, self.machine_name)

@@ -70,7 +70,8 @@ elements = {
     "virtual_machine_delete_confirm": ".//*[@id='action-Delete']/div/div[3]/button[2]",
     "virtual_machine_page_status": "html/body/div[2]/div/div/table[1]/tbody/tr[12]/td[2]",
     "cloudspace_action": "html/body/div[2]/div/div/div[1]/button",
-    "cloudspace_delete": "html/body/div[2]/div/div/div[1]/ul/li[2]/a",
+    "cloudspace_delete_deployed": "html/body/div[2]/div/div/div[1]/ul/li[2]/a",
+    "cloudspace_delete_virtual": "html/body/div[2]/div/div/div[1]/ul/li[3]/a",
     "cloudspace_delete_reason": ".//*[@id='action-DeleteCloudSpace']/div/div[2]/div[3]/div/input",
     "cloudspace_delete_confirm": ".//*[@id='action-DeleteCloudSpace']/div/div[3]/button[2]",
     "cloudspace_page_status": "html/body/div[2]/div/div/table[1]/tbody/tr[6]/td[2]",
@@ -79,5 +80,6 @@ elements = {
     "account_delete": "html/body/div[2]/div/div/div[1]/ul/li[4]/a",
     "account_delete_reason": ".//*[@id='action-Delete']/div/div[2]/div[3]/div/input",
     "account_delete_confirm": ".//*[@id='action-Delete']/div/div[3]/button[2]",
-    "account_page_status": "html/body/div[2]/div/div/table[1]/tbody/tr[2]/td[2]"
+    "account_page_status": "html/body/div[2]/div/div/table[1]/tbody/tr[2]/td[2]",
+    "user_name" : "html/body/div[2]/div/div/h2"
 }

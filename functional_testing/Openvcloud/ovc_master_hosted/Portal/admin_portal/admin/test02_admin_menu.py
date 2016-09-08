@@ -1,6 +1,7 @@
 from ...utils.utils import BaseTest
 from ..page_elements_xpath import menu_page
 import unittest
+
 @unittest.skip("bug#356")
 class AdminMenu(BaseTest):
     def __init__(self, *args, **kwargs):
@@ -13,7 +14,7 @@ class AdminMenu(BaseTest):
         self.get_page(self.base_page)
 
     def test01_admin_menu_items(self):
-        """ PRTL-000
+        """ PRTL-022
         *Test case to make sure that the admin portal menu work as expected*
 
         **Test Scenario:**

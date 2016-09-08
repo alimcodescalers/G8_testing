@@ -30,6 +30,7 @@ class BaseTest(unittest.TestCase):
         self.elements = utils_xpath.elements.copy()
 
     def setUp(self):
+        self.CLEANUP = {"users": [], "accounts": []}
         self._testID = self._testMethodName
         self._startTime = time.time()
         self._logger = logging.LoggerAdapter(logging.getLogger('portal_testsuite'),
@@ -45,7 +46,7 @@ class BaseTest(unittest.TestCase):
                 time.sleep(1)
         else:
             raise AngularNotFoundException
-        self.driver.set_window_size(1920,1080)
+        self.driver.set_window_size(1920, 1080)
         for temp in range(5):
             if self.wait_until_element_located(self.elements["username_textbox"]):
                 break
@@ -58,6 +59,18 @@ class BaseTest(unittest.TestCase):
         """
         Environment cleanup and logs collection.
         """
+        accounts = self.CLEANUP.get("accounts")
+        if accounts:
+            for account in accounts:
+                self.lg('Teardown -- delete account: %s' % account)
+                self.delete_account(account)
+
+        users = self.CLEANUP.get("users")
+        if users:
+            for user in users:
+                self.lg('Teardown -- delete user: %s' % user)
+                self.delete_user(user)
+
         self.driver.quit()
         if hasattr(self, '_startTime'):
             executionTime = time.time() - self._startTime
@@ -136,11 +149,11 @@ class BaseTest(unittest.TestCase):
         for temp in range(10):
             try:
                 self.wait.until(EC.text_to_be_present_in_element((By.XPATH, xpath), text))
-                break
+                return True
             except (TimeoutException, StaleElementReferenceException):
                 time.sleep(1)
         else:
-            raise TimeoutException
+            raise NameError(self.driver.find_element_by_xpath(xpath).text,"!=", text)
 
     def wait_unti_element_clickable(self, name):
         for temp in range(10):
@@ -306,6 +319,7 @@ class BaseTest(unittest.TestCase):
         time.sleep(1)
         self.set_text("username_search", self.username)
         self.wait_until_element_located_and_has_text(self.elements["username_table_first"], self.username)
+        self.CLEANUP["users"].append(self.username)
 
     def open_user_page(self, username=''):
         self.username = username
@@ -323,15 +337,19 @@ class BaseTest(unittest.TestCase):
 
         self.set_text("user_search", username)
         self.lg("check if this user is exist")
-        if self.check_element_is_exist("user_table_first_element"):
+        if self.wait_until_element_located_and_has_text(self.elements["username_table_first"],username):
+            self.lg("Delete %s user" % username)
             time.sleep(1)
+            self.assertEqual(self.get_text("user_table_first_element"),username)
             self.click("user_table_first_element")
+            self.assertEqual(self.get_text("user_name")[6:],username)
             self.click("user_action")
             self.click("user_delete")
             self.click("user_delete_confirm")
-            self.set_text("user_search", username)
+            del self.CLEANUP["users"][self.CLEANUP["users"].index(username)]
             return True
         else:
+            self.lg("There is no %s user" % username)
             return False
 
     def create_new_account(self, account='', username=''):
@@ -350,6 +368,7 @@ class BaseTest(unittest.TestCase):
         self.set_text("account_search", self.account)
         self.wait_until_element_located_and_has_text(self.elements["account_table_first_element"], self.account)
 
+        self.CLEANUP["accounts"].append(self.account)
         if account == '':
             return self.account
 
@@ -371,13 +390,19 @@ class BaseTest(unittest.TestCase):
         self.lg('open %s account' % account)
         self.open_account_page(self.account)
 
-        self.lg('delete the account')
-        self.click('account_action')
-        self.click('account_delete')
-        self.set_text('account_delete_reason', "Test")
-        self.click("account_delete_confirm")
-        self.wait_until_element_located_and_has_text(self.elements["account_page_status"],
-                                                     "DESTROYED")
+        if self.driver.find_element_by_xpath(self.elements["account_page_status"]).text == "CONFIRMED":
+            self.lg('delete %s account' % self.account)
+            self.click('account_action')
+            self.click('account_delete')
+            self.set_text('account_delete_reason', "Test")
+            self.click("account_delete_confirm")
+            self.wait_until_element_located_and_has_text(self.elements["account_page_status"],
+                                                         "DESTROYED")
+            del self.CLEANUP["accounts"][self.CLEANUP["accounts"].index(self.account)]
+        elif self.driver.find_element_by_xpath(self.elements["account_page_status"]).text == "DESTROYED":
+            self.lg('%s account is already deleted' % self.account)
+        else:
+            raise NameError('"%s" account status has an error in the page %s' % account)
 
     def create_cloud_space(self, account='', cloud_space=''):
         self.account = account
@@ -400,12 +425,9 @@ class BaseTest(unittest.TestCase):
                                                      self.cloud_space_name)
         return self.cloud_space_name
 
-    def open_cloudspace_page(self, account='', cloudspace=''):
-        self.account = account
+    def open_cloudspace_page(self, cloudspace=''):
         self.cloudspace = cloudspace
-
-        self.open_account_page(self.account)
-
+        self.open_base_page("cloud_broker", "cloud_spaces")
         self.set_text("cloud_space_search", self.cloudspace)
         self.wait_until_element_located_and_has_text(self.elements["cloud_space_table_first_element_2"],
                                                      self.cloudspace)
@@ -418,21 +440,31 @@ class BaseTest(unittest.TestCase):
         self.cloudspace = cloudspace
 
         self.lg('open %s cloudspace' % cloudspace)
-        self.open_cloudspace_page(self.account, self.cloudspace)
+        self.open_cloudspace_page(self.cloudspace)
+        if self.driver.find_element_by_xpath(self.elements["cloudspace_page_status"]).text != "DESTROYED":
+            self.lg('delete "%s" cloudspace' % self.cloudspace)
+            self.click('cloudspace_action')
+            if self.driver.find_element_by_xpath(self.elements["cloudspace_page_status"]).text == "DEPLOYED":
+                self.click('cloudspace_delete_deployed')
+            elif self.driver.find_element_by_xpath(self.elements["cloudspace_page_status"]).text == "VIRTUAL":
+                self.click('cloudspace_delete_virtual')
 
-        self.lg('delete the cloudspace')
-        self.click('cloudspace_action')
-        self.click('cloudspace_delete')
-        self.set_text('cloudspace_delete_reason', "Test")
-        self.click("cloudspace_delete_confirm")
-        time.sleep(0.5)
-        self.get_page(self.driver.current_url)
-        for temp in range(5):
-            try:
-                self.wait_until_element_located_and_has_text(self.elements["cloudspace_page_status"], "DESTROYED")
-            except TimeoutException:
-                time.sleep(1)
-                self.driver.refresh()
+            self.set_text('cloudspace_delete_reason', "Test")
+            self.click("cloudspace_delete_confirm")
+            time.sleep(0.5)
+            self.get_page(self.driver.current_url)
+            for temp in range(10):
+                try:
+                    self.wait_until_element_located_and_has_text(self.elements["cloudspace_page_status"], "DESTROYED")
+                    return True
+                except TimeoutException:
+                    time.sleep(1)
+                    self.get_page(self.driver.current_url)
+            else:
+                raise NameError("Can't delete this '%s' cloudspcae")
+        else:
+            self.lg('"%s" cloudspace is already deleted' % self.cloudspace)
+            return True
 
     def create_virtual_machine(self, account='', cloudspace='', machine_name='', image='', memory='', disk=''):
         self.account = account
@@ -443,7 +475,7 @@ class BaseTest(unittest.TestCase):
         self.disk = disk or '50 GB'
 
         self.lg('open the cloudspace page')
-        self.open_cloudspace_page(self.account, self.cloudspace)
+        self.open_cloudspace_page(self.cloudspace)
 
         self.lg('add virtual machine')
         self.click('add_virtual_machine')
@@ -477,7 +509,7 @@ class BaseTest(unittest.TestCase):
         self.machine_name = machine_name
 
         self.lg('opne %s cloudspace' % cloudspace)
-        self.open_cloudspace_page(self.account, self.cloudspace)
+        self.open_cloudspace_page(self.cloudspace)
 
         self.lg('open %s virtual machine' % machine_name)
         self.set_text('virtual machine search', self.machine_name)
