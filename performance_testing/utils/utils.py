@@ -320,6 +320,21 @@ def run_again_if_failed(func, **kwargs):
             continue
         break
 
+def account_vms_ovs_nodes(accountId, ccl):
+    vms_ovsnodes_dict = {}
+    cloudspaces = ccl.cloudspace.search({'accountId': accountId})[1:]
+    for cs in cloudspaces:
+        vms_per_cs = ccl.vmachine.search({'cloudspaceId': cs['id']})[1:]
+        for vm in vms_per_cs:
+            for disk_id in vm['disks']:
+                disk = ccl.disk.search({'accountId': accountId, 'id': disk_id})[1]
+                if disk['descr'] == 'Machine disk of type D':
+                    ovs_ip = re.search('(\d+.){3}(\d+)', disk['referenceId'])
+                    vms_ovsnodes_dict[vm['hostName']] = ovs_ip.group()
+                    break
+    return vms_ovsnodes_dict
+
+
 def push_results_to_repo(Res_dir, test_type=''):
     match = re.search('(/201.+)', Res_dir)
     Res_file = Res_dir + match.group(1) + '.csv'
