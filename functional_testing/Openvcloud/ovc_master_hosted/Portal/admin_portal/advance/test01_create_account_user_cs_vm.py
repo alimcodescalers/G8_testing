@@ -1,9 +1,4 @@
-from selenium.common.exceptions import NoSuchElementException
-import time
-from ...utils.utils import BaseTest
-from ..page_elements_xpath import account_page
-import uuid
-
+from functional_testing.Openvcloud.ovc_master_hosted.Portal.utils.utils import BaseTest
 
 class Account(BaseTest):
     def __init__(self, *args, **kwargs):
@@ -12,7 +7,6 @@ class Account(BaseTest):
     def setUp(self):
         super(Account, self).setUp()
         self.login()
-        self.elements.update(account_page.elements)
 
     def test01_create_account_user_cs_vm(self):
         """ PRTL-021

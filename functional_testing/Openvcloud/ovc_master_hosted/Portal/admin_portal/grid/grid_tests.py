@@ -1,5 +1,4 @@
-from end_user.utils import BaseTest
-from admin_portal.page_elements_xpath import grid
+from functional_testing.Openvcloud.ovc_master_hosted.Portal.utils.utils import BaseTest
 import re
 import time
 
@@ -8,7 +7,6 @@ class GridTests(BaseTest):
 
     def __init__(self, *args, **kwargs):
         super(GridTests, self).__init__(*args, **kwargs)
-        self.elements.update(grid.elements)
 
     def setUp(self):
         super(GridTests, self).setUp()
