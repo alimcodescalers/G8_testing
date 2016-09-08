@@ -15,6 +15,7 @@ vms_to_run_fio_on = int(sys.argv[1])
 config = ConfigParser.ConfigParser()
 config.read("Testsuite/1_fio_vms/Perf_parameters.cfg")
 USERNAME = config.get("perf_parameters", "username")
+No_of_cloudspaces=int(config.get("perf_parameters", "No_of_cloudspaces"))
 vms_time_diff = float(config.get("perf_parameters", "vms_time_diff"))
 data_size = int(config.get("perf_parameters", "data_size"))
 testrun_time = int(config.get("perf_parameters", "testrun_time"))
@@ -38,12 +39,12 @@ j.do.execute('cp /test_results/VMs_creation_time.csv %s' %Res_dir)
 
 ccl = j.clients.osis.getNamespace('cloudbroker')
 pcl = j.clients.portal.getByInstance('main')
-cloudspaceId = ccl.cloudspace.search({'acl.userGroupId': USERNAME, 'status': 'DEPLOYED'})[1]['id']
-portforwards = pcl.actors.cloudapi.portforwarding.list(cloudspaceId=cloudspaceId)
-
 vms_list=[]
-for pi in portforwards:
-    vms_list.append({pi['machineId']:[pi['publicIp'],pi['publicPort'], IO_type]})
+for n in range(No_of_cloudspaces):
+    cloudspaceId = ccl.cloudspace.search({'acl.userGroupId': USERNAME, 'status': 'DEPLOYED'})[n+1]['id']
+    portforwards = pcl.actors.cloudapi.portforwarding.list(cloudspaceId=cloudspaceId)
+    for pi in portforwards:
+        vms_list.append({pi['machineId']:[pi['publicIp'],pi['publicPort'], IO_type]})
 
 iteration_no=1
 #Only one iteration will be done
