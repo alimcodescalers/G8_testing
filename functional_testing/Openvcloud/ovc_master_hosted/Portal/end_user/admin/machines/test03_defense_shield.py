@@ -2,14 +2,12 @@ import os
 import unittest
 from testconfig import config
 from ....utils.utils import BaseTest
-from ...page_elements_xpath import defense_shield_page
 
 @unittest.skip("Bug 347")
 class DefenseShield(BaseTest):
 
     def __init__(self, *args, **kwargs):
         super(DefenseShield, self).__init__(*args, **kwargs)
-        self.elements.update(defense_shield_page.elements)
 
     def setUp(self):
         super(DefenseShield, self).setUp()

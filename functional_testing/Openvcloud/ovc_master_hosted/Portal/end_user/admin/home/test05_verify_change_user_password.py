@@ -1,5 +1,4 @@
 from ....utils.utils import BaseTest
-from ...page_elements_xpath import users_page
 import uuid
 import unittest
 
@@ -7,8 +6,6 @@ import unittest
 class ChangePassword(BaseTest):
     def __init__(self, *args, **kwargs):
         super(ChangePassword, self).__init__(*args, **kwargs)
-        self.elements.update(users_page.elements)
-
     def setUp(self):
         super(ChangePassword, self).setUp()
         self.login()
