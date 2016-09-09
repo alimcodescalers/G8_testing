@@ -1,6 +1,6 @@
 ## Functional Testing
 
-This section describes the tests to be executed in order to validate the basic functionality of a G8 installation. It lists the tests and expected test results.
+This section describes the tests to be executed in order to validate the basic functionality of a G8 installation.
 
 Functional testing requires that the system was installed properly, as documented in the [OpenvCloud Operator's Guide](https://www.gitbook.com/book/gig/ovcdoc_public/details), more specifically in the section [Installation of an OpenvCloud Environment](https://gig.gitbooks.io/ovcdoc_public/content/Installation/Installation.html).
 
