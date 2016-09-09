@@ -6,11 +6,70 @@ from prettytable import PrettyTable
 import itertools
 import csv
 
+
+def get_vm_ovs_node(vmid):
+    #make sure vmid is int
+    ccl = j.clients.osis.getNamespace('cloudbroker')
+    vm = ccl.vmachine.search({'id': vmid})
+    for disk_id in vm['disks']:
+        disk = ccl.disk.search({'id': disk_id})[1]
+        if disk['descr'] == 'Machine disk of type D':
+            ovs_ip = re.search('(\d+.){3}(\d+)', disk['referenceId'])
+            break
+    return ovs_ip
+
+#vm_ovsip_iops_list.append({'machineId': machineId, 'ovs_ip': ovs_ip, 'iops': total_iops})
+
+def sum_iops_per_ovs(vm_ovsip_iops_list):
+    ovs_list = []
+    cross_iops_list = []
+    final_iops_list = []
+    for vm in vm_ovsip_iops_list:
+        if vm['ovs_ip'] not in ovs_list:
+            ovs_list.append(vm['ovs_ip'])
+            cross_iops_list.append([vm['iops']])
+        else:
+            index = ovs_list.index(vm['ovs_ip'])
+            cross_iops_list[index].append(vm['iops'])
+    for ovs_iops in cross_iops_list:
+        final_iops_list.append(sum(ovs_iops))
+    ovs_list.insert(0,"OVS_NODES")
+    final_iops_list.insert(0,"TOTAL_IOPS")
+    return ovs_list,final_iops_list
+
+def results_on_csvfile(csv_file_name, Res_dir, table_string):
+    #s=s1.get_string()
+    result=[]
+    for line in table_string.splitlines():
+        splitdata = line.split("|")
+        if len(splitdata) == 1:
+            continue  # skip lines with no separators
+        linedata = []
+        for field in splitdata:
+            field = field.strip()
+            if field:
+                linedata.append(field)
+        result.append(linedata)
+
+    with open('%s/%s.csv'%(Res_dir, csv_file_name), 'a') as outcsv:
+           writer = csv.writer(outcsv)
+           writer.writerows(result)
+
+def collect_results(titles, results, Res_dir):
+    table = PrettyTable(titles)
+    for i in results:
+        table.add_row(i)
+    table_txt = table.get_string()
+    with open('%s/results.table' %Res_dir,'a') as file:
+        file.write('\n%s'%table_txt)
+    results_on_csvfile('ovs_nodes_iops', Res_dir, table_txt)
+
 Res_dir = sys.argv[1]
 #working from inside Res_dir
 #iterate on each machine results
 # Assuming RAID0 for calculating the total IOPS
 total_iops_list=[]
+vm_ovsip_iops_list=[]
 for j in os.listdir(os.getcwd()):
 
     if j.startswith('machine'):
@@ -57,8 +116,13 @@ for j in os.listdir(os.getcwd()):
                     %(iteration,total_iops, iteration, avg_total_cpuload, iteration, runtime))
             newfile.write('\n --------------------:-------------------- \n')
 
+        ovs_ip = get_vm_ovs_node(machineId)
+        vm_ovsip_iops_list.append({'machineId': machineId, 'ovs_ip': ovs_ip, 'iops': total_iops})
+
         os.chdir('%s' %Res_dir)
 
+ovs_list, iops_list = sum_iops_per_ovs(vm_ovsip_iops_list)
+collect_results(ovs_list, iops_list, Res_dir)
 
 def group_separator(line):
     return line=='\n'

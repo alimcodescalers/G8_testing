@@ -320,6 +320,7 @@ def run_again_if_failed(func, **kwargs):
             continue
         break
 
+#not used for now .. may be needed later
 def account_vms_ovs_nodes(accountId, ccl):
     vms_ovsnodes_dict = {}
     cloudspaces = ccl.cloudspace.search({'accountId': accountId})[1:]
@@ -333,6 +334,16 @@ def account_vms_ovs_nodes(accountId, ccl):
                     vms_ovsnodes_dict[vm['hostName']] = ovs_ip.group()
                     break
     return vms_ovsnodes_dict
+
+def get_vm_ovs_node(vmid, ccl):
+    #make sure vmid is int
+    vm = ccl.vmachine.search({'id': vmid})
+    for disk_id in vm['disks']:
+        disk = ccl.disk.search({'id': disk_id})[1]
+        if disk['descr'] == 'Machine disk of type D':
+            ovs_ip = re.search('(\d+.){3}(\d+)', disk['referenceId'])
+            break
+    return ovs_ip
 
 
 def push_results_to_repo(Res_dir, test_type=''):
