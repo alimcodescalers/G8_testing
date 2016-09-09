@@ -7,11 +7,12 @@ There are currently two test suites for the OpenvCloud APIs:
 The actual tests are auto-documented [here](http://85.255.197.106:8888/) using **Sphinx**. For instructions on how to set-up this auto-documentation see the [section about auto-documentation](../../sphinx.md) in this guide.
 
 In order to install and run the API test suites you have two options:
-- Install and run from a remote machine, using **run\_tests\_remote.sh**
-- Install and run directly on **ovc_master**, using **setup\_run\_tests\_local.sh**
+- [Install and run from a remote machine, using **run\_tests\_remote.sh**](#remote)
+- [Install and run directly on **ovc_master**, using **setup\_run\_tests\_local.sh**](#local)
 
 Both options are discussed here below.
 
+<a id="remote"></a>
 ### Install and run from a remote machine
 
 There are two steps:
@@ -55,6 +56,7 @@ What actually will happen:
 - The result will be fed back in the file **testresults.xml** and all collected log information in the **logs** directory
 
 
+<a id="local"></a>
 ### Install and run directly on ovc_master
 
 There are three steps:
