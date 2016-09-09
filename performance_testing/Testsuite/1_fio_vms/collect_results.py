@@ -9,21 +9,22 @@ import csv
 
 def get_vm_ovs_node(vmid):
     #make sure vmid is int
+    from JumpScale import j
     ccl = j.clients.osis.getNamespace('cloudbroker')
-    vm = ccl.vmachine.search({'id': vmid})
+    vm = ccl.vmachine.search({'id': vmid})[1]
     for disk_id in vm['disks']:
         disk = ccl.disk.search({'id': disk_id})[1]
         if disk['descr'] == 'Machine disk of type D':
             ovs_ip = re.search('(\d+.){3}(\d+)', disk['referenceId'])
             break
-    return ovs_ip
+    return ovs_ip.group()
 
 #vm_ovsip_iops_list.append({'machineId': machineId, 'ovs_ip': ovs_ip, 'iops': total_iops})
 
 def sum_iops_per_ovs(vm_ovsip_iops_list):
     ovs_list = []
     cross_iops_list = []
-    final_iops_list = []
+    final_iops_list = [[]]
     for vm in vm_ovsip_iops_list:
         if vm['ovs_ip'] not in ovs_list:
             ovs_list.append(vm['ovs_ip'])
@@ -32,9 +33,9 @@ def sum_iops_per_ovs(vm_ovsip_iops_list):
             index = ovs_list.index(vm['ovs_ip'])
             cross_iops_list[index].append(vm['iops'])
     for ovs_iops in cross_iops_list:
-        final_iops_list.append(sum(ovs_iops))
+        final_iops_list[0].append(sum(ovs_iops))
     ovs_list.insert(0,"OVS_NODES")
-    final_iops_list.insert(0,"TOTAL_IOPS")
+    final_iops_list[0].insert(0,"TOTAL_IOPS")
     return ovs_list,final_iops_list
 
 def results_on_csvfile(csv_file_name, Res_dir, table_string):
@@ -60,7 +61,7 @@ def collect_results(titles, results, Res_dir):
     for i in results:
         table.add_row(i)
     table_txt = table.get_string()
-    with open('%s/results.table' %Res_dir,'a') as file:
+    with open('%s/ovs_nodes_iops.table' %Res_dir,'a') as file:
         file.write('\n%s'%table_txt)
     results_on_csvfile('ovs_nodes_iops', Res_dir, table_txt)
 
@@ -116,7 +117,7 @@ for j in os.listdir(os.getcwd()):
                     %(iteration,total_iops, iteration, avg_total_cpuload, iteration, runtime))
             newfile.write('\n --------------------:-------------------- \n')
 
-        ovs_ip = get_vm_ovs_node(machineId)
+        ovs_ip = get_vm_ovs_node(int(machineId))
         vm_ovsip_iops_list.append({'machineId': machineId, 'ovs_ip': ovs_ip, 'iops': total_iops})
 
         os.chdir('%s' %Res_dir)
