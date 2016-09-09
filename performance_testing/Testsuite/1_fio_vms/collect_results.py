@@ -25,18 +25,26 @@ def sum_iops_per_ovs(vm_ovsip_iops_list):
     ovs_list = []
     cross_iops_list = []
     final_iops_list = [[]]
+    vm_dist_list = []
     for vm in vm_ovsip_iops_list:
         if vm['ovs_ip'] not in ovs_list:
             ovs_list.append(vm['ovs_ip'])
             cross_iops_list.append([vm['iops']])
+            index = ovs_list.index(vm['ovs_ip'])
+            vm_dist_list.insert(index,1)
         else:
             index = ovs_list.index(vm['ovs_ip'])
             cross_iops_list[index].append(vm['iops'])
+            temp = vm_dist_list[index]
+            vm_dist_list.remove(vm_dist_list[index])
+            vm_dist_list.insert(index, temp+1)
     for ovs_iops in cross_iops_list:
         final_iops_list[0].append(sum(ovs_iops))
     ovs_list.insert(0,"OVS_NODES")
     final_iops_list[0].insert(0,"TOTAL_IOPS")
-    return ovs_list,final_iops_list
+    vm_dist_list.insert(0,"VMs DISTRIBUTION")
+    final_iops_list.append(vm_dist_list)
+    return ovs_list, final_iops_list
 
 def results_on_csvfile(csv_file_name, Res_dir, table_string):
     #s=s1.get_string()
