@@ -52,7 +52,7 @@
   # Number of times UnixBench needs to run per VM
   unixbench_run_times:1
 
-  # Time difference (in secs) between starts of UnixBench test on VMs
+  # Time difference (in secs) between starts of UnixBench tests on VMs
   vms_time_diff: 1
 
   # RAM specifications
