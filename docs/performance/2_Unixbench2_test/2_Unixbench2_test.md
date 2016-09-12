@@ -72,11 +72,11 @@ Bdisksize: 100
   ```
   jspython Testsuite/2_Unixbench2_test/2_unixbench_run.py 3
   ```
-  **3** : is the number of virtual machines that will be used to run unixbench on. (assuming that 10 VMs have been created for for example)
+  **3** : is the number of virtual machines that will be used to run unixbench on. (assuming that 10 VMs have been created  for example)
 
 
 - To clean the test after finishing:
-- ```
+ ```
   jspython scripts/tear_down.py unixbench2testuser
   ```
 
