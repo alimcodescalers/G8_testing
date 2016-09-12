@@ -59,7 +59,7 @@
   memory: 8192
 
   # Number of vCPU cores
-  # Choose values in function of the the RAM specifications [RAM, vcpu]: [512,1], [1024,1], [4096,2], [2048,2], [8192,4] or [16384,8]
+  # Choose values in function of the RAM specifications [RAM, vCPUs]: [512,1], [1024,1], [4096,2], [2048,2], [8192,4] or [16384,8]
   cpus: 4
 
   # Boot Disk size (in GB)
