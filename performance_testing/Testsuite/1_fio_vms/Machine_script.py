@@ -4,11 +4,11 @@ import os
 import multiprocessing
 
 
-def FIO_test(disk, testrun_time, machineId, account_pass, iteration, datasize_process, write_type,rwmixwrite, bs, iodepth, direct_io,rate_iops):
+def FIO_test(disk, testrun_time, machineId, account_pass, iteration, datasize_process, write_type,rwmixwrite, bs, iodepth, direct_io,rate_iops, numjobs):
     os.system('echo %s | sudo -S fio --bs=%s --iodepth=%s --direct=%s --ioengine=libaio  --gtod_reduce=1 --name=test_iter%s_vd%s --size=%sM --readwrite=%s --rwmixwrite=%s'
-              ' --numjobs=3 --group_reporting --filename=/dev/vd%s --runtime=%s --output=machine%s_iter%s_%s_results/result%s_iter%s_vd%s.txt --rate_iops=%s'
+              '  --group_reporting --filename=/dev/vd%s --runtime=%s --output=machine%s_iter%s_%s_results/result%s_iter%s_vd%s.txt --rate_iops=%s --numjobs=%s'
               %(account_pass, bs, iodepth, direct_io, iteration, disk, datasize_process, write_type, rwmixwrite ,disk, testrun_time, machineId,iteration,
-                write_type, machineId, iteration, disk, rate_iops))
+                write_type, machineId, iteration, disk, rate_iops, numjobs))
 
 
 if __name__ == "__main__":
@@ -19,12 +19,13 @@ if __name__ == "__main__":
     no_of_disks = int(sys.argv[5])
     data_size = int(sys.argv[6])
     write_type = sys.argv[7]
-    datasize_process = data_size/3
     bs=sys.argv[8]
     iodepth=sys.argv[9]
     direct_io=sys.argv[10]
     rwmixwrite=sys.argv[11]
     rate_iops=int(sys.argv[12])
+    numjobs=int(sys.argv[13])
+    datasize_process = data_size/numjobs
 
     disk_list = ['b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k']
     os.system('mkdir machine%s_iter%s_%s_results' % (machineId, iteration, write_type))
@@ -32,7 +33,7 @@ if __name__ == "__main__":
     for iter_on_disks in range(no_of_disks):
         p = multiprocessing.Process(target=FIO_test, args=(disk_list[iter_on_disks], testrun_time, machineId,
                                                            account_pass, iteration, datasize_process, write_type,
-                                                           rwmixwrite, bs, iodepth, direct_io, rate_iops))
+                                                           rwmixwrite, bs, iodepth, direct_io, rate_iops, numjobs))
         processes.append(p)
     for j in range(no_of_disks):
         processes[j].start()

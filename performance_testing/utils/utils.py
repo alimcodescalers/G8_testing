@@ -129,7 +129,7 @@ def setup_machine(cloudspace, machineId, cs_publicport, pcl, no_of_disks, fio=No
         if fio != 'onlyfio':
             connection.apt_get('install sysstat')
             #machine_mount_disks(connection, account, machineId, no_of_disks)
-            format_disks(connection, account, machineId, no_of_disks)
+            #format_disks(connection, account, machineId, no_of_disks)
         if telegraf:
             connection.run('echo %s | sudo -S wget https://dl.influxdata.com/telegraf/releases/telegraf_1.0.0-beta3_amd64.deb' %account['password'])
             connection.run('echo %s | sudo -S dpkg -i telegraf_1.0.0-beta3_amd64.deb' %account['password'])
@@ -158,7 +158,8 @@ def machine_mount_disks(connection, account, machineId, no_of_disks=6):
         connection.run('echo %s | sudo -S mount /dev/vd%s /mnt/disk_%s' %(account['password'],list[i], list[i]))
     print('   |--finished mounting')
 
-def FIO_test(vm_pubip_pubport, pcl, data_size, testrun_time, Res_dir, iteration, no_of_disks, rwmixwrite, bs, iodepth, direct_io, rate_iops):
+def FIO_test(vm_pubip_pubport, pcl, data_size, testrun_time, Res_dir, iteration,
+             no_of_disks, rwmixwrite, bs, iodepth, direct_io, rate_iops, numjobs):
     machineId = vm_pubip_pubport.keys()[0]
     cloudspace_publicip = vm_pubip_pubport.values()[0][0]
     cs_publicport = vm_pubip_pubport.values()[0][1]
@@ -176,14 +177,14 @@ def FIO_test(vm_pubip_pubport, pcl, data_size, testrun_time, Res_dir, iteration,
         connection.fabric.state.output["stdout"]=False
         j.do.execute('sshpass -p%s scp -o \'StrictHostKeyChecking=no\' -P %s Testsuite/1_fio_vms/Machine_script.py  %s@%s:'
                      %(account['password'], cs_publicport, account['login'], cloudspace_publicip))
-        connection.run('python Machine_script.py %s %s %s %s %s %s %s %s %s %s %s %s' %(testrun_time, machineId,
-                        account['password'], iteration, no_of_disks, data_size, write_type, bs, iodepth, direct_io, rwmixwrite, rate_iops))
+        connection.run('python Machine_script.py %s %s %s %s %s %s %s %s %s %s %s %s %s' %(testrun_time, machineId,
+                        account['password'], iteration, no_of_disks, data_size, write_type, bs, iodepth, direct_io, rwmixwrite, rate_iops, numjobs))
         j.do.execute('sshpass -p%s scp -r -o \'StrictHostKeyChecking=no \' -P %s  %s@%s:machine%s_iter%s_%s_results %s/'
                      %(account['password'], cs_publicport, account['login'], cloudspace_publicip, machineId, iteration, write_type, Res_dir))
-        list=['b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k']
-        for i in range(no_of_disks):
+        #list=['b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k']
+        #for i in range(no_of_disks):
             #connection.run('echo %s | sudo -S umount /dev/vd%s ' %(account['password'],list[i]))
-            connection.run('echo %s | sudo -S mkfs.ext4 /dev/vd%s' %(account['password'],list[i]))
+            #connection.run('echo %s | sudo -S mkfs.ext4 /dev/vd%s' %(account['password'],list[i]))
             #connection.run('echo %s | sudo -S mount /dev/vd%s /mnt/disk_%s' %(account['password'],list[i], list[i]))
 
 
