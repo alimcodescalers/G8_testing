@@ -7,7 +7,7 @@
 
 ### Test case description
 - Create an account
-- Create a cloud space for all nodes
+- Create number of cloudspaces that will be used for that test
 - Create the number of virtual machines you want to run UnixBench on
 - Install UnixBench on the created virtual machines
 - Run UnixBench on the first VM only and store its score
@@ -19,6 +19,11 @@
   |VM name  | CPUs  | Memory | HDD | Iteration 1 | Iteration 2 | ... | Iteration x | Avg UnixBench Score|
 
 ### Running the test
+- The test is divided into 2 scripts:
+
+    - 2_unixbench_create_vms.py : creates all virtual machines and install unixbench on them
+    - 2_unixbench_run.py: used to run unixbench on selected virtual machines in parallel.
+
 - Go to performance testing directory:
 
   ```
@@ -58,11 +63,17 @@ cpus: 4
 Bdisksize: 100
   ```
 
-- Finally start the test:
+- Finally start creating vms:
 
   ```
-  jspython Testsuite/2_Unixbench2_test/2_unixbench2.0_test.py 
+  jspython Testsuite/2_Unixbench2_test/2_unixbench_create_vms.py
   ```
+- Then run unixbench on the seleted virtual machines
+  ```
+  jspython Testsuite/2_Unixbench2_test/2_unixbench_run.py 3
+  ```
+  **3** : is the number of virtual machines that will be used to run unixbench on. (assuming that 10 VMs have been created for for example)
+
 
 - After the test has been completed, the test will clean itself.
 
