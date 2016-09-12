@@ -7,11 +7,11 @@
 
 ### Test case description
 - Create an account
-- Create number of cloudspaces that will be used for that test
-- Create the number of virtual machines you want to run UnixBench on
+- Create a number of cloud spaces that will be used for the test
+- Create a number of virtual machines you want to run the UnixBench on
 - Install UnixBench on the created virtual machines
-- Run UnixBench on the first VM only and store its score
-- Run UnixBench on all VMs, then store all UnixBench scores
+- Run UnixBench on the first virtual machine and store its score
+- Run UnixBench on all virtual machines, then store all UnixBench scores
 
 ### Expected result
 - Create a result table providing the average UnixBench score per virtual machine:
@@ -21,10 +21,10 @@
 ### Running the test
 - The test is divided into 2 scripts:
 
-    - 2_unixbench_create_vms.py : creates all virtual machines and install unixbench on them
-    - 2_unixbench_run.py: used to run unixbench on selected virtual machines in parallel.
+    - **2_unixbench_create_vms.py** creates all virtual machines and installs UnixBench on them
+    - **2_unixbench_run.py** runs UnixBench on the specified number of virtual machines in parallel
 
-- Go to performance testing directory:
+- Go to the performance testing directory:
 
   ```
   cd /root/G8_testing/performance_testing
@@ -33,55 +33,56 @@
 - Change the test parameters:
 
   ```
-  vim Testsuite/2_Unixbench2_test/parameters.cfg 
+  vim Testsuite/2_Unixbench2_test/parameters.cfg
   ```
 
 - Following parameters can be configured:
 
   ```  
-# Number of cloudspaces
-No_of_cloudspaces: 1
+  # Number of cloudspaces
+  No_of_cloudspaces: 1
 
-# Results Directory : write absolute directory
-Res_dir: /root/G8_testing/tests_results/2_unixbench2
+  # Results Directory : write absolute directory
+  Res_dir: /root/G8_testing/tests_results/2_unixbench2
 
-#Number of VMs that will be created for that test
-VMs:2
+  #Number of VMs that will be created for that test
+  VMs:2
 
-#Numbers of unixbench_running_times on the created vms
-unixbench_run_times:1
+  #Numbers of unixbench_running_times on the created vms
+  unixbench_run_times:1
 
-# Time difference (in secs) between starting running unixbench on VMs
-vms_time_diff: 1
+  # Time difference (in secs) between starting running unixbench on VMs
+  vms_time_diff: 1
 
-# please choose between these values [RAM, vcpu] = [512,1] or [1024,1] or [4096,2] or [2048,2] or [8192,4] or [16384,8]
-# RAM specifications
-memory: 8192
-#vcpu cores
-cpus: 4
-#Boot Disk size(in GB), please choose between these values [10, 20, 50, 100, 250, 500, 1000, 2000]
-Bdisksize: 100
+  # please choose between these values [RAM, vcpu] = [512,1] or [1024,1] or [4096,2] or [2048,2] or [8192,4] or [16384,8]
+  # RAM specifications
+  memory: 8192
+  #vcpu cores
+  cpus: 4
+  #Boot Disk size(in GB), please choose between these values [10, 20, 50, 100, 250, 500, 1000, 2000]
+  Bdisksize: 100
   ```
 
-- Finally start creating vms:
+- Finally start creating virtual machines:
 
   ```
   jspython Testsuite/2_Unixbench2_test/2_unixbench_create_vms.py
   ```
-- Then run unixbench on the seleted virtual machines
+
+- Then run UnixBench on a specified number of virtual machines, for instance here on 3 virtual machines, assuming 10 (for example) were created previously:
+
   ```
   jspython Testsuite/2_Unixbench2_test/2_unixbench_run.py 3
   ```
-  **3** : is the number of virtual machines that will be used to run unixbench on. (assuming that 10 VMs have been created  for example)
 
+- To clean the test once completed:
 
-- To clean the test after finishing:
  ```
   jspython scripts/tear_down.py unixbench2testuser
   ```
 
 ### Result sample
-Results can be found in seperate files:
+Results can be found in separate files:
 
 ```
 cd G8_testing/tests_results/Unixbench_results/(date)_(cpu_name).(env_name)_testresults(run_number)/
@@ -90,4 +91,3 @@ vim (date)_(cpu_name).(env_name)_testresults(run_number).csv
 
 
 ![unixbench](https://cloud.githubusercontent.com/assets/15011431/14142022/b3a054de-f68b-11e5-8996-259aca0fba93.png)
-
