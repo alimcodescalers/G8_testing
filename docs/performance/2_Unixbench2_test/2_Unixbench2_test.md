@@ -75,7 +75,10 @@ Bdisksize: 100
   **3** : is the number of virtual machines that will be used to run unixbench on. (assuming that 10 VMs have been created for for example)
 
 
-- After the test has been completed, the test will clean itself.
+- To clean the test after finishing:
+- ```
+  jspython scripts/tear_down.py unixbench2testuser
+  ```
 
 ### Result sample
 Results can be found in seperate files:
