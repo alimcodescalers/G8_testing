@@ -34,25 +34,28 @@
 - Following parameters can be configured:
 
   ```  
-  # Results Directory: write absolute directory
-  Res_dir: /root/G8_testing/tests_results/2_unixbench2
+# Number of cloudspaces
+No_of_cloudspaces: 1
 
-  #Number of VMS to run unixbench on
-  VMs:2
+# Results Directory : write absolute directory
+Res_dir: /root/G8_testing/tests_results/2_unixbench2
 
-  #Numbers of unixbench_running_times on the created vms
-  unixbench_run_times:1
+#Number of VMs that will be created for that test
+VMs:2
 
-  # Time difference (in secs) between starting running unixbench on VMs
-  vms_time_diff: 1
+#Numbers of unixbench_running_times on the created vms
+unixbench_run_times:1
 
-  # please choose between these values [RAM, vcpu] = [512,1] or [1024,1] or [4096,2] or [2048,2] or [8192,4] or [16384,8]
-  # RAM specifications
-  memory: 8192
-  #vcpu cores
-  cpus: 4
-  #Boot Disk size(in GB), please choose between these values [10, 20, 50, 100, 250, 500, 1000, 2000]
-  Bdisksize: 100
+# Time difference (in secs) between starting running unixbench on VMs
+vms_time_diff: 1
+
+# please choose between these values [RAM, vcpu] = [512,1] or [1024,1] or [4096,2] or [2048,2] or [8192,4] or [16384,8]
+# RAM specifications
+memory: 8192
+#vcpu cores
+cpus: 4
+#Boot Disk size(in GB), please choose between these values [10, 20, 50, 100, 250, 500, 1000, 2000]
+Bdisksize: 100
   ```
 
 - Finally start the test:
