@@ -21,7 +21,7 @@
 - Prior to running the script make sure that the environment is clean, using the **tear_down.py** script:
 
   ```
-  cd G8_testing/Environment_testing/performance_testing
+  cd G8_testing/performance_testing
   jspython scripts/tear_down.py --clean
   ```
 
@@ -35,12 +35,15 @@
 - Following parameters are settable in **Perf_parameters.cfg**:
 
 ```
-# No of cloudspaces --> an account is created for each cloudspace and Number of cloudspaces should be
-#less than or equal that of cpu nodes
+# Number of Iterations --> each iteration create one VM per cpunode(stack)
+iterations: 1
+
+# No of cloudspaces 
 No_of_cloudspaces: 1
 
-# Number of cpu nodes which will be used for the test (must be less than environment_cpu_nodes-1 )
+# Number of cpu nodes which will be used for the test 
 used_stacks: 2
+
 
 
 # Parameters required for VM
@@ -87,12 +90,21 @@ data_size: 4000
 # if you enter nothing then half of the vms will be write and the other half will be randwrite
 IO_type: write
 
+#rate_iops: Cap the bandwidth to this number of IOPS. Basically the same as rate, just specified independently of bandwidth
+rate_iops: 8000
+
+#numjobs: Number of clones (processes/threads performing the same workload) of this job. Default: 1.
+numjobs:1
+
 
 # Results Directory : write absolute directory
 Res_dir: /root/G8_testing/tests_results/FIO_test
 
 # username
 username: perftestuser
+
+# should run all scripts from inside the repo
+
 ```
 
 - The actual test is divided into 2 scripts:
