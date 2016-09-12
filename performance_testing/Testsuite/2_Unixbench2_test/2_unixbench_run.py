@@ -54,8 +54,6 @@ try:
     utils.collect_results(titles, results, '%s' %Res_dir)
     network.disconnect_all()
 
-
-
     for i in range(unixbench_run_times):
         network.disconnect_all()
         q= multiprocessing.Queue()
@@ -83,7 +81,6 @@ try:
         for s in res_arr:
             results.append([res_arr.index(s)+1, s[0], cpus, memory, Bdisksize, s[1]])
         utils.collect_results(titles, results, '%s' %Res_dir)
-    utils.push_results_to_repo(Res_dir)
 
     #Removing vms fingerprints from known hosts
     for vm in machines:
@@ -97,3 +94,4 @@ except:
         j.do.execute('ssh-keygen -f "/root/.ssh/known_hosts" -R [%s]:%s'%(cs_ip, cs_pp))
     j.do.execute('rm -rf %s' %Res_dir)
     raise
+utils.push_results_to_repo(Res_dir)
