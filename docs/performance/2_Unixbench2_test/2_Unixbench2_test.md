@@ -47,10 +47,10 @@
   Res_dir: /root/G8_testing/tests_results/2_unixbench2
 
   # Number of VMs to be created for the test
-  VMs:2
+  VMs: 2
 
   # Number of times UnixBench needs to run per VM
-  unixbench_run_times:1
+  unixbench_run_times: 1
 
   # Time difference (in secs) between starts of UnixBench tests on VMs
   vms_time_diff: 1
