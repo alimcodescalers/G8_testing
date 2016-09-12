@@ -21,11 +21,12 @@ data_size = int(config.get("perf_parameters", "data_size"))
 testrun_time = int(config.get("perf_parameters", "testrun_time"))
 Res_dir = config.get("perf_parameters", "Res_dir")
 no_of_disks = int(config.get("perf_parameters", "no_of_disks"))
-rwmixwrite=int(config.get("perf_parameters", "rwmixwrite"))
-bs=config.get("perf_parameters", "bs")
-iodepth=int(config.get("perf_parameters", "iodepth"))
-direct_io=int(config.get("perf_parameters", "direct_io"))
-rate_iops=int(config.get("perf_parameters", "rate_iops"))
+rwmixwrite = int(config.get("perf_parameters", "rwmixwrite"))
+bs = config.get("perf_parameters", "bs")
+iodepth = int(config.get("perf_parameters", "iodepth"))
+direct_io = int(config.get("perf_parameters", "direct_io"))
+rate_iops = int(config.get("perf_parameters", "rate_iops"))
+numjobs=int(config.get("perf_parameters", "numjobs"))
 IO_type = config.get("perf_parameters", "IO_type")
 hostname = j.do.execute('hostname')[1].replace("\n","")
 test_num = len(os.listdir('%s'%Res_dir))+1
@@ -55,7 +56,7 @@ i=0
 for iter_on_vms in vms_list:
     p = multiprocessing.Process(target=utils.FIO_test, args=(iter_on_vms, pcl, data_size,
                                                              testrun_time, Res_dir, iteration_no, no_of_disks,
-                                                             rwmixwrite, bs, iodepth, direct_io, rate_iops))
+                                                             rwmixwrite, bs, iodepth, direct_io, rate_iops, numjobs))
     processes.append(p)
     i += 1
     if i == vms_to_run_fio_on:
