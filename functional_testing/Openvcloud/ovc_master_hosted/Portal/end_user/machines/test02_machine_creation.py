@@ -1,5 +1,4 @@
-from ....utils.utils import BaseTest
-from ...page_elements_xpath import machines_page
+from functional_testing.Openvcloud.ovc_master_hosted.Portal.utils.utils import BaseTest
 import time
 import uuid
 from nose_parameterized import parameterized
@@ -9,7 +8,6 @@ import unittest
 class Read(BaseTest):
     def __init__(self, *args, **kwargs):
         super(Read, self).__init__(*args, **kwargs)
-        self.elements.update(machines_page.elements)
 
     def setUp(self):
         super(Read, self).setUp()

@@ -409,7 +409,7 @@ class BaseTest(unittest.TestCase):
         elif self.driver.find_element_by_xpath(self.elements["account_page_status"]).text == "DESTROYED":
             self.lg('%s account is already deleted' % account)
         else:
-            raise NameError('"%s" account status has an error in the page %s' % account)
+            raise NameError('"%s" account status has an error in the page' % account)
 
     def create_cloud_space(self, account='', cloud_space=''):
         account = account
@@ -487,10 +487,10 @@ class BaseTest(unittest.TestCase):
         self.assertEqual(self.get_text('create_virtual_machine_on_cpu_node'), 'Create Machine On CPU Node')
 
         self.lg('enter the machine name')
-        self.set_text('machine_name', machine_name)
+        self.set_text('machine_name_admin', machine_name)
 
         self.lg('enter the machien description')
-        self.set_text('machine_description', str(uuid.uuid4()).replace('-', '')[0:10])
+        self.set_text('machine_description_admin', str(uuid.uuid4()).replace('-', '')[0:10])
 
         self.lg('select the image')
         self.select('machine_images_list', self.image)

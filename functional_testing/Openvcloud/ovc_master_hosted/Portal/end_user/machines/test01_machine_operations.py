@@ -1,5 +1,4 @@
-from ....utils.utils import BaseTest
-from ...page_elements_xpath import machines_page
+from functional_testing.Openvcloud.ovc_master_hosted.Portal.utils.utils import BaseTest
 import time
 import uuid
 import unittest
@@ -9,7 +8,6 @@ class Write(BaseTest):
 
     def __init__(self, *args, **kwargs):
         super(Write, self).__init__(*args, **kwargs)
-        self.elements.update(machines_page.elements)
 
     def setUp(self):
         super(Write, self).setUp()

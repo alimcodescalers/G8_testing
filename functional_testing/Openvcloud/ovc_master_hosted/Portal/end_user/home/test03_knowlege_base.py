@@ -1,12 +1,10 @@
-from ....utils.utils import BaseTest
-from ...page_elements_xpath import home_page
+from functional_testing.Openvcloud.ovc_master_hosted.Portal.utils.utils import BaseTest
 import unittest
 
 class KnowledgeBase(BaseTest):
 
     def __init__(self, *args, **kwargs):
         super(KnowledgeBase, self).__init__(*args, **kwargs)
-        self.elements.update(home_page.elements)
 
     def setUp(self):
         super(KnowledgeBase, self).setUp()

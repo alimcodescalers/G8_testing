@@ -1,4 +1,4 @@
-from ....utils.utils import BaseTest
+from functional_testing.Openvcloud.ovc_master_hosted.Portal.utils.utils import BaseTest
 import uuid
 import unittest
 

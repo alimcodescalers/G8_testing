@@ -1,11 +1,9 @@
-from ....utils.utils import BaseTest
-from ...page_elements_xpath import home_page
+from functional_testing.Openvcloud.ovc_master_hosted.Portal.utils.utils import BaseTest
 
 class Support(BaseTest):
 
     def __init__(self, *args, **kwargs):
         super(Support, self).__init__(*args, **kwargs)
-        self.elements.update(home_page.elements)
 
     def setUp(self):
         super(Support, self).setUp()
