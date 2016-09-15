@@ -1,5 +1,7 @@
+from pytractor.exceptions import AngularNotFoundException
 from functional_testing.Openvcloud.ovc_master_hosted.Portal.utils.utils import BaseTest
 import uuid
+import time
 
 class ChangePassword(BaseTest):
     def __init__(self, *args, **kwargs):
@@ -9,7 +11,7 @@ class ChangePassword(BaseTest):
         self.login()
 
     def test01_verify_change_user_password(self):
-        """ PRTL-010
+        """ PRTL-022
         *Test case for create new user and change his password*
 
         **Test Scenario:**
@@ -30,12 +32,13 @@ class ChangePassword(BaseTest):
 
         self.lg('Create new username, user:%s password:%s' % (self.username, self.password))
         self.create_new_user(self.username, self.password, self.email, self.group)
+        self.driver.ignore_synchronization = False
 
         self.lg('Do logout')
         self.click("admin_logout_button")
 
         self.lg("login using the new username")
-        self.driver.get(self.environment_url)
+        self.driver.get(self.get_url())
         self.login(self.username, self.password)
 
         self.lg("check access denied")
@@ -52,6 +55,7 @@ class ChangePassword(BaseTest):
 
         self.lg("Do logout")
         self.click("end_user_logout")
+        self.driver.get(self.get_url())
 
         self.lg("Login using new password")
         self.login(self.username, self.newPassword)
