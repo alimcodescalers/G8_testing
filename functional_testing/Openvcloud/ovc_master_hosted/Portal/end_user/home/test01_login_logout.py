@@ -3,6 +3,7 @@ import uuid
 from nose_parameterized import parameterized
 import unittest
 
+@unittest.skip("bug: #423")
 class LoginLogoutPortalTests(BaseTest):
 
     def test001_login_and_portal_title(self):
