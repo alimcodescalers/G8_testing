@@ -1,8 +1,6 @@
 from functional_testing.Openvcloud.ovc_master_hosted.Portal.utils.utils import BaseTest
 import uuid
-import unittest
 
-@unittest.skip("bug #352")
 class ChangePassword(BaseTest):
     def __init__(self, *args, **kwargs):
         super(ChangePassword, self).__init__(*args, **kwargs)

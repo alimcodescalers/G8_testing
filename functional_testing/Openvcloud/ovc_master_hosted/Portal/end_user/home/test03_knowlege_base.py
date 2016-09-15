@@ -1,5 +1,4 @@
 from functional_testing.Openvcloud.ovc_master_hosted.Portal.utils.utils import BaseTest
-import unittest
 
 class KnowledgeBase(BaseTest):
 

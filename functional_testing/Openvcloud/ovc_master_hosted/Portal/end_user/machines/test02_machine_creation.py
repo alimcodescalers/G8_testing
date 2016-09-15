@@ -3,7 +3,7 @@ import time
 import uuid
 from nose_parameterized import parameterized
 from random import randint
-import unittest
+
 
 class Read(BaseTest):
     def __init__(self, *args, **kwargs):
@@ -77,7 +77,7 @@ class Read(BaseTest):
                            "windows_2012"
                            ])
     '''
-    @unittest.skip("bug #346")
+
     def test06_machine_create(self, image_name="ubuntu_14_04"):
         """ PRTL-011
         *Test case for creating/deleting machine with all avaliable image name, random package and random disk size*

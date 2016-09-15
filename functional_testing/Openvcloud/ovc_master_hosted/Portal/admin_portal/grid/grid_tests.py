@@ -1,8 +1,9 @@
 from functional_testing.Openvcloud.ovc_master_hosted.Portal.utils.utils import BaseTest
 import re
 import time
+import unittest
 
-
+@unittest.skip("Need Edits")
 class GridTests(BaseTest):
 
     def __init__(self, *args, **kwargs):
