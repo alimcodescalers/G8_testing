@@ -68,6 +68,10 @@ def main(options):
     jobs.extend([gevent.spawn(fio_test, Res_dir, iter_on_vms, ovc, options) for iter_on_vms in vms_list])
     gevent.joinall(jobs)
 
+    #collecting results in csv file
+    j.do.execute('cp Testsuite/1_fio_vms/collect_results.py %s' % Res_dir)
+    j.do.chdir('%s' % Res_dir)
+    j.do.execute('python collect_results.py %s' % Res_dir)
 
 
 if __name__ == "__main__":
