@@ -3,10 +3,9 @@ from optparse import OptionParser
 import gevent
 import signal
 import time
-import socket
 import os
+from libtest import run_cmd_via_gevent, wait_until_remote_is_listening, safe_get_vm
 from gevent.coros import BoundedSemaphore
-from gevent.subprocess import Popen, PIPE
 from gevent import monkey
 monkey.patch_all()
 _cloudspace_semaphores = dict()
@@ -19,53 +18,23 @@ def get_publicport_semaphore(cloudspace_id):
     return _cloudspace_semaphores[cloudspace_id]
 
 
-def run_remote_cmd_via_gevent(cmd):
-    sub = Popen([cmd], stdout=PIPE, shell=True)
-    out, err = sub.communicate()
-    if sub.returncode == 0:
-        print(out.decode('ascii'))
-    else:
-        print(err.decode('ascii'))
-        raise RuntimeError("Failed to execute command.\n{}".format(cmd))
-
-
 def install_req(ovc, machine, cloudspace, public_port, name):
     account = machine['accounts'][0]
 
     # Wait until vm accepts connections
-    while True:
-        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        try:
-            s.connect((cloudspace['publicipaddress'], public_port))
-            s.close()
-            break
-        except ConnectionAbortedError:
-            gevent.sleep(1)
-        except ConnectionRefusedError:
-            gevent.sleep(1)
-        s.close()
+    wait_until_remote_is_listening(cloudspace['publicipaddress'], public_port)
 
     # Copy install_deps.sh to vm
     templ = 'sshpass -p "{0}" scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'
     templ += ' -P {1} install_deps.sh {2}@{3}:/home/{2}'
     cmd = templ.format(account['password'], public_port, account['login'], cloudspace['publicipaddress'])
-    run_remote_cmd_via_gevent(cmd)
+    run_cmd_via_gevent(cmd)
 
     # Run bash script on vm
     templ = 'sshpass -p "{0}" ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p {1} {2}@{3} '
     templ += '\'echo "{0}" | sudo -S bash /home/{2}/install_deps.sh\''
     cmd = templ.format(account['password'], public_port, account['login'], cloudspace['publicipaddress'])
-    run_remote_cmd_via_gevent(cmd)
-
-
-def safe_get_vm(ovc, machine_id):
-    while True:
-        try:
-            with concurrency:
-                return ovc.api.cloudapi.machines.get(machineId=machine_id)
-        except Exception as e:
-            print("Failed to get vm details for machine {}".format(machine_id))
-            gevent.sleep(2)
+    run_cmd_via_gevent(cmd)
 
 
 def safe_deploy_vm(options, ovc, account_id, gid, name, cloudspace_id, image_id):
@@ -115,7 +84,7 @@ def deploy_vm(options, ovc, account_id, gid, name, cloudspace_id, image_id):
     start = time.time()
     while True:
         gevent.sleep(5)
-        machine = safe_get_vm(ovc, vm_id)
+        machine = safe_get_vm(ovc, concurrency, vm_id)
         ip = machine['interfaces'][0]['ipAddress']
         if ip != 'Undefined':
             break
