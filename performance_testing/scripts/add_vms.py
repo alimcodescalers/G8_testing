@@ -69,6 +69,9 @@ def deploy_vm(options, ovc, account_id, gid, name, cloudspace_id, image_id):
     if size_id is None:
         raise ValueError("No matching size for vm found.")
 
+    if options.iops < 0:
+        raise ValueError("Maximum iops can't be a negative value")
+
     # Create vm
     with concurrency:
         print("Creating {}".format(name))
@@ -79,6 +82,12 @@ def deploy_vm(options, ovc, account_id, gid, name, cloudspace_id, image_id):
                                                  imageId=image_id,
                                                  disksize=options.bootdisk,
                                                  datadisks=[int(options.datadisk)])
+
+        # limit the IOPS on all the disks of the vm
+        machine = ovc.api.cloudapi.machines.get(machineId=vm_id)
+        for disk in machine['disks']:
+            print("Set limit of iops to {} on disk {}({}) for machine {}".format(options.iops, disk['name'], disk['id'], name))
+            ovc.api.cloudapi.disks.limitIO(diskId=disk['id'], iops=options.iops)
 
     # Wait until vm has ip address
     start = time.time()
@@ -216,6 +225,8 @@ if __name__ == "__main__":
                       help="amount of memory for the virtual machines")
     parser.add_option("-k", "--cpu", dest="cpu", default=1, type="int",
                       help="amount of vcpus for the virtual machines")
+    parser.add_option("-o", "--iops", dest="iops", default=600, type="int",
+                      help="maximum of iops of the disks for the virtual machines")
     parser.add_option("-n", "--con", dest="concurrency", default=2, type="int",
                       help="amount of concurrency to execute the job")
 
