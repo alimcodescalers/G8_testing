@@ -138,7 +138,7 @@ def deploy_cloudspace(options, ovc, account_id, name, image_id, gid):
 
 def main(options):
     # Check dependencies
-    if not (os.path.exists('install_deps.sh') or os.path.exists('/usr/bin/sshpass')):
+    if not (os.path.exists('install_deps.sh') and os.path.exists('/usr/bin/sshpass')):
         print("Not all dependencies are met. Make sure the install_deps.sh script" +
               " is in the current directory and sshpass is installed.")
         return

@@ -3,6 +3,15 @@ import gevent
 import socket
 
 
+def check_package(package):
+    from JumpScale import j
+    try:
+        j.do.execute('dpkg -l {}'.format(package))
+        return True
+    except RuntimeError:
+        print("Dependant package {}".format(package))
+        return False
+
 def run_cmd_via_gevent(cmd):
     sub = Popen([cmd], stdout=PIPE, shell=True)
     out, err = sub.communicate()

@@ -1,77 +1,93 @@
-#!/usr/local/bin/jspython
+#!/usr/bin/python3
 import gevent
+from gevent.coros import BoundedSemaphore
 import signal
 from optparse import OptionParser
 import os
 from JumpScale import j
 import datetime
+from libtest import run_cmd_via_gevent, check_remote_is_listening, safe_get_vm, check_package
 
 
-def fio_test(vm_pubip_pubport, Res_dir,ovc, options):
-    iteration=1
-    machineId = vm_pubip_pubport.keys()[0]
-    cloudspace_publicip = vm_pubip_pubport.values()[0][0]
-    cs_publicport = vm_pubip_pubport.values()[0][1]
-
-    machine = ovc.api.cloudapi.machines.get(machineId)
+def prepare_fio_test(ovc, options, machine_id, publicip, publicport):
+    print("Preparing fio test on machine {}".format(machine_id))
+    machine = safe_get_vm(ovc, concurrency, machine_id)
     account = machine['accounts'][0]
 
-    if not j.system.net.waitConnectionTest(cloudspace_publicip, cs_publicport, 20):
-        print 'Could not connect to VM over public interface'
-    else:
-        exc = j.tools.executor.getSSHBased(cloudspace_publicip, port=cs_publicport,
-                                           passwd=account['password'], login=account['login'])
-        connection = j.tools.cuisine.get(exc)
-        j.do.execute('sshpass -p%s scp -o \'StrictHostKeyChecking=no\' -P %s Testsuite/1_fio_vms/Machine_script.py  %s@%s:'
-                     %(account['password'], cs_publicport, account['login'], cloudspace_publicip))
+    check_remote_is_listening(publicip, int(publicport))
 
-        print('FIO testing has been started on machine: %s' %machineId)
+    templ = 'sshpass -p{} scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null '
+    templ += '-P {} {}/1_fio_vms/Machine_script.py  {}@{}:'
+    cmd = templ.format(account['password'], publicport, options.testsuite, account['login'], publicip)
+    run_cmd_via_gevent(cmd)
 
-        connection.core.run('python Machine_script.py %s %s %s %s %s %s %s %s %s %s %s %s %s'
-                            %(options.testrun_time, machineId, account['password'], iteration, options.no_of_disks,
-                              options.data_size, options.write_type, options.block_size, options.iodepth,
-                              options.direct_io, options.rwmixwrite, options.rate_iops, options.numjobs))
+    return machine_id, publicip, publicport, account
 
-        print('FIO testing has been ended on machine: %s' %machineId)
 
-        j.do.execute('sshpass -p%s scp -r -o \'StrictHostKeyChecking=no \' -P %s  %s@%s:machine%s_iter%s_%s_results %s/'
-                     %(account['password'], cs_publicport, account['login'], cloudspace_publicip,
-                       machineId, iteration, options.write_type, Res_dir))
+def fio_test(options, machine_id, publicip, publicport, account):
+    print('FIO testing has been started on machine: {}'.format(machine_id))
+
+    templ = 'sshpass -p "{}" ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p {} {}@{} '
+    templ += ' python Machine_script.py {} {} {} {} {} {} {} {} {} {} {} {} {}'
+    cmd = templ.format(account['password'], publicport, account['login'], publicip,
+                       options.testrun_time, machine_id, account['password'], 1, options.no_of_disks,
+                       options.data_size, options.write_type, options.block_size, options.iodepth,
+                       options.direct_io, options.rwmixwrite, options.rate_iops, options.numjobs)
+    run_cmd_via_gevent(cmd)
+
+    return account, publicport, publicip, machine_id
+
+
+def assemble_fio_test_results(account, publicport, cloudspace_publicip, machine_id, results_dir):
+    print('Collecting results from machine: {}'.format(machine_id))
+    templ = 'sshpass -p{} scp -r -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null '
+    templ += '-P {}  {}@{}:machine{}_iter{}_{}_results {}/'
+    cmd = templ.format(account['password'], publicport, account['login'], cloudspace_publicip,
+                       machine_id, 1, options.write_type, results_dir)
+    run_cmd_via_gevent(cmd)
 
 
 def main(options):
-    ovc = j.clients.openvcloud.get(options.environment,
-                                   options.username,
-                                   options.password)
+    # Check dependencies
+    if not os.path.exists(options.results_dir):
+        print("Not all dependencies are met. Make sure the result directory exists.")
+        return
 
-    if not j.do.exists('%s' % options.Res_dir):
-        j.do.execute('mkdir -p %s' % options.Res_dir)
+    if not check_package('sshpass') or not check_package('python-prettytable'):
+        return
 
-    hostname = j.do.execute('hostname')[1].replace("\n", "")
-    test_num = len(os.listdir('%s' % options.Res_dir)) + 1
-    test_folder = "/" + datetime.datetime.today().strftime('%Y-%m-%d') + "_" + hostname + "_testresults_%s" % test_num
-    Res_dir = options.Res_dir + test_folder
+    # Prepare test run
+    hostname = run_cmd_via_gevent('hostname').replace("\n", "")
+    test_num = len(os.listdir('{}'.format(options.results_dir))) + 1
+    test_dir = "/" + datetime.datetime.today().strftime('%Y-%m-%d')
+    test_dir += "_" + hostname + "_testresults_{}".format(test_num)
+    results_dir = options.results_dir + test_dir
 
-    #make sure sshpass is installed
-    j.do.execute('apt-get install sshpass')
-
-    vms_list = []
-    #list virtual and deployed cloudspaces
-    cloudspaces_per_user =  ovc.api.cloudapi.cloudspaces.list()
+    # list virtual and deployed cloudspaces
+    vms = []
+    ovc = j.clients.openvcloud.get(options.environment, options.username, options.password)
+    cloudspaces_per_user = ovc.api.cloudapi.cloudspaces.list()
     for cs in cloudspaces_per_user:
         portforwards = ovc.api.cloudapi.portforwarding.list(cloudspaceId=cs['id'])
         for pi in portforwards:
-            vms_list.append({pi['machineId']: [pi['publicIp'], pi['publicPort']]})
+            vms.append([pi['machineId'], pi['publicIp'], pi['publicPort']])
 
+    # prepare fio tests
+    prepare_jobs = [gevent.spawn(prepare_fio_test, ovc, options, *vm) for vm in vms]
+    gevent.joinall(prepare_jobs)
 
-    # running fio in parallel
-    jobs.extend([gevent.spawn(fio_test, Res_dir, iter_on_vms, ovc, options) for iter_on_vms in vms_list])
-    gevent.joinall(jobs)
+    # run fio tests
+    run_jobs = [gevent.spawn(fio_test, options, *job.value) for job in prepare_jobs if job.value is not None]
+    gevent.joinall(run_jobs)
 
-    #collecting results in csv file
-    j.do.execute('cp Testsuite/1_fio_vms/collect_results.py %s' % Res_dir)
-    j.do.chdir('%s' % Res_dir)
-    j.do.execute('python collect_results.py %s' % Res_dir)
+    # collect results from machines
+    run_jobs = [gevent.spawn(assemble_fio_test_results, *job.value, results_dir) for job in run_jobs if job.value]
+    gevent.joinall(run_jobs)
+
+    # collecting results in csv file
+    # j.do.copyFile('{}/1_fio_vms/collect_results.py'.format(options.testsuite), results_dir)
+    # j.do.chdir(results_dir)
+    # j.do.execute('python2 collect_results.py {}'.format(results_dir))
 
 
 if __name__ == "__main__":
@@ -86,9 +102,9 @@ if __name__ == "__main__":
                       default=1000, help="Amount of data to be written per each data disk per VM (in MB)")
     parser.add_option("-t", "--run_time", dest="testrun_time", type="int",
                       default=300, help=" Test-rum time per virtual machine  (in seconds)")
-    parser.add_option("-n", "--dn", dest="no_of_disks", type="int",
+    parser.add_option("-c", "--nod", dest="no_of_disks", type="int",
                       default=1, help="Number of data disks per VM")
-    parser.add_option("-t", "--IO_type", dest="write_type", type="string",
+    parser.add_option("-w", "--IO_type", dest="write_type", type="string",
                       default="randrw", help="Type of I/O pattern")
     parser.add_option("-m", "--mixwrite", dest="rwmixwrite", type="int",
                       default=20, help=" Percentage of a mixed workload that should be writes")
@@ -102,13 +118,17 @@ if __name__ == "__main__":
                       default=8000, help="Cap the bandwidth to this number of IOPS")
     parser.add_option("-j", "--numjobs", dest="numjobs", type="int",
                       default=1, help=" Number of clones (processes/threads performing the same workload) of this job")
-    parser.add_option("-r", "--rdir", dest="Res_dir", type="string",
+    parser.add_option("-r", "--rdir", dest="results_dir", type="string",
                       default="/root/G8_testing/tests_results/FIO_test", help="absolute path fot results directory")
+    parser.add_option("-n", "--con", dest="concurrency", default=2, type="int",
+                      help="amount of concurrency to execute the job")
+    parser.add_option("-s", "--ts", dest="testsuite", default="../Testsuite", type="string",
+                      help="location to find Testsuite directory")
 
     (options, args) = parser.parse_args()
     if not options.username or not options.password or not options.environment:
         parser.print_usage()
     else:
-        jobs = list()
         gevent.signal(signal.SIGQUIT, gevent.kill)
+        concurrency = BoundedSemaphore(options.concurrency)
         main(options)
