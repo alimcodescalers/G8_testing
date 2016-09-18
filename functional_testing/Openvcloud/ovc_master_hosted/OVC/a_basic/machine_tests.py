@@ -51,6 +51,7 @@ class BasicTests(BasicACLTest):
 
     @parameterized.expand(['Ubuntu 14.04 x64',
                            'Ubuntu 15.10 x64',
+                           'Ubuntu 16.04 x64',
                            'Windows 2012r2 Standard'])
     def test002_create_vmachine_withbig_disk(self, image_name):
         """ OVC-002
@@ -108,6 +109,7 @@ class BasicTests(BasicACLTest):
 
         self.lg('%s ENDED' % self._testID)
 
+    @unittest.skip("https://github.com/0-complexity/openvcloud/issues/424")
     def test003_create_machine_with_resize(self):
         """ OVC-003
         *Test case for testing resize operation with all combinations*
