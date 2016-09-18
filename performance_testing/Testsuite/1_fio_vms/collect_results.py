@@ -7,14 +7,11 @@ import itertools
 import csv
 
 
-def get_vm_ovs_node(vmid):
-    #make sure vmid is int
-    from JumpScale import j
-    ccl = j.clients.osis.getNamespace('cloudbroker')
-    vm = ccl.vmachine.search({'id': vmid})[1]
-    for disk_id in vm['disks']:
-        disk = ccl.disk.search({'id': disk_id})[1]
-        if disk['descr'] == 'Machine disk of type D':
+def get_vm_ovs_node(vmid, ovc):
+    # make sure vmid is int
+    vm = ovc.api.cloudapi.machines.get(machineId=vmid)
+    for disk in vm['disks']:
+        if disk['type'] == 'D':
             ovs_ip = re.search('(\d+.){3}(\d+)', disk['referenceId'])
             break
     return ovs_ip.group()
@@ -74,6 +71,11 @@ def collect_results(titles, results, Res_dir):
     results_on_csvfile('ovs_nodes_iops', Res_dir, table_txt)
 
 Res_dir = sys.argv[1]
+environment=sys.argv[2]
+username=sys.argv[3]
+password=sys.argv[4]
+from JumpScale import j
+ovc = j.clients.openvcloud.get(environment, username, password)
 #working from inside Res_dir
 #iterate on each machine results
 # Assuming RAID0 for calculating the total IOPS
@@ -125,7 +127,7 @@ for j in os.listdir(os.getcwd()):
                     %(iteration,total_iops, iteration, avg_total_cpuload, iteration, runtime))
             newfile.write('\n --------------------:-------------------- \n')
 
-        ovs_ip = get_vm_ovs_node(int(machineId))
+        ovs_ip = get_vm_ovs_node(int(machineId), ovc)
         vm_ovsip_iops_list.append({'machineId': machineId, 'ovs_ip': ovs_ip, 'iops': total_iops})
 
         os.chdir('%s' %Res_dir)

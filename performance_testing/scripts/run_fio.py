@@ -38,7 +38,7 @@ def fio_test(options, machine_id, publicip, publicport, account):
     return account, publicport, publicip, machine_id
 
 
-def assemble_fio_test_results(account, publicport, cloudspace_publicip, machine_id, results_dir):
+def assemble_fio_test_results(results_dir, account, publicport, cloudspace_publicip, machine_id):
     print('Collecting results from machine: {}'.format(machine_id))
     templ = 'sshpass -p{} scp -r -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null '
     templ += '-P {}  {}@{}:machine{}_iter{}_{}_results {}/'
@@ -62,6 +62,8 @@ def main(options):
     test_dir = "/" + datetime.datetime.today().strftime('%Y-%m-%d')
     test_dir += "_" + hostname + "_testresults_{}".format(test_num)
     results_dir = options.results_dir + test_dir
+    j.do.execute('mkdir -p %s' %results_dir)
+
 
     # list virtual and deployed cloudspaces
     vms = []
@@ -81,13 +83,14 @@ def main(options):
     gevent.joinall(run_jobs)
 
     # collect results from machines
-    run_jobs = [gevent.spawn(assemble_fio_test_results, *job.value, results_dir) for job in run_jobs if job.value]
+    run_jobs = [gevent.spawn(assemble_fio_test_results, results_dir, *job.value ) for job in run_jobs if job.value]
     gevent.joinall(run_jobs)
 
     # collecting results in csv file
-    # j.do.copyFile('{}/1_fio_vms/collect_results.py'.format(options.testsuite), results_dir)
-    # j.do.chdir(results_dir)
-    # j.do.execute('python2 collect_results.py {}'.format(results_dir))
+    j.do.copyFile('{}/1_fio_vms/collect_results.py'.format(options.testsuite, results_dir))
+    j.do.chdir(results_dir)
+    j.do.execute('python2 collect_results.py {} {} {} {}'.format(results_dir, options.environment,
+                                                                 options.username, options.password))
 
 
 if __name__ == "__main__":
