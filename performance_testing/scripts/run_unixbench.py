@@ -1,99 +1,96 @@
-#!/usr/local/bin/jspython
+#!/usr/bin/python3
 import gevent
+from gevent.coros import BoundedSemaphore
 import signal
 from optparse import OptionParser
-from gevent.queue import Queue
 import os
 from JumpScale import j
 import datetime
-from utils import utils
+from libtest import run_cmd_via_gevent, check_remote_is_listening, safe_get_vm, check_package
 
 
-def run_unixbench(vm, cpu_cores, ovc, queue=None):
-    machineId = vm[0]
-    cloudspace_ip = vm[1]
-    publicport = vm[2]
-    machine = ovc.api.cloudapi.machines.get(machineId=machineId)
+def prepare_unixbench_test(ovc, options, machine_id, publicip, publicport, cpu_cores):
+    print("Preparing unixbench test on machine {}".format(machine_id))
+    machine = safe_get_vm(ovc, concurrency, machine_id)
     account = machine['accounts'][0]
 
-    if not j.system.net.waitConnectionTest(cloudspace_ip, publicport, 20):
-        print 'Could not connect to VM over public interface'
-    else:
-        sendscript = 'Testsuite/2_Unixbench2_test/2_machine_script.py'
-        j.do.execute('sshpass -p%s scp -o \'StrictHostKeyChecking=no\' -P %s %s  %s@%s:'
-                     % (account['password'], publicport, sendscript, account['login'], cloudspace_ip))
+    check_remote_is_listening(publicip, int(publicport))
 
-        exc = j.tools.executor.getSSHBased(cloudspace_ip, port=publicport,
-                                           passwd=account['password'], login=account['login'])
-        connection = j.tools.cuisine.get(exc)
-        print('   |--Running UnixBench on machine:%s' % machineId)
-        connection.core.run('cd /home/cloudscalers/UnixBench; echo %s | sudo -S ./Run -c %s -i 3 '
-                            '> /home/cloudscalers/test_res.txt' %(account['password'], cpu_cores))
-        score = connection.core.run('python 2_machine_script.py')
-        print('   |--finished running UnixBench on machine:%s' % machineId)
-        if queue:
-            queue.put([machineId, score])
-        score = float(score)
-        return score
+    templ = 'sshpass -p{} scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null '
+    templ += '-P {} {}/2_Unixbench2_test/2_machine_script.py  {}@{}:'
+    cmd = templ.format(account['password'], publicport, options.testsuite, account['login'], publicip)
+    run_cmd_via_gevent(cmd)
+
+    return machine_id, publicip, publicport, account, cpu_cores
 
 
+def unixbench_test(options, machine_id, publicip, publicport, account, cpu_cores):
+    print('unixbench testing has been started on machine: {}'.format(machine_id))
+
+    templ = 'sshpass -p "{}" ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p {} {}@{} '
+    templ += ' cd /home/{}/UnixBench; echo %s | sudo -S ./Run -c %s -i 3 '
+    templ += '> /home/{}/test_res.txt; python 2_machine_script.py'
+    cmd = templ.format(account['password'], publicport, account['login'], publicip,
+                       account['login'], account['password'], cpu_cores, account['login'])
+    run_cmd_via_gevent(cmd)
+
+    templ = 'sshpass -p "{}" ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p {} {}@{} '
+    templ += ' python 2_machine_script.py'
+    cmd = templ.format(account['password'], publicport, account['login'], publicip)
+    score = run_cmd_via_gevent(cmd)
+
+    return machine_id, float(score)
 
 
 def main(options):
-    ovc = j.clients.openvcloud.get(options.environment,
-                                   options.username,
-                                   options.password)
+    # Check dependencies
+    if not os.path.exists(options.results_dir):
+        print("Not all dependencies are met. Make sure the result directory exists.")
+        return
 
-    if not j.do.exists('%s' % options.Res_dir):
-        j.do.execute('mkdir -p %s' % options.Res_dir)
+    if not check_package('sshpass'):
+        return
 
-    hostname = j.do.execute('hostname')[1].replace("\n", "")
-    test_num = len(os.listdir('%s' % options.Res_dir)) + 1
-    test_folder = "/" + datetime.datetime.today().strftime('%Y-%m-%d') + "_" + hostname + "_testresults_%s" % test_num
-    Res_dir = options.Res_dir + test_folder
+    # Prepare test run
+    hostname = run_cmd_via_gevent('hostname').replace("\n", "")
+    test_num = len(os.listdir('{}'.format(options.results_dir))) + 1
+    test_dir = "/" + datetime.datetime.today().strftime('%Y-%m-%d')
+    test_dir += "_" + hostname + "_testresults_{}".format(test_num)
+    results_dir = options.results_dir + test_dir
 
-    #make sure sshpass is installed
-    j.do.execute('apt-get install sshpass')
-
-    #getting portforwards
-    machines = []
+    # list virtual and deployed cloudspaces
+    vms = []
+    ovc = j.clients.openvcloud.get(options.environment, options.username, options.password)
     cloudspaces_per_user = ovc.api.cloudapi.cloudspaces.list()
     for cs in cloudspaces_per_user:
         portforwards = ovc.api.cloudapi.portforwarding.list(cloudspaceId=cs['id'])
         for pi in portforwards:
-            machines.append([pi['machineId'], pi['publicIp'], pi['publicPort']])
+            vms.append([pi['machineId'], pi['publicIp'], pi['publicPort']])
 
     # getting bootdisk size, cpu and memory used during vms creatian (for any vm)
-    machine = ovc.api.cloudapi.machines.get(machineId=pi['machineId'])
+    machine = safe_get_vm(ovc, concurrency, pi['machineId'])
     bootdisk = machine['disks'][0]['sizeMax']
     size_id = machine['sizeid']
     sizes = ovc.api.cloudapi.sizes.list(cloudspaceId=cs['id'])
     memory = next((i for i in sizes if i['id'] == size_id), False)['memory']
     cpu = next((i for i in sizes if i['id'] == size_id), False)['vcpus']
 
-    # post results for first machine
-    print('running unixbench on the first machine only')
-    VM1_score = run_unixbench(machines[0], cpu, ovc)
-    first_machineId = machines[0][0]
-    titles = ['Index', 'VM', 'CPU\'s', 'Memory(MB)', 'HDD(GB)', 'Avg. Unixbench Score']
-    results = [[1, first_machineId, cpu, memory, bootdisk, VM1_score]]
-    utils.collect_results(titles, results, '%s' % Res_dir)
+    # prepare unixbench tests
+    prepare_jobs = [gevent.spawn(prepare_unixbench_test, ovc, options, *vm, cpu) for vm in vms]
+    gevent.joinall(prepare_jobs)
 
+    # run unixbench tests
+    run_jobs = [gevent.spawn(unixbench_test, options, *job.value) for job in prepare_jobs if job.value is not None]
+    gevent.joinall(run_jobs)
 
-    # running unixbench in parallel
-    queue = Queue()
-    jobs.extend([gevent.spawn(run_unixbench, vm, cpu, ovc, queue) for vm in machines])
-    gevent.joinall(jobs)
-
-    res_arr = []
-    while not queue.empty():
-        res_arr.append(queue.get())
-
-    res_arr.sort()
+    raw_results = [job.value for job in run_jobs]
+    raw_results.sort()
     results = []
-    for s in res_arr:
-        results.append([res_arr.index(s) + 1, s[0], cpu, memory, bootdisk, s[1]])
-    utils.collect_results(titles, results, '%s' % Res_dir)
+    index = 0
+    for s in raw_results:
+        index += 1
+        results.append([index, s[0], cpu, memory, bootdisk, s[1]])
+    # utils.collect_results(titles, results, '%s' % results_dir)
 
 
 if __name__ == "__main__":
@@ -106,13 +103,17 @@ if __name__ == "__main__":
                       help="environment to login on the OVC api")
     parser.add_option("-d", "--ds", dest="data_size", type="int",
                       default=1000, help="Amount of data to be written per each data disk per VM (in MB)")
-    parser.add_option("-r", "--rdir", dest="Res_dir", type="string",
+    parser.add_option("-r", "--rdir", dest="results_dir", type="string",
                       default="/root/G8_testing/tests_results/unixbench", help="absolute path fot results directory")
+    parser.add_option("-n", "--con", dest="concurrency", default=2, type="int",
+                      help="amount of concurrency to execute the job")
+    parser.add_option("-s", "--ts", dest="testsuite", default="../Testsuite", type="string",
+                      help="location to find Testsuite directory")
 
     (options, args) = parser.parse_args()
     if not options.username or not options.password or not options.environment:
         parser.print_usage()
     else:
-        jobs = list()
         gevent.signal(signal.SIGQUIT, gevent.kill)
+        concurrency = BoundedSemaphore(options.concurrency)
         main(options)
