@@ -89,7 +89,7 @@ def main(options):
     # collecting results in csv file
     j.do.copyFile('{}/1_fio_vms/collect_results.py'.format(options.testsuite, results_dir))
     j.do.chdir(results_dir)
-    j.do.execute('python2 collect_results.py {} {} {} {}'.format(results_dir, options.environment,
+    j.do.execute('python3 collect_results.py {} {} {} {}'.format(results_dir, options.environment,
                                                                  options.username, options.password))
 
 
