@@ -6,6 +6,7 @@ from prettytable import PrettyTable
 import csv
 import re
 import uuid
+import ConfigParser
 
 
 def get_stacks(ccl):
