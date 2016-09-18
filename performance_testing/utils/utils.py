@@ -5,6 +5,7 @@ from JumpScale.portal.portal.PortalClient2 import ApiError
 from prettytable import PrettyTable
 import csv
 import re
+import uuid
 
 
 def get_stacks(ccl):
@@ -374,7 +375,7 @@ def push_results_to_repo(Res_dir, test_type=''):
     ccl = j.clients.osis.getNamespace('cloudbroker')
     location = ccl.location.search({})[1]['locationCode']
     config = ConfigParser.ConfigParser()
-    config.read("/opt/code/github/0-complexity/G8_testing/performance_testing/utils/locations.cfg")
+    config.read("locations.cfg")
     if location not in config.options('locations'):
         raise AssertionError('Please update the locations.cfg with your '
                              'location:environment_repo to be able to push your results')
