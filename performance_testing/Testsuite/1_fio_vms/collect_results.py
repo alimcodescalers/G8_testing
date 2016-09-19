@@ -1,4 +1,4 @@
-#!/usr/bin/env/python
+#!/usr/bin/env/python3
 import sys
 import re
 import os
@@ -70,70 +70,7 @@ def collect_results(titles, results, Res_dir):
         file.write('\n%s'%table_txt)
     results_on_csvfile('ovs_nodes_iops', Res_dir, table_txt)
 
-Res_dir = sys.argv[1]
-environment=sys.argv[2]
-username=sys.argv[3]
-password=sys.argv[4]
-from JumpScale import j
-ovc = j.clients.openvcloud.get(environment, username, password)
-#working from inside Res_dir
-#iterate on each machine results
-# Assuming RAID0 for calculating the total IOPS
-total_iops_list=[]
-vm_ovsip_iops_list=[]
-for j in os.listdir(os.getcwd()):
 
-    if j.startswith('machine'):
-        os.chdir(j)
-
-        file = open('cpuload.txt', 'r')
-        f=file.read()
-        cpuload = re.finditer(r'all\s+[\d.]+\s+[\d.]+\s+[\d.]+\s+[\d.]+\s+[\d.]+'
-                              r'\s+[\d.]+\s+[\d.]+\s+[\d.]+\s+[\d.]+\s+([\d.]+)', f)
-        total_cpuload = [100-float(s.group(1)) for s in cpuload]
-        avg_total_cpuload = round(sum(total_cpuload)/len(total_cpuload), 1)
-
-        iops_list=[]
-        disks_runtime=[]
-        #iterate on disks_results per machine
-        for i in os.listdir(os.getcwd()):
-            if i.startswith("result"):
-                file = open( i, 'r')
-                f=file.read()
-                disk_iops=[]
-                match = re.finditer(r'iops=([\S]+),', f)
-                # this for loop in case there are iops for write and read
-                for c in match:
-                    if c.group(1).endswith('K'):
-                        disk_iops.append(int(float(c.group(1).replace('K',''))*1000))
-                    else:
-                        disk_iops.append(int(c.group(1)))
-                iops_list.append(sum(disk_iops))
-                runt = re.search(r'runt=\s*([\d]+)msec', f)
-                disks_runtime.append(int(runt.group(1)))
-        total_iops = sum(iops_list)
-
-        total_iops_list.append(total_iops)
-
-        runtime = max(disks_runtime)
-        vm_info = re.search('machine([\d.]+)_iter([\d]+)_([\w]+)_', j)
-        machineId = vm_info.group(1)
-        iteration = vm_info.group(2)
-        write_type = vm_info.group(3)
-
-        with open('%s/total_results' %Res_dir, 'a') as newfile:
-            newfile.write('\n VM: %s \n Iteration: %s \n Test_type: %s' %(machineId, iteration, write_type))
-            newfile.write('\n IOPS(%s): %s \n Avg_cpuload(%s): %s%% \n test_runtime(%s): %s msec'
-                    %(iteration,total_iops, iteration, avg_total_cpuload, iteration, runtime))
-            newfile.write('\n --------------------:-------------------- \n')
-
-        ovs_ip = get_vm_ovs_node(int(machineId), ovc)
-        vm_ovsip_iops_list.append({'machineId': machineId, 'ovs_ip': ovs_ip, 'iops': total_iops})
-
-        os.chdir('%s' %Res_dir)
-
-ovs_list, iops_list = sum_iops_per_ovs(vm_ovsip_iops_list)
-collect_results(ovs_list, iops_list, Res_dir)
 
 def group_separator(line):
     return line=='\n'
@@ -170,34 +107,108 @@ def table_print(iter, arrays):
            writer.writerows(result)
 
 
-arr=[]
-with open('%s/total_results' %Res_dir) as f:
-    for key,group in itertools.groupby(f, group_separator):
-        row=[]
-        if not key:
-            for item in list(group):
-                field,value=item.split(':')
-                match = re.search('[\d]+', field)
-                value= value.strip()
-                if field == ' Iteration':
-                    row.append(int(value))
-                else:
-                    row.append(value)
-            row.pop(6)
-            arr.append(row)
 
-arr.sort(key=lambda x: x[1])
-b = []
-iter = 1
-for a in arr:
-    if a[1] == iter:
-        b.append(a)
-    else:
-        b.sort()
-        table_print(iter, b)
-        iter += 1
-        b = []; b.append(a)
-    if a == arr[len(arr)-1]:
-        b.sort()
-        table_print(iter, b)
-print ('##################### \n TOTAL_IOPS = %s \n#####################' %sum(total_iops_list))
+def main():
+    Res_dir = sys.argv[1]
+    environment=sys.argv[2]
+    username=sys.argv[3]
+    password=sys.argv[4]
+    from JumpScale import j
+    ovc = j.clients.openvcloud.get(environment, username, password)
+    #working from inside Res_dir
+    #iterate on each machine results
+    # Assuming RAID0 for calculating the total IOPS
+    total_iops_list=[]
+    vm_ovsip_iops_list=[]
+    for j in os.listdir(os.getcwd()):
+
+        if j.startswith('machine'):
+            os.chdir(j)
+
+            file = open('cpuload.txt', 'r')
+            f=file.read()
+            cpuload = re.finditer(r'all\s+[\d.]+\s+[\d.]+\s+[\d.]+\s+[\d.]+\s+[\d.]+'
+                                  r'\s+[\d.]+\s+[\d.]+\s+[\d.]+\s+[\d.]+\s+([\d.]+)', f)
+            total_cpuload = [100-float(s.group(1)) for s in cpuload]
+            avg_total_cpuload = round(sum(total_cpuload)/len(total_cpuload), 1)
+
+            iops_list=[]
+            disks_runtime=[]
+            #iterate on disks_results per machine
+            for i in os.listdir(os.getcwd()):
+                if i.startswith("result"):
+                    file = open( i, 'r')
+                    f=file.read()
+                    disk_iops=[]
+                    match = re.finditer(r'iops=([\S]+),', f)
+                    # this for loop in case there are iops for write and read
+                    for c in match:
+                        if c.group(1).endswith('K'):
+                            disk_iops.append(int(float(c.group(1).replace('K',''))*1000))
+                        else:
+                            disk_iops.append(int(c.group(1)))
+                    iops_list.append(sum(disk_iops))
+                    runt = re.search(r'runt=\s*([\d]+)msec', f)
+                    disks_runtime.append(int(runt.group(1)))
+            total_iops = sum(iops_list)
+
+            total_iops_list.append(total_iops)
+
+            runtime = max(disks_runtime)
+            vm_info = re.search('machine([\d.]+)_iter([\d]+)_([\w]+)_', j)
+            machineId = vm_info.group(1)
+            iteration = vm_info.group(2)
+            write_type = vm_info.group(3)
+
+            with open('%s/total_results' %Res_dir, 'a') as newfile:
+                newfile.write('\n VM: %s \n Iteration: %s \n Test_type: %s' %(machineId, iteration, write_type))
+                newfile.write('\n IOPS(%s): %s \n Avg_cpuload(%s): %s%% \n test_runtime(%s): %s msec'
+                        %(iteration,total_iops, iteration, avg_total_cpuload, iteration, runtime))
+                newfile.write('\n --------------------:-------------------- \n')
+
+            ovs_ip = get_vm_ovs_node(int(machineId), ovc)
+            vm_ovsip_iops_list.append({'machineId': machineId, 'ovs_ip': ovs_ip, 'iops': total_iops})
+
+            os.chdir('%s' %Res_dir)
+
+    ovs_list, iops_list = sum_iops_per_ovs(vm_ovsip_iops_list)
+    collect_results(ovs_list, iops_list, Res_dir)
+
+
+
+
+    arr=[]
+    with open('%s/total_results' %Res_dir) as f:
+        for key,group in itertools.groupby(f, group_separator):
+            row=[]
+            if not key:
+                for item in list(group):
+                    field,value=item.split(':')
+                    match = re.search('[\d]+', field)
+                    value= value.strip()
+                    if field == ' Iteration':
+                        row.append(int(value))
+                    else:
+                        row.append(value)
+                row.pop(6)
+                arr.append(row)
+
+    arr.sort(key=lambda x: x[1])
+    b = []
+    iter = 1
+    for a in arr:
+        if a[1] == iter:
+            b.append(a)
+        else:
+            b.sort()
+            table_print(iter, b)
+            iter += 1
+            b = []; b.append(a)
+        if a == arr[len(arr)-1]:
+            b.sort()
+            table_print(iter, b)
+    print ('##################### \n TOTAL_IOPS = %s \n#####################' %sum(total_iops_list))
+
+
+if __name__ == "__main__":
+    main()

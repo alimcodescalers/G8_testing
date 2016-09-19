@@ -75,7 +75,7 @@ def main(options):
             vms.append([pi['machineId'], pi['publicIp'], pi['publicPort']])
 
     # prepare fio tests
-    prepare_jobs = [gevent.spawn(prepare_fio_test, ovc, options, *vm) for vm in vms]
+    prepare_jobs = [gevent.spawn(prepare_fio_test, ovc, options, *vms[c]) for c in range(len(vms)) if c < options.required_vms]
     gevent.joinall(prepare_jobs)
 
     # run fio tests
@@ -83,7 +83,7 @@ def main(options):
     gevent.joinall(run_jobs)
 
     # collect results from machines
-    run_jobs = [gevent.spawn(assemble_fio_test_results, results_dir, *job.value ) for job in run_jobs if job.value]
+    run_jobs = [gevent.spawn(assemble_fio_test_results, results_dir, *job.value ) for job in run_jobs if job.value is not None]
     gevent.joinall(run_jobs)
 
     # collecting results in csv file
@@ -121,6 +121,8 @@ if __name__ == "__main__":
                       default=8000, help="Cap the bandwidth to this number of IOPS")
     parser.add_option("-j", "--numjobs", dest="numjobs", type="int",
                       default=1, help=" Number of clones (processes/threads performing the same workload) of this job")
+    parser.add_option("-v", "--vms", dest="required_vms", type="int",
+                      default=2, help=" selected number of virtual machines to run fio on")
     parser.add_option("-r", "--rdir", dest="results_dir", type="string",
                       default="/root/G8_testing/tests_results/FIO_test", help="absolute path fot results directory")
     parser.add_option("-n", "--con", dest="concurrency", default=2, type="int",

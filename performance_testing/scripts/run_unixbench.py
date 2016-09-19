@@ -9,7 +9,7 @@ import datetime
 from libtest import run_cmd_via_gevent, check_remote_is_listening, safe_get_vm, check_package
 
 
-def prepare_unixbench_test(ovc, options, machine_id, publicip, publicport, cpu_cores):
+def prepare_unixbench_test(options, ovc, cpu_cores, machine_id, publicip, publicport):
     print("Preparing unixbench test on machine {}".format(machine_id))
     machine = safe_get_vm(ovc, concurrency, machine_id)
     account = machine['accounts'][0]
@@ -28,10 +28,10 @@ def unixbench_test(options, machine_id, publicip, publicport, account, cpu_cores
     print('unixbench testing has been started on machine: {}'.format(machine_id))
 
     templ = 'sshpass -p "{}" ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p {} {}@{} '
-    templ += ' cd /home/{}/UnixBench; echo %s | sudo -S ./Run -c %s -i 3 '
+    templ += ' cd /home/{}/UnixBench; echo %s | sudo -S ./Run -c %s -i %s'
     templ += '> /home/{}/test_res.txt; python 2_machine_script.py'
-    cmd = templ.format(account['password'], publicport, account['login'], publicip,
-                       account['login'], account['password'], cpu_cores, account['login'])
+    cmd = templ.format(account['password'], publicport, account['login'], publicip, account['login'],
+                       account['password'], cpu_cores, account['login'], options.runtimes)
     run_cmd_via_gevent(cmd)
 
     templ = 'sshpass -p "{}" ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p {} {}@{} '
@@ -76,7 +76,8 @@ def main(options):
     cpu = next((i for i in sizes if i['id'] == size_id), False)['vcpus']
 
     # prepare unixbench tests
-    prepare_jobs = [gevent.spawn(prepare_unixbench_test, ovc, options, *vm, cpu) for vm in vms]
+    prepare_jobs = [gevent.spawn(prepare_unixbench_test, options, ovc, cpu, *vms[c])
+                    for c in range(len(vms)) if c < options.required_vms]
     gevent.joinall(prepare_jobs)
 
     # run unixbench tests
@@ -101,8 +102,10 @@ if __name__ == "__main__":
                       help="password to login on the OVC api")
     parser.add_option("-e", "--env", dest="environment", type="string",
                       help="environment to login on the OVC api")
-    parser.add_option("-d", "--ds", dest="data_size", type="int",
-                      default=1000, help="Amount of data to be written per each data disk per VM (in MB)")
+    parser.add_option("-r", "--rt", dest="runtimes", type="int",
+                      default=3, help="number of times for running unixbench (each (10-30 mins))")
+    parser.add_option("-v", "--vms", dest="required_vms", type="int",
+                      default=2, help=" selected number of virtual machines to run unixbench on")
     parser.add_option("-r", "--rdir", dest="results_dir", type="string",
                       default="/root/G8_testing/tests_results/unixbench", help="absolute path fot results directory")
     parser.add_option("-n", "--con", dest="concurrency", default=2, type="int",
