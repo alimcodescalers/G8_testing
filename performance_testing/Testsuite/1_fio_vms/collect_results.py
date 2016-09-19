@@ -12,7 +12,8 @@ def get_vm_ovs_node(vmid, ovc):
     vm = ovc.api.cloudapi.machines.get(machineId=vmid)
     for disk in vm['disks']:
         if disk['type'] == 'D':
-            ovs_ip = re.search('(\d+.){3}(\d+)', disk['referenceId'])
+            diskd = ovc.api.cloudapi.disks.get(diskId=disk['id'])
+            ovs_ip = re.search('(\d+.){3}(\d+)', diskd['referenceId'])
             break
     return ovs_ip.group()
 
@@ -76,7 +77,7 @@ def group_separator(line):
     return line=='\n'
 
 
-def table_print(iter, arrays):
+def table_print(iter, arrays, Res_dir):
     titles = ["VM_index", "Machine", "Test_type"]
     titles.append('IOPS(%s)'%iter); titles.append('cpuload(%s)'%iter); titles.append('Testruntime(%s)'%iter)
     table = PrettyTable(titles)
@@ -201,12 +202,12 @@ def main():
             b.append(a)
         else:
             b.sort()
-            table_print(iter, b)
+            table_print(iter, b, Res_dir)
             iter += 1
             b = []; b.append(a)
         if a == arr[len(arr)-1]:
             b.sort()
-            table_print(iter, b)
+            table_print(iter, b, Res_dir)
     print ('##################### \n TOTAL_IOPS = %s \n#####################' %sum(total_iops_list))
 
 
