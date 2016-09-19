@@ -28,7 +28,11 @@ if __name__ == "__main__":
     datasize_process = data_size/numjobs
 
     disk_list = ['b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k']
-    os.system('mkdir machine%s_iter%s_%s_results' % (machineId, iteration, write_type))
+    os.system('mkdir base_machine%s_iter%s_%s_results' % (machineId, iteration, write_type))
+    if os.path.isdir('machine%s_iter%s_%s_results' % (machineId, iteration, write_type)):
+        os.system('rm -rf machine%s_iter%s_%s_results/*' % (machineId, iteration, write_type))
+    else:
+        os.system('mkdir machine%s_iter%s_%s_results' % (machineId, iteration, write_type))
     processes = []
     for iter_on_disks in range(no_of_disks):
         p = multiprocessing.Process(target=FIO_test, args=(disk_list[iter_on_disks], testrun_time, machineId,
@@ -39,8 +43,11 @@ if __name__ == "__main__":
         processes[j].start()
         #print('FIO testing has been started on machine: %s and on disk: vd%s'% (machineId, disk_list[j]))
     while (any(p.is_alive()==True for p in processes)):
-        os.system('sar -r 1 1 >> machine%s_iter%s_%s_results/memory_usage.txt' %(machineId, iteration, write_type))
-        os.system('mpstat -P ALL >> machine%s_iter%s_%s_results/cpuload.txt' %(machineId, iteration, write_type))
+        os.system('sar -r 1 1 >> base_machine%s_iter%s_%s_results/memory_usage.txt' %(machineId, iteration, write_type))
+        os.system('mpstat -P ALL >> base_machine%s_iter%s_%s_results/cpuload.txt' %(machineId, iteration, write_type))
     for k in range(no_of_disks):
         processes[k].join()
         #print('FIO testing has been ended on machine: %s and on disk: vd%s'% (machineId, disk_list[k]))
+    os.system('cp -r base_machine%s_iter%s_%s_results/* machine%s_iter%s_%s_results/'
+              % (machineId, iteration, write_type, machineId, iteration, write_type))
+    os.system('rm -rf base_machine%s_iter%s_%s_results' % (machineId, iteration, write_type))
