@@ -63,6 +63,7 @@ class NetworkBasicTests(BasicACLTest):
             self.assertTrue(str(cloud_space_networkId[csNumbers]) in released_network_Id)
         self.lg('%s ENDED' % self._testID)
 
+    @unittest.skip("https://github.com/0-complexity/openvcloud/issues/425")
     def test002_clean_ovs_bridge(self):
         ''' OVC-011
          * Test case verify the cleaning OVS bridges when deleting a cloudspace operation
