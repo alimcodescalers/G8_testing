@@ -7,6 +7,39 @@ import os
 from JumpScale import j
 import datetime
 from libtest import run_cmd_via_gevent, check_remote_is_listening, safe_get_vm, check_package
+import csv
+import re
+
+
+
+def results_on_csvfile(csv_file_name, Res_dir, table_string):
+    result=[]
+    for line in table_string.splitlines():
+        splitdata = line.split("|")
+        if len(splitdata) == 1:
+            continue  # skip lines with no separators
+        linedata = []
+        for field in splitdata:
+            field = field.strip()
+            if field:
+                linedata.append(field)
+        result.append(linedata)
+
+    with open('%s/%s.csv'%(Res_dir, csv_file_name), 'a') as outcsv:
+           writer = csv.writer(outcsv)
+           writer.writerows(result)
+
+#collects results in a table
+def collect_results(titles, results, Res_dir):
+    from prettytable import PrettyTable
+    table = PrettyTable(titles)
+    for i in results:
+        table.add_row(i)
+    table_txt = table.get_string()
+    with open('%s/results.table' %Res_dir,'a') as file:
+        file.write('\n%s'%table_txt)
+    match = re.search('/(201.+)', Res_dir)
+    results_on_csvfile(match.group(1), Res_dir, table_txt)
 
 
 def prepare_unixbench_test(options, ovc, cpu_cores, machine_id, publicip, publicport):
@@ -28,18 +61,12 @@ def unixbench_test(options, machine_id, publicip, publicport, account, cpu_cores
     print('unixbench testing has been started on machine: {}'.format(machine_id))
 
     templ = 'sshpass -p "{}" ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p {} {}@{} '
-    templ += ' cd /home/{}/UnixBench; echo {} | sudo -S ./Run -c {} -i 1'
-    templ += ' > /home/{}/test_res.txt'
-    cmd = templ.format(account['password'], publicport, account['login'], publicip, account['login'],
-                       account['password'], cpu_cores, account['login'])
-    run_cmd_via_gevent(cmd)
-
-    templ = 'sshpass -p "{}" ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p {} {}@{} '
-    templ += ' python 2_machine_script.py'
-    cmd = templ.format(account['password'], publicport, account['login'], publicip)
+    templ += ' python 2_machine_script.py {} {} {}'
+    cmd = templ.format(account['password'], publicport, account['login'], publicip,
+                       account['password'], cpu_cores, options.test_runtime)
     score = run_cmd_via_gevent(cmd)
 
-    return machine_id, float(score)
+    return [machine_id, float(score)]
 
 
 def main(options):
@@ -91,7 +118,8 @@ def main(options):
     for s in raw_results:
         index += 1
         results.append([index, s[0], cpu, memory, bootdisk, s[1]])
-    # utils.collect_results(titles, results, '%s' % results_dir)
+    titles = ['Index', 'VM', 'CPU\'s', 'Memory(MB)', 'HDD(GB)', 'Avg. Unixbench Score']
+    collect_results(titles, results, '%s' % results_dir)
 
 
 if __name__ == "__main__":
@@ -104,6 +132,8 @@ if __name__ == "__main__":
                       help="environment to login on the OVC api")
     parser.add_option("-v", "--vms", dest="required_vms", type="int",
                       default=2, help=" selected number of virtual machines to run unixbench on")
+    parser.add_option("-t", "--runtime", dest="test_runtime", type="int",
+                      default=100, help="duration for running unixbecnh (in secs)")
     parser.add_option("-r", "--rdir", dest="results_dir", type="string",
                       default="/root/G8_testing/tests_results/unixbench", help="absolute path for results directory")
     parser.add_option("-n", "--con", dest="concurrency", default=2, type="int",
