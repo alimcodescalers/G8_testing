@@ -36,7 +36,7 @@ class BaseTest(unittest.TestCase):
         self._logger = logging.LoggerAdapter(logging.getLogger('portal_testsuite'),
                                              {'testid': self.shortDescription() or self._testID})
         self.lg('Testcase %s Started at %s' % (self._testID, self._startTime))
-        self.set_browser()
+        #self.set_browser()
         self.wait = WebDriverWait(self.driver, 30)
         for temp in range(5):
             try:
@@ -45,7 +45,7 @@ class BaseTest(unittest.TestCase):
             except AngularNotFoundException:
                 time.sleep(1)
         else:
-            raise AngularNotFoundException
+            self.fail('AngularNotFoundException')
         self.driver.set_window_size(1920, 1080)
         for temp in range(5):
             if self.wait_until_element_located(self.elements["username_textbox"]):
@@ -53,7 +53,7 @@ class BaseTest(unittest.TestCase):
             else:
                 self.driver.refresh()
         else:
-            raise NameError("The login page isn't loading well.")
+            self.fail("The login page isn't loading well.")
 
         self.username = str(uuid.uuid4()).replace('-', '')[0:10]
         self.account = str(uuid.uuid4()).replace('-', '')[0:10]
@@ -119,7 +119,7 @@ class BaseTest(unittest.TestCase):
         elif self.browser == 'safari':
             self.driver = webdriver.Safari
         else:
-            raise AssertionError("Invalid broswer configuration [%s]" % self.browser)
+            self.fail("Invalid browser configuration [%s]" % self.browser)
 
     def get_page(self, page_url):
         try:
@@ -145,7 +145,7 @@ class BaseTest(unittest.TestCase):
             try:
                 self.wait.until(EC.visibility_of_element_located((By.XPATH, name)))
                 return True
-            except (TimeoutException, StaleElementReferenceException):
+            except:
                 time.sleep(1)
         else:
             return False
@@ -162,7 +162,7 @@ class BaseTest(unittest.TestCase):
             except (TimeoutException, StaleElementReferenceException):
                 time.sleep(1)
         else:
-            raise NameError(self.driver.find_element_by_xpath(xpath).text,"!=", text)
+            self.assertEqual(self.driver.find_element_by_xpath(xpath).text, text)
 
     def wait_unti_element_clickable(self, name):
         for temp in range(10):
@@ -173,7 +173,7 @@ class BaseTest(unittest.TestCase):
             else:
                 return True
         else:
-            raise StaleElementReferenceException
+            self.fail('StaleElementReferenceException')
 
     def click(self, element):
         element = self.elements[element]
@@ -184,7 +184,7 @@ class BaseTest(unittest.TestCase):
             except:
                 time.sleep(1)
         else:
-            raise NoSuchElementException("can't find %s element" % element)
+            self.fail("can't find %s element" % element)
         time.sleep(1)
 
     def click_link(self, link):
@@ -198,7 +198,7 @@ class BaseTest(unittest.TestCase):
             except:
                 time.sleep(0.5)
         else:
-            raise NoSuchElementException(element)
+            self.fail('NoSuchElementException(%s)' % element)
 
     def get_size(self, element):
         element = self.elements[element]
@@ -251,7 +251,8 @@ class BaseTest(unittest.TestCase):
                 item_value = option.text
                 break
         else:
-            raise Exception("This %s item isn't an option in %s list" % (item_value, list_element))
+            self.fail("This %s item isn't an option in %s list" % (item_value, list_element))
+
         self.assertEqual(item_value, self.select_obeject.first_selected_option.text)
 
     def get_list_items(self, list_element):
@@ -281,7 +282,7 @@ class BaseTest(unittest.TestCase):
             except:
                 time.sleep(1)
         else:
-            raise NoSuchElementException("this %s item isn't exist in this url: %s" % (text_item, self.get_url()))
+            self.fail("this %s item isn't exist in this url: %s" % (text_item, self.get_url()))
 
     def check_side_list(self):
         for temp in range(3):
@@ -409,7 +410,7 @@ class BaseTest(unittest.TestCase):
         elif self.driver.find_element_by_xpath(self.elements["account_page_status"]).text == "DESTROYED":
             self.lg('%s account is already deleted' % account)
         else:
-            raise NameError('"%s" account status has an error in the page %s' % account)
+            self.fail('"%s" account status has an error in the page' % account)
 
     def create_cloud_space(self, account='', cloud_space=''):
         account = account
@@ -467,7 +468,7 @@ class BaseTest(unittest.TestCase):
                     time.sleep(1)
                     self.get_page(self.driver.current_url)
             else:
-                raise NameError("Can't delete this '%s' cloudspcae")
+                self.fail("Can't delete this '%s' cloudspcae")
         else:
             self.lg('"%s" cloudspace is already deleted' % cloudspace)
             return True
@@ -487,10 +488,10 @@ class BaseTest(unittest.TestCase):
         self.assertEqual(self.get_text('create_virtual_machine_on_cpu_node'), 'Create Machine On CPU Node')
 
         self.lg('enter the machine name')
-        self.set_text('machine_name', machine_name)
+        self.set_text('machine_name_admin', machine_name)
 
         self.lg('enter the machien description')
-        self.set_text('machine_description', str(uuid.uuid4()).replace('-', '')[0:10])
+        self.set_text('machine_description_admin', str(uuid.uuid4()).replace('-', '')[0:10])
 
         self.lg('select the image')
         self.select('machine_images_list', self.image)
@@ -563,4 +564,32 @@ class BaseTest(unittest.TestCase):
         exist_menu = self.get_list_items_text(menu_element)
         for item in original_list:
             if not item in exist_menu:
-                raise NameError("This %s list item isn't exist in %s" % (item, exist_menu))
+                self.fail("This %s list item isn't exist in %s" % (item, exist_menu))
+
+    def edit_account(self, account, edit_item, edit_value):
+        try:
+            self.wait_until_element_located_and_has_text(self.elements["account_name_value"], account)
+        except:
+            print("Can't find the account")
+            self.open_account_page(account)
+
+        self.click('account_action')
+        self.click('account_action_edit')
+
+        self.wait_until_element_located_and_has_text(self.elements["account_action_edit_page"], 'Confirm Action Edit')
+
+        edit_items = ['name', 'Max Memory Capacity (GB)', 'Max VDisk Capacity (GB)', 'Max Number of CPU Cores',
+                      'Max Primary Storage(NAS) Capacity (TB)', 'Max Secondary Storage(Archive) Capacity (TB)',
+                      'Max Network Transfer In Operator (GB)', 'Max Network Transfer Peering (GB)',
+                      'Max Number of Public IP Addresses']
+        for item in edit_items:
+            if item == edit_item:
+                xpath = self.elements['account_action_edit_page_items'] % (edit_items.index(item) + 1)
+                break
+        else:
+            self.fail("%s isn't an item in the list" % edit_item)
+
+        self.driver.find_element_by_xpath(xpath).clear()
+        self.driver.find_element_by_xpath(xpath).send_keys(edit_value)
+
+        self.click('account_action_edit_page_confirm')
