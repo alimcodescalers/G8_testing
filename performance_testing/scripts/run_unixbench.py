@@ -1,4 +1,4 @@
-#!python3
+#!/usr/bin/python3
 import gevent
 from gevent.coros import BoundedSemaphore
 import signal

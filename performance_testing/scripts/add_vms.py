@@ -1,4 +1,4 @@
-#!python3
+#!/usr/bin/python3
 from optparse import OptionParser
 import gevent
 import signal
