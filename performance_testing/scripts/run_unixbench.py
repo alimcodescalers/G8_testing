@@ -84,6 +84,7 @@ def main(options):
     test_dir = "/" + datetime.datetime.today().strftime('%Y-%m-%d')
     test_dir += "_" + hostname + "_testresults_{}".format(test_num)
     results_dir = options.results_dir + test_dir
+    j.do.execute('mkdir -p %s' % results_dir)
 
     # list virtual and deployed cloudspaces
     vms = []
