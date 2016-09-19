@@ -42,6 +42,9 @@ class AccountsTests(BaseTest):
                 xpath = self.elements['account_action_page_items'] % edit_items.index(item)
                 self.assertIn(str(value),self.driver.find_element_by_xpath(xpath).text)
 
+
+    def test02_disable_enable_account(self):
+        pass
     '''
     def test02_account_page_paging_table_sorting(self):
         """ PRTL-000
