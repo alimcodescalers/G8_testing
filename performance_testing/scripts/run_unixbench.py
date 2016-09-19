@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+from libtest import run_cmd_via_gevent, check_remote_is_listening, safe_get_vm, check_package
 import gevent
 from gevent.coros import BoundedSemaphore
 import signal
@@ -6,7 +7,6 @@ from optparse import OptionParser
 import os
 from JumpScale import j
 import datetime
-from libtest import run_cmd_via_gevent, check_remote_is_listening, safe_get_vm, check_package
 
 
 def prepare_unixbench_test(options, ovc, cpu_cores, machine_id, publicip, publicport):

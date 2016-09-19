@@ -1,12 +1,11 @@
-#!/usr/bin/python3
+#!python3
+from libtest import run_cmd_via_gevent, check_remote_is_listening, safe_get_vm, check_package
 import gevent
 from gevent.coros import BoundedSemaphore
 import signal
 from optparse import OptionParser
 import os
-from JumpScale import j
 import datetime
-from libtest import run_cmd_via_gevent, check_remote_is_listening, safe_get_vm, check_package
 
 
 def prepare_fio_test(ovc, options, machine_id, publicip, publicport):
@@ -47,12 +46,14 @@ def assemble_fio_test_results(results_dir, account, publicport, cloudspace_publi
 
 
 def main(options):
+    from JumpScale import j
+
     # Check dependencies
     if not os.path.exists(options.results_dir):
         print("Not all dependencies are met. Make sure the result directory exists.")
         return
 
-    if not check_package('sshpass') or not check_package('python-prettytable'):
+    if not check_package('sshpass') or not check_package('python3-prettytable'):
         return
 
     # Prepare test run
@@ -61,8 +62,7 @@ def main(options):
     test_dir = "/" + datetime.datetime.today().strftime('%Y-%m-%d')
     test_dir += "_" + hostname + "_testresults_{}".format(test_num)
     results_dir = options.results_dir + test_dir
-    j.do.execute('mkdir -p %s' %results_dir)
-
+    j.do.execute('mkdir -p {}'.format(results_dir))
 
     # list virtual and deployed cloudspaces
     vms = []
@@ -74,16 +74,16 @@ def main(options):
             vms.append([pi['machineId'], pi['publicIp'], pi['publicPort']])
 
     # prepare fio tests
-    prepare_jobs = [gevent.spawn(prepare_fio_test, ovc, options, *vms[c]) for c in range(len(vms)) if c < options.required_vms]
-    gevent.joinall(prepare_jobs)
+    pjobs = [gevent.spawn(prepare_fio_test, ovc, options, *vms[c]) for c in range(len(vms)) if c < options.required_vms]
+    gevent.joinall(pjobs)
 
     # run fio tests
-    run_jobs = [gevent.spawn(fio_test, options, *job.value) for job in prepare_jobs if job.value is not None]
-    gevent.joinall(run_jobs)
+    rjobs = [gevent.spawn(fio_test, options, *job.value) for job in pjobs if job.value is not None]
+    gevent.joinall(rjobs)
 
     # collect results from machines
-    run_jobs = [gevent.spawn(assemble_fio_test_results, results_dir, *job.value ) for job in run_jobs if job.value is not None]
-    gevent.joinall(run_jobs)
+    rjobs = [gevent.spawn(assemble_fio_test_results, results_dir, *job.value) for job in rjobs if job.value is not None]
+    gevent.joinall(rjobs)
 
     # collecting results in csv file
     j.do.copyFile('{}/1_fio_vms/collect_results.py'.format(options.testsuite), results_dir)

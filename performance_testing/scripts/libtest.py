@@ -1,6 +1,6 @@
 from gevent.subprocess import Popen, PIPE
 import gevent
-import socket
+gevent.monkey.patch_all()
 
 
 def check_package(package):
@@ -14,7 +14,7 @@ def check_package(package):
 
 
 def run_cmd_via_gevent(cmd):
-    sub = Popen([cmd], stdout=PIPE, shell=True)
+    sub = Popen([cmd], stdout=PIPE, stderr=PIPE, shell=True)
     out, err = sub.communicate()
     if sub.returncode == 0:
         result = out.decode('ascii')
@@ -26,6 +26,7 @@ def run_cmd_via_gevent(cmd):
 
 
 def wait_until_remote_is_listening(address, port):
+    import socket
     while True:
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         try:
@@ -35,6 +36,8 @@ def wait_until_remote_is_listening(address, port):
         except ConnectionAbortedError:
             gevent.sleep(1)
         except ConnectionRefusedError:
+            gevent.sleep(1)
+        except TimeoutError:
             gevent.sleep(1)
         s.close()
 

@@ -1,13 +1,11 @@
 #!/usr/bin/python3
+from libtest import run_cmd_via_gevent, wait_until_remote_is_listening, safe_get_vm
 from optparse import OptionParser
 import gevent
 import signal
 import time
 import os
-from libtest import run_cmd_via_gevent, wait_until_remote_is_listening, safe_get_vm
 from gevent.coros import BoundedSemaphore
-from gevent import monkey
-monkey.patch_all()
 _cloudspace_semaphores = dict()
 _stats = dict(deployed_vms=0, deployed_cloudspaces=0)
 
@@ -86,7 +84,10 @@ def deploy_vm(options, ovc, account_id, gid, name, cloudspace_id, image_id):
         # limit the IOPS on all the disks of the vm
         machine = ovc.api.cloudapi.machines.get(machineId=vm_id)
         for disk in machine['disks']:
-            print("Set limit of iops to {} on disk {}({}) for machine {}".format(options.iops, disk['name'], disk['id'], name))
+            print("Set limit of iops to {} on disk {}({}) for machine {}".format(options.iops,
+                                                                                 disk['name'],
+                                                                                 disk['id'],
+                                                                                 name))
             ovc.api.cloudapi.disks.limitIO(diskId=disk['id'], iops=options.iops)
 
     # Wait until vm has ip address
