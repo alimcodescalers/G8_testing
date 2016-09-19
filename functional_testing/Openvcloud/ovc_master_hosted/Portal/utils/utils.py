@@ -145,7 +145,7 @@ class BaseTest(unittest.TestCase):
             try:
                 self.wait.until(EC.visibility_of_element_located((By.XPATH, name)))
                 return True
-            except (TimeoutException, StaleElementReferenceException):
+            except:
                 time.sleep(1)
         else:
             return False
