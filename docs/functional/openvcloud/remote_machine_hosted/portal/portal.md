@@ -10,8 +10,8 @@ The actual tests are auto-documented [here](http://85.255.197.106:8888/) using *
 
 - Supported browsers for Ubuntu:
   - Chrome
-  - Firefox <= 46.0
-- Current tests can only run from Ubuntu Desktop, not server
+  - Firefox
+- Current tests can run from Ubuntu Desktop or server
 - Make sure **Python 2.7** is installed:
 
   ```
@@ -52,7 +52,7 @@ Change the necessary parameters in **config.ini** according to your environment:
 env = http://du-conv-2.demo.greenitglobe.com
 #url for the environment portal
 location = du-conv-2
-#location for the environment in the grid, ex.: du-conv-2, du-conv-1, du-conv-3
+#location for the environment in the grid, ex.: du-conv-2,du-conv-1,du-conv-3
 admin = gig
 passwd =
 browser = firefox
@@ -61,15 +61,16 @@ browser = firefox
 Run the test using **nosetests** using the required parameters:
 
 ```
-nosetests -v testsuite_name --tc-file=config.ini  2>testresults.log
+nosetests -v --with-selenium --browser browser_name testsuite_name --tc-file=config.ini  2>testresults.log
 ```
+You have to use --headless parameters for server machines.
 
 Currently we have two test suites: **end\_user** and **admin\_portal**.
 
 So for running the **end\_user** test suite:
 
 ```
-nosetests -v end_user --tc-file=config.ini  2>testresults.log
+nosetests -v --with-selenium --browser chrome end_user --tc-file=config.ini  2>testresults.log
 ```
 
 You can also overwrite the **config.ini** parameters:
