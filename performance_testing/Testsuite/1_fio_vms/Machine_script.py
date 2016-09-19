@@ -37,10 +37,10 @@ if __name__ == "__main__":
         processes.append(p)
     for j in range(no_of_disks):
         processes[j].start()
-        print('FIO testing has been started on machine: %s and on disk: vd%s'% (machineId, disk_list[j]))
+        #print('FIO testing has been started on machine: %s and on disk: vd%s'% (machineId, disk_list[j]))
     while (any(p.is_alive()==True for p in processes)):
         os.system('sar -r 1 1 >> machine%s_iter%s_%s_results/memory_usage.txt' %(machineId, iteration, write_type))
         os.system('mpstat -P ALL >> machine%s_iter%s_%s_results/cpuload.txt' %(machineId, iteration, write_type))
     for k in range(no_of_disks):
         processes[k].join()
-        print('FIO testing has been ended on machine: %s and on disk: vd%s'% (machineId, disk_list[k]))
+        #print('FIO testing has been ended on machine: %s and on disk: vd%s'% (machineId, disk_list[k]))

@@ -25,14 +25,13 @@ def prepare_fio_test(ovc, options, machine_id, publicip, publicport):
 
 
 def fio_test(options, machine_id, publicip, publicport, account):
-    print('FIO testing has been started on machine: {}'.format(machine_id))
-
     templ = 'sshpass -p "{}" ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p {} {}@{} '
     templ += ' python Machine_script.py {} {} {} {} {} {} {} {} {} {} {} {} {}'
     cmd = templ.format(account['password'], publicport, account['login'], publicip,
                        options.testrun_time, machine_id, account['password'], 1, options.no_of_disks,
                        options.data_size, options.write_type, options.block_size, options.iodepth,
                        options.direct_io, options.rwmixwrite, options.rate_iops, options.numjobs)
+    print('FIO testing has been started on machine: {}'.format(machine_id))
     run_cmd_via_gevent(cmd)
 
     return account, publicport, publicip, machine_id
