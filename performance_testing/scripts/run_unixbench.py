@@ -75,7 +75,7 @@ def main(options):
         print("Not all dependencies are met. Make sure the result directory exists.")
         return
 
-    if not check_package('sshpass'):
+    if not check_package('sshpass') or not check_package('python3-prettytable'):
         return
 
     # Prepare test run
