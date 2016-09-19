@@ -28,10 +28,10 @@ def unixbench_test(options, machine_id, publicip, publicport, account, cpu_cores
     print('unixbench testing has been started on machine: {}'.format(machine_id))
 
     templ = 'sshpass -p "{}" ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p {} {}@{} '
-    templ += ' cd /home/{}/UnixBench; echo %s | sudo -S ./Run -c %s -i %s'
-    templ += '> /home/{}/test_res.txt; python 2_machine_script.py'
+    templ += ' cd /home/{}/UnixBench; echo {} | sudo -S ./Run -c {} -i 1'
+    templ += ' > /home/{}/test_res.txt'
     cmd = templ.format(account['password'], publicport, account['login'], publicip, account['login'],
-                       account['password'], cpu_cores, account['login'], options.runtimes)
+                       account['password'], cpu_cores, account['login'])
     run_cmd_via_gevent(cmd)
 
     templ = 'sshpass -p "{}" ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p {} {}@{} '
@@ -102,12 +102,10 @@ if __name__ == "__main__":
                       help="password to login on the OVC api")
     parser.add_option("-e", "--env", dest="environment", type="string",
                       help="environment to login on the OVC api")
-    parser.add_option("-r", "--rt", dest="runtimes", type="int",
-                      default=3, help="number of times for running unixbench (each (10-30 mins))")
     parser.add_option("-v", "--vms", dest="required_vms", type="int",
                       default=2, help=" selected number of virtual machines to run unixbench on")
     parser.add_option("-r", "--rdir", dest="results_dir", type="string",
-                      default="/root/G8_testing/tests_results/unixbench", help="absolute path fot results directory")
+                      default="/root/G8_testing/tests_results/unixbench", help="absolute path for results directory")
     parser.add_option("-n", "--con", dest="concurrency", default=2, type="int",
                       help="amount of concurrency to execute the job")
     parser.add_option("-s", "--ts", dest="testsuite", default="../Testsuite", type="string",
