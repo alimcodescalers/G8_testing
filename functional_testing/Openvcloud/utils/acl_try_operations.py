@@ -46,14 +46,25 @@ def try_account_write(self, operation='create_cloudspace'):
                           access=self.account_owner, maxMemoryCapacity=1, maxDiskCapacity=1)
         self._cloudspaces = [newcloudspaceId]
         self.assertTrue(newcloudspaceId)
-        machineId = self.cloudapi_create_machine(cloudspace_id=newcloudspaceId, api=self.account_owner_api)
+        selected_image = self.account_owner_api.cloudapi.images.list(cloudspaceId=newcloudspaceId)[0]
+        machineId = self.cloudapi_create_machine(cloudspace_id=newcloudspaceId,
+                                                 api=self.account_owner_api,
+                                                 image_id=selected_image['id'])
         self._machines = [machineId]
-        basename = self.account_owner_api.cloudapi.images.list(cloudspaceId=newcloudspaceId)[0]['name']
         self.lg('- use created machine2 to create machineTemplate with user1')
         created = self.user_api.cloudapi.machines.createTemplate(machineId=machineId,
-                  templatename=str(uuid.uuid4()).replace('-', '')[0:10], basename=basename)
-        self.assertTrue(created)
-        time.sleep(100)
+                  templatename=str(uuid.uuid4()).replace('-', '')[0:10], basename=selected_image['name'])
+        self.assertTrue(created, 'Create Template API returned False')
+        templates = len(self.account_owner_api.cloudapi.accounts.listTemplates(accountId=self.account_id))
+        self.assertEqual(templates, 1, 'We should have only one template for this account not [%s]' % templates)
+        counter = 120
+        while(counter>0):
+            status = self.account_owner_api.cloudapi.accounts.listTemplates(accountId=self.account_id)[0]['status']
+            if status == 'CREATED':
+                break
+            counter-=1
+            time.sleep(1)
+        self.assertEqual(status, 'CREATED', 'Template did not created and still %s' % status)
     else:
         raise AssertionError('Un-supported operation [%s]' % operation)
 
