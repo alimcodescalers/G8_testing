@@ -1,4 +1,6 @@
 #!/usr/bin/python3
+from gevent import monkey
+monkey.patch_all()
 from libtest import run_cmd_via_gevent, wait_until_remote_is_listening, safe_get_vm
 from optparse import OptionParser
 import gevent
@@ -82,8 +84,10 @@ def deploy_vm(options, ovc, account_id, gid, name, cloudspace_id, image_id):
                                                  datadisks=[int(options.datadisk)])
 
         # limit the IOPS on all the disks of the vm
-        machine = ovc.api.cloudapi.machines.get(machineId=vm_id)
+        machine = safe_get_vm(ovc, None, vm_id)
         for disk in machine['disks']:
+            if disk['type'] != 'D':
+                continue
             print("Set limit of iops to {} on disk {}({}) for machine {}".format(options.iops,
                                                                                  disk['name'],
                                                                                  disk['id'],

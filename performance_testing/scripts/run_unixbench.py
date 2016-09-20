@@ -5,7 +5,6 @@ from gevent.coros import BoundedSemaphore
 import signal
 from optparse import OptionParser
 import os
-from JumpScale import j
 import datetime
 
 
@@ -43,6 +42,8 @@ def unixbench_test(options, machine_id, publicip, publicport, account, cpu_cores
 
 
 def main(options):
+    from JumpScale import j
+
     # Check dependencies
     if not os.path.exists(options.results_dir):
         print("Not all dependencies are met. Make sure the result directory exists.")

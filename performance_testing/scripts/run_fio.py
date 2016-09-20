@@ -1,4 +1,6 @@
-#!python3
+#!/usr/bin/python3
+from gevent import monkey
+monkey.patch_all()
 from libtest import run_cmd_via_gevent, check_remote_is_listening, safe_get_vm, check_package
 import gevent
 from gevent.coros import BoundedSemaphore
@@ -62,7 +64,7 @@ def main(options):
     test_dir = "/" + datetime.datetime.today().strftime('%Y-%m-%d')
     test_dir += "_" + hostname + "_testresults_{}".format(test_num)
     results_dir = options.results_dir + test_dir
-    j.do.execute('mkdir -p {}'.format(results_dir))
+    run_cmd_via_gevent('mkdir -p {}'.format(results_dir))
 
     # list virtual and deployed cloudspaces
     vms = []

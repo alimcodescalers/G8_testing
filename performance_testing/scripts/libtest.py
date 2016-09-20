@@ -1,15 +1,13 @@
-from gevent.subprocess import Popen, PIPE
 import gevent
-gevent.monkey.patch_all()
+from gevent.subprocess import Popen, PIPE
 
 
 def check_package(package):
-    from JumpScale import j
     try:
-        j.do.execute('dpkg -l {}'.format(package))
+        run_cmd_via_gevent('dpkg -l {}'.format(package))
         return True
     except RuntimeError:
-        print("Dependant package {}".format(package))
+        print("Dependant package {} is not installed".format(package))
         return False
 
 
@@ -17,12 +15,10 @@ def run_cmd_via_gevent(cmd):
     sub = Popen([cmd], stdout=PIPE, stderr=PIPE, shell=True)
     out, err = sub.communicate()
     if sub.returncode == 0:
-        result = out.decode('ascii')
-        print(result)
-        return result
+        return out.decode('ascii')
     else:
-        print(err.decode('ascii'))
-        raise RuntimeError("Failed to execute command.\n{}".format(cmd))
+        error_output = err.decode('ascii')
+        raise RuntimeError("Failed to execute command.\n\ncommand:\n{}\n\n".format(cmd, error_output))
 
 
 def wait_until_remote_is_listening(address, port):
@@ -43,6 +39,7 @@ def wait_until_remote_is_listening(address, port):
 
 
 def check_remote_is_listening(address, port):
+    import socket
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     try:
         s.connect((address, port))
@@ -53,6 +50,8 @@ def check_remote_is_listening(address, port):
 def safe_get_vm(ovc, concurrency, machine_id):
     while True:
         try:
+            if concurrency is None:
+                return ovc.api.cloudapi.machines.get(machineId=machine_id)
             with concurrency:
                 return ovc.api.cloudapi.machines.get(machineId=machine_id)
         except Exception as e:
