@@ -3,7 +3,7 @@ import time
 import uuid
 import unittest
 
-@unittest.skip("This test case need some edit cos its assume that the user has already a VM")
+#@unittest.skip("This test case need some edit cos its assume that the user has already a VM")
 class Write(BaseTest):
 
     def __init__(self, *args, **kwargs):
@@ -12,16 +12,29 @@ class Write(BaseTest):
     def setUp(self):
         super(Write, self).setUp()
         self.login()
+        self.end_user_create_virtual_machine(machine_name=self.machine_name)
         self.click("machines_button")
-        self.machine = self.element_link("first_machine")
-        self.machine_name = self.get_text("first_machine_name")
-        self.machine_memory = self.get_text("first_machine_memory")
-        self.machine_cpu = self.get_text("first_machine_cpu")
-        self.machine_storage = self.get_text("first_machine_storage")
-        if self.get_text("first_machine_status") != "RUNNING":
-            self.start_machine(self.machine)
-        self.click_link(self.machine)
-        self.machine_description = self.get_text("machine_description")
+        if self.check_element_is_exist("end_user_machine_table"):
+            machine_table = self.driver.find_element_by_xpath(self.elements["end_user_machine_table"])
+            machine_table_rows = machine_table.find_elements_by_class_name("ng-scope")
+
+            for row in machine_table_rows:
+                items = row.find_elements_by_class_name("ng-binding")
+                if self.machine_name == items[1].text:
+                    self.machine = items[1]
+                    self.machine_memory = items[3].text
+                    self.machine_cpu = items[4].text
+                    self.machine_storage = items[5].text
+                    row.find_element_by_link_text(self.machine_name).click()
+                    break
+            else:
+                self.lg("can't find %s machine in the table" % self.machine_name)
+                return False
+
+        if self.check_element_is_exist("machine_description"):
+            self.machine_description = self.get_text("machine_description")
+        else:
+            self.machine_description = ''
         self.machine_status = self.get_text("machine_status")
         self.machine_ipaddress = self.get_text("machine_ipaddress")
         self.machine_osimage = self.get_text("machine_osimage")
@@ -42,7 +55,8 @@ class Write(BaseTest):
             time.sleep(1)
 
     def verify_machine_elements(self, status):
-        self.assertEqual(self.machine_description, self.get_text("machine_description"))
+        if self.machine_description:
+            self.assertEqual(self.machine_description, self.get_text("machine_description"))
         self.assertEqual(status, self.get_text("machine_status"))
         self.assertEqual(self.machine_ipaddress, self.get_text("machine_ipaddress"))
         self.assertEqual(self.machine_osimage, self.get_text("machine_osimage"))
@@ -89,7 +103,7 @@ class Write(BaseTest):
 
         self.lg('stop machine, should succeed')
         self.click("machine_stop")
-        time.sleep(30)
+        self.wait_machine("HALTED")
         self.click("console_tab")
         self.verify_machine_console("HALTED")
         self.click("actions_tab")
@@ -101,7 +115,8 @@ class Write(BaseTest):
 
         self.lg('start machine, should succeed')
         self.click("machine_start")
-        time.sleep(30)
+        self.wait_machine("RUNNING")
+        self.click("console_tab")
         self.verify_machine_console("RUNNING")
         self.click("actions_tab")
         self.wait_machine("RUNNING")
@@ -112,7 +127,8 @@ class Write(BaseTest):
 
         self.lg('reboot machine, should succeed')
         self.click("machine_reboot")
-        time.sleep(30)
+        self.wait_machine("RUNNING")
+        self.click("console_tab")
         self.verify_machine_console("RUNNING")
         self.click("actions_tab")
         self.wait_machine("RUNNING")
@@ -123,7 +139,8 @@ class Write(BaseTest):
 
         self.lg('reset machine, should succeed')
         self.click("machine_reset")
-        time.sleep(30)
+        self.wait_machine("RUNNING")
+        self.click("console_tab")
         self.verify_machine_console("RUNNING")
         self.click("actions_tab")
         self.wait_machine("RUNNING")
@@ -136,7 +153,7 @@ class Write(BaseTest):
         self.click("console_tab")
         self.verify_machine_console("RUNNING")
         self.click("send_ctrl/alt/del_button")
-        time.sleep(30)
+        time.sleep(10)
         self.verify_machine_console("RUNNING")
         self.click("actions_tab")
         self.wait_machine("RUNNING")
@@ -201,7 +218,8 @@ class Write(BaseTest):
         self.click("actions_tab")
         self.lg('stop machine, should succeed')
         self.click("machine_stop")
-        time.sleep(30)
+        self.wait_machine("HALTED")
+        self.verify_machine_elements("HALTED")
         self.click("snapshot_tab")
         self.click("first_snapshot_rollback")
         time.sleep(2)
@@ -217,4 +235,3 @@ class Write(BaseTest):
         time.sleep(2)
 
         self.lg('%s ENDED' % self._testID)
-        

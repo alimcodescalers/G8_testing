@@ -1,9 +1,7 @@
 import unittest
 import uuid
 from random import randint
-
 from functional_testing.Openvcloud.ovc_master_hosted.Portal.utils.utils import BaseTest
-
 
 class AccountsTests(BaseTest):
     def setUp(self):
