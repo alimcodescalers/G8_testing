@@ -11,7 +11,7 @@ The actual tests are auto-documented [here](http://85.255.197.106:8888/) using *
 - Supported browsers for Ubuntu:
   - Chrome
   - Firefox
-- Current tests can run from Ubuntu Desktop or server
+- The tests can run from both Ubuntu Desktop and Ubuntu Server
 - Make sure **Python 2.7** is installed:
 
   ```
@@ -29,7 +29,7 @@ The actual tests are auto-documented [here](http://85.255.197.106:8888/) using *
   source venv/bin/activate
   ```
 
-- After making sure your SSH private key is loaded by ssh-agent, clone the **G8_testing** repository,:
+- After making sure your SSH private key is loaded by ssh-agent, clone the **G8_testing** repository:
 
   ```
   ssh-add -l
@@ -63,7 +63,8 @@ Run the test using **nosetests** using the required parameters:
 ```
 nosetests -v --with-selenium --browser browser_name testsuite_name --tc-file=config.ini  2>testresults.log
 ```
-You have to use --headless parameters for server machines.
+
+Use the **--headless** option if you want to run the test on Ubuntu Server, instead of Ubuntu Desktop.
 
 Currently we have two test suites: **end\_user** and **admin\_portal**.
 
