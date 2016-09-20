@@ -570,8 +570,7 @@ class Admin(ACLACCOUNT):
         self.lg('%s ENDED' % self._testID)
 
     @parameterized.expand(['create_cloudspace',
-#                            'create_machineTemplate' skip until fix https://github.com/gig-projects/org_quality/issues/471
-                           ])
+                           'create_machineTemplate'])
     def test002a_try_account_write_operations(self, operation):
         """ ACL-12
         *Test case for try to use write operations with admin access.*
