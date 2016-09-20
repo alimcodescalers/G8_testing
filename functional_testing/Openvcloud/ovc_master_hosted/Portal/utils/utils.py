@@ -3,6 +3,7 @@ import unittest
 import time
 import os
 import uuid
+from random import randint
 
 from testconfig import config
 from selenium.common.exceptions import NoSuchElementException, TimeoutException, StaleElementReferenceException
@@ -398,7 +399,7 @@ class BaseTest(unittest.TestCase):
         self.lg('open %s account' % account)
         self.open_account_page(account)
 
-        if self.driver.find_element_by_xpath(self.elements["account_page_status"]).text == "CONFIRMED":
+        if self.driver.find_element_by_xpath(self.elements["account_page_status"]).text in ["CONFIRMED", "DISABLED"]:
             self.lg('delete %s account' % account)
             self.click('account_action')
             self.click('account_delete')
@@ -566,17 +567,16 @@ class BaseTest(unittest.TestCase):
             if not item in exist_menu:
                 self.fail("This %s list item isn't exist in %s" % (item, exist_menu))
 
-    def edit_account(self, account, edit_item, edit_value):
+    def account_edit(self, account, edit_item, edit_value):
         try:
             self.wait_until_element_located_and_has_text(self.elements["account_name_value"], account)
         except:
-            print("Can't find the account")
             self.open_account_page(account)
 
         self.click('account_action')
         self.click('account_action_edit')
 
-        self.wait_until_element_located_and_has_text(self.elements["account_action_edit_page"], 'Confirm Action Edit')
+        self.assertEqual(self.get_text("account_action_edit_page"), 'Confirm Action Edit')
 
         edit_items = ['name', 'Max Memory Capacity (GB)', 'Max VDisk Capacity (GB)', 'Max Number of CPU Cores',
                       'Max Primary Storage(NAS) Capacity (TB)', 'Max Secondary Storage(Archive) Capacity (TB)',
@@ -593,3 +593,76 @@ class BaseTest(unittest.TestCase):
         self.driver.find_element_by_xpath(xpath).send_keys(edit_value)
 
         self.click('account_action_edit_page_confirm')
+
+    def account_edit_all_items(self, account):
+        edit_items = ['name', 'Max Memory Capacity (GB)', 'Max VDisk Capacity (GB)', 'Max Number of CPU Cores',
+                      'Max Primary Storage(NAS) Capacity (TB)', 'Max Secondary Storage(Archive) Capacity (TB)',
+                      'Max Network Transfer In Operator (GB)', 'Max Network Transfer Peering (GB)',
+                      'Max Number of Public IP Addresses']
+
+        for item in edit_items:
+            if item == 'name':
+                value = str(uuid.uuid4()).replace('-', '')[0:10]
+                self.account_edit(account, item, value)
+                self.CLEANUP["accounts"].remove(self.account)
+                self.account = value
+                self.CLEANUP["accounts"].append(self.account)
+                time.sleep(0.5)
+                if value not in self.get_text('account_name_value'):
+                    self.lg("FAIL : %s not in the account name: %s" % (value, self.get_text('account_name_value')))
+                    return False
+            else:
+                value = randint(1, 100)
+                self.account_edit(self.account, item, value)
+                xpath = self.elements['account_action_page_items'] % edit_items.index(item)
+                if str(value) not in self.driver.find_element_by_xpath(xpath).text:
+                    self.lg("FAIL : %d no in %s" % (value,self.driver.find_element_by_xpath(xpath).text))
+                    return False
+        return True
+
+    def account_enable(self, account):
+        try:
+            self.wait_until_element_located_and_has_text(self.elements["account_name_value"], account)
+        except:
+            self.open_account_page(account)
+
+        if self.get_text("account_page_status") != "DISABLED":
+            self.lg("FAIL : %s account status : %s" % (account, self.get_text("account_page_status")))
+            return False
+
+        self.click('account_action')
+        self.click('account_enable')
+
+        self.assertEqual(self.get_text("account_enable_page"), "Confirm Action Enable")
+        self.set_text("account_enable_reason", "Enable")
+        self.click("account_enable_confirm")
+
+        if self.get_text("account_page_status") == "CONFIRMED":
+            return True
+        else:
+
+            self.lg("FAIL : account status : %s" % self.get_text("account_page_status"))
+            return False
+
+    def account_disable(self, account):
+        try:
+            self.wait_until_element_located_and_has_text(self.elements["account_name_value"], account)
+        except:
+            self.open_account_page(account)
+
+        if self.get_text("account_page_status") != "CONFIRMED":
+            self.lg("FAIL : %s account status : %s" % (account, self.get_text("account_page_status")))
+            return False
+
+        self.click('account_action')
+        self.click('account_disable')
+
+        self.assertEqual(self.get_text("account_disable_page"), "Confirm Action Disable")
+        self.set_text("account_disable_reason", "disable")
+        self.click("account_disable_confirm")
+
+        if self.get_text("account_page_status") == "DISABLED":
+            return True
+        else:
+            self.lg("FAIL : account status : %s" % self.get_text("account_page_status"))
+            return False

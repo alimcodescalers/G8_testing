@@ -10,8 +10,8 @@ The actual tests are auto-documented [here](http://85.255.197.106:8888/) using *
 
 - Supported browsers for Ubuntu:
   - Chrome
-  - Firefox <= 46.0
-- Current tests can only run from Ubuntu Desktop, not server
+  - Firefox
+- The tests can run from both Ubuntu Desktop and Ubuntu Server
 - Make sure **Python 2.7** is installed:
 
   ```
@@ -29,7 +29,7 @@ The actual tests are auto-documented [here](http://85.255.197.106:8888/) using *
   source venv/bin/activate
   ```
 
-- After making sure your SSH private key is loaded by ssh-agent, clone the **G8_testing** repository,:
+- After making sure your SSH private key is loaded by ssh-agent, clone the **G8_testing** repository:
 
   ```
   ssh-add -l
@@ -52,7 +52,7 @@ Change the necessary parameters in **config.ini** according to your environment:
 env = http://du-conv-2.demo.greenitglobe.com
 #url for the environment portal
 location = du-conv-2
-#location for the environment in the grid, ex.: du-conv-2, du-conv-1, du-conv-3
+#location for the environment in the grid, ex.: du-conv-2,du-conv-1,du-conv-3
 admin = gig
 passwd =
 browser = firefox
@@ -61,15 +61,17 @@ browser = firefox
 Run the test using **nosetests** using the required parameters:
 
 ```
-nosetests -v testsuite_name --tc-file=config.ini  2>testresults.log
+nosetests -v --with-selenium --browser browser_name testsuite_name --tc-file=config.ini  2>testresults.log
 ```
+
+Use the **--headless** option if you want to run the test on Ubuntu Server, instead of Ubuntu Desktop.
 
 Currently we have two test suites: **end\_user** and **admin\_portal**.
 
 So for running the **end\_user** test suite:
 
 ```
-nosetests -v end_user --tc-file=config.ini  2>testresults.log
+nosetests -v --with-selenium --browser chrome end_user --tc-file=config.ini  2>testresults.log
 ```
 
 You can also overwrite the **config.ini** parameters:

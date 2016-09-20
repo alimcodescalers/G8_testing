@@ -1,3 +1,4 @@
+import unittest
 import uuid
 from random import randint
 
@@ -15,7 +16,7 @@ class AccountsTests(BaseTest):
         self.open_account_page(self.account)
 
     def test01_edit_account(self):
-        """ PRTL-000
+        """ PRTL-023
         *Test case to make sure that edit actions on accounts are working as expected*
 
         **Test Scenario:**
@@ -23,24 +24,24 @@ class AccountsTests(BaseTest):
         #. search for it and verify it should succeed
         #. edit account parameters and verify it should succeed
         """
-        edit_items = ['name', 'Max Memory Capacity (GB)', 'Max VDisk Capacity (GB)', 'Max Number of CPU Cores',
-                      'Max Primary Storage(NAS) Capacity (TB)', 'Max Secondary Storage(Archive) Capacity (TB)',
-                      'Max Network Transfer In Operator (GB)', 'Max Network Transfer Peering (GB)',
-                      'Max Number of Public IP Addresses']
+        self.assertTrue(self.account_edit_all_items(self.account))
 
-        for item in edit_items:
-            if item == 'name':
-                value = str(uuid.uuid4()).replace('-', '')[0:10]
-                self.edit_account(self.account, item, value)
-                self.CLEANUP["accounts"].remove(self.account)
-                self.account = value
-                self.CLEANUP["accounts"].append(self.account)
-                self.assertIn(value,self.get_text('account_name_value'))
-            else:
-                value = randint(1, 100)
-                self.edit_account(self.account, item, value)
-                xpath = self.elements['account_action_page_items'] % edit_items.index(item)
-                self.assertIn(str(value),self.driver.find_element_by_xpath(xpath).text)
+    @unittest.skip("bug# 431")
+    def test02_disable_enable_account(self):
+        """ PRTL-024
+        *Test case to make sure that enable/disable actions on accounts are working as expected*
+
+        **Test Scenario:**
+        #. create account.
+        #. search for it and verify it should succeed
+        #. disable account and verify it should succeed
+        #. enable account and verify it should succeed
+        """
+
+        self.assertTrue(self.account_disable(self.account))
+        self.assertTrue(self.account_edit_all_items(self.account))
+        self.assertTrue(self.account_enable(self.account))
+        self.assertTrue(self.account_edit_all_items(self.account))
 
     '''
     def test02_account_page_paging_table_sorting(self):
