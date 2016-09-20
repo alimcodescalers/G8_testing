@@ -83,11 +83,12 @@ def deploy_vm(options, ovc, account_id, gid, name, cloudspace_id, image_id):
                                                  disksize=options.bootdisk,
                                                  datadisks=[int(options.datadisk)])
 
-        # limit the IOPS on all the disks of the vm
-        machine = safe_get_vm(ovc, None, vm_id)
-        for disk in machine['disks']:
-            if disk['type'] != 'D':
-                continue
+    # limit the IOPS on all the disks of the vm
+    machine = safe_get_vm(ovc, concurrency, vm_id)
+    for disk in machine['disks']:
+        if disk['type'] != 'D':
+            continue
+        with concurrency:
             print("Set limit of iops to {} on disk {}({}) for machine {}".format(options.iops,
                                                                                  disk['name'],
                                                                                  disk['id'],
