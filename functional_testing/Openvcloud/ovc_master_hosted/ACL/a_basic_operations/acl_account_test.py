@@ -213,28 +213,36 @@ class Write(ACLACCOUNT):
         self.lg('%s STARTED' % self._testID)
         self._cloudspaces = []
         self.lg('1- create cloudspace and machine with user1')
-        self.cloudspaceId1 = self.cloudapi_cloudspace_create(account_id=self.account_id,
+        self.cloudspace_id = self.cloudapi_cloudspace_create(account_id=self.account_id,
                                                              location=self.location,
                                                              access=self.account_owner,
                                                              api=self.account_owner_api)
-        self._cloudspaces.append(self.cloudspaceId1)
+        self._cloudspaces.append(self.cloudspace_id)
         self._machines = []
-        machineId1 = self.cloudapi_create_machine(cloudspace_id=self.cloudspaceId1,
-                                                  api=self.account_owner_api)
-        self._machines.append(machineId1)
-        basename1 = self.account_owner_api.cloudapi.images.list(cloudspaceId=self.cloudspaceId1)[0]['name']
+        selected_image = self.account_owner_api.cloudapi.images.list(cloudspaceId=self.cloudspace_id)[0]
+        machine_id = self.cloudapi_create_machine(cloudspace_id=self.cloudspace_id,
+                                                  api=self.account_owner_api,
+                                                  image_id=selected_image['id'])
+        self._machines.append(machine_id)
 
         self.lg('2- use created machine1 to create machineTemplate with user1')
-        self.assertTrue(self.account_owner_api.cloudapi.machines.createTemplate(machineId=machineId1,
-                                                                                templatename=str(uuid.uuid4()).replace(
-                                                                                    '-', '')[0:10],
-                                                                                basename=basename1))
-
+        created = self.account_owner_api.cloudapi.machines.createTemplate(machineId=machine_id,
+                  templatename=str(uuid.uuid4()).replace('-', '')[0:10], basename=selected_image['name'])
+        self.assertTrue(created, 'Create Template API returned False')
+        templates = len(self.account_owner_api.cloudapi.accounts.listTemplates(accountId=self.account_id))
+        self.assertEqual(templates, 1, 'We should have only one template for this account not [%s]' % templates)
+        counter = 120
+        while(counter>0):
+            status = self.account_owner_api.cloudapi.accounts.listTemplates(accountId=self.account_id)[0]['status']
+            if status == 'CREATED':
+                break
+            counter-=1
+            time.sleep(1)
+        self.assertEqual(status, 'CREATED', 'Template did not created and still %s' % status)
         self.lg('3- try to use created machine1 to create machineTemplate with user2')
         try:
-            self.user_api.cloudapi.machines.createTemplate(machineId=machineId1,
-                                                           templatename=str(uuid.uuid4()).replace('-', '')[0:10],
-                                                           basename=basename1)
+            self.user_api.cloudapi.machines.createTemplate(machineId=machine_id,
+            templatename=str(uuid.uuid4()).replace('-', '')[0:10], basename=selected_image['name'])
         except ApiError as e:
             self.lg('- expected error raised %s' % e.message)
             self.assertEqual(e.message, '403 Forbidden')
@@ -245,12 +253,22 @@ class Write(ACLACCOUNT):
                                            accesstype='RCX')
 
         self.lg('5- use created machine1 to create machineTemplate with user2')
-        self.assertTrue(self.user_api.cloudapi.machines.createTemplate(machineId=machineId1,
-                                                                       templatename=str(uuid.uuid4()).replace('-', '')[
-                                                                                    0:10],
-                                                                       basename=basename1))
-        #To Do: this step create template take time and we should wait until the image created so we can delete the account in the next step.
-        time.sleep(30)
+        created = self.user_api.cloudapi.machines.createTemplate(machineId=machine_id,
+                  templatename=str(uuid.uuid4()).replace('-', '')[0:10], basename=selected_image['name'])
+        self.assertTrue(created, 'Create Template API returned False')
+        templates = len(self.account_owner_api.cloudapi.accounts.listTemplates(accountId=self.account_id))
+        self.assertEqual(templates, 2, 'We should have only two template for this account not [%s]' % templates)
+        counter = 120
+        while(counter>0):
+            status1 = self.account_owner_api.cloudapi.accounts.listTemplates(accountId=self.account_id)[0]['status']
+            status2 = self.account_owner_api.cloudapi.accounts.listTemplates(accountId=self.account_id)[1]['status']
+            if status1 == 'CREATED' and status2 == 'CREATED':
+                break
+            counter-=1
+            time.sleep(1)
+        self.assertEqual(status1, 'CREATED', 'Template did not created and still %s' % status1)
+        self.assertEqual(status2, 'CREATED', 'Template did not created and still %s' % status2)
+
         self.lg('6- delete user1 account: %s' % self.account_id)
         self.api.cloudbroker.account.delete(accountId=self.account_id, reason='testing')
         self.wait_for_status('DESTROYED', self.api.cloudapi.accounts.get,
@@ -259,9 +277,9 @@ class Write(ACLACCOUNT):
 
         self.lg('- use created machine1 to create machineTemplate with user1')
         try:
-            self.user_api.cloudapi.machines.createTemplate(machineId=machineId1,
+            self.user_api.cloudapi.machines.createTemplate(machineId=machine_id,
                                                            templatename=str(uuid.uuid4()).replace('-', '')[0:10],
-                                                           basename=basename1)
+                                                           basename=selected_image['name'])
         except ApiError as e:
             self.lg('- expected error raised %s' % e.message)
             self.assertEqual(e.message, '404 Not Found')

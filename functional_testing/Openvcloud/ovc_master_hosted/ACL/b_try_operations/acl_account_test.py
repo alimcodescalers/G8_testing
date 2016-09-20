@@ -570,7 +570,8 @@ class Admin(ACLACCOUNT):
         self.lg('%s ENDED' % self._testID)
 
     @parameterized.expand(['create_cloudspace',
-                           'create_machineTemplate'])
+                           #'create_machineTemplate' @unittest.skip("https://github.com/0-complexity/openvcloud/issues/353")
+                           ])
     def test002a_try_account_write_operations(self, operation):
         """ ACL-12
         *Test case for try to use write operations with admin access.*
