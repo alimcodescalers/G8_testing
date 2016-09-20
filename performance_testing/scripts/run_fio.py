@@ -74,9 +74,13 @@ def main(options):
         portforwards = ovc.api.cloudapi.portforwarding.list(cloudspaceId=cs['id'])
         for pi in portforwards:
             vms.append([pi['machineId'], pi['publicIp'], pi['publicPort']])
+    if len(vms) < options.required_vms:
+        print("Not enough vms available to run this test.")
+        return
+    vms = vms[:options.required_vms]
 
     # prepare fio tests
-    pjobs = [gevent.spawn(prepare_fio_test, ovc, options, *vms[c]) for c in range(len(vms)) if c < options.required_vms]
+    pjobs = [gevent.spawn(prepare_fio_test, ovc, options, *vm) for vm in vms]
     gevent.joinall(pjobs)
 
     # run fio tests
