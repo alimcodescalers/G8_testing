@@ -17,12 +17,6 @@
 
 
 ### Running the test
-- Prior to running the script make sure that the environment is clean, using the **tear_down.py** script:
-
-  ```
-  cd G8_testing/performance_testing/scripts/
-  python3 scripts/tear_down.py --clean
-  ```
 
 - Make sure to set the required parameters for running the test: 
 
@@ -75,20 +69,15 @@
     - This test is also used to install unixbench on the virtual machines
   - **run_fio.py** actually runs the FIO tests on all virtual machines in parallel
 
-- For instance in order to create 25 virtual machines and use 10 of the to run the test:
+- For instance in order to run the test:
 
   ```
   cd G8_testing/performance_testing/scripts
-  python3 run_fio.py 10 --provide needed parameters
+  python3 run_fio.py --{provide needed parameters}
   ```
 
 - You can rerun **run\_fio.py** as many times as needed, using different parameters
-- After finishing the test, make sure that the test environments is teared down using the **tear_down.py** specifying the admin user used
 
-  ```
-  cd G8_testing/performance_testing/scripts
-  python3 tear_down.py perftestuser
-  ```
 
 ### Check the test results
 - The results of the tests will on the results directory specified during the test
