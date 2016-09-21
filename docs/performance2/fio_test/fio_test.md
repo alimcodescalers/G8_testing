@@ -1,0 +1,113 @@
+## FIO Test
+
+### Prerequisites
+- Have a G8 running the latest version of OpenvCloud
+- Clean the G8, so no virtual machines are running on it
+- Have an admin user with only one corresponding account
+- Make sure you Jumpscale8 is installed on your personal machine
+  [https://github.com/Jumpscale/jumpscale_core8/blob/master/docs/GettingStarted/Installation.md]
+
+### Test description
+- Create the required number of cloud spaces
+- Create the required number of virtual machines
+  - The virtual machines will we spread over the number of nodes depending on the free resources
+- Install **Flexible I/O** (FIO) tester tool
+- Make sure to update your parameters before running the test
+
+
+### Running the test
+- Prior to running the script make sure that the environment is clean, using the **tear_down.py** script:
+
+  ```
+  cd G8_testing/performance_testing/scripts/
+  python3 scripts/tear_down.py --clean
+  ```
+
+- To set the required parameters for running the test:
+
+  ```
+  cd G8_testing/performance_testing/scripts/
+  python3 run_fio.py --help
+  ```
+
+- Following parameters are settable:
+
+  ```
+    -u USERNAME, --user=USERNAME
+                        username to login on the OVC api
+  -p PASSWORD, --pwd=PASSWORD
+                        password to login on the OVC api
+  -e ENVIRONMENT, --env=ENVIRONMENT
+                        environment to login on the OVC api
+  -d DATA_SIZE, --ds=DATA_SIZE
+                        Amount of data to be written per each data disk per VM
+                        (in MB)
+  -t TESTRUN_TIME, --run_time=TESTRUN_TIME
+                         Test-rum time per virtual machine  (in seconds)
+  -c NO_OF_DISKS, --nod=NO_OF_DISKS
+                        Number of data disks per VM
+  -w WRITE_TYPE, --IO_type=WRITE_TYPE
+                        Type of I/O pattern
+  -m RWMIXWRITE, --mixwrite=RWMIXWRITE
+                         Percentage of a mixed workload that should be writes
+  -b BLOCK_SIZE, --bs=BLOCK_SIZE
+                        Block size
+  -i IODEPTH, --iodp=IODEPTH
+                        number of I/O units to keep in flight against the file
+  -o DIRECT_IO, --dio=DIRECT_IO
+                        If direct_io = 1, use non-buffered I/O.
+  -x RATE_IOPS, --max_iops=RATE_IOPS
+                        Cap the bandwidth to this number of IOPS
+  -j NUMJOBS, --numjobs=NUMJOBS
+                         Number of clones (processes/threads performing the
+                        same workload) of this job
+  -v REQUIRED_VMS, --vms=REQUIRED_VMS
+                         selected number of virtual machines to run fio on
+  -r RESULTS_DIR, --rdir=RESULTS_DIR
+                        absolute path fot results directory
+  -n CONCURRENCY, --con=CONCURRENCY
+                        amount of concurrency to execute the job
+  -s TESTSUITE, --ts=TESTSUITE
+                        location to find Testsuite directory
+```
+
+- The actual test is divided into 2 scripts:
+  - **add_vms.py** creates all virtual machines
+    - This test is also used to install unixbench on the virtual machines
+  - **run_fio.py** actually runs the FIO tests on all virtual machines in parallel
+
+- For instance in order to create 25 virtual machines and use 10 of the to run the test:
+
+  ```
+  cd G8_testing/performance_testing/scripts
+  python3 run_fio.py 10 --provide needed parameters
+  ```
+
+- You can rerun **run\_fio.py** as many times as needed, using different parameters
+- After finishing the test, make sure that the test environments is teared down using the **tear_down.py** specifying the admin user used
+
+  ```
+  cd G8_testing/performance_testing/scripts
+  python3 tear_down.py perftestuser
+  ```
+
+### Check the test results
+- The results of the tests will on the results directory specified during the test
+  ```
+  cd (results_directory)/(date)_(cpu_name).(env_name)_testresults(run_number)/
+  vim (date)_(cpu_name).(pc_hostname)_testresults(run_number).csv
+  ```
+
+- Also results will be pushed on the environment repo under testresults directory
+  - please make sure to identify who you are
+  ```
+  git config --global user.email "you@example.com"
+  git config --global user.name "Your Name"
+  ```
+ 
+
+- In the test result file we can view the following information:
+  - Total IOPS per virtual machine per iteration
+  - Avergage CPU Load
+
+- For each run of the **run\_fio.py**, there is a separated folder that is created which has its own CSV file
