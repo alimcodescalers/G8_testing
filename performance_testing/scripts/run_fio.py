@@ -57,7 +57,8 @@ def main(options):
 
     if not check_package('sshpass') or not check_package('python3-prettytable'):
         return
-
+    
+    #working from scripts directory
     cwd = j.do.execute('pwd')[1]
     cwd = cwd.split('\n')[0]
     # Prepare test run
