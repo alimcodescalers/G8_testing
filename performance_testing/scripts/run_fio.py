@@ -59,10 +59,7 @@ def main(options):
 
     if not check_package('sshpass') or not check_package('python3-prettytable'):
         return
-    
-    #working from scripts directory
-    cwd = j.do.execute('pwd')[1]
-    cwd = cwd.split('\n')[0]
+
     # Prepare test run
     hostname = run_cmd_via_gevent('hostname').replace("\n", "")
     test_num = len(os.listdir('{}'.format(options.results_dir))) + 1
@@ -98,13 +95,14 @@ def main(options):
     gevent.joinall(rjobs)
 
     # collecting results in csv file
+    cwd = os.getcwd()
     j.do.copyFile('{}/1_fio_vms/collect_results.py'.format(options.testsuite), results_dir)
-    j.do.chdir(results_dir)
+    os.chdir(results_dir)
     j.do.execute('python3 collect_results.py {} {} {} {}'.format(results_dir, options.environment,
                                                                  options.username, options.password))
 
     # pushing results to env_repo
-    j.do.chdir(cwd)
+    os.chdir(cwd)
     location = options.environment.split('.')[0]
     push_results_to_repo(results_dir, location)
 
