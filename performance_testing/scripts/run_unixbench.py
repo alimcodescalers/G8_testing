@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-from libtest import run_cmd_via_gevent, check_remote_is_listening, safe_get_vm, check_package
+from libtest import run_cmd_via_gevent, check_remote_is_listening, safe_get_vm, check_package, push_results_to_repo
 import gevent
 from gevent.coros import BoundedSemaphore
 import signal
@@ -57,8 +57,8 @@ def prepare_unixbench_test(options, ovc, cpu_cores, machine_id, publicip, public
 
 
 def unixbench_test(options, machine_id, publicip, publicport, account, cpu_cores):
+    gevent.sleep(options.time_interval)
     print('unixbench testing has been started on machine: {}'.format(machine_id))
-
     templ = 'sshpass -p "{}" ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p {} {}@{} '
     templ += ' python 2_machine_script.py {} {} {}'
     cmd = templ.format(account['password'], publicport, account['login'], publicip,
@@ -79,6 +79,8 @@ def main(options):
     if not check_package('sshpass') or not check_package('python3-prettytable'):
         return
 
+    cwd = j.do.execute('pwd')[1]
+    cwd = cwd.split('\n')[0]
     # Prepare test run
     hostname = run_cmd_via_gevent('hostname').replace("\n", "")
     test_num = len(os.listdir('{}'.format(options.results_dir))) + 1
@@ -123,6 +125,11 @@ def main(options):
     titles = ['Index', 'VM', 'CPU\'s', 'Memory(MB)', 'HDD(GB)', 'Avg. Unixbench Score']
     collect_results(titles, results, '%s' % results_dir)
 
+    # pushing results to env_repo
+    j.do.chdir(cwd)
+    location = options.environment.split('.')[0]
+    push_results_to_repo(results_dir, location)
+
 
 if __name__ == "__main__":
     parser = OptionParser()
@@ -136,6 +143,8 @@ if __name__ == "__main__":
                       default=2, help=" selected number of virtual machines to run unixbench on")
     parser.add_option("-t", "--runtime", dest="test_runtime", type="int",
                       default=100, help="duration for running unixbecnh (in secs)")
+    parser.add_option("-d", "--interval", dest="time_interval", type="int",
+                      default=0.5, help="time interval between starting unixbench on 2 successive machines   (in secs)")
     parser.add_option("-r", "--rdir", dest="results_dir", type="string",
                       default="/root/G8_testing/tests_results/unixbench", help="absolute path for results directory")
     parser.add_option("-n", "--con", dest="concurrency", default=2, type="int",
