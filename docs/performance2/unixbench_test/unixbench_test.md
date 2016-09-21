@@ -34,40 +34,40 @@ python3 run_fio.py --{provide needed parameters}
 ```
   - Following parameters are settable for running run_fio.py:
 
-```
--u USERNAME, --user=USERNAME
-                        username to login on the OVC api
-  -p PASSWORD, --pwd=PASSWORD
-                        password to login on the OVC api
-  -e ENVIRONMENT, --env=ENVIRONMENT
-                        environment to login on the OVC api
-  -l LOCATION, --loc=LOCATION
-                        location to create cloudspaces
-  -c CLOUDSPACES, --clspcs=CLOUDSPACES
-                        minimum number of cloudspaces
-  -v VMACHINES, --vms=VMACHINES
-                        minimum number of vmachines per cloudspace
-  -i IMAGE, --img=IMAGE
-                        image to use for creating vmachines
-  -b BOOTDISK, --boot=BOOTDISK
-                        bootdisk size
-  -d DATADISK, --data=DATADISK
-                        datadisk size
-  -m MEMORY, --mem=MEMORY
-                        amount of memory for the virtual machines
-  -k CPU, --cpu=CPU     amount of vcpus for the virtual machines
-  -o IOPS, --iops=IOPS  maximum of iops of the disks for the virtual machines
-  -n CONCURRENCY, --con=CONCURRENCY
-                        amount of concurrency to execute the job
-
-```
-
-- Second run UnixBench on a specified number of virtual machines:
-
   ```
-  cd G8_testing/performance_testing/scripts
-  python3 run_unixbench.py --{provide needed parameters}
+  -u USERNAME, --user=USERNAME
+                          username to login on the OVC api
+    -p PASSWORD, --pwd=PASSWORD
+                          password to login on the OVC api
+    -e ENVIRONMENT, --env=ENVIRONMENT
+                          environment to login on the OVC api
+    -l LOCATION, --loc=LOCATION
+                          location to create cloudspaces
+    -c CLOUDSPACES, --clspcs=CLOUDSPACES
+                          minimum number of cloudspaces
+    -v VMACHINES, --vms=VMACHINES
+                          minimum number of vmachines per cloudspace
+    -i IMAGE, --img=IMAGE
+                          image to use for creating vmachines
+    -b BOOTDISK, --boot=BOOTDISK
+                          bootdisk size
+    -d DATADISK, --data=DATADISK
+                          datadisk size
+    -m MEMORY, --mem=MEMORY
+                          amount of memory for the virtual machines
+    -k CPU, --cpu=CPU     amount of vcpus for the virtual machines
+    -o IOPS, --iops=IOPS  maximum of iops of the disks for the virtual machines
+    -n CONCURRENCY, --con=CONCURRENCY
+                          amount of concurrency to execute the job
+  
   ```
+  
+  - Second run UnixBench on a specified number of virtual machines:
+  
+    ```
+    cd G8_testing/performance_testing/scripts
+    python3 run_unixbench.py --{provide needed parameters}
+    ```
    - Following parameters can be configured for running unixbench:
 
   ```  
