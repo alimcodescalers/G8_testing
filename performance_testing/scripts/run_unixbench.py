@@ -57,8 +57,8 @@ def prepare_unixbench_test(options, ovc, cpu_cores, machine_id, publicip, public
 
 
 def unixbench_test(options, machine_id, publicip, publicport, account, cpu_cores):
+    gevent.sleep(options.time_interval)
     print('unixbench testing has been started on machine: {}'.format(machine_id))
-
     templ = 'sshpass -p "{}" ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p {} {}@{} '
     templ += ' python 2_machine_script.py {} {} {}'
     cmd = templ.format(account['password'], publicport, account['login'], publicip,
@@ -143,6 +143,8 @@ if __name__ == "__main__":
                       default=2, help=" selected number of virtual machines to run unixbench on")
     parser.add_option("-t", "--runtime", dest="test_runtime", type="int",
                       default=100, help="duration for running unixbecnh (in secs)")
+    parser.add_option("-d", "--interval", dest="time_interval", type="int",
+                      default=0.5, help="time interval between starting unixbench on 2 successive machines   (in secs)")
     parser.add_option("-r", "--rdir", dest="results_dir", type="string",
                       default="/root/G8_testing/tests_results/unixbench", help="absolute path for results directory")
     parser.add_option("-n", "--con", dest="concurrency", default=2, type="int",
