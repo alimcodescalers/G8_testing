@@ -26,10 +26,12 @@ def prepare_fio_test(ovc, options, machine_id, publicip, publicport):
 
 
 def fio_test(options, machine_id, publicip, publicport, account):
+    # only one data disk for this test
+    disks_num = 1
     templ = 'sshpass -p "{}" ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p {} {}@{} '
     templ += ' python Machine_script.py {} {} {} {} {} {} {} {} {} {} {} {} {}'
     cmd = templ.format(account['password'], publicport, account['login'], publicip,
-                       options.testrun_time, machine_id, account['password'], 1, options.no_of_disks,
+                       options.testrun_time, machine_id, account['password'], 1, disks_num,
                        options.data_size, options.write_type, options.block_size, options.iodepth,
                        options.direct_io, options.rwmixwrite, options.rate_iops, options.numjobs)
     print('FIO testing has been started on machine: {}'.format(machine_id))
@@ -114,8 +116,6 @@ if __name__ == "__main__":
                       default=1000, help="Amount of data to be written per each data disk per VM (in MB)")
     parser.add_option("-t", "--run_time", dest="testrun_time", type="int",
                       default=300, help=" Test-rum time per virtual machine  (in seconds)")
-    parser.add_option("-c", "--nod", dest="no_of_disks", type="int",
-                      default=1, help="Number of data disks per VM")
     parser.add_option("-w", "--IO_type", dest="write_type", type="string",
                       default="randrw", help="Type of I/O pattern")
     parser.add_option("-m", "--mixwrite", dest="rwmixwrite", type="int",
