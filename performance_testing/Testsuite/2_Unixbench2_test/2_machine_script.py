@@ -19,5 +19,8 @@ f = file.read()
 match = re.finditer(r'System Benchmarks Index Score\s+([\d.]+)', f)
 matches = [float(m.group(1)) for m in match]
 os.system('rm /home/cloudscalers/test_res.txt')
-print(sum(matches)/len(matches))
+if(len(matches) != 0):
+    print(sum(matches)/len(matches))
+else:
+    print('0')
 
