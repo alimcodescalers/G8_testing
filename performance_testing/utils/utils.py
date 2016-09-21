@@ -349,7 +349,7 @@ def get_vm_ovs_node(vmid, ccl):
     return ovs_ip
 
 
-def push_results_to_repo_old(Res_dir, test_type=''):
+def push_results_to_repo(Res_dir, test_type=''):
     match = re.search('(/201.+)', Res_dir)
     Res_file = Res_dir + match.group(1) + '.csv'
     if j.do.exists('%s' %Res_file):
@@ -371,21 +371,3 @@ def push_results_to_repo_old(Res_dir, test_type=''):
     else:
        print('Found problems during running the test.. removing results directory..')
        j.do.execute('rm -rf %s' %Res_dir)
-
-def push_results_to_repo(Res_dir, test_type=''):
-    ccl = j.clients.osis.getNamespace('cloudbroker')
-    location = ccl.location.search({})[1]['locationCode']
-    config = ConfigParser.ConfigParser()
-    config.read("locations.cfg")
-    if location not in config.options('locations'):
-        raise AssertionError('Please update the locations.cfg with your '
-                             'location:environment_repo to be able to push your results')
-    repo = config.get("locations", location)
-    repo_dir = '/tmp/' + str(uuid.uuid4()) + '/'
-    repo_result_dir = repo_dir + 'testresults/'
-    j.do.execute('cd %s; git clone %s' % (repo_dir, repo))
-    j.do.copyTree(Res_dir, repo_result_dir)
-    j.do.chdir(repo_dir)
-    j.do.execute('cd ../ && git add %s*' % repo_result_dir)
-    j.do.execute("cd ../ && git commit -a -m 'Pushing: %s ' " % repo_result_dir)
-    j.do.execute('cd ../ && git push')
