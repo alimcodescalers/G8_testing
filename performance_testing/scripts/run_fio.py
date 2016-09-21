@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 from gevent import monkey
 monkey.patch_all()
-from libtest import run_cmd_via_gevent, check_remote_is_listening, safe_get_vm, check_package
+from libtest import run_cmd_via_gevent, check_remote_is_listening, safe_get_vm, check_package, push_results_to_repo
 import gevent
 from gevent.coros import BoundedSemaphore
 import signal
@@ -58,6 +58,8 @@ def main(options):
     if not check_package('sshpass') or not check_package('python3-prettytable'):
         return
 
+    cwd = j.do.execute('pwd')[1]
+    cwd = cwd.split('\n')[0]
     # Prepare test run
     hostname = run_cmd_via_gevent('hostname').replace("\n", "")
     test_num = len(os.listdir('{}'.format(options.results_dir))) + 1
@@ -96,6 +98,11 @@ def main(options):
     j.do.chdir(results_dir)
     j.do.execute('python3 collect_results.py {} {} {} {}'.format(results_dir, options.environment,
                                                                  options.username, options.password))
+
+    # pushing results to env_repo
+    j.do.chdir(cwd)
+    location = options.environment.split('.')[0]
+    push_results_to_repo(results_dir, location)
 
 
 if __name__ == "__main__":
