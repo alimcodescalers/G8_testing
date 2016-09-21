@@ -8,6 +8,7 @@
   (https://github.com/Jumpscale/jumpscale_core8/blob/master/docs/GettingStarted/Installation.md)
 
 ### Test description
+- Create one user with one account
 - Create the required number of cloud spaces
 - Create the required number of virtual machines
   - The virtual machines will we spread over the number of nodes depending on the free resources
