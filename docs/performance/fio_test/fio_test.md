@@ -4,8 +4,8 @@
 - Have a G8 running the latest version of OpenvCloud
 - Clean the G8, so no virtual machines are running on it
 - Have an admin user with only one corresponding account
-- Make sure you Jumpscale8 is installed on your personal machine
-  (https://github.com/Jumpscale/jumpscale_core8/blob/master/docs/GettingStarted/Installation.md)
+- Make sure you JumpScale8 is installed on your personal machine; see the [JumpScale8 installation documentation](https://github.com/Jumpscale/jumpscale_core8/blob/master/docs/GettingStarted/Installation.md)
+
 
 ### Test description
 - Create one user with one account
@@ -16,22 +16,23 @@
 - Run FIO on all virtual machines in parallel
 
 
-
 ### Running the test
 - The actual test is divided into 2 scripts:
-  - **add_vms.py** creates all virtual machines
-    - This test is also used to install unixbench on the virtual machines
+
+  - **add_vms.py** creates all virtual machines; these virtual machines are also used for running the UnixBench test, so no need to rerun this script if the machines were already created before
   - **run_fio.py** actually runs the FIO tests on all virtual machines in parallel
 
-- First we need to create Virtual machines
-```
-cd G8_testing/performance_testing/scripts/
-python3 run_fio.py --{provide needed parameters}
-```
-   - Following parameters are settable for running run_fio.py:
+- So first you need to create the virtual machines using **add_vms.py**:
 
-```
--u USERNAME, --user=USERNAME
+  ```
+  cd G8_testing/performance_testing/scripts/
+  python3 add_vms.py --{provide needed parameters}
+  ```
+
+  **Following parameters are available**:
+
+  ```
+  -u USERNAME, --user=USERNAME
                         username to login on the OVC api
   -p PASSWORD, --pwd=PASSWORD
                         password to login on the OVC api
@@ -55,19 +56,18 @@ python3 run_fio.py --{provide needed parameters}
   -o IOPS, --iops=IOPS  maximum of iops of the disks for the virtual machines
   -n CONCURRENCY, --con=CONCURRENCY
                         amount of concurrency to execute the job
+  ```
 
-```
-- Second in order to run the test:
+- Then run the actual FIO test using **run_fio.py**:
 
   ```
   cd G8_testing/performance_testing/scripts
   python3 run_fio.py --{provide needed parameters}
+  ```
+
+  **Following parameters are available**:
 
   ```
-  
-  - Make sure to set the required parameters for running the test: :
-
-```
   -u USERNAME, --user=USERNAME
                         username to login on the OVC api
   -p PASSWORD, --pwd=PASSWORD
@@ -102,29 +102,30 @@ python3 run_fio.py --{provide needed parameters}
                         amount of concurrency to execute the job
   -s TESTSUITE, --ts=TESTSUITE
                         location to find Testsuite directory
-```
-
+  ```
 
 - You can rerun **run\_fio.py** as many times as needed, using different parameters
 
 
 ### Check the test results
-- The results of the tests will on the results directory specified during the test
+- The results of the tests will on the results directory specified during the test:
+
   ```
   cd (results_directory)/(date)_(cpu_name).(env_name)_testresults(run_number)/
   vim (date)_(cpu_name).(pc_hostname)_testresults(run_number).csv
   ```
 
-- Also results will be pushed on the environment repo under testresults directory
-  - please make sure to identify who you are
+- Also results will be pushed on the environment repo under **testresults** directory
+
+  In order to make this work make sure to identify who you are:
+
   ```
   git config --global user.email "you@example.com"
   git config --global user.name "Your Name"
   ```
- 
 
 - In the test result file we can view the following information:
   - Total IOPS per virtual machine per iteration
-  - Avergage CPU Load
+  - Average CPU load
 
 - For each run of the **run\_fio.py**, there is a separated folder that is created which has its own CSV file
