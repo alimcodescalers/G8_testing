@@ -56,8 +56,8 @@ def prepare_unixbench_test(options, ovc, cpu_cores, machine_id, publicip, public
     return machine_id, publicip, publicport, account, cpu_cores
 
 
-def unixbench_test(options, machine_id, publicip, publicport, account, cpu_cores):
-    gevent.sleep(options.time_interval)
+def unixbench_test(options, count, machine_id, publicip, publicport, account, cpu_cores):
+    gevent.sleep(options.time_interval*count)
     print('unixbench testing has been started on machine: {}'.format(machine_id))
     templ = 'sshpass -p "{}" ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p {} {}@{} '
     templ += ' python 2_machine_script.py {} {} {}'
@@ -112,7 +112,7 @@ def main(options):
     gevent.joinall(prepare_jobs)
 
     # run unixbench tests
-    run_jobs = [gevent.spawn(unixbench_test, options, *job.value) for job in prepare_jobs if job.value is not None]
+    run_jobs = [gevent.spawn(unixbench_test, options, c, *job.value) for job,c in prepare_jobs,range(len(prepare_jobs)) if job.value is not None]
     gevent.joinall(run_jobs)
 
     raw_results = [job.value for job in run_jobs]
