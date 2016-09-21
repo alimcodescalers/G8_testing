@@ -60,22 +60,24 @@ def safe_get_vm(ovc, concurrency, machine_id):
             print("Failed to get vm details for machine {}".format(machine_id))
             gevent.sleep(2)
 
+
 def push_results_to_repo(res_dir, location):
     from JumpScale import j
     config = configparser.ConfigParser()
     config.read("locations.cfg")
     if location not in config.options('locations'):
         raise AssertionError('Please update the locations.cfg with your '
-                             'location:environment_repo to be able to push your results')
+                             'location:environment_repo to be able to '
+                             'push your results')
     repo = config.get("locations", location)
     repo_dir = '/tmp/' + str(uuid.uuid4()) + '/'
     res_folder_name = res_dir.split('/')[-1]
-    j.do.execute('mkdir -p %s' %repo_dir)
+    j.do.execute('mkdir -p %s' % repo_dir)
     j.do.execute('cd %s; git clone %s' % (repo_dir, repo))
     repo_path = j.do.listDirsInDir(repo_dir)[0]
-    repo_result_dir = repo_path +'/testresults/'
-    j.do.execute('mkdir -p %s'% repo_result_dir)
-    j.do.execute('cp -rf %s %s' %(res_dir, repo_result_dir))
+    repo_result_dir = repo_path + '/testresults/'
+    j.do.execute('mkdir -p %s' % repo_result_dir)
+    j.do.execute('cp -rf %s %s' % (res_dir, repo_result_dir))
     j.do.chdir(repo_result_dir + res_folder_name)
     j.do.execute('git add *.csv ')
     j.do.execute("git commit -a -m 'Pushing new results' ")
