@@ -28,7 +28,7 @@
 cd G8_testing/performance_testing/scripts/
 python3 run_fio.py --{provide needed parameters}
 ```
--- Following parameters are settable for running run_fio.py:
+   - Following parameters are settable for running run_fio.py:
 
 ```
 -u USERNAME, --user=USERNAME
@@ -65,7 +65,7 @@ python3 run_fio.py --{provide needed parameters}
 
   ```
   
-- Make sure to set the required parameters for running the test: :
+  - Make sure to set the required parameters for running the test: :
 
 ```
   -u USERNAME, --user=USERNAME
