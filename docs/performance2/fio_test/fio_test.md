@@ -5,14 +5,15 @@
 - Clean the G8, so no virtual machines are running on it
 - Have an admin user with only one corresponding account
 - Make sure you Jumpscale8 is installed on your personal machine
-  [https://github.com/Jumpscale/jumpscale_core8/blob/master/docs/GettingStarted/Installation.md]
+  (https://github.com/Jumpscale/jumpscale_core8/blob/master/docs/GettingStarted/Installation.md)
 
 ### Test description
 - Create the required number of cloud spaces
 - Create the required number of virtual machines
   - The virtual machines will we spread over the number of nodes depending on the free resources
-- Install **Flexible I/O** (FIO) tester tool
-- Make sure to update your parameters before running the test
+- Install **Flexible I/O** (FIO) tester tool (https://linux.die.net/man/1/fio)
+- Run FIO on all virtual machines in parallel
+
 
 
 ### Running the test
@@ -23,7 +24,7 @@
   python3 scripts/tear_down.py --clean
   ```
 
-- To set the required parameters for running the test:
+- Make sure to set the required parameters for running the test: 
 
   ```
   cd G8_testing/performance_testing/scripts/
@@ -32,8 +33,8 @@
 
 - Following parameters are settable:
 
-  ```
-    -u USERNAME, --user=USERNAME
+```
+  -u USERNAME, --user=USERNAME
                         username to login on the OVC api
   -p PASSWORD, --pwd=PASSWORD
                         password to login on the OVC api
@@ -44,8 +45,6 @@
                         (in MB)
   -t TESTRUN_TIME, --run_time=TESTRUN_TIME
                          Test-rum time per virtual machine  (in seconds)
-  -c NO_OF_DISKS, --nod=NO_OF_DISKS
-                        Number of data disks per VM
   -w WRITE_TYPE, --IO_type=WRITE_TYPE
                         Type of I/O pattern
   -m RWMIXWRITE, --mixwrite=RWMIXWRITE
