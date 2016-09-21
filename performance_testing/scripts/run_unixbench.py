@@ -98,6 +98,11 @@ def main(options):
         for pi in portforwards:
             vms.append([pi['machineId'], pi['publicIp'], pi['publicPort']])
 
+    if len(vms) < options.required_vms:
+        print("Not enough vms available to run this test.")
+        return
+    vms = vms[:options.required_vms]
+
     # getting bootdisk size, cpu and memory used during vms creatian (for any vm)
     machine = safe_get_vm(ovc, concurrency, pi['machineId'])
     bootdisk = machine['disks'][0]['sizeMax']
@@ -107,12 +112,14 @@ def main(options):
     cpu = next((i for i in sizes if i['id'] == size_id), False)['vcpus']
 
     # prepare unixbench tests
-    prepare_jobs = [gevent.spawn(prepare_unixbench_test, options, ovc, cpu, *vms[c])
-                    for c in range(len(vms)) if c < options.required_vms]
+    prepare_jobs = [gevent.spawn(prepare_unixbench_test, options, ovc, cpu, *vm) for vm in vms]
     gevent.joinall(prepare_jobs)
 
     # run unixbench tests
-    run_jobs = [gevent.spawn(unixbench_test, options, c, *job.value) for job,c in prepare_jobs,range(len(prepare_jobs)) if job.value is not None]
+    run_jobs = [gevent.spawn(unixbench_test, options, c, *job.value)
+                for job, c in zip(*[prepare_jobs, range(len(prepare_jobs))]) if job.value is not None]
+
+
     gevent.joinall(run_jobs)
 
     raw_results = [job.value for job in run_jobs]
