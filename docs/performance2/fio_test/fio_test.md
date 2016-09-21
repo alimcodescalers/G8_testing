@@ -18,15 +18,54 @@
 
 
 ### Running the test
+- The actual test is divided into 2 scripts:
+  - **add_vms.py** creates all virtual machines
+    - This test is also used to install unixbench on the virtual machines
+  - **run_fio.py** actually runs the FIO tests on all virtual machines in parallel
 
-- Make sure to set the required parameters for running the test: 
+- First we need to create Virtual machines
+```
+cd G8_testing/performance_testing/scripts/
+python3 run_fio.py --{provide needed parameters}
+```
+-- Following parameters are settable for running run_fio.py:
+
+```
+-u USERNAME, --user=USERNAME
+                        username to login on the OVC api
+  -p PASSWORD, --pwd=PASSWORD
+                        password to login on the OVC api
+  -e ENVIRONMENT, --env=ENVIRONMENT
+                        environment to login on the OVC api
+  -l LOCATION, --loc=LOCATION
+                        location to create cloudspaces
+  -c CLOUDSPACES, --clspcs=CLOUDSPACES
+                        minimum number of cloudspaces
+  -v VMACHINES, --vms=VMACHINES
+                        minimum number of vmachines per cloudspace
+  -i IMAGE, --img=IMAGE
+                        image to use for creating vmachines
+  -b BOOTDISK, --boot=BOOTDISK
+                        bootdisk size
+  -d DATADISK, --data=DATADISK
+                        datadisk size
+  -m MEMORY, --mem=MEMORY
+                        amount of memory for the virtual machines
+  -k CPU, --cpu=CPU     amount of vcpus for the virtual machines
+  -o IOPS, --iops=IOPS  maximum of iops of the disks for the virtual machines
+  -n CONCURRENCY, --con=CONCURRENCY
+                        amount of concurrency to execute the job
+
+```
+- Second in order to run the test:
 
   ```
-  cd G8_testing/performance_testing/scripts/
-  python3 run_fio.py --help
-  ```
+  cd G8_testing/performance_testing/scripts
+  python3 run_fio.py --{provide needed parameters}
 
-- Following parameters are settable:
+  ```
+  
+- Make sure to set the required parameters for running the test: :
 
 ```
   -u USERNAME, --user=USERNAME
@@ -65,17 +104,6 @@
                         location to find Testsuite directory
 ```
 
-- The actual test is divided into 2 scripts:
-  - **add_vms.py** creates all virtual machines
-    - This test is also used to install unixbench on the virtual machines
-  - **run_fio.py** actually runs the FIO tests on all virtual machines in parallel
-
-- For instance in order to run the test:
-
-  ```
-  cd G8_testing/performance_testing/scripts
-  python3 run_fio.py --{provide needed parameters}
-  ```
 
 - You can rerun **run\_fio.py** as many times as needed, using different parameters
 
