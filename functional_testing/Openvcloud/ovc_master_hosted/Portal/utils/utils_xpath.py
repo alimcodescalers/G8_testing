@@ -464,4 +464,8 @@ elements = {'storage_menu': 'html/body/div[1]/div/div[1]/div/nav/div/ul/li[5]', 
             "end_user_machine_name_table": ".//*[@id='machine_buckets_list']/tbody[2]/tr[%d]/td[2]/a",
             "end_user_machine_table":".//*[@id='machine_buckets_list']/tbody[2]",
             "end_user_machine_table_row":".//*[@id='machine_buckets_list']/tbody[2]/tr[%d]/td[%d]",
-            "creating_machine_progress_bar":".//*[@id='overlay-loader']/div/h2"}
+            "creating_machine_progress_bar":".//*[@id='overlay-loader']/div/h2",
+            "end_user_selected_account" : ".//*[@id='drop1']/span",
+            "end_user_accounts_list" : ".//*[@id='accordion']/div[%d]/div[1]/h4/a",
+            "end_user_cloud_space":".//*[@id='%s']/div/ul/li/a"
+            }

@@ -3,9 +3,7 @@ import time
 import uuid
 import unittest
 
-#@unittest.skip("This test case need some edit cos its assume that the user has already a VM")
 class Write(BaseTest):
-
     def __init__(self, *args, **kwargs):
         super(Write, self).__init__(*args, **kwargs)
 

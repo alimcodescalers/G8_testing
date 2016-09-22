@@ -30,6 +30,10 @@ class BaseTest(unittest.TestCase):
         self.base_page = self.environment_url + '/ays'
         self.elements = utils_xpath.elements.copy()
 
+    @classmethod
+    def setUpClass(cls):
+        super(BaseTest, cls).setUpClass()
+
     def setUp(self):
         self.CLEANUP = {"users": [], "accounts": []}
         self._testID = self._testMethodName
@@ -37,7 +41,6 @@ class BaseTest(unittest.TestCase):
         self._logger = logging.LoggerAdapter(logging.getLogger('portal_testsuite'),
                                              {'testid': self.shortDescription() or self._testID})
         self.lg('Testcase %s Started at %s' % (self._testID, self._startTime))
-        #self.set_browser()
         self.wait = WebDriverWait(self.driver, 30)
         for temp in range(5):
             try:
@@ -382,6 +385,7 @@ class BaseTest(unittest.TestCase):
         self.CLEANUP["accounts"].append(account)
         if account == '':
             return account
+        self.lg("%s account is created" % account)
 
     def open_account_page(self, account=''):
         account = account
@@ -415,7 +419,7 @@ class BaseTest(unittest.TestCase):
         else:
             self.fail('"%s" account status has an error in the page' % account)
 
-    def create_cloud_space(self, account='', cloud_space=''):
+    def create_cloud_space(self, account, cloud_space=''):
         account = account
         self.cloud_space_name = cloud_space or str(uuid.uuid4()).replace('-', '')[0:10]
 
@@ -434,6 +438,7 @@ class BaseTest(unittest.TestCase):
         self.set_text("cloud_space_search", self.cloud_space_name)
         self.wait_until_element_located_and_has_text(self.elements["cloud_space_table_first_element_2"],
                                                      self.cloud_space_name)
+        self.lg(" %s cloudspace is created" % self.cloud_space_name)
         return self.cloud_space_name
 
     def open_cloudspace_page(self, cloudspace=''):
@@ -748,4 +753,30 @@ class BaseTest(unittest.TestCase):
                 return False
         else:
             self.lg("FAIL : Machine button isn't exist for this user")
+            return False
+
+    def end_user_choose_account(self, account=''):
+        account = account or self.account
+        self.lg('Open end user home page')
+        self.get_page(self.environment_url)
+        if self.check_element_is_exist("end_user_selected_account"):
+            print(account,self.get_text("end_user_selected_account"))
+            if account not in self.get_text("end_user_selected_account"):
+                accounts_xpath = self.elements["end_user_accounts_list"]
+                for temp in range(100):
+                    try:
+                        account_item = self.driver.find_element_by_xpath(accounts_xpath % temp)
+                    except:
+                        self.lg("Can't choose %s account from the end user" % account)
+                        return False
+                    else:
+                        if account in account_item.text:
+                            account_item.click()
+                            cloud_space_xpath = self.elements["end_user_cloud_space"] % account
+                            self.driver.find_element_by_xpath(cloud_space_xpath).click()
+                            return True
+            else:
+                return True
+        else:
+            self.lg("This user doesn't has any account")
             return False
