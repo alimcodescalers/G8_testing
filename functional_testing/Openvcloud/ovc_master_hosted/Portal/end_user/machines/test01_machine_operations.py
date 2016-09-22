@@ -101,6 +101,7 @@ class Write(BaseTest):
 
         self.lg('stop machine, should succeed')
         self.click("machine_stop")
+        time.sleep(10)
         self.wait_machine("HALTED")
         self.click("console_tab")
         self.verify_machine_console("HALTED")
