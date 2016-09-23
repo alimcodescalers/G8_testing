@@ -79,15 +79,13 @@ def main(options):
     if not check_package('sshpass') or not check_package('python3-prettytable'):
         return
 
-    cwd = j.do.execute('pwd')[1]
-    cwd = cwd.split('\n')[0]
     # Prepare test run
     hostname = run_cmd_via_gevent('hostname').replace("\n", "")
     test_num = len(os.listdir('{}'.format(options.results_dir))) + 1
     test_dir = "/" + datetime.datetime.today().strftime('%Y-%m-%d')
     test_dir += "_" + hostname + "_testresults_{}".format(test_num)
     results_dir = options.results_dir + test_dir
-    j.do.execute('mkdir -p %s' % results_dir)
+    run_cmd_via_gevent('mkdir -p {}'.format(results_dir))
 
     # list virtual and deployed cloudspaces
     vms = []
@@ -119,7 +117,6 @@ def main(options):
     run_jobs = [gevent.spawn(unixbench_test, options, c, *job.value)
                 for job, c in zip(*[prepare_jobs, range(len(prepare_jobs))]) if job.value is not None]
 
-
     gevent.joinall(run_jobs)
 
     raw_results = [job.value for job in run_jobs]
@@ -133,7 +130,6 @@ def main(options):
     collect_results(titles, results, '%s' % results_dir)
 
     # pushing results to env_repo
-    j.do.chdir(cwd)
     location = options.environment.split('.')[0]
     push_results_to_repo(results_dir, location)
 
