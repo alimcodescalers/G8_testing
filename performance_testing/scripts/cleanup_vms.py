@@ -29,14 +29,19 @@ def main(options):
                                    options.password)
 
     while True:
-        jobs = list()
         cloudspaces = ovc.api.cloudapi.cloudspaces.list()
         if not cloudspaces:
             break
+        jobs = list()
         for cloudspace in cloudspaces:
             cloudspace_id = cloudspace['id']
             vms = ovc.api.cloudapi.machines.list(cloudspaceId=cloudspace_id)
-            vms.sort(key=lambda vm: vm['name'], reverse=True)
+            jobs.extend([gevent.spawn(delete_vm, ovc, vm['id']) for vm in vms if not vm['name'].endswith('000')])
+        gevent.joinall(jobs)
+        jobs = list()
+        for cloudspace in cloudspaces:
+            cloudspace_id = cloudspace['id']
+            vms = ovc.api.cloudapi.machines.list(cloudspaceId=cloudspace_id)
             jobs.extend([gevent.spawn(delete_vm, ovc, vm['id']) for vm in vms])
         gevent.joinall(jobs)
         jobs = list()
