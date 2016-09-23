@@ -7,7 +7,7 @@ import gevent
 import signal
 import time
 import os
-from gevent.coros import BoundedSemaphore
+from gevent.lock import BoundedSemaphore
 _cloudspace_semaphores = dict()
 _stats = dict(deployed_vms=0, deployed_cloudspaces=0)
 
@@ -104,7 +104,7 @@ def deploy_vm(options, ovc, account_id, gid, name, cloudspace_id, image_id):
         if ip != 'Undefined':
             break
         now = time.time()
-        if now > start + 300:
+        if now > start + 600:
             raise RuntimeError("Machine {} did not get an ip within 300 seconds".format(vm_id))
         print("Waiting {} seconds for an IP for VM {}".format(int(now - start), name))
 
@@ -139,7 +139,7 @@ def deploy_cloudspace(options, ovc, account_id, name, image_id, gid):
                                                         access=options.username)
     # Create first vm to force the routeros deployment
     print("Deploying first vm in cloudspace {}".format(name))
-    deploy_vm(options, ovc, account_id, gid, "vm-{0}-{1:0>3}".format(cloudspace_id, 0),
+    safe_deploy_vm(options, ovc, account_id, gid, "vm-{0}-{1:0>3}".format(cloudspace_id, 0),
               cloudspace_id, image_id)
 
     # Deploy the remaining vms

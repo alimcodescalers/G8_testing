@@ -6,7 +6,7 @@ import gevent
 import signal
 import time
 import os
-from gevent.coros import BoundedSemaphore
+from gevent.lock import BoundedSemaphore
 
 
 def delete_vm(ovc, machine_id):

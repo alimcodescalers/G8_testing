@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 from libtest import run_cmd_via_gevent, check_remote_is_listening, safe_get_vm, check_package, push_results_to_repo
 import gevent
-from gevent.coros import BoundedSemaphore
+from gevent.lock import BoundedSemaphore
 import signal
 from optparse import OptionParser
 import os
