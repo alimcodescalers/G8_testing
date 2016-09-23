@@ -36,6 +36,7 @@ def main(options):
         for cloudspace in cloudspaces:
             cloudspace_id = cloudspace['id']
             vms = ovc.api.cloudapi.machines.list(cloudspaceId=cloudspace_id)
+            vms.sort(key=lambda vm: vm['name'], reverse=True)
             jobs.extend([gevent.spawn(delete_vm, ovc, vm['id']) for vm in vms])
         gevent.joinall(jobs)
         jobs = list()
