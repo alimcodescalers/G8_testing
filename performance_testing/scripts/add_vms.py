@@ -10,12 +10,23 @@ import os
 from gevent.lock import BoundedSemaphore
 _cloudspace_semaphores = dict()
 _stats = dict(deployed_vms=0, deployed_cloudspaces=0)
+_vmnamecache = dict()
 
 
 def get_publicport_semaphore(cloudspace_id):
     if cloudspace_id not in _cloudspace_semaphores:
         _cloudspace_semaphores[cloudspace_id] = BoundedSemaphore()
     return _cloudspace_semaphores[cloudspace_id]
+
+
+def get_cloudspace_template_vm_id(ovc, cloudspace_id):
+    machine_name = get_vm_name(cloudspace_id, 0)
+    if machine_name in _vmnamecache:
+        return _vmnamecache[machine_name]
+    machines = ovc.api.cloudapi.machines.list(cloudspaceId=cloudspace_id)
+    vm_id = next(m['id'] for m in machines if m['name'] == machine_name)
+    _vmnamecache[machine_name] = vm_id
+    return vm_id
 
 
 def install_req(ovc, machine, cloudspace, public_port, name):
@@ -60,7 +71,7 @@ def safe_deploy_vm(options, ovc, account_id, gid, name, cloudspace_id, image_id)
                     gevent.sleep(10)
 
 
-def deploy_vm(options, ovc, account_id, gid, name, cloudspace_id, image_id):
+def deploy_vm(options, ovc, account_id, gid, name, cloudspace_id, image_id, force_create=False):
     # Listing sizes
     sizes = ovc.api.cloudapi.sizes.list(cloudspaceId=cloudspace_id)
     size_id = next((s['id'] for s in sizes if (options.bootdisk in s['disks'] and
@@ -72,16 +83,23 @@ def deploy_vm(options, ovc, account_id, gid, name, cloudspace_id, image_id):
     if options.iops < 0:
         raise ValueError("Maximum iops can't be a negative value")
 
+    clone = options.clone and not force_create
+
     # Create vm
     with concurrency:
-        print("Creating {}".format(name))
-        vm_id = ovc.api.cloudapi.machines.create(cloudspaceId=cloudspace_id,
-                                                 name=name,
-                                                 description=name,
-                                                 sizeId=size_id,
-                                                 imageId=image_id,
-                                                 disksize=options.bootdisk,
-                                                 datadisks=[int(options.datadisk)])
+        if clone:
+            print("Cloning {}".format(name))
+            vm_id = ovc.api.cloudapi.machines.clone(machineId=get_cloudspace_template_vm_id(ovc, cloudspace_id),
+                                                    name=name)
+        else:
+            print("Creating {}".format(name))
+            vm_id = ovc.api.cloudapi.machines.create(cloudspaceId=cloudspace_id,
+                                                     name=name,
+                                                     description=name,
+                                                     sizeId=size_id,
+                                                     imageId=image_id,
+                                                     disksize=options.bootdisk,
+                                                     datadisks=[int(options.datadisk)])
 
     # limit the IOPS on all the disks of the vm
     machine = safe_get_vm(ovc, concurrency, vm_id)
@@ -123,11 +141,16 @@ def deploy_vm(options, ovc, account_id, gid, name, cloudspace_id, image_id):
                                                    localPort=22,
                                                    protocol='tcp')
 
-    # Install fio & unixbench via cuisine on the vm
-    install_req(ovc, machine, cloudspace, public_port, name)
-    print("Machine {} deployed succesfully.".format(name))
+    if not clone:
+        # Install fio & unixbench via cuisine on the vm
+        install_req(ovc, machine, cloudspace, public_port, name)
 
+    print("Machine {} deployed succesfully.".format(name))
     _stats['deployed_vms'] += 1
+
+
+def get_vm_name(cloudspace_id, counter):
+    return "vm-{0}-{1:0>3}".format(cloudspace_id, counter)
 
 
 def deploy_cloudspace(options, ovc, account_id, name, image_id, gid):
@@ -139,12 +162,12 @@ def deploy_cloudspace(options, ovc, account_id, name, image_id, gid):
                                                         access=options.username)
     # Create first vm to force the routeros deployment
     print("Deploying first vm in cloudspace {}".format(name))
-    safe_deploy_vm(options, ovc, account_id, gid, "vm-{0}-{1:0>3}".format(cloudspace_id, 0),
-              cloudspace_id, image_id)
+    safe_deploy_vm(options, ovc, account_id, gid, get_vm_name(cloudspace_id, 0),
+                   cloudspace_id, image_id, force_create=True)
 
     # Deploy the remaining vms
     jobs = [gevent.spawn(safe_deploy_vm, options, ovc, account_id, gid,
-                         "vm-{0}-{1:0>3}".format(cloudspace_id, x),
+                         get_vm_name(cloudspace_id, x),
                          cloudspace_id, image_id) for x in range(1, options.vmachines)]
     gevent.joinall(jobs)
 
@@ -201,8 +224,8 @@ def main(options):
         with concurrency:
             vm_count = len(ovc.api.cloudapi.machines.list(cloudspaceId=cloudspace_id))
         jobs.extend([gevent.spawn(safe_deploy_vm, options, ovc, account_id, gid,
-                                  "vm-{0}-{1:0>3}".format(cloudspace_id, x),
-                                  cloudspace_id, image_id) for x in range(vm_count, options.vmachines)])
+                                  get_vm_name(cloudspace_id, x), cloudspace_id, image_id)
+                     for x in range(vm_count, options.vmachines)])
 
     gevent.joinall(jobs)
 
@@ -235,6 +258,8 @@ if __name__ == "__main__":
                       help="maximum of iops of the disks for the virtual machines")
     parser.add_option("-n", "--con", dest="concurrency", default=2, type="int",
                       help="amount of concurrency to execute the job")
+    parser.add_option("-s", "--clone", dest="clone", default=1, type="int",
+                      help="clone the first vm in the cloudspace (000)")
 
     (options, args) = parser.parse_args()
     if not options.username or not options.password or not options.environment:
