@@ -25,9 +25,16 @@ def get_cloudspace_template_vm_id(concurrency, ovc, cloudspace_id):
         return _vmnamecache[machine_name]
     machines = ovc.api.cloudapi.machines.list(cloudspaceId=cloudspace_id)
     vm_id = next(m['id'] for m in machines if m['name'] == machine_name)
-    with concurrency:
+
+    def stop():
         print("Stopping machine {}".format(machine_name))
         ovc.api.cloudapi.machines.stop(machineId=vm_id)
+
+    if concurrency is None:
+        stop()
+    else:
+        with concurrency:
+            stop()
     while True:
         gevent.sleep(1)
         vm = safe_get_vm(ovc, concurrency, vm_id)
@@ -97,9 +104,8 @@ def deploy_vm(options, ovc, account_id, gid, name, cloudspace_id, image_id, forc
     with concurrency:
         if clone:
             print("Cloning {}".format(name))
-            template_vm_id = get_cloudspace_template_vm_id(concurrency, ovc, cloudspace_id)
-            vm_id = ovc.api.cloudapi.machines.clone(machineId=template_vm_id,
-                                                    name=name)
+            template_vm_id = get_cloudspace_template_vm_id(None, ovc, cloudspace_id)
+            vm_id = ovc.api.cloudapi.machines.clone(machineId=template_vm_id, name=name)
         else:
             print("Creating {}".format(name))
             vm_id = ovc.api.cloudapi.machines.create(cloudspaceId=cloudspace_id,
