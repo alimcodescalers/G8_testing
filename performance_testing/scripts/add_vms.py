@@ -19,12 +19,20 @@ def get_publicport_semaphore(cloudspace_id):
     return _cloudspace_semaphores[cloudspace_id]
 
 
-def get_cloudspace_template_vm_id(ovc, cloudspace_id):
+def get_cloudspace_template_vm_id(concurrency, ovc, cloudspace_id):
     machine_name = get_vm_name(cloudspace_id, 0)
     if machine_name in _vmnamecache:
         return _vmnamecache[machine_name]
     machines = ovc.api.cloudapi.machines.list(cloudspaceId=cloudspace_id)
     vm_id = next(m['id'] for m in machines if m['name'] == machine_name)
+    with concurrency:
+        print("Stopping machine {}".format(machine_name))
+        ovc.api.cloudapi.machines.stop(machineId=vm_id)
+    while True:
+        gevent.sleep(1)
+        vm = safe_get_vm(ovc, concurrency, vm_id)
+        if vm['status'] == 'HALTED':
+            break
     _vmnamecache[machine_name] = vm_id
     return vm_id
 
@@ -48,10 +56,10 @@ def install_req(ovc, machine, cloudspace, public_port, name):
     run_cmd_via_gevent(cmd)
 
 
-def safe_deploy_vm(options, ovc, account_id, gid, name, cloudspace_id, image_id):
+def safe_deploy_vm(options, ovc, account_id, gid, name, cloudspace_id, image_id, force_create=False):
     while True:
         try:
-            deploy_vm(options, ovc, account_id, gid, name, cloudspace_id, image_id)
+            deploy_vm(options, ovc, account_id, gid, name, cloudspace_id, image_id, force_create)
             return
         except Exception as e:
             templ = "Failed creating machine {} in cloudspace {}, \nError: {}\nretrying ..."
@@ -89,7 +97,8 @@ def deploy_vm(options, ovc, account_id, gid, name, cloudspace_id, image_id, forc
     with concurrency:
         if clone:
             print("Cloning {}".format(name))
-            vm_id = ovc.api.cloudapi.machines.clone(machineId=get_cloudspace_template_vm_id(ovc, cloudspace_id),
+            template_vm_id = get_cloudspace_template_vm_id(concurrency, ovc, cloudspace_id)
+            vm_id = ovc.api.cloudapi.machines.clone(machineId=template_vm_id,
                                                     name=name)
         else:
             print("Creating {}".format(name))
@@ -228,6 +237,12 @@ def main(options):
                      for x in range(vm_count, options.vmachines)])
 
     gevent.joinall(jobs)
+
+    # Start template vms
+    for cloudspace in cloudspaces:
+        cloudspace_id = cloudspace['id']
+        print("Starting machine {}".format(get_vm_name(cloudspace_id, 0)))
+        ovc.api.cloudapi.machines.start(machineId=get_cloudspace_template_vm_id(concurrency, ovc, cloudspace_id))
 
 
 if __name__ == "__main__":
