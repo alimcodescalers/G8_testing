@@ -23,25 +23,29 @@ def get_cloudspace_template_vm_id(concurrency, ovc, cloudspace_id):
     machine_name = get_vm_name(cloudspace_id, 0)
     if machine_name in _vmnamecache:
         return _vmnamecache[machine_name]
-    machines = ovc.api.cloudapi.machines.list(cloudspaceId=cloudspace_id)
-    vm_id = next(m['id'] for m in machines if m['name'] == machine_name)
+    with get_publicport_semaphore(cloudspace_id):
+        if machine_name in _vmnamecache:
+            return _vmnamecache[machine_name]
 
-    def stop():
-        print("Stopping machine {}".format(machine_name))
-        ovc.api.cloudapi.machines.stop(machineId=vm_id)
+        machines = ovc.api.cloudapi.machines.list(cloudspaceId=cloudspace_id)
+        vm_id = next(m['id'] for m in machines if m['name'] == machine_name)
 
-    if concurrency is None:
-        stop()
-    else:
-        with concurrency:
+        def stop():
+            print("Stopping machine {}".format(machine_name))
+            ovc.api.cloudapi.machines.stop(machineId=vm_id)
+
+        if concurrency is None:
             stop()
-    while True:
-        gevent.sleep(1)
-        vm = safe_get_vm(ovc, concurrency, vm_id)
-        if vm['status'] == 'HALTED':
-            break
-    _vmnamecache[machine_name] = vm_id
-    return vm_id
+        else:
+            with concurrency:
+               stop()
+        while True:
+            gevent.sleep(1)
+            vm = safe_get_vm(ovc, concurrency, vm_id)
+            if vm['status'] == 'HALTED':
+                break
+        _vmnamecache[machine_name] = vm_id
+        return vm_id
 
 
 def install_req(ovc, machine, cloudspace, public_port, name):
