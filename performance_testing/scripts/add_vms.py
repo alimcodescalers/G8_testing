@@ -138,7 +138,7 @@ def deploy_vm(options, ovc, account_id, gid, name, cloudspace_id, image_id, forc
             break
         now = time.time()
         if now > start + 600:
-            raise RuntimeError("Machine {} did not get an ip within 300 seconds".format(vm_id))
+            raise RuntimeError("Machine {} did not get an ip within 600 seconds".format(vm_id))
         print("Waiting {} seconds for an IP for VM {}".format(int(now - start), name))
 
     # Configure portforward to ssh port of vm
@@ -236,12 +236,13 @@ def main(options):
     print('Checking if we need more vms in existing cloudspaces')
     for cloudspace in cloudspaces:
         cloudspace_id = cloudspace['id']
-        with concurrency:
-            vm_count = len(ovc.api.cloudapi.machines.list(cloudspaceId=cloudspace_id))
+        expected_vms = [get_vm_name(cloudspace_id, x) for x in range(0, options.vmachines)]
+        for vm in ovc.api.cloudapi.machines.list(cloudspaceId=cloudspace_id):
+            if vm['name'] in expected_vms:
+                expected_vms.remove(vm['name'])
         jobs.extend([gevent.spawn(safe_deploy_vm, options, ovc, account_id, gid,
-                                  get_vm_name(cloudspace_id, x), cloudspace_id, image_id)
-                     for x in range(vm_count, options.vmachines)])
-
+                                  vm_name, cloudspace_id, image_id)
+                     for vm_name in expected_vms])
     gevent.joinall(jobs)
 
     # Start template vms
