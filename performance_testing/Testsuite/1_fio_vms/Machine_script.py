@@ -5,7 +5,7 @@ import multiprocessing
 
 
 def FIO_test(disk, testrun_time, machineId, account_pass, iteration, datasize_process, write_type,rwmixwrite, bs, iodepth, direct_io,rate_iops, numjobs):
-    os.system('echo %s | sudo -S fio --bs=%s --iodepth=%s --direct=%s --ioengine=libaio  --gtod_reduce=1 --name=test_iter%s_vd%s --size=%sM --readwrite=%s --rwmixwrite=%s'
+    os.system('echo %s | sudo -S fio --bs=%s --iodepth=%s --direct=%s --ioengine=libaio --name=test_iter%s_vd%s --size=%sM --readwrite=%s --rwmixwrite=%s'
               '  --group_reporting --filename=/dev/vd%s --runtime=%s --output=machine%s_iter%s_%s_results/result%s_iter%s_vd%s.txt --rate_iops=%s --numjobs=%s'
               %(account_pass, bs, iodepth, direct_io, iteration, disk, datasize_process, write_type, rwmixwrite ,disk, testrun_time, machineId,iteration,
                 write_type, machineId, iteration, disk, rate_iops, numjobs))
