@@ -148,8 +148,8 @@ def main():
                     disks_count += 1
                     file = open( i, 'r')
                     f=file.read()
-                    read_match = re.search(r'read', f)
-                    write_match = re.search(r'write', f)
+                    read_match = re.search(r'read :', f)
+                    write_match = re.search(r'write:', f)
 
                     if read_match:
                         match_bw_r = re.search(r'read : io=\S+ bw=(\S+),', f)
