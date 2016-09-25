@@ -30,6 +30,10 @@ class BaseTest(unittest.TestCase):
         self.base_page = self.environment_url + '/ays'
         self.elements = utils_xpath.elements.copy()
 
+    @classmethod
+    def setUpClass(cls):
+        super(BaseTest, cls).setUpClass()
+
     def setUp(self):
         self.CLEANUP = {"users": [], "accounts": []}
         self._testID = self._testMethodName
@@ -37,7 +41,6 @@ class BaseTest(unittest.TestCase):
         self._logger = logging.LoggerAdapter(logging.getLogger('portal_testsuite'),
                                              {'testid': self.shortDescription() or self._testID})
         self.lg('Testcase %s Started at %s' % (self._testID, self._startTime))
-        #self.set_browser()
         self.wait = WebDriverWait(self.driver, 30)
         for temp in range(5):
             try:
@@ -154,6 +157,8 @@ class BaseTest(unittest.TestCase):
     def wait_element(self, element):
         if self.wait_until_element_located(self.elements[element]):
             return True
+        else:
+            return False
 
     def wait_until_element_located_and_has_text(self, xpath, text):
         for temp in range(10):
@@ -380,6 +385,7 @@ class BaseTest(unittest.TestCase):
         self.CLEANUP["accounts"].append(account)
         if account == '':
             return account
+        self.lg("%s account is created" % account)
 
     def open_account_page(self, account=''):
         account = account
@@ -413,7 +419,7 @@ class BaseTest(unittest.TestCase):
         else:
             self.fail('"%s" account status has an error in the page' % account)
 
-    def create_cloud_space(self, account='', cloud_space=''):
+    def create_cloud_space(self, account, cloud_space=''):
         account = account
         self.cloud_space_name = cloud_space or str(uuid.uuid4()).replace('-', '')[0:10]
 
@@ -432,6 +438,7 @@ class BaseTest(unittest.TestCase):
         self.set_text("cloud_space_search", self.cloud_space_name)
         self.wait_until_element_located_and_has_text(self.elements["cloud_space_table_first_element_2"],
                                                      self.cloud_space_name)
+        self.lg(" %s cloudspace is created" % self.cloud_space_name)
         return self.cloud_space_name
 
     def open_cloudspace_page(self, cloudspace=''):
@@ -665,4 +672,111 @@ class BaseTest(unittest.TestCase):
             return True
         else:
             self.lg("FAIL : account status : %s" % self.get_text("account_page_status"))
+            return False
+
+    def end_user_create_virtual_machine(self, image_name="ubuntu_14_04", machine_name=''):
+        self.lg('Open end user home page')
+        self.get_page(self.environment_url)
+
+        if self.check_element_is_exist("machines_button"):
+            self.lg(' Start creation of machine')
+            self.click("machines_button")
+            self.click("create_machine_button")
+
+            machine_name = machine_name or str(uuid.uuid4()).replace('-', '')[0:10]
+            machine_description = str(uuid.uuid4()).replace('-', '')[0:10]
+            randome_package = randint(1, 6)
+            if image_name != "windows_2012":
+                random_disk_size = randint(1, 8)
+            else:
+                random_disk_size = randint(1, 6)
+                self.click("windows")
+
+            self.lg("Create a machine name: %s image:%s" % (machine_name, image_name))
+            self.set_text("machine_name", machine_name)
+            self.set_text("machine_description_", machine_description)
+            self.click(image_name)
+            self.click("package_%i" % randome_package)
+            self.click("disk_size_%i" % random_disk_size)
+
+            self.click("create_machine")
+            for temp in range(30):
+                if "console" in self.get_url():
+                    break
+                else:
+                    time.sleep(1)
+
+            if self.get_text("machine_status") == "RUNNING":
+                self.lg(' machine is created')
+                return True
+            else:
+                self.lg("FAIL : %s Machine isn't RUNNING" % machine_name)
+                return False
+        else:
+            self.lg("FAIL : Machine button isn't exist for this user")
+            return False
+
+    def end_user_delete_virtual_machine(self, virtual_machine):
+        self.lg('Open end user home page')
+        self.get_page(self.environment_url)
+
+        if self.check_element_is_exist("machines_button"):
+            self.lg(' Start creation of machine')
+            self.click("machines_button")
+
+            if self.check_element_is_exist("end_user_machine_table"):
+                self.lg('Open the machine page to destroy it')
+                machine_table = self.driver.find_element_by_xpath(self.elements["end_user_machine_table"])
+                machine_table_rows = machine_table.find_elements_by_class_name("ng-scope")
+
+                for counter in range(len(machine_table_rows)):
+                    machine_name_xpath = self.elements["end_user_machine_name_table"] % (counter+1)
+                    machine_name = self.driver.find_element_by_xpath(machine_name_xpath)
+                    if virtual_machine == machine_name.text:
+                        machine_name.click()
+                        break
+                else:
+                    self.lg("can't find %s machine in the table" % virtual_machine)
+                    return False
+
+                self.lg("Destroy the machine")
+                self.click("destroy_machine")
+                self.click("destroy_machine_confirm")
+                time.sleep(10)
+                if self.get_text("machine_list") == "Machines":
+                    return True
+                else:
+                    self.lg("FAIL : Can't delete %s machine" % virtual_machine)
+                    return False
+            else:
+                self.lg("There is no machines")
+                return False
+        else:
+            self.lg("FAIL : Machine button isn't exist for this user")
+            return False
+
+    def end_user_choose_account(self, account=''):
+        account = account or self.account
+        self.lg('Open end user home page')
+        self.get_page(self.environment_url)
+        if self.check_element_is_exist("end_user_selected_account"):
+            print(account,self.get_text("end_user_selected_account"))
+            if account not in self.get_text("end_user_selected_account"):
+                accounts_xpath = self.elements["end_user_accounts_list"]
+                for temp in range(100):
+                    try:
+                        account_item = self.driver.find_element_by_xpath(accounts_xpath % temp)
+                    except:
+                        self.lg("Can't choose %s account from the end user" % account)
+                        return False
+                    else:
+                        if account in account_item.text:
+                            account_item.click()
+                            cloud_space_xpath = self.elements["end_user_cloud_space"] % account
+                            self.driver.find_element_by_xpath(cloud_space_xpath).click()
+                            return True
+            else:
+                return True
+        else:
+            self.lg("This user doesn't has any account")
             return False

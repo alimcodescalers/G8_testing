@@ -89,34 +89,8 @@ class Read(BaseTest):
         
         """
         self.lg('%s STARTED' % self._testID)
-        #self.driver.find_element_by_xpath(self.elements["machines_button"]).click
-        #self.driver.find_element_by_xpath(self.elements["machines_button"]).click
-        self.click("machines_button")
-        self.click("create_machine_button")
-
-        self.machine_name = str(uuid.uuid4()).replace('-', '')[0:10]
-        self.machine_description = str(uuid.uuid4()).replace('-', '')[0:10]
-        randome_package = randint(1, 6)
-        if image_name != "windows_2012":
-            random_disk_size = randint(1, 8)
-        else:
-            random_disk_size = randint(1, 6)
-            self.click("windows")
-
-        self.lg("Create a machine name: %s image:%s" % (self.machine_name, image_name))
-        self.set_text("machine_name", self.machine_name)
-        self.set_text("machine_description_", self.machine_description)
-        self.click(image_name)
-        self.click("package_%i" % randome_package)
-        self.click("disk_size_%i" % random_disk_size)
-
-        self.click("create_machine")
-        #time.sleep(20)
-        self.assertEqual(self.get_text("machine_status"), "RUNNING")
-
-        self.lg("Destroy the machine")
-        self.click("destroy_machine")
-        self.click("destroy_machine_confirm")
-        time.sleep(10)
-        self.assertEqual(self.get_text("machine_list"),"Machines")
+        self.lg(' create %s machine ' % self.machine_name)
+        self.assertTrue(self.end_user_create_virtual_machine(image_name,self.machine_name))
+        self.lg('delete %s machine ' % self.machine_name)
+        self.assertTrue(self.end_user_delete_virtual_machine(self.machine_name))
         self.lg('%s ENDED' % self._testID)
