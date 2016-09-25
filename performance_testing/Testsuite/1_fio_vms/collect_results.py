@@ -135,11 +135,49 @@ def main():
 
             iops_list=[]
             disks_runtime=[]
+
+            vm_bw_r = []; vm_bw_w = [];
+            vm_slat_r_min = []; vm_slat_r_max = []; vm_slat_r_avg = [];
+            vm_slat_w_min = []; vm_slat_w_max = []; vm_slat_w_avg = [];
+
             #iterate on disks_results per machine
             for i in os.listdir(os.getcwd()):
                 if i.startswith("result"):
                     file = open( i, 'r')
                     f=file.read()
+
+                    match_bw_r = re.match(r'read : io=\S+ bw=(\S+),', f)
+                    disk_bw_read = match_bw_r.group(1)  # ex:234KB/s
+                    vm_bw_r.append(disk_bw_read)  # remove kb/s
+
+                    match_bw_w = re.match(r'write : io=\S+ bw=(\S+),', f)
+                    disk_bw_write = match_bw_w.group(1)  # ex:234KB/s
+                    vm_bw_w.append(disk_bw_write)  # remove kb/s
+
+                    # disk_slat_r=[]
+                    # disk_slat_w=[]
+                    match_slat = re.finditer(r'slat \((\S+)\): min=(\S+), max=(\S+), avg=(\S+)', f)
+                    c = 0  # count to split read_slat from write_slat
+
+                    for m in match_slat:
+                        slat_unit = match_slat.group(1)  # usec
+                        slat_min = float(match_slat.group(2))  # 123.23 string
+                        slat_max = float(match_slat.group(3))  # 123.23 string
+                        slat_avg = float(match_slat.group(4))  # 123.23 string
+
+                        if c == 0:
+                            vm_slat_r_min.append(slat_min)
+                            vm_slat_r_max.append(slat_max)
+                            vm_slat_r_avg.append(slat_avg)
+                        else:
+                            vm_slat_w_min.append(slat_min)
+                            vm_slat_w_max.append(slat_max)
+                            vm_slat_w_avg.append(slat_avg)
+                            c += 1
+
+
+
+
                     disk_iops=[]
                     match = re.finditer(r'iops=([\S]+),', f)
                     # this for loop in case there are iops for write and read
