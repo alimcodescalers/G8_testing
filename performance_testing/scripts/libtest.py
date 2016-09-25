@@ -2,6 +2,18 @@ import gevent
 from gevent.subprocess import Popen, PIPE
 import configparser
 import uuid
+import logging
+
+FORMAT = '%(asctime)-15s %(name)s %(levelname)s: %(message)s'
+
+
+def get_logger(name):
+    log = logging.getLogger(name)
+    handler = logging.handlers.RotatingFileHandler(filename='/var/log/perftest-%s.log' % name)
+    handler.setFormatter(logging.Formatter(FORMAT))
+    log.addHandler(handler)
+
+    return log
 
 
 def check_package(package):

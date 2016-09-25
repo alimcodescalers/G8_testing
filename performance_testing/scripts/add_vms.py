@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 from gevent import monkey
 monkey.patch_all()
-from libtest import run_cmd_via_gevent, wait_until_remote_is_listening, safe_get_vm
+from libtest import run_cmd_via_gevent, wait_until_remote_is_listening, safe_get_vm, get_logger
 from optparse import OptionParser
 import gevent
 import signal
@@ -11,6 +11,9 @@ from gevent.lock import BoundedSemaphore
 _cloudspace_semaphores = dict()
 _stats = dict(deployed_vms=0, deployed_cloudspaces=0)
 _vmnamecache = dict()
+
+
+logger = get_logger('add_vms')
 
 
 def get_publicport_semaphore(cloudspace_id):
@@ -74,7 +77,7 @@ def safe_deploy_vm(options, ovc, account_id, gid, name, cloudspace_id, image_id,
             return
         except Exception as e:
             templ = "Failed creating machine {} in cloudspace {}, \nError: {}\nretrying ..."
-            print(templ.format(name, cloudspace_id, str(e)))
+            logger.error(templ.format(name, cloudspace_id, str(e)))
             gevent.sleep(10)
             while True:
                 try:
@@ -86,7 +89,7 @@ def safe_deploy_vm(options, ovc, account_id, gid, name, cloudspace_id, image_id,
                     break
                 except Exception as e:
                     templ = "Failed cleaning up machine {} in cloudspace {}, \nError: {}\nretrying ..."
-                    print(templ.format(name, cloudspace_id, str(e)))
+                    logger.error(templ.format(name, cloudspace_id, str(e)))
                     gevent.sleep(10)
 
 
