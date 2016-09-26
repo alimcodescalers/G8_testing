@@ -102,9 +102,9 @@ def main(options):
                                                                  options.username, options.password))
 
     # pushing results to env_repo
-    #os.chdir(cwd)
-    #location = options.environment.split('.')[0]
-    #push_results_to_repo(results_dir, location)
+    os.chdir(cwd)
+    location = options.environment.split('.')[0]
+    push_results_to_repo(results_dir, location)
 
 
 if __name__ == "__main__":

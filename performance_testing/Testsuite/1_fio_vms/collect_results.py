@@ -211,8 +211,8 @@ def main():
                         %(iteration,total_iops, iteration, avg_total_cpuload, iteration, runtime))
                 newfile.write('\n --------------------:-------------------- \n')
 
-            #ovs_ip = get_vm_ovs_node(int(machineId), ovc)
-            #vm_ovsip_iops_list.append({'machineId': machineId, 'ovs_ip': ovs_ip, 'iops': total_iops})
+            ovs_ip = get_vm_ovs_node(int(machineId), ovc)
+            vm_ovsip_iops_list.append({'machineId': machineId, 'ovs_ip': ovs_ip, 'iops': total_iops})
 
             os.chdir('%s' %Res_dir)
 
@@ -241,8 +241,8 @@ def main():
             titles.insert(0,'vm-%s'%machineId)
             collect_results(titles, vm_disks_results, Res_dir, "vms_disks_info")
 
-    #ovs_list, iops_list = sum_iops_per_ovs(vm_ovsip_iops_list)
-    #collect_results(ovs_list, iops_list, Res_dir, "ovs_nodes_iops")
+    ovs_list, iops_list = sum_iops_per_ovs(vm_ovsip_iops_list)
+    collect_results(ovs_list, iops_list, Res_dir, "ovs_nodes_iops")
 
 
 
