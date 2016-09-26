@@ -70,14 +70,16 @@ def main(options):
 
     # list virtual and deployed cloudspaces
     vms = []
+    vms_index = set()
     ovc = j.clients.openvcloud.get(options.environment, options.username, options.password)
     cloudspaces_per_user = ovc.api.cloudapi.cloudspaces.list()
     for cs in cloudspaces_per_user:
         portforwards = ovc.api.cloudapi.portforwarding.list(cloudspaceId=cs['id'])
         for pi in portforwards:
-            if 'machineId' not in pi:
+            if 'machineId' not in pi or pi['machineId'] in vms_index:
                 continue
             vms.append([pi['machineId'], pi['publicIp'], pi['publicPort']])
+            vms_index.add(pi['machineId'])
 
     if len(vms) < options.required_vms:
         print("Not enough vms available to run this test. {} < {}".format(len(vms), options.required_vms))
