@@ -161,9 +161,8 @@ def main():
                         disk_bw_write = match_bw_w.group(1)  # ex:234KB/s
                         vm_bw_w.append(disk_bw_write)  # remove kb/s
 
-                    # disk_slat_r=[]
-                    # disk_slat_w=[]
-                    match_slat = re.finditer(r'slat \((\S+)\): min=(\S+), max=(\S+), avg=(\S+),', f)
+
+                    match_slat = re.finditer(r'slat \((\S+)\): min=(\S+), max=(\S+), avg=\s*(\S+),', f)
                     c = 0  # count to split read_slat from write_slat
 
                     if write_match and not read_match:
