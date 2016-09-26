@@ -129,3 +129,23 @@
   - Average CPU load
 
 - For each run of the **run\_fio.py**, there is a separated folder that is created which has its own CSV file
+
+### Tearing Down the test
+ - In order to clean all the created virtual machines and the deployed cloudspaces:
+  ```
+  cd G8_testing/performance_testing/scripts
+  python3 cleanup_vms.py --{provide needed parameters}
+  ```
+  
+  **Following parameters are available**:
+  ```
+  -u USERNAME, --user=USERNAME
+                        username to login on the OVC api
+  -p PASSWORD, --pwd=PASSWORD
+                        password to login on the OVC api
+  -e ENVIRONMENT, --env=ENVIRONMENT
+                        environment to login on the OVC api
+  -n CONCURRENCY, --con=CONCURRENCY
+                        amount of concurrency to execute the job
+  ```
+  
