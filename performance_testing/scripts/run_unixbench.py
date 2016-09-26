@@ -94,7 +94,8 @@ def main(options):
     for cs in cloudspaces_per_user:
         portforwards = ovc.api.cloudapi.portforwarding.list(cloudspaceId=cs['id'])
         for pi in portforwards:
-            vms.append([pi['machineId'], pi['publicIp'], pi['publicPort']])
+            if 'machineId' in pi:
+                 vms.append([pi['machineId'], pi['publicIp'], pi['publicPort']])
 
     if len(vms) < options.required_vms:
         print("Not enough vms available to run this test.")
@@ -119,8 +120,8 @@ def main(options):
 
     gevent.joinall(run_jobs)
 
-    raw_results = [job.value for job in run_jobs]
-    raw_results.sort()
+    raw_results = [job.value for job in run_jobs if job.value]
+    raw_results.sort(key=lambda x: x[1])
     results = []
     index = 0
     for s in raw_results:

@@ -3,6 +3,7 @@ from gevent.subprocess import Popen, PIPE
 import configparser
 import uuid
 import logging
+import logging.handlers
 
 FORMAT = '%(asctime)-15s %(name)s %(levelname)s: %(message)s'
 
@@ -29,9 +30,9 @@ def run_cmd_via_gevent(cmd):
     sub = Popen([cmd], stdout=PIPE, stderr=PIPE, shell=True)
     out, err = sub.communicate()
     if sub.returncode == 0:
-        return out.decode('ascii')
+        return out.decode('utf-8')
     else:
-        error_output = err.decode('ascii')
+        error_output = err.decode('utf-8')
         raise RuntimeError("Failed to execute command.\n\ncommand:\n{}\n\n".format(cmd, error_output))
 
 

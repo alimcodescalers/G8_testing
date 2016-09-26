@@ -75,10 +75,12 @@ def main(options):
     for cs in cloudspaces_per_user:
         portforwards = ovc.api.cloudapi.portforwarding.list(cloudspaceId=cs['id'])
         for pi in portforwards:
+            if 'machineId' not in pi:
+                continue
             vms.append([pi['machineId'], pi['publicIp'], pi['publicPort']])
 
     if len(vms) < options.required_vms:
-        print("Not enough vms available to run this test.")
+        print("Not enough vms available to run this test. {} < {}".format(len(vms), options.required_vms))
         return
     vms = vms[:options.required_vms]
 
