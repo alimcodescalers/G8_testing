@@ -7,7 +7,7 @@ class machines():
     def __init__(self, framework):
         self.framework = framework
 
-    def create_virtual_machine(self, image_name="ubuntu_14_04", machine_name=''):
+    def end_user_create_virtual_machine(self, image_name="ubuntu_14_04", machine_name=''):
         self.framework.RightNavigationMenu.Machines.home()
 
         self.framework.click("create_machine_button")
@@ -42,7 +42,7 @@ class machines():
             self.framework.lg("FAIL : %s Machine isn't RUNNING" % machine_name)
             return False
 
-    def get_machine_page(self, machine_name=''):
+    def end_user_get_machine_page(self, machine_name=''):
         machine_name = machine_name
         self.framework.click("machines_button")
         if self.framework.check_element_is_exist("end_user_machine_table"):
@@ -69,7 +69,7 @@ class machines():
             else:
                 self.framework.fail("can't find %s machine in the table" % machine_name)
 
-    def get_machine_info(self, machine_name=''):
+    def end_user_get_machine_info(self, machine_name=''):
         self.framework.assertIn(machine_name, self.framework.get_text("end_user_machine_name",
                                                                       "can't find %s machine in the table" % machine_name))
 
@@ -82,13 +82,13 @@ class machines():
         self.framework.machine_osimage = self.framework.get_text("machine_osimage")
         self.framework.machine_credentials = self.framework.get_text("machine_credentials")
 
-    def wait_machine(self, status):
+    def end_user_wait_machine(self, status):
         for _ in range(30):
             if self.framework.get_text("machine_status") == status:
                 break
             time.sleep(1)
 
-    def verify_machine_elements(self, status):
+    def end_user_verify_machine_elements(self, status):
         if self.framework.machine_description:
             self.framework.assertEqual(self.framework.machine_description, self.framework.get_text("machine_description"))
         self.framework.assertEqual(status, self.framework.get_text("machine_status"))
@@ -100,7 +100,7 @@ class machines():
         self.framework.assertEqual(self.framework.machine_storage, self.framework.get_text("machine_storage"))
 
 
-    def verify_machine_console(self, status):
+    def end_user_verify_machine_console(self, status):
         if status == 'RUNNING':
             self.framework.assertEqual(self.framework.get_text("console_message_running"),
                              "Click the console screen or use the control buttons below to "
@@ -116,10 +116,76 @@ class machines():
             self.framework.assertFalse(self.framework.element_is_displayed("send_ctrl/alt/del_button"))
 
 
-    def start_machine(self, machine):
+    def end_user_start_machine(self, machine):
         self.framework.click_link(machine)
         if self.framework.get_text("machine_status") != "RUNNING":
             self.framework.click("machine_start")
             time.sleep(30)
             self.framework.click("actions_tab")
             self.framework.click("refresh_button")
+
+
+    def end_user_delete_virtual_machine(self, virtual_machine):
+        self.framework.lg('Open end user home page')
+        self.framework.get_page(self.framework.environment_url)
+
+        if self.framework.check_element_is_exist("machines_button"):
+            self.framework.lg(' Start creation of machine')
+            self.framework.click("machines_button")
+
+            if self.framework.check_element_is_exist("end_user_machine_table"):
+                self.framework.lg('Open the machine page to destroy it')
+                machine_table = self.framework.driver.find_element_by_xpath(self.framework.elements["end_user_machine_table"])
+                machine_table_rows = machine_table.find_elements_by_class_name("ng-scope")
+
+                for counter in range(len(machine_table_rows)):
+                    machine_name_xpath = self.framework.elements["end_user_machine_name_table"] % (counter+1)
+                    machine_name = self.framework.driver.find_element_by_xpath(machine_name_xpath)
+                    if virtual_machine == machine_name.text:
+                        machine_name.click()
+                        break
+                else:
+                    self.framework.lg("can't find %s machine in the table" % virtual_machine)
+                    return False
+
+                self.framework.lg("Destroy the machine")
+                self.framework.click("destroy_machine")
+                self.framework.click("destroy_machine_confirm")
+                time.sleep(10)
+                if self.framework.get_text("machine_list") == "Machines":
+                    return True
+                else:
+                    self.framework.lg("FAIL : Can't delete %s machine" % virtual_machine)
+                    return False
+            else:
+                self.framework.lg("There is no machines")
+                return False
+        else:
+            self.framework.lg("FAIL : Machine button isn't exist for this user")
+            return False
+
+    def end_user_choose_account(self, account=''):
+        account = account or self.framework.account
+        self.framework.lg('Open end user home page')
+        self.framework.get_page(self.framework.environment_url)
+        if self.framework.check_element_is_exist("end_user_selected_account"):
+            print(account,self.framework.get_text("end_user_selected_account"))
+            if account not in self.framework.get_text("end_user_selected_account"):
+                accounts_xpath = self.framework.elements["end_user_accounts_list"]
+                for temp in range(100):
+                    try:
+                        account_item = self.framework.driver.find_element_by_xpath(accounts_xpath % temp)
+                    except:
+                        self.framework.lg("Can't choose %s account from the end user" % account)
+                        return False
+                    else:
+                        if account in account_item.text:
+                            account_item.click()
+                            cloud_space_xpath = self.framework.elements["end_user_cloud_space"] % account
+                            self.framework.driver.find_element_by_xpath(cloud_space_xpath).click()
+                            return True
+            else:
+                return True
+        else:
+            self.framework.lg("This user doesn't has any account")
+            return False
