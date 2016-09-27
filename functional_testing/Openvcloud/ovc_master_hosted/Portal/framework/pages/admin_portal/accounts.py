@@ -9,7 +9,7 @@ class accounts():
         self.framework = framework
         self.LeftNavigationMenu = leftNavigationMenu(framework)
 
-    def create_new_account(self, account='', username=''):
+    def create_new_account(self, account='', username='', max_memory=None):
         account = account or str(uuid.uuid4()).replace('-', '')[0:10]
         username = username
         self.LeftNavigationMenu.CloudBroker.Accounts()
@@ -20,6 +20,8 @@ class accounts():
         self.framework.set_text("account_name", account)
         self.framework.set_text("account_username", username)
 
+        if max_memory:
+            self.framework.set_text("account_maxmemory", max_memory)
         self.framework.click("account_confirm")
 
         self.framework.set_text("account_search", account)

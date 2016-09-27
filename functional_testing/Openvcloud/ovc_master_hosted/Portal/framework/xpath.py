@@ -473,5 +473,7 @@ elements = {'storage_menu': 'html/body/div[1]/div/div[1]/div/nav/div/ul/li[5]', 
             "users_page":"html/body/div[2]/div/div/h2",
             "end_user_home" : ".//*[@id='wrap']/div/tour/div[3]/div[2]/div/div/div/div[2]/div[2]/div[2]/p/a",
             "end_user_create_machine_page":".//*[@id='wrap']/div/tour/div[3]/div[2]/div/div/div/div[2]/div/div/h1",
-            "end_user_machine_name":".//*[@id='wrap']/div/tour/div[3]/div[2]/div/div/div/div[2]/div[2]/h1"
+            "end_user_machine_name":".//*[@id='wrap']/div/tour/div[3]/div[2]/div/div/div/div[2]/div[2]/h1",
+            'account_maxmemory': ".//*[@id='createaccount']/div/div[2]/div[3]/div[4]/input",
+            'account_page_maxmemory': "html/body/div[2]/div/div/table[2]/tbody/tr[1]/td[2]"
             }
