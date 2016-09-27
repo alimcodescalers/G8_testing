@@ -475,5 +475,10 @@ elements = {'storage_menu': 'html/body/div[1]/div/div[1]/div/nav/div/ul/li[5]', 
             "end_user_create_machine_page":".//*[@id='wrap']/div/tour/div[3]/div[2]/div/div/div/div[2]/div/div/h1",
             "end_user_machine_name":".//*[@id='wrap']/div/tour/div[3]/div[2]/div/div/div/div[2]/div[2]/h1",
             'account_maxmemory': ".//*[@id='createaccount']/div/div[2]/div[3]/div[4]/input",
-            'account_page_maxmemory': "html/body/div[2]/div/div/table[2]/tbody/tr[1]/td[2]"
+            'account_page_maxmemory': "html/body/div[2]/div/div/table[2]/tbody/tr[1]/td[2]",
+            'cloudapi_images_show': ".//*[@id='endpointListTogger_cloudapi__images']",
+            'cloudapi_images_list_btn': ".//*[@id='cloudapi__images_post_cloudapi_images_list']/div[1]/h3/span[1]/a",
+            'cloudapi_images_list_accountid': ".//*[@id='cloudapi__images_post_cloudapi_images_list_content']/form/table/tbody/tr[1]/td[2]/input",
+            'cloudapi_images_list_tryit': ".//*[@id='cloudapi__images_post_cloudapi_images_list_content']/form/div[2]/input",
+            'cloudapi_images_list_body': ".//*[@id='cloudapi__images_post_cloudapi_images_list_content']/div[3]/div[2]/pre/code"
             }
