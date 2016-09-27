@@ -131,12 +131,13 @@
 - For each run of the **run\_fio.py**, there is a separated folder that is created which has its own CSV file
 
 ### Tearing Down the test
- - In order to clean all the created virtual machines and the deployed cloudspaces:
+ - In order to clean all the created virtual machines and deployed cloud spaces:
+ 
   ```
   cd G8_testing/performance_testing/scripts
   python3 cleanup_vms.py --{provide needed parameters}
   ```
-  
+
   **Following parameters are available**:
   ```
   -u USERNAME, --user=USERNAME
@@ -148,4 +149,3 @@
   -n CONCURRENCY, --con=CONCURRENCY
                         amount of concurrency to execute the job
   ```
-  
