@@ -7,68 +7,69 @@ from functional_testing.Openvcloud.ovc_master_hosted.Portal.framework.Navigation
 from functional_testing.Openvcloud.ovc_master_hosted.Portal.framework.pages.admin_portal.accounts import accounts
 import uuid
 
-class cloudspaces(BaseTest):
-    def __init__(self, *args, **kwargs):
-        super(cloudspaces, self).__init__(*args, **kwargs)
+class cloudspaces():
+    def __init__(self, framework):
+        self.framework = framework
+        self.LeftNavigationMenu = leftNavigationMenu(framework)
 
     def create_cloud_space(self, account, cloud_space=''):
         account = account
-        self.cloud_space_name = cloud_space or str(uuid.uuid4()).replace('-', '')[0:10]
+        self.framework.cloud_space_name = cloud_space or str(uuid.uuid4()).replace('-', '')[0:10]
 
-        accounts().open_account_page(account)
-        account_username = self.get_text("account_first_user_name")
+        self.framework.Accounts.open_account_page(account)
+        account_username = self.framework.get_text("account_first_user_name")
 
-        self.click("add_cloudspace")
+        self.framework.click("add_cloudspace")
 
-        self.assertEqual(self.get_text("create_cloud_space"), "Create Cloud Space")
+        self.framework.assertEqual(self.framework.get_text("create_cloud_space"), "Create Cloud Space")
 
-        self.set_text("cloud_space_name", self.cloud_space_name)
-        self.set_text("cloud_space_user_name", account_username)
+        self.framework.set_text("cloud_space_name", self.framework.cloud_space_name)
+        self.framework.set_text("cloud_space_user_name", account_username)
 
-        self.click("cloud_space_confirm")
+        self.framework.click("cloud_space_confirm")
 
-        self.set_text("cloud_space_search", self.cloud_space_name)
-        self.wait_until_element_located_and_has_text(self.elements["cloud_space_table_first_element_2"],
-                                                     self.cloud_space_name)
-        self.lg(" %s cloudspace is created" % self.cloud_space_name)
-        return self.cloud_space_name
+        self.framework.set_text("cloud_space_search", self.framework.cloud_space_name)
+        self.framework.wait_until_element_located_and_has_text(self.framework.elements["cloud_space_table_first_element_2"],
+                                                     self.framework.cloud_space_name)
+        self.framework.lg(" %s cloudspace is created" % self.framework.cloud_space_name)
+        return self.framework.cloud_space_name
 
     def open_cloudspace_page(self, cloudspace=''):
         cloudspace = cloudspace
-        leftNavigationMenu.CloudBroker.CloudSpaces()
-        self.set_text("cloud_space_search", cloudspace)
-        self.wait_until_element_located_and_has_text(self.elements["cloud_space_table_first_element_2"],
+        self.LeftNavigationMenu.CloudBroker.CloudSpaces()
+        self.framework.set_text("cloud_space_search", cloudspace)
+        self.framework.wait_until_element_located_and_has_text(self.framework.elements["cloud_space_table_first_element_2"],
                                                      cloudspace)
-        cloudspace_id = self.get_text("cloud_space_table_first_element_1")
-        self.click("cloud_space_table_first_element_1")
-        self.element_in_url(cloudspace_id)
+        cloudspace_id = self.framework.get_text("cloud_space_table_first_element_1")
+        self.framework.click("cloud_space_table_first_element_1")
+        self.framework.element_in_url(cloudspace_id)
 
     def delete_cloudspace(self, cloudspace=''):
         cloudspace = cloudspace
 
-        self.lg('open %s cloudspace' % cloudspace)
+        self.framework.lg('open %s cloudspace' % cloudspace)
         self.open_cloudspace_page(cloudspace)
-        if self.driver.find_element_by_xpath(self.elements["cloudspace_page_status"]).text != "DESTROYED":
-            self.lg('delete "%s" cloudspace' % cloudspace)
-            self.click('cloudspace_action')
-            if self.driver.find_element_by_xpath(self.elements["cloudspace_page_status"]).text == "DEPLOYED":
-                self.click('cloudspace_delete_deployed')
-            elif self.driver.find_element_by_xpath(self.elements["cloudspace_page_status"]).text == "VIRTUAL":
-                self.click('cloudspace_delete_virtual')
+        if self.framework.driver.find_element_by_xpath(self.framework.elements["cloudspace_page_status"]).text != "DESTROYED":
+            self.framework.lg('delete "%s" cloudspace' % cloudspace)
+            self.framework.click('cloudspace_action')
+            if self.framework.driver.find_element_by_xpath(self.framework.elements["cloudspace_page_status"]).text == "DEPLOYED":
+                self.framework.click('cloudspace_delete_deployed')
+            elif self.framework.driver.find_element_by_xpath(self.framework.elements["cloudspace_page_status"]).text == "VIRTUAL":
+                self.framework.click('cloudspace_delete_virtual')
 
-            self.set_text('cloudspace_delete_reason', "Test")
-            self.click("cloudspace_delete_confirm")
+            self.framework.set_text('cloudspace_delete_reason', "Test")
+            self.framework.click("cloudspace_delete_confirm")
             time.sleep(0.5)
-            self.get_page(self.driver.current_url)
+            self.framework.get_page(self.framework.driver.current_url)
             for temp in range(10):
                 try:
-                    self.wait_until_element_located_and_has_text(self.elements["cloudspace_page_status"], "DESTROYED")
+                    self.framework.wait_until_element_located_and_has_text(self.framework.elements["cloudspace_page_status"], "DESTROYED")
                     return True
                 except TimeoutException:
                     time.sleep(1)
-                    self.get_page(self.driver.current_url)
+                    self.framework.get_page(self.framework.driver.current_url)
             else:
-                self.fail("Can't delete this '%s' cloudspcae")
+                self.framework.fail("Can't delete this '%s' cloudspcae")
         else:
-            self.lg('"%s" cloudspace is already deleted' % cloudspace)
+            self.framework.lg('"%s" cloudspace is already deleted' % cloudspace)
             return True
