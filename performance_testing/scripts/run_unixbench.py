@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-from libtest import run_cmd_via_gevent, check_remote_is_listening, safe_get_vm, check_package, push_results_to_repo
+from libtest import run_cmd_via_gevent, check_remote_is_listening, safe_get_vm, check_package, push_results_to_repo, get_logger
 import gevent
 from gevent.lock import BoundedSemaphore
 import signal
@@ -8,6 +8,9 @@ import os
 import datetime
 import csv
 import re
+import time
+matcher = re.compile(r'System Benchmarks Index Score\s+([\d.]+)')
+logger = get_logger('run_unixbench')
 
 
 def results_on_csvfile(csv_file_name, result_dir, table_string):
@@ -48,10 +51,10 @@ def prepare_unixbench_test(options, ovc, cpu_cores, machine_id, publicip, public
 
     check_remote_is_listening(publicip, int(publicport))
 
-    templ = 'sshpass -p{} scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null '
-    templ += '-P {} {}/2_Unixbench2_test/2_machine_script.py  {}@{}:'
-    cmd = templ.format(account['password'], publicport, options.testsuite, account['login'], publicip)
-    run_cmd_via_gevent(cmd)
+    # templ = 'sshpass -p{} scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null '
+    # templ += '-P {} {}/2_Unixbench2_test/2_machine_script.py  {}@{}:'
+    # cmd = templ.format(account['password'], publicport, options.testsuite, account['login'], publicip)
+    # run_cmd_via_gevent(cmd)
 
     return machine_id, publicip, publicport, account, cpu_cores
 
@@ -60,12 +63,27 @@ def unixbench_test(options, count, machine_id, publicip, publicport, account, cp
     gevent.sleep(options.time_interval*count)
     print('unixbench testing has been started on machine: {}'.format(machine_id))
     templ = 'sshpass -p "{}" ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p {} {}@{} '
-    templ += ' python 2_machine_script.py {} {} {}'
+    templ += ' "cd /home/cloudscalers/UnixBench; echo {} | sudo -S ./Run -c {} -i 1"'
     cmd = templ.format(account['password'], publicport, account['login'], publicip,
-                       account['password'], cpu_cores, options.test_runtime)
-    score = run_cmd_via_gevent(cmd)
+                       account['password'], cpu_cores)
+    results = list()
+    start = time.time()
+    while start + options.test_runtime > time.time():
+        output = run_cmd_via_gevent(cmd)
+        match = None
+        for line in output.splitlines():
+            m = matcher.match(line)
+            if m:
+                match = m
+                break
+        if match:
+            result = float(match.group(1))
+            results.append(result)
+            print("Machine {} reports score of {}".format(machine_id, result))
+        else:
+            logger.error("Unixbench did not return result:\n\n{}".format(output))
 
-    return [machine_id, float(score)]
+    return machine_id, sum(results) / len(results)
 
 
 def main(options):
@@ -118,8 +136,7 @@ def main(options):
 
     # run unixbench tests
     run_jobs = [gevent.spawn(unixbench_test, options, c, *job.value)
-                for job, c in zip(*[prepare_jobs, range(len(prepare_jobs))]) if job.value is not None]
-
+               for job, c in zip(*[prepare_jobs, range(len(prepare_jobs))]) if job.value is not None]
     gevent.joinall(run_jobs)
 
     raw_results = [job.value for job in run_jobs if job.value]
