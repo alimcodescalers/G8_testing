@@ -110,3 +110,24 @@
   git config --global user.email "you@example.com"
   git config --global user.name "Your Name"
   ```
+
+### Tearing Down the test
+ - In order to clean all the created virtual machines and deployed cloud spaces:
+
+  ```
+  cd G8_testing/performance_testing/scripts
+  python3 cleanup_vms.py --{provide needed parameters}
+  ```
+
+  **Following parameters are available**:
+
+  ```
+  -u USERNAME, --user=USERNAME
+                        username to login on the OVC api
+  -p PASSWORD, --pwd=PASSWORD
+                        password to login on the OVC api
+  -e ENVIRONMENT, --env=ENVIRONMENT
+                        environment to login on the OVC api
+  -n CONCURRENCY, --con=CONCURRENCY
+                        amount of concurrency to execute the job
+  ```
