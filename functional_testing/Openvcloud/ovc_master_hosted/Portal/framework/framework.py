@@ -1,6 +1,8 @@
-from functional_testing.Openvcloud.ovc_master_hosted.Portal.framework.pages.admin_portal.accounts import accounts
-from functional_testing.Openvcloud.ovc_master_hosted.Portal.framework.pages.admin_portal.cloudspaces import cloudspaces
-from functional_testing.Openvcloud.ovc_master_hosted.Portal.framework.pages.admin_portal.virtualmachines import virtualmachines
+from functional_testing.Openvcloud.ovc_master_hosted.Portal.framework.pages.admin_portal.cloud_broker.accounts import accounts
+from functional_testing.Openvcloud.ovc_master_hosted.Portal.framework.pages.admin_portal.cloud_broker.cloudspaces import cloudspaces
+from functional_testing.Openvcloud.ovc_master_hosted.Portal.framework.pages.admin_portal.cloud_broker.virtualmachines import virtualmachines
+from functional_testing.Openvcloud.ovc_master_hosted.Portal.framework.pages.admin_portal.grid.error_conditions import errorConditions
+
 
 from functional_testing.Openvcloud.ovc_master_hosted.Portal.framework.Navigation.left_navigation_menu import leftNavigationMenu
 from functional_testing.Openvcloud.ovc_master_hosted.Portal.framework.Navigation.right_navigation_menu import rightNavigationMenu
@@ -16,11 +18,14 @@ class Framework(BaseTest):
     def __init__(self, *args, **kwargs):
         super(Framework, self).__init__(*args, **kwargs)
 
-        #Pages.AdminPortal
+        #Pages.AdminPortal.Cloud_broker
         self.Users = users(self)
         self.Accounts = accounts(self)
         self.CloudSpaces = cloudspaces(self)
         self.VirtualMachines = virtualmachines(self)
+
+        #Pages.AdminPortal.grid
+        self.ErrorConditions = errorConditions(self)
 
         #pages.end_user
         self.EUHome = home(self)

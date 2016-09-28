@@ -4,10 +4,6 @@ from functional_testing.Openvcloud.ovc_master_hosted.Portal.framework.framework 
 
 
 class GridTests(Framework):
-
-    def __init__(self, *args, **kwargs):
-        super(GridTests, self).__init__(*args, **kwargs)
-
     def setUp(self):
         super(GridTests, self).setUp()
         self.Login.Login()
@@ -27,10 +23,7 @@ class GridTests(Framework):
         #. select All and click on confirm, and check that all ECS are deleted
         """
         self.lg('%s STARTED' % self._testID)
-
-        self.lg('click grid cruser then click on error condition')
-        self.click('grid_arrow')
-        self.click('Error_Conditions')
+        self.ErrorConditions.get_it()
 
         self.lg('check that all elements on error condition page exist')
         self.assertEqual(self.get_text("grid_portal_header1"),"Grid Portal")
@@ -84,6 +77,7 @@ class GridTests(Framework):
         self.click('action_purge_select')
         self.click('ALL_option')
         self.click('action_purge_confirm_button')
+        time.sleep(5)
         self.assertEqual(self.get_text("ec_table_no_data_text"),"No data available in table")
 
         self.lg('%s ENDED' % self._testID)

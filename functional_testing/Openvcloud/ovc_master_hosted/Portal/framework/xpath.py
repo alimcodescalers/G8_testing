@@ -117,7 +117,7 @@ elements = {'storage_menu': 'html/body/div[1]/div/div[1]/div/nav/div/ul/li[5]', 
             'action_purge_select': ".//*[@id='action-Purge']/div/div[2]/div[3]/div/select",
             'ec_table_header5': ".//*[@id='DataTables_Table_0']/thead/tr/th[5]",
             'purge_button': 'html/body/div[2]/div/div/div[1]/ul/li/a',
-            'Error_Conditions': ".//*[@id='collapse-4']/li[2]/a",
+            'error_conditions': ".//*[@id='collapse-4']/li[2]/a",
             'entries_select_option1': ".//*[@id='DataTables_Table_0_length']/label/select/option[1]",
             'entries_select': ".//*[@id='DataTables_Table_0_length']/label/select",
             'ec_table_header3': ".//*[@id='DataTables_Table_0']/thead/tr/th[3]",
@@ -480,5 +480,6 @@ elements = {'storage_menu': 'html/body/div[1]/div/div[1]/div/nav/div/ul/li[5]', 
             'cloudapi_images_list_btn': ".//*[@id='cloudapi__images_post_cloudapi_images_list']/div[1]/h3/span[1]/a",
             'cloudapi_images_list_accountid': ".//*[@id='cloudapi__images_post_cloudapi_images_list_content']/form/table/tbody/tr[1]/td[2]/input",
             'cloudapi_images_list_tryit': ".//*[@id='cloudapi__images_post_cloudapi_images_list_content']/form/div[2]/input",
-            'cloudapi_images_list_body': ".//*[@id='cloudapi__images_post_cloudapi_images_list_content']/div[3]/div[2]/pre/code"
+            'cloudapi_images_list_body': ".//*[@id='cloudapi__images_post_cloudapi_images_list_content']/div[3]/div[2]/pre/code",
+            "error_conditions_page":"html/body/div[2]/div/div/h2"
             }
