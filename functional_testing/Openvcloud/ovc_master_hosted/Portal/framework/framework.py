@@ -1,14 +1,15 @@
-from functional_testing.Openvcloud.ovc_master_hosted.Portal.framework.Navigation.left_navigation_menu import leftNavigationMenu
-from functional_testing.Openvcloud.ovc_master_hosted.Portal.framework.Navigation.right_navigation_menu import rightNavigationMenu
 from functional_testing.Openvcloud.ovc_master_hosted.Portal.framework.pages.admin_portal.accounts import accounts
 from functional_testing.Openvcloud.ovc_master_hosted.Portal.framework.pages.admin_portal.cloudspaces import cloudspaces
-from functional_testing.Openvcloud.ovc_master_hosted.Portal.framework.pages.admin_portal.users import users
 from functional_testing.Openvcloud.ovc_master_hosted.Portal.framework.pages.admin_portal.virtualmachines import virtualmachines
+
+from functional_testing.Openvcloud.ovc_master_hosted.Portal.framework.Navigation.left_navigation_menu import leftNavigationMenu
+from functional_testing.Openvcloud.ovc_master_hosted.Portal.framework.Navigation.right_navigation_menu import rightNavigationMenu
+from functional_testing.Openvcloud.ovc_master_hosted.Portal.framework.pages.admin_portal.cloud_broker.users import users
+from functional_testing.Openvcloud.ovc_master_hosted.Portal.framework.pages.end_user_portal.home import home
+from functional_testing.Openvcloud.ovc_master_hosted.Portal.framework.pages.end_user_portal.machines import machines
 from functional_testing.Openvcloud.ovc_master_hosted.Portal.framework.utils.utils import BaseTest
 from functional_testing.Openvcloud.ovc_master_hosted.Portal.framework.workflow.login import login
 from functional_testing.Openvcloud.ovc_master_hosted.Portal.framework.workflow.logout import logout
-from functional_testing.Openvcloud.ovc_master_hosted.Portal.framework.pages.end_user_portal.home import home
-from functional_testing.Openvcloud.ovc_master_hosted.Portal.framework.pages.end_user_portal.machines import machines
 
 
 class Framework(BaseTest):

@@ -1,19 +1,16 @@
 import re
 import time
-import unittest
-
-from functional_testing.Openvcloud.ovc_master_hosted.Portal.framework.utils.utils import BaseTest
+from functional_testing.Openvcloud.ovc_master_hosted.Portal.framework.framework import Framework
 
 
-@unittest.skip("Need Edits")
-class GridTests(BaseTest):
+class GridTests(Framework):
 
     def __init__(self, *args, **kwargs):
         super(GridTests, self).__init__(*args, **kwargs)
 
     def setUp(self):
         super(GridTests, self).setUp()
-        self.login()
+        self.Login.Login()
 
     def test001_error_condition_page(self):
 

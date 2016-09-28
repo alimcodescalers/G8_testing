@@ -1,4 +1,3 @@
-from functional_testing.Openvcloud.ovc_master_hosted.Portal.framework.pages.admin_portal.cloudspaces import cloudspaces
 import uuid
 
 class virtualmachines():

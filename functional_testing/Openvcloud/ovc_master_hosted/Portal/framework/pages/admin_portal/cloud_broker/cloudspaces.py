@@ -1,11 +1,11 @@
 import time
-from random import randint
+import uuid
+
 from selenium.common.exceptions import TimeoutException
-from functional_testing.Openvcloud.ovc_master_hosted.Portal.framework.utils.utils import BaseTest
+
 from functional_testing.Openvcloud.ovc_master_hosted.Portal.framework.Navigation.left_navigation_menu import \
     leftNavigationMenu
-from functional_testing.Openvcloud.ovc_master_hosted.Portal.framework.pages.admin_portal.accounts import accounts
-import uuid
+
 
 class cloudspaces():
     def __init__(self, framework):

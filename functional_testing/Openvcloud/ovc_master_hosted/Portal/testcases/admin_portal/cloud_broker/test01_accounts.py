@@ -5,7 +5,6 @@ from functional_testing.Openvcloud.ovc_master_hosted.Portal.framework.framework 
 class AccountsTests(Framework):
     def setUp(self):
         super(AccountsTests, self).setUp()
-        self.Login.GetIt()
         self.Login.Login(username=self.admin_username, password=self.admin_password)
         self.lg('Create new username, user:%s password:%s' % (self.username, self.password))
         self.Users.create_new_user(self.username, self.password, self.email, self.group)
