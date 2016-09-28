@@ -3,7 +3,7 @@ class AtYourService():
     def __init__(self, framework):
         self.framework = framework
 
-    pass
+    
 
 class CloudBroker():
     def __init__(self, framework):
@@ -44,7 +44,7 @@ class Statics():
     def __init__(self, framework):
         self.framework = framework
 
-    pass
+    
 
 class Grid():
 
@@ -59,21 +59,21 @@ class Storage():
     def __init__(self, framework):
         self.framework = framework
 
-    pass
+    
 
 class Systems():
 
     def __init__(self, framework):
         self.framework = framework
 
-    pass
+    
 
 class EndUser():
 
     def __init__(self, framework):
         self.framework = framework
 
-    pass
+    
 
 class leftNavigationMenu():
     def __init__(self, framework):

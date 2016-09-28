@@ -39,10 +39,12 @@ class GridTests(Framework):
         self.lg('check if show 10 and 25 entries works as expected')
         def wait_until_entries_info_change():
             match2 = re.search("(\d+)\s+of", self.get_text("ec_entries_info"))
-            while(int(match2.group(1)) == 10):
+            while int(match2.group(1)) == 10:
                 match2 = re.search("(\d+)\s+of", self.get_text("ec_entries_info"))
                 time.sleep(1)
 
+
+        print(str(float(self.get_size("ec_table_body"))))
         table_body_height_10 = float(self.get_size("ec_table_body")['height'])
         table_row_height = float(self.get_size("ec_table_row")['height'])
         match = re.search("([\d]*[,]*[\d]*)\s+entries", self.get_text("ec_entries_info"))
@@ -74,11 +76,14 @@ class GridTests(Framework):
         self.click('purge_button')
 
         self.lg('select All and click on confirm, and check that all ECS are deleted')
-        self.click('action_purge_select')
-        self.click('ALL_option')
         self.click('action_purge_confirm_button')
-        time.sleep(5)
-        self.assertEqual(self.get_text("ec_table_no_data_text"),"No data available in table")
+        for _ in range(10):
+            if self.get_text("ec_table_no_data_text") != "No data available in table":
+                time.sleep(1)
+            else:
+                return True
+        else:
+            return False
 
         self.lg('%s ENDED' % self._testID)
 
