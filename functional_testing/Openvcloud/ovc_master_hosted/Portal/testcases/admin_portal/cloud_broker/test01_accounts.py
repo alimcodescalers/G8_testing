@@ -8,9 +8,7 @@ class AccountsTests(Framework):
         self.Login.Login(username=self.admin_username, password=self.admin_password)
         self.lg('Create new username, user:%s password:%s' % (self.username, self.password))
         self.Users.create_new_user(self.username, self.password, self.email, self.group)
-        self.lg('create new account %s' % self.account)
-        self.Accounts.create_new_account(self.account, self.username)
-        self.Accounts.open_account_page(self.account)
+
 
     def test01_edit_account(self):
         """ PRTL-023
@@ -21,6 +19,9 @@ class AccountsTests(Framework):
         #. search for it and verify it should succeed
         #. edit account parameters and verify it should succeed
         """
+        self.lg('create new account %s' % self.account)
+        self.Accounts.create_new_account(self.account, self.username)
+        self.Accounts.open_account_page(self.account)
         self.assertTrue(self.Accounts.account_edit_all_items(self.account))
 
     @unittest.skip("bug# 431")
@@ -34,14 +35,34 @@ class AccountsTests(Framework):
         #. disable account and verify it should succeed
         #. enable account and verify it should succeed
         """
-
+        self.lg('create new account %s' % self.account)
+        self.Accounts.create_new_account(self.account, self.username)
+        self.Accounts.open_account_page(self.account)
         self.assertTrue(self.Accounts.account_disable(self.account))
         self.assertTrue(self.Accounts.account_edit_all_items(self.account))
         self.assertTrue(self.Accounts.account_enable(self.account))
         self.assertTrue(self.Accounts.account_edit_all_items(self.account))
 
+    def test03_add_account_with_decimal_limitations(self):
+        """ PRTL-026
+        *Test case to make sure that creating account with decimal limitations working as expected*
+
+        **Test Scenario:**
+        #. create account with decimal limitations.
+        #. search for it and verify it should succeed
+        """
+        self.lg('%s STARTED' % self._testID)
+        self.lg('create new account %s with decimal limitations' % self.account)
+        max_memory = '3.5'
+        self.Accounts.create_new_account(self.account, self.username, max_memory=max_memory)
+        self.Accounts.open_account_page(self.account)
+        account_maxmemory = self.get_text("account_page_maxmemory")
+        self.assertTrue(account_maxmemory.startswith(max_memory), "Account max memory is [%s]"
+                        " and expected is [%s]" % (account_maxmemory, max_memory))
+        self.lg('%s ENDED' % self._testID)
+
     '''
-    def test02_account_page_paging_table_sorting(self):
+    def test03_account_page_paging_table_sorting(self):
         """ PRTL-000
         *Test case to make sure that paging and sorting of accounts page are working as expected*
 
@@ -52,4 +73,3 @@ class AccountsTests(Framework):
         #. try sorting for all fields and verify it should succeed
         """
     '''
-
