@@ -134,10 +134,10 @@ class BaseTest(unittest.TestCase):
             try:
                 self.wait.until(EC.text_to_be_present_in_element((By.XPATH, xpath), text))
                 return True
-            except (TimeoutException, StaleElementReferenceException):
+            except:
                 time.sleep(1)
         else:
-            self.assertEqual(self.driver.find_element_by_xpath(xpath).text, text)
+            return False
 
     def wait_unti_element_clickable(self, name):
         for temp in range(10):

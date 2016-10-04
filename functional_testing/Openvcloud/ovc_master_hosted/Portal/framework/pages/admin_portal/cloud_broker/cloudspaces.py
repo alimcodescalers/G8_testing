@@ -50,7 +50,7 @@ class cloudspaces():
         self.framework.lg('open %s cloudspace' % cloudspace)
         self.open_cloudspace_page(cloudspace)
         if self.framework.get_text("cloudspace_page_status") != "DESTROYED":
-            self.framework.lg('delete "%s" cloudspace' % cloudspace)
+            self.framework.lg('start deleting "%s" cloudspace' % cloudspace)
             self.framework.click('cloudspace_action')
             if self.framework.get_text("cloudspace_page_status") == "DEPLOYED":
                 self.framework.click('cloudspace_delete_deployed')
@@ -62,11 +62,9 @@ class cloudspaces():
             time.sleep(0.5)
             self.framework.get_page(self.framework.driver.current_url)
             for temp in range(10):
-                try:
-                    self.framework.wait_until_element_located_and_has_text(self.framework.elements["cloudspace_page_status"], "DESTROYED")
+                if self.framework.wait_until_element_located_and_has_text(self.framework.elements["cloudspace_page_status"], "DESTROYED"):
                     return True
-                except TimeoutException:
-                    time.sleep(1)
+                else:
                     self.framework.get_page(self.framework.driver.current_url)
             else:
                 self.framework.fail("Can't delete this '%s' cloudspcae")
