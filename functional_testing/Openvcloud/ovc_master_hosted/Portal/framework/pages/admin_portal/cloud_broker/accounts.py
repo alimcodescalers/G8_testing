@@ -91,9 +91,17 @@ class accounts():
                 value = randint(1, 100)
                 self.account_edit(self.framework.account, item, value)
                 xpath = self.framework.elements['account_action_page_items'] % edit_items.index(item)
-                if str(value) not in self.framework.driver.find_element_by_xpath(xpath).text:
-                    self.framework.lg("FAIL : %d no in %s" % (value,self.framework.driver.find_element_by_xpath(xpath).text))
-                    return False
+                try:
+                    for _ in range(10):
+                        if str(value) not in self.framework.driver.find_element_by_xpath(xpath).text:
+                            time.sleep(0.5)
+                        else:
+                            break
+                    else:
+                        self.framework.lg("FAIL : %d no in %s" % (value,self.framework.driver.find_element_by_xpath(xpath).text))
+                        return False
+                except:
+                    pass #ignor silence
         return True
 
     def account_disable(self, account):

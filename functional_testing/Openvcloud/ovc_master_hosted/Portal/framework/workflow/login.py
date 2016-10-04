@@ -36,5 +36,6 @@ class login():
         self.framework.set_text('username_textbox', username)
         self.framework.set_text('password_textbox', password)
         self.framework.click('login_button')
+        self.framework.assertEqual(self.framework.get_text("home"), "Home",
+                                   "Fail: can't login using %s:%s" % (username, password))
         self.framework.lg('Login successfully using username [%s] and passsword [%s]' % (username, password))
-

@@ -49,12 +49,12 @@ class cloudspaces():
 
         self.framework.lg('open %s cloudspace' % cloudspace)
         self.open_cloudspace_page(cloudspace)
-        if self.framework.driver.find_element_by_xpath(self.framework.elements["cloudspace_page_status"]).text != "DESTROYED":
+        if self.framework.get_text("cloudspace_page_status") != "DESTROYED":
             self.framework.lg('delete "%s" cloudspace' % cloudspace)
             self.framework.click('cloudspace_action')
-            if self.framework.driver.find_element_by_xpath(self.framework.elements["cloudspace_page_status"]).text == "DEPLOYED":
+            if self.framework.get_text("cloudspace_page_status") == "DEPLOYED":
                 self.framework.click('cloudspace_delete_deployed')
-            elif self.framework.driver.find_element_by_xpath(self.framework.elements["cloudspace_page_status"]).text == "VIRTUAL":
+            elif self.framework.get_text("cloudspace_page_status") == "VIRTUAL":
                 self.framework.click('cloudspace_delete_virtual')
 
             self.framework.set_text('cloudspace_delete_reason', "Test")
