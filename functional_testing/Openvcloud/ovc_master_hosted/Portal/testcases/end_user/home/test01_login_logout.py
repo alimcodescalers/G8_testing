@@ -19,6 +19,7 @@ class LoginLogoutPortalTests(Framework):
         """
         self.lg('%s STARTED' % self._testID)
         self.lg('check the login page title, should succeed')
+        self.Login.GetIt()
         self.assertEqual(self.driver.title, 'Green IT Globe Login')
         self.lg('do login using admin username/password, should succeed')
         self.Login.Login()
