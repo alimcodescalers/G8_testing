@@ -41,9 +41,8 @@ class virtualmachines():
         self.framework.assertTrue(self.framework.check_element_is_exist('virtual machine search'),
                                   "FAIL: Can't create virtual machine")
         self.framework.set_text('virtual machine search', machine_name)
-        self.framework.wait_until_element_located_and_has_text(
-            self.framework.elements["virtual_machine_table_first_element"],
-            machine_name)
+        self.framework.wait_until_element_located_and_has_text("virtual_machine_table_first_element",
+                                                               machine_name)
 
     def open_virtual_machine_page(self, cloudspace='', machine_name=''):
         cloudspace = cloudspace
@@ -54,9 +53,8 @@ class virtualmachines():
 
         self.framework.lg('open %s virtual machine' % machine_name)
         self.framework.set_text('virtual machine search', machine_name)
-        self.framework.wait_until_element_located_and_has_text(
-            self.framework.elements["virtual_machine_table_first_element"],
-            machine_name)
+        self.framework.wait_until_element_located_and_has_text("virtual_machine_table_first_element",
+                                                               machine_name)
         vm_id = self.framework.get_text("virtual_machine_table_first_element_2")[3:]
         self.framework.click('virtual_machine_table_first_element')
         self.framework.element_in_url(vm_id)
@@ -73,5 +71,5 @@ class virtualmachines():
         self.framework.click('virtual_machine_delete')
         self.framework.set_text('virtual_machine_delete_reason', "Test")
         self.framework.click("virtual_machine_delete_confirm")
-        self.framework.wait_until_element_located_and_has_text(self.framework.elements["virtual_machine_page_status"],
+        self.framework.wait_until_element_located_and_has_text("virtual_machine_page_status",
                                                                "DESTROYED")

@@ -4,6 +4,7 @@ from functional_testing.Openvcloud.ovc_master_hosted.Portal.framework.Navigation
     leftNavigationMenu
 import uuid
 
+
 class accounts():
     def __init__(self, framework):
         self.framework = framework
@@ -25,7 +26,7 @@ class accounts():
         self.framework.click("account_confirm")
 
         self.framework.set_text("account_search", account)
-        self.framework.wait_until_element_located_and_has_text(self.framework.elements["account_table_first_element"], account)
+        self.framework.wait_until_element_located_and_has_text("account_table_first_element", account)
 
         self.framework.CLEANUP["accounts"].append(account)
         if account == '':
@@ -37,7 +38,7 @@ class accounts():
         self.LeftNavigationMenu.CloudBroker.Accounts()
 
         self.framework.set_text("account_search", account)
-        self.framework.wait_until_element_located_and_has_text(self.framework.elements["account_table_first_element"], account)
+        self.framework.wait_until_element_located_and_has_text("account_table_first_element", account)
 
         account_id = self.framework.get_text("account_first_id")
         self.framework.click("account_first_id")
@@ -45,7 +46,7 @@ class accounts():
 
     def account_edit(self, account, edit_item, edit_value):
         try:
-            self.framework.wait_until_element_located_and_has_text(self.framework.elements["account_name_value"], account)
+            self.framework.wait_until_element_located_and_has_text("account_name_value", account)
         except:
             self.open_account_page(account)
 
@@ -60,7 +61,7 @@ class accounts():
                       'Max Number of Public IP Addresses']
         for item in edit_items:
             if item == edit_item:
-                xpath = self.framework.elements['account_action_edit_page_items'] % (edit_items.index(item) + 1)
+                xpath = self.framework.elements['account_action_edit_page_items'][1] % (edit_items.index(item) + 1)
                 break
         else:
             self.framework.fail("%s isn't an item in the list" % edit_item)
@@ -85,12 +86,13 @@ class accounts():
                 self.framework.CLEANUP["accounts"].append(self.framework.account)
                 time.sleep(0.5)
                 if value not in self.framework.get_text('account_name_value'):
-                    self.framework.lg("FAIL : %s not in the account name: %s" % (value, self.framework.get_text('account_name_value')))
+                    self.framework.lg("FAIL : %s not in the account name: %s" % (
+                    value, self.framework.get_text('account_name_value')))
                     return False
             else:
                 value = randint(1, 100)
                 self.account_edit(self.framework.account, item, value)
-                xpath = self.framework.elements['account_action_page_items'] % edit_items.index(item)
+                xpath = self.framework.elements['account_action_page_items'][1] % edit_items.index(item)
                 try:
                     for _ in range(10):
                         if str(value) not in self.framework.driver.find_element_by_xpath(xpath).text:
@@ -98,20 +100,22 @@ class accounts():
                         else:
                             break
                     else:
-                        self.framework.lg("FAIL : %d no in %s" % (value,self.framework.driver.find_element_by_xpath(xpath).text))
+                        self.framework.lg(
+                            "FAIL : %d no in %s" % (value, self.framework.driver.find_element_by_xpath(xpath).text))
                         return False
                 except:
-                    pass #ignor silence
+                    pass  # ignor silence
         return True
 
     def account_disable(self, account):
         try:
-            self.framework.wait_until_element_located_and_has_text(self.framework.elements["account_name_value"], account)
+            self.framework.wait_until_element_located_and_has_text("account_name_value", account)
         except:
             self.LeftNavigationMenu.CloudBroker.Accounts()
 
         if self.framework.get_text("account_page_status") != "CONFIRMED":
-            self.framework.lg("FAIL : %s account status : %s" % (account, self.framework.get_text("account_page_status")))
+            self.framework.lg(
+                "FAIL : %s account status : %s" % (account, self.framework.get_text("account_page_status")))
             return False
 
         self.framework.click('account_action')
@@ -129,12 +133,13 @@ class accounts():
 
     def account_enable(self, account):
         try:
-            self.framework.wait_until_element_located_and_has_text(self.framework.elements["account_name_value"], account)
+            self.framework.wait_until_element_located_and_has_text("account_name_value", account)
         except:
             self.LeftNavigationMenu.CloudBroker.Accounts()
 
         if self.framework.get_text("account_page_status") != "DISABLED":
-            self.framework.lg("FAIL : %s account status : %s" % (account, self.framework.get_text("account_page_status")))
+            self.framework.lg(
+                "FAIL : %s account status : %s" % (account, self.framework.get_text("account_page_status")))
             return False
 
         self.framework.click('account_action')
@@ -157,16 +162,18 @@ class accounts():
         self.framework.lg('open %s account' % account)
         self.open_account_page(account)
 
-        if self.framework.driver.find_element_by_xpath(self.framework.elements["account_page_status"]).text in ["CONFIRMED", "DISABLED"]:
+        if self.framework.driver.find_element_by_xpath(self.framework.elements["account_page_status"]).text in [
+            "CONFIRMED", "DISABLED"]:
             self.framework.lg('delete %s account' % account)
             self.framework.click('account_action')
             self.framework.click('account_delete')
             self.framework.set_text('account_delete_reason', "Test")
             self.framework.click("account_delete_confirm")
-            self.framework.wait_until_element_located_and_has_text(self.framework.elements["account_page_status"],
-                                                         "DESTROYED")
+            self.framework.wait_until_element_located_and_has_text("account_page_status",
+                                                                   "DESTROYED")
             self.framework.CLEANUP['accounts'].remove(account)
-        elif self.framework.driver.find_element_by_xpath(self.framework.elements["account_page_status"]).text == "DESTROYED":
+        elif self.framework.driver.find_element_by_xpath(
+                self.framework.elements["account_page_status"]).text == "DESTROYED":
             self.framework.lg('%s account is already deleted' % account)
         else:
             self.framework.fail('"%s" account status has an error in the page' % account)

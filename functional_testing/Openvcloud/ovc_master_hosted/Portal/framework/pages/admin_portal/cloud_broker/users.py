@@ -33,7 +33,7 @@ class users():
 
         xpath_user_group = ''
         for i in range(1, 100):
-            xpath_user_group = self.framework.elements["user_group"] % i
+            xpath_user_group = self.framework.elements["user_group"][1] % i
             if group == self.framework.driver.find_element_by_xpath(xpath_user_group).text:
                 break
         user_group = self.framework.driver.find_element_by_xpath(xpath_user_group)
@@ -43,7 +43,7 @@ class users():
         self.framework.click("confirm_add_user")
         time.sleep(1)
         self.framework.set_text("username_search", username)
-        self.framework.wait_until_element_located_and_has_text(self.framework.elements["username_table_first"], username)
+        self.framework.wait_until_element_located_and_has_text("username_table_first", username)
         self.framework.CLEANUP["users"].append(username)
 
     def open_user_page(self, username=''):
@@ -51,7 +51,7 @@ class users():
         self.LeftNavigationMenu.CloudBroker.Users()
 
         self.framework.set_text("username_search", username)
-        self.framework.wait_until_element_located_and_has_text(self.framework.elements["username_table_first"], username)
+        self.framework.wait_until_element_located_and_has_text("username_table_first", username)
         username_id = self.framework.get_text("username_table_first")
 
         self.framework.click("username_table_first")
@@ -62,7 +62,7 @@ class users():
 
         self.framework.set_text("user_search", username)
         self.framework.lg("check if this user is exist")
-        if self.framework.wait_until_element_located_and_has_text(self.framework.elements["username_table_first"],username):
+        if self.framework.wait_until_element_located_and_has_text("username_table_first",username):
             self.framework.lg("Delete %s user" % username)
             time.sleep(1)
             self.framework.assertEqual(self.framework.get_text("user_table_first_element"),username)

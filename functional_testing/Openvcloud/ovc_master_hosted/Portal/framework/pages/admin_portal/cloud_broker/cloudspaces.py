@@ -29,8 +29,8 @@ class cloudspaces():
         self.framework.click("cloud_space_confirm")
 
         self.framework.set_text("cloud_space_search", self.framework.cloud_space_name)
-        self.framework.wait_until_element_located_and_has_text(self.framework.elements["cloud_space_table_first_element_2"],
-                                                     self.framework.cloud_space_name)
+        self.framework.wait_until_element_located_and_has_text("cloud_space_table_first_element_2",
+                                                               self.framework.cloud_space_name)
         self.framework.lg(" %s cloudspace is created" % self.framework.cloud_space_name)
         return self.framework.cloud_space_name
 
@@ -38,8 +38,8 @@ class cloudspaces():
         cloudspace = cloudspace
         self.LeftNavigationMenu.CloudBroker.CloudSpaces()
         self.framework.set_text("cloud_space_search", cloudspace)
-        self.framework.wait_until_element_located_and_has_text(self.framework.elements["cloud_space_table_first_element_2"],
-                                                     cloudspace)
+        self.framework.wait_until_element_located_and_has_text("cloud_space_table_first_element_2",
+                                                               cloudspace)
         cloudspace_id = self.framework.get_text("cloud_space_table_first_element_1")
         self.framework.click("cloud_space_table_first_element_1")
         self.framework.element_in_url(cloudspace_id)
@@ -62,7 +62,7 @@ class cloudspaces():
             time.sleep(0.5)
             self.framework.get_page(self.framework.driver.current_url)
             for temp in range(10):
-                if self.framework.wait_until_element_located_and_has_text(self.framework.elements["cloudspace_page_status"], "DESTROYED"):
+                if self.framework.wait_until_element_located_and_has_text("cloudspace_page_status", "DESTROYED"):
                     return True
                 else:
                     self.framework.get_page(self.framework.driver.current_url)

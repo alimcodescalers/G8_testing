@@ -21,7 +21,7 @@ class login():
 
     def IsAt(self):
         for temp in range(5):
-            if self.framework.wait_until_element_located(self.framework.elements["username_textbox"]):
+            if self.framework.wait_until_element_located("username_textbox"):
                 return True
             else:
                 self.framework.driver.refresh()
