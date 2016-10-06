@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 from gevent import monkey
 monkey.patch_all()
-from libtest import run_cmd_via_gevent, check_remote_is_listening, safe_get_vm, check_package, push_results_to_repo
+from libtest import run_cmd_via_gevent, wait_until_remote_is_listening, safe_get_vm, check_package, push_results_to_repo
 import gevent
 from gevent.lock import BoundedSemaphore
 import signal
@@ -9,13 +9,15 @@ from optparse import OptionParser
 import os
 import datetime
 
+machines_running = set()
+machines_complete = set()
 
 def prepare_fio_test(ovc, options, machine_id, publicip, publicport):
     print("Preparing fio test on machine {}".format(machine_id))
     machine = safe_get_vm(ovc, concurrency, machine_id)
     account = machine['accounts'][0]
 
-    check_remote_is_listening(publicip, int(publicport))
+    wait_until_remote_is_listening(publicip, int(publicport), True, machine_id)
 
     templ = 'sshpass -p{} scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null '
     templ += '-P {} {}/1_fio_vms/Machine_script.py  {}@{}:'
@@ -26,6 +28,7 @@ def prepare_fio_test(ovc, options, machine_id, publicip, publicport):
 
 
 def fio_test(options, machine_id, publicip, publicport, account):
+    machines_running.add(machine_id)
     # only one data disk for this test
     disks_num = 1
     templ = 'sshpass -p "{}" ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p {} {}@{} '
@@ -36,6 +39,12 @@ def fio_test(options, machine_id, publicip, publicport, account):
                        options.direct_io, options.rwmixwrite, options.rate_iops, options.numjobs)
     print('FIO testing has been started on machine: {}'.format(machine_id))
     run_cmd_via_gevent(cmd)
+    machines_complete.add(machine_id)
+    running = machines_running.difference(machines_complete)
+    complete = (len(machines_running) - len(running)) / len(machines_running) * 100.0
+    print('Testing completed for {:.2f}%'.format(complete))
+    if complete >= 90.0:
+        print('Waiting for machines {} to complete their test ...'.format(' '.join(str(x) for x in running)))
 
     return account, publicport, publicip, machine_id
 

@@ -126,12 +126,14 @@ def main():
         if j.startswith('machine'):
             os.chdir(j)
 
-            file = open('cpuload.txt', 'r')
-            f=file.read()
-            cpuload = re.finditer(r'all\s+[\d.]+\s+[\d.]+\s+[\d.]+\s+[\d.]+\s+[\d.]+'
-                                  r'\s+[\d.]+\s+[\d.]+\s+[\d.]+\s+[\d.]+\s+([\d.]+)', f)
-            total_cpuload = [100-float(s.group(1)) for s in cpuload]
-            avg_total_cpuload = round(sum(total_cpuload)/len(total_cpuload), 1)
+            avg_total_cpuload = 0
+            if os.path.exists('cpuload.txt'):
+                file = open('cpuload.txt', 'r')
+                f=file.read()
+                cpuload = re.finditer(r'all\s+[\d.]+\s+[\d.]+\s+[\d.]+\s+[\d.]+\s+[\d.]+'
+                                      r'\s+[\d.]+\s+[\d.]+\s+[\d.]+\s+[\d.]+\s+([\d.]+)', f)
+                total_cpuload = [100-float(s.group(1)) for s in cpuload]
+                avg_total_cpuload = round(sum(total_cpuload)/len(total_cpuload), 1)
 
             iops_list=[]
             disks_runtime=[]

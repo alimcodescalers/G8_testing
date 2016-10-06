@@ -36,7 +36,7 @@ def run_cmd_via_gevent(cmd):
         raise RuntimeError("Failed to execute command.\n\ncommand:\n{}\n\n".format(cmd, error_output))
 
 
-def wait_until_remote_is_listening(address, port):
+def wait_until_remote_is_listening(address, port, report_failure=False, machine_name='unknown'):
     import socket
     while True:
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -44,21 +44,10 @@ def wait_until_remote_is_listening(address, port):
             s.connect((address, port))
             s.close()
             break
-        except ConnectionAbortedError:
+        except (OSError, ConnectionAbortedError, ConnectionRefusedError, TimeoutError):
+            if report_failure:
+                print("Waiting for machine {} to accept connections on {}:{}".format(machine_name, address, port))
             gevent.sleep(1)
-        except ConnectionRefusedError:
-            gevent.sleep(1)
-        except TimeoutError:
-            gevent.sleep(1)
-        s.close()
-
-
-def check_remote_is_listening(address, port):
-    import socket
-    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    try:
-        s.connect((address, port))
-    finally:
         s.close()
 
 
