@@ -78,17 +78,15 @@ class BaseTest(unittest.TestCase):
     def lg(self, msg):
         self._logger.info(msg)
 
-    def find_element(self, element, item_order=-1):
+    def find_element(self, element):
         method = self.elements[element][0]
         value = self.elements[element][1]
-        if method in ['XPATH','ID']:
+        if method in ['XPATH','ID', 'LINK_TEXT']:
             element_value = self.driver.find_element(getattr(By, method), value)
-        elif method in ['CLASS','By.NAME']:
-            elements_value = self.driver.find_element(getattr(By, method), value)
-            if item_order != -1:
-                element_value = elements_value[item_order]
-            else:
-                self.fail("please set item order for %s method" % method)
+        elif method in ['CLASS_NAME','NAME']:
+            item_order = self.elements[element][2]
+            elements_value = self.driver.find_elements(getattr(By, method), value)
+            element_value = elements_value[item_order]
         else:
             self.fail("This %s method isn't defined" % method)
         return element_value

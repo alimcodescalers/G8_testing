@@ -4,7 +4,7 @@ from nose_parameterized import parameterized
 from functional_testing.Openvcloud.ovc_master_hosted.Portal.framework.framework import Framework
 
 
-@unittest.skip("bug: #423")
+#@unittest.skip("bug: #423")
 class LoginLogoutPortalTests(Framework):
 
     def test001_login_and_portal_title(self):
