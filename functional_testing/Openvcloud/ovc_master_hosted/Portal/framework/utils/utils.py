@@ -94,10 +94,9 @@ class BaseTest(unittest.TestCase):
         return element_value
 
     def check_side_list(self):
-        element = self.elements["left_menu"]
         for temp in range(3):
             try:
-                if self.find_element(element).location["x"] < 0:
+                if self.find_element("left_menu").location["x"] < 0:
                     self.click("left_menu_button")
                 break
             except:

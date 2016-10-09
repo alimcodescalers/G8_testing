@@ -162,7 +162,7 @@ class accounts():
         self.framework.lg('open %s account' % account)
         self.open_account_page(account)
 
-        if self.framework.driver.find_element_by_xpath(self.framework.elements["account_page_status"]).text in [
+        if self.framework.driver.find_element_by_xpath(self.framework.elements["account_page_status"][1]).text in [
             "CONFIRMED", "DISABLED"]:
             self.framework.lg('delete %s account' % account)
             self.framework.click('account_action')
