@@ -33,8 +33,7 @@ class ChangePassword(Framework):
         self.Users.create_new_user(self.username, self.password, self.email, self.group)
         self.driver.ignore_synchronization = False
 
-        self.lg('Do logout')
-        self.click("admin_logout_button")
+        self.Logout.Admin_Logout()
 
         self.lg("login using the new username")
         self.driver.get(self.get_url())
@@ -66,10 +65,3 @@ class ChangePassword(Framework):
         self.click("end_user_logout")
         self.lg('%s ENDED' % self._testID)
 
-    def tearDown(self):
-        self.lg("login as admin")
-        self.Login.Login()
-
-        self.lg("Delete the user")
-        self.assertTrue(self.Users.delete_user(self.username))
-        super(ChangePassword, self).tearDown()

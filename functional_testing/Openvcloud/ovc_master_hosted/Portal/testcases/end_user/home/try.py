@@ -7,5 +7,4 @@ class LoginLogoutPortalTests(Framework):
 
     def test001_login_and_portal_title(self):
         self.Login.Login()
-        div = self.element_link("defense_shield_link")
-        print(div)
+        self.Logout.End_User_Logout()
