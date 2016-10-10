@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-from libtest import run_cmd_via_gevent, check_remote_is_listening, safe_get_vm, check_package, push_results_to_repo, get_logger
+from libtest import run_cmd_via_gevent, wait_until_remote_is_listening, safe_get_vm, check_package, push_results_to_repo, get_logger
 import gevent
 from gevent.lock import BoundedSemaphore
 import signal
@@ -50,7 +50,7 @@ def prepare_unixbench_test(options, ovc, cpu_cores, machine_id, publicip, public
     machines[machine_id] = machine['name']
     account = machine['accounts'][0]
 
-    check_remote_is_listening(publicip, int(publicport))
+    wait_until_remote_is_listening(publicip, int(publicport), True, machine_id)
 
     # templ = 'sshpass -p{} scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null '
     # templ += '-P {} {}/2_Unixbench2_test/2_machine_script.py  {}@{}:'
