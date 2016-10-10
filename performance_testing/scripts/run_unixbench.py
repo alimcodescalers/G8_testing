@@ -11,6 +11,7 @@ import re
 import time
 matcher = re.compile(r'System Benchmarks Index Score\s+([\d.]+)')
 logger = get_logger('run_unixbench')
+machines = dict()
 
 
 def results_on_csvfile(csv_file_name, result_dir, table_string):
@@ -31,7 +32,7 @@ def results_on_csvfile(csv_file_name, result_dir, table_string):
         writer.writerows(result)
 
 
-def collect_results(titles, results, result_dir):
+def collect_results(titles, results, result_dir, filename):
     # collects results in a table
     from prettytable import PrettyTable
     table = PrettyTable(titles)
@@ -40,13 +41,13 @@ def collect_results(titles, results, result_dir):
     table_txt = table.get_string()
     with open('{}/results.table'.format(result_dir), 'a') as file:
         file.write('\n{}'.format(table_txt))
-    match = re.search('/(201.+)', result_dir)
-    results_on_csvfile(match.group(1), result_dir, table_txt)
+    results_on_csvfile(filename, result_dir, table_txt)
 
 
 def prepare_unixbench_test(options, ovc, cpu_cores, machine_id, publicip, publicport):
     print("Preparing unixbench test on machine {}".format(machine_id))
     machine = safe_get_vm(ovc, concurrency, machine_id)
+    machines[machine_id] = machine['name']
     account = machine['accounts'][0]
 
     check_remote_is_listening(publicip, int(publicport))
@@ -60,7 +61,7 @@ def prepare_unixbench_test(options, ovc, cpu_cores, machine_id, publicip, public
 
 
 def unixbench_test(options, count, machine_id, publicip, publicport, account, cpu_cores):
-    gevent.sleep(options.time_interval*count)
+    gevent.sleep(options.time_interval * count)
     print('unixbench testing has been started on machine: {}'.format(machine_id))
     templ = 'sshpass -p "{}" ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p {} {}@{} '
     templ += ' "cd /home/cloudscalers/UnixBench; echo {} | sudo -S ./Run -c {} -i 1"'
@@ -78,12 +79,12 @@ def unixbench_test(options, count, machine_id, publicip, publicport, account, cp
                 break
         if match:
             result = float(match.group(1))
-            results.append(result)
+            results.append((time.time(), result))
             print("Machine {} reports score of {}".format(machine_id, result))
         else:
             logger.error("Unixbench did not return result:\n\n{}".format(output))
 
-    return machine_id, sum(results) / len(results)
+    return machine_id, sum((r[1] for r in results)) / len(results), results
 
 
 def main(options):
@@ -141,13 +142,20 @@ def main(options):
 
     raw_results = [job.value for job in run_jobs if job.value]
     raw_results.sort(key=lambda x: x[1])
-    results = []
+    results = list()
     index = 0
     for s in raw_results:
         index += 1
-        results.append([index, s[0], cpu, memory, bootdisk, s[1]])
+        results.append([index, '{} (id={})'.format(machines.get(s[0], s[0]), s[0]), cpu, memory, bootdisk, s[1]])
     titles = ['Index', 'VM', 'CPU\'s', 'Memory(MB)', 'HDD(GB)', 'Avg. Unixbench Score']
-    collect_results(titles, results, '%s' % results_dir)
+    collect_results(titles, results, results_dir, 'average-results')
+    titles = ['VM', 'Timestamp (epoch)', 'Score']
+    results = list()
+    for result in raw_results:
+        machine_id, avg_score, scores = result
+        for timestamp, score in scores:
+            results.append(['{} (id={})'.format(machines.get(machine_id, machine_id), machine_id), timestamp, score])
+    collect_results(titles, results, results_dir, 'all-results')
 
     # pushing results to env_repo
     location = options.environment.split('.')[0]
@@ -182,3 +190,4 @@ if __name__ == "__main__":
         gevent.signal(signal.SIGQUIT, gevent.kill)
         concurrency = BoundedSemaphore(options.concurrency)
         main(options)
+
