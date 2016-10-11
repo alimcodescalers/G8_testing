@@ -29,15 +29,22 @@ class machines():
         self.framework.click("disk_size_%i" % random_disk_size)
 
         self.framework.click("create_machine")
-        for temp in range(30):
+        for temp in range(50):
             if "console" in self.framework.get_url():
+                time.sleep(1)
                 break
             else:
                 time.sleep(1)
+        else:
+            self.framework.lg("FAIL : %s Machine can't create in 30 sec" % machine_name)
+            return False
 
-        if self.framework.get_text("machine_status") == "RUNNING":
-            self.framework.lg(' machine is created')
-            return True
+        for temp in range(50):
+            if self.framework.get_text("machine_status") == "RUNNING":
+                self.framework.lg(' machine is created')
+                return True
+            else:
+                time.sleep(1)
         else:
             self.framework.lg("FAIL : %s Machine isn't RUNNING" % machine_name)
             return False
@@ -45,9 +52,9 @@ class machines():
     def end_user_get_machine_page(self, machine_name=''):
         machine_name = machine_name
         self.framework.click("machines_button")
+        time.sleep(2)
         if self.framework.check_element_is_exist("end_user_machine_table"):
-            machine_table = self.framework.driver.find_element_by_xpath(
-                self.framework.elements["end_user_machine_table"])
+            machine_table = self.framework.find_element("end_user_machine_table")
             machine_table_rows = machine_table.find_elements_by_class_name("ng-scope")
 
             for row in machine_table_rows:
@@ -63,15 +70,16 @@ class machines():
                             time.sleep(1)
                         else:
                             break
-                    self.framework.assertIn(machine_name, self.framework.get_text("end_user_machine_name",
-                                                                                  "can't find %s machine in the table" % machine_name))
+                    self.framework.assertIn(machine_name, self.framework.get_text("end_user_machine_name"),
+                                            "can't find %s machine in the table" % machine_name)
                     break
             else:
                 self.framework.fail("can't find %s machine in the table" % machine_name)
+                return False
 
     def end_user_get_machine_info(self, machine_name=''):
-        self.framework.assertIn(machine_name, self.framework.get_text("end_user_machine_name",
-                                                                      "can't find %s machine in the table" % machine_name))
+        self.framework.assertIn(machine_name, self.framework.get_text("end_user_machine_name"),
+                                                                      "can't find %s machine in the table" % machine_name)
 
         if self.framework.check_element_is_exist("machine_description"):
             self.framework.machine_description = self.framework.get_text("machine_description")
@@ -85,12 +93,16 @@ class machines():
     def end_user_wait_machine(self, status):
         for _ in range(30):
             if self.framework.get_text("machine_status") == status:
-                break
-            time.sleep(1)
+                return True
+            else:
+                time.sleep(1)
+        else:
+            return False
 
     def end_user_verify_machine_elements(self, status):
         if self.framework.machine_description:
-            self.framework.assertEqual(self.framework.machine_description, self.framework.get_text("machine_description"))
+            self.framework.assertEqual(self.framework.machine_description,
+                                       self.framework.get_text("machine_description"))
         self.framework.assertEqual(status, self.framework.get_text("machine_status"))
         self.framework.assertEqual(self.framework.machine_ipaddress, self.framework.get_text("machine_ipaddress"))
         self.framework.assertEqual(self.framework.machine_osimage, self.framework.get_text("machine_osimage"))
@@ -99,22 +111,20 @@ class machines():
         self.framework.assertEqual(self.framework.machine_memory, self.framework.get_text("machine_memory"))
         self.framework.assertEqual(self.framework.machine_storage, self.framework.get_text("machine_storage"))
 
-
     def end_user_verify_machine_console(self, status):
         if status == 'RUNNING':
             self.framework.assertEqual(self.framework.get_text("console_message_running"),
-                             "Click the console screen or use the control buttons below to "
-                             "get access to the screen. In case of a black screen, hit any key "
-                             "to disable the screen saving mode of your virtual machine.")
+                                       "Click the console screen or use the control buttons below to "
+                                       "get access to the screen. In case of a black screen, hit any key "
+                                       "to disable the screen saving mode of your virtual machine.")
             self.framework.assertEqual(self.framework.get_text("console_ipaddress"), self.framework.machine_ipaddress)
             self.framework.assertTrue(self.framework.element_is_displayed("capture_button"))
             self.framework.assertTrue(self.framework.element_is_displayed("send_ctrl/alt/del_button"))
         else:
             self.framework.assertEqual(self.framework.get_text("console_message_halted"),
-                             "A machine must be started to access the console!")
+                                       "A machine must be started to access the console!")
             self.framework.assertFalse(self.framework.element_is_displayed("capture_button"))
             self.framework.assertFalse(self.framework.element_is_displayed("send_ctrl/alt/del_button"))
-
 
     def end_user_start_machine(self, machine):
         self.framework.click_link(machine)
@@ -123,7 +133,6 @@ class machines():
             time.sleep(30)
             self.framework.click("actions_tab")
             self.framework.click("refresh_button")
-
 
     def end_user_delete_virtual_machine(self, virtual_machine):
         self.framework.lg('Open end user home page')
@@ -135,11 +144,12 @@ class machines():
 
             if self.framework.check_element_is_exist("end_user_machine_table"):
                 self.framework.lg('Open the machine page to destroy it')
-                machine_table = self.framework.driver.find_element_by_xpath(self.framework.elements["end_user_machine_table"])
+                machine_table = self.framework.driver.find_element_by_xpath(
+                    self.framework.elements["end_user_machine_table"])
                 machine_table_rows = machine_table.find_elements_by_class_name("ng-scope")
 
                 for counter in range(len(machine_table_rows)):
-                    machine_name_xpath = self.framework.elements["end_user_machine_name_table"] % (counter+1)
+                    machine_name_xpath = self.framework.elements["end_user_machine_name_table"] % (counter + 1)
                     machine_name = self.framework.driver.find_element_by_xpath(machine_name_xpath)
                     if virtual_machine == machine_name.text:
                         machine_name.click()
@@ -169,7 +179,7 @@ class machines():
         self.framework.lg('Open end user home page')
         self.framework.get_page(self.framework.environment_url)
         if self.framework.check_element_is_exist("end_user_selected_account"):
-            print(account,self.framework.get_text("end_user_selected_account"))
+            print(account, self.framework.get_text("end_user_selected_account"))
             if account not in self.framework.get_text("end_user_selected_account"):
                 accounts_xpath = self.framework.elements["end_user_accounts_list"]
                 for temp in range(100):
