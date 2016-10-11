@@ -39,12 +39,14 @@ class machines():
             self.framework.lg("FAIL : %s Machine can't create in 30 sec" % machine_name)
             return False
 
+        time.sleep(5)
         for temp in range(50):
-            if self.framework.get_text("machine_status") == "RUNNING":
+            if self.framework.get_text("machine_ipaddress") != "Undefined":
                 self.framework.lg(' machine is created')
                 return True
             else:
-                time.sleep(1)
+                self.framework.click('refresh_button')
+                time.sleep(2)
         else:
             self.framework.lg("FAIL : %s Machine isn't RUNNING" % machine_name)
             return False

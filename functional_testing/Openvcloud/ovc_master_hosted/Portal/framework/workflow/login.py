@@ -10,9 +10,12 @@ class login():
         for temp in range(5):
             try:
                 self.framework.driver.get(self.framework.environment_url)
-                break
             except AngularNotFoundException:
                 time.sleep(1)
+            else:
+                self.framework.click('confirm_alert')
+                self.framework.click('landing_page_login')
+                break
         else:
             self.framework.fail('AngularNotFoundException')
         self.framework.driver.set_window_size(1920, 1080)

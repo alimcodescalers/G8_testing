@@ -15,7 +15,6 @@ class Write(Framework):
         self.EUMachines.end_user_get_machine_page(machine_name=self.machine_name)
         self.EUMachines.end_user_get_machine_info(machine_name=self.machine_name)
 
-    @unittest.skip('bug# 487')
     def test01_machine_stop_start_reboot_reset_pause_resume(self):
         """ PRTL-007
         *Test case for start/stop/reboot/reset/pause/resume machine.*
@@ -38,10 +37,9 @@ class Write(Framework):
 
         self.lg('stop machine, should succeed')
         self.click("machine_stop")
-        time.sleep(10)
-        self.EUMachines.end_user_wait_machine("HALTED")
+        self.assertTrue(self.EUMachines.end_user_wait_machine("HALTED"))
         self.click("console_tab")
-        self.EUMachines.end_user_verify_machine_console("HALTED")
+        #self.EUMachines.end_user_verify_machine_console("HALTED")
         self.click("actions_tab")
         self.EUMachines.end_user_wait_machine("HALTED")
         self.EUMachines.end_user_verify_machine_elements("HALTED")
@@ -51,8 +49,9 @@ class Write(Framework):
 
         self.lg('start machine, should succeed')
         self.click("machine_start")
-        self.EUMachines.end_user_wait_machine("RUNNING")
-        self.click("console_tab")
+        time.sleep(10)
+        self.driver.refresh()
+        self.click('console_tab')
         self.EUMachines.end_user_verify_machine_console("RUNNING")
         self.click("actions_tab")
         self.EUMachines.end_user_wait_machine("RUNNING")

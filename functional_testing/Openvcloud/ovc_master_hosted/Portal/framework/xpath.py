@@ -653,4 +653,6 @@ elements = {'snapshot_ok_button': ['XPATH', 'html/body/div[3]/form/div[3]/button
             'knowledge_base_line2_tab_line7_sub5': ['XPATH',
                                                     ".//*[@id='wrap']/div/tour/div[3]/div[2]/div/div/div/div[2]/ol/ol[1]/li[5]"],
             'knowledge_base_line4_tab_text3': ['XPATH',
-                                               ".//*[@id='wrap']/div/tour/div[2]/div[2]/div/div/div/div[4]/div[1]/textarea"]}
+                                               ".//*[@id='wrap']/div/tour/div[2]/div[2]/div/div/div/div[4]/div[1]/textarea"],
+            'confirm_alert':['CLASS_NAME', 'btn-primary', 0],
+            'landing_page_login':['LINK_TEXT', 'LOGIN']}
