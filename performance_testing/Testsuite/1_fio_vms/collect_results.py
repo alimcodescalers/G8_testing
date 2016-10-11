@@ -218,13 +218,13 @@ def main():
 
             # Info about disks per vm
             vm_bw_r.insert(0, "BW_R")
-            vm_slat_r_min.insert(0, "SLAT_R_MIN")
-            vm_slat_r_max.insert(0, "SLAT_R_MAX")
-            vm_slat_r_avg.insert(0, "SLAT_R_AVG")
+            vm_slat_r_min.insert(0, "SLAT_R_MIN (%s)"%slat_unit)
+            vm_slat_r_max.insert(0, "SLAT_R_MAX (%s)"%slat_unit)
+            vm_slat_r_avg.insert(0, "SLAT_R_AVG (%s)"%slat_unit)
             vm_bw_w.insert(0, "BW_W")
-            vm_slat_w_min.insert(0, "SLAT_W_MIN")
-            vm_slat_w_max.insert(0, "SLAT_W_MAX")
-            vm_slat_w_avg.insert(0, "SLAT_W_AVG")
+            vm_slat_w_min.insert(0, "SLAT_W_MIN (%s)"%slat_unit)
+            vm_slat_w_max.insert(0, "SLAT_W_MAX (%s)"%slat_unit)
+            vm_slat_w_avg.insert(0, "SLAT_W_AVG (%s)"%slat_unit)
 
             if read_match:
                 vm_disks_results.append(vm_bw_r)
