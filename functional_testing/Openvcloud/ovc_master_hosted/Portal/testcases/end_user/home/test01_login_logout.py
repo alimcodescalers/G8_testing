@@ -18,9 +18,6 @@ class LoginLogoutPortalTests(Framework):
         #. check the home page title, should succeed
         """
         self.lg('%s STARTED' % self._testID)
-        self.lg('check the login page title, should succeed')
-        self.Login.GetIt()
-        self.assertEqual(self.driver.title, 'Green IT Globe Login')
         self.lg('do login using admin username/password, should succeed')
         self.Login.Login()
         self.lg('check the home page title, should succeed')
@@ -31,13 +28,13 @@ class LoginLogoutPortalTests(Framework):
                          "Configure, launch and manage your Virtual Machines. "
                          "Automate using the simple API.")
         self.assertEqual(self.element_link("machines_link"),
-                        "%swiki_gcb/MachineDeck" % url)
+                        "%s/g8vdc/#/MachineDeck" % url)
         self.assertTrue(self.wait_element("defense_shield_pic"))
         self.assertEqual(self.get_text("defense_shield_label"),
                          "Your private Defense Shield providing privacy and secure "
                          "access to your Cloud Space.")
         self.assertEqual(self.element_link("defense_shield_link"),
-                        "%swiki_gcb/NetworkDeck" % url)
+                        "%s/g8vdc/#/NetworkDeck" % url)
         self.lg('%s ENDED' % self._testID)
 
     def test002_logout_and_portal_title(self):
@@ -55,16 +52,13 @@ class LoginLogoutPortalTests(Framework):
         #. check the home page title, should succeed
         """
         self.lg('%s STARTED' % self._testID)
-        self.lg('check the login page title, should succeed')
-        self.assertEqual(self.driver.title, 'Green IT Globe Login')
         self.lg('do login using admin username/password, should succeed')
         self.Login.Login()
         self.lg('check the home page title, should succeed')
         self.assertEqual(self.driver.title, 'OpenvCloud - Decks')
         self.lg('do logout, should succeed')
         self.Logout.End_User_Logout()
-        self.wait_element('login_button')
-        self.assertEqual(self.driver.title, 'Green IT Globe Login')
+        self.assertEqual(self.driver.title, 'OpenvCloud - Decks')
         self.lg('do login using admin username/password again, should succeed')
         self.Login.Login()
         self.lg('check the home page title, should succeed')
@@ -81,7 +75,6 @@ class LoginLogoutPortalTests(Framework):
 
         **Test Scenario:**
 
-        #. check the login page title, should succeed
         #. do login using wrong username, should fail
         #. proper error message, should succeed
         #. do login using admin username/password, should succeed
@@ -90,21 +83,13 @@ class LoginLogoutPortalTests(Framework):
         #. check the login page title, should succeed
         """
         self.lg('%s STARTED' % self._testID)
-        self.lg('check the login page title, should succeed')
-        self.assertEqual(self.driver.title, 'Green IT Globe Login')
         self.lg('do login using wrong , should succeed')
-        self.Login.Login(username=username)
-        error_message = self.get_text("error_message")
-        self.assertEqual(error_message, "The login or password you entered is incorrect.")
-        self.assertEqual(self.driver.title, 'Green IT Globe Login')
+        self.Login.LoginFail(username=username)
         self.lg('do login using admin username/password, should succeed')
         self.Login.Login()
-        self.lg('check the home page title, should succeed')
-        self.assertEqual(self.driver.title, 'OpenvCloud - Decks')
         self.lg('do logout, should succeed')
         self.Logout.End_User_Logout()
-        self.wait_element('login_button')
-        self.assertEqual(self.driver.title, 'Green IT Globe Login')
+        self.assertEqual(self.driver.title, 'OpenvCloud - Decks')
         self.lg('%s ENDED' % self._testID)
 
     @parameterized.expand([('normal password', str(uuid.uuid4())),
@@ -126,21 +111,13 @@ class LoginLogoutPortalTests(Framework):
         #. check the login page title, should succeed
         """
         self.lg('%s STARTED' % self._testID)
-        self.lg('check the login page title, should succeed')
-        self.assertEqual(self.driver.title, 'Green IT Globe Login')
         self.lg('do login using wrong , should succeed')
-        self.Login.Login(password=password)
-        error_message = self.get_text("error_message")
-        self.assertEqual(error_message, "The login or password you entered is incorrect.")
-        self.assertEqual(self.driver.title, 'Green IT Globe Login')
+        self.Login.LoginFail(password=password)
         self.lg('do login using admin username/password, should succeed')
         self.Login.Login()
-        self.lg('check the home page title, should succeed')
-        self.assertEqual(self.driver.title, 'OpenvCloud - Decks')
         self.lg('do logout, should succeed')
         self.Logout.End_User_Logout()
-        self.wait_element('login_button')
-        self.assertEqual(self.driver.title, 'Green IT Globe Login')
+        self.assertEqual(self.driver.title, 'OpenvCloud - Decks')
         self.lg('%s ENDED' % self._testID)
 
     @parameterized.expand([('normal username/password', str(uuid.uuid4())),
@@ -162,19 +139,11 @@ class LoginLogoutPortalTests(Framework):
         #. check the login page title, should succeed
         """
         self.lg('%s STARTED' % self._testID)
-        self.lg('check the login page title, should succeed')
-        self.assertEqual(self.driver.title, 'Green IT Globe Login')
         self.lg('do login using wrong , should succeed')
-        self.Login.Login(username=name, password=name)
-        error_message = self.get_text("error_message")
-        self.assertEqual(error_message, "The login or password you entered is incorrect.")
-        self.assertEqual(self.driver.title, 'Green IT Globe Login')
+        self.Login.LoginFail(username=name, password=name)
         self.lg('do login using admin username/password, should succeed')
         self.Login.Login()
-        self.lg('check the home page title, should succeed')
-        self.assertEqual(self.driver.title, 'OpenvCloud - Decks')
         self.lg('do logout, should succeed')
         self.Logout.End_User_Logout()
-        self.wait_element('login_button')
-        self.assertEqual(self.driver.title, 'Green IT Globe Login')
+        self.assertEqual(self.driver.title, 'OpenvCloud - Decks')
         self.lg('%s ENDED' % self._testID)

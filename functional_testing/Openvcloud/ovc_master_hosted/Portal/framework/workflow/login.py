@@ -35,10 +35,37 @@ class login():
         username = username or self.framework.admin_username
         password = password or self.framework.admin_password
         self.GetIt()
+        self.framework.lg('check the login page title, should succeed')
+        self.framework.assertEqual(self.framework.driver.title, 'Green IT Globe Login')
         self.framework.lg('Do login using username [%s] and passsword [%s]' % (username, password))
         self.framework.set_text('username_textbox', username)
         self.framework.set_text('password_textbox', password)
         self.framework.click('login_button')
-        self.framework.assertEqual(self.framework.get_text("home"), "Home",
-                                   "Fail: can't login using %s:%s" % (username, password))
-        self.framework.lg('Login successfully using username [%s] and passsword [%s]' % (username, password))
+        time.sleep(0.5)
+        self.framework.assertEqual(self.framework.driver.title, 'OpenvCloud - Decks',
+                                   "Can't Login using username [%s] and passsword [%s]" % (username, password))
+
+    def LoginFail(self, username='', password=''):
+        username = username
+        password = password
+        self.GetIt()
+        self.framework.lg('check the login page title, should succeed')
+        self.framework.assertEqual(self.framework.driver.title, 'Green IT Globe Login')
+        self.framework.lg('Do login using username [%s] and passsword [%s]' % (username, password))
+        self.framework.set_text('username_textbox', username)
+        self.framework.set_text('password_textbox', password)
+        self.framework.click('login_button')
+        if password and not username:
+            self.framework.assertEqual(self.framework.get_text("error_password_message"),
+                                       "Required.")
+        elif username and not password:
+            self.framework.assertEqual(self.framework.get_text("error_message"),
+                                       "Required.")
+        elif not (username and password):
+            self.framework.assertEqual(self.framework.get_text("error_message"),
+                                       "Required.")
+            self.framework.assertEqual(self.framework.get_text("error_password_message"),
+                                       "Required.")
+        else:
+            self.framework.assertEqual(self.framework.get_text("error_message"),
+                                       "The login or password you entered is incorrect.")

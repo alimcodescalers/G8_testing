@@ -9,7 +9,7 @@ class AccountsTests(Framework):
         self.lg('Create new username, user:%s password:%s' % (self.username, self.password))
         self.Users.create_new_user(self.username, self.password, self.email, self.group)
 
-
+    @unittest.skip('bug# 496')
     def test01_edit_account(self):
         """ PRTL-023
         *Test case to make sure that edit actions on accounts are working as expected*
@@ -24,7 +24,7 @@ class AccountsTests(Framework):
         self.Accounts.open_account_page(self.account)
         self.assertTrue(self.Accounts.account_edit_all_items(self.account))
 
-    @unittest.skip("bug# 431")
+    @unittest.skip("bug# 431 and 496")
     def test02_disable_enable_account(self):
         """ PRTL-024
         *Test case to make sure that enable/disable actions on accounts are working as expected*
