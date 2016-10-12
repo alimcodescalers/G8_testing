@@ -152,12 +152,16 @@ def main():
                             disk_iops.append(int(c.group(1)))
                     iops_list.append(sum(disk_iops))
                     runt = re.search(r'runt=\s*([\d]+)msec', f)
-                    disks_runtime.append(int(runt.group(1)))
+                    if runt:
+                        disks_runtime.append(int(runt.group(1)))
+                    else:
+                        open("/tmp/d.txt", "w").write(f)
+                        disks_runtime.append(-1)
             total_iops = sum(iops_list)
 
             total_iops_list.append(total_iops)
 
-            runtime = max(disks_runtime)
+            runtime = max(disks_runtime) if disks_runtime else 0
             vm_info = re.search('machine([\d.]+)_iter([\d]+)_([\w]+)_', j)
             machineId = vm_info.group(1)
             iteration = vm_info.group(2)
