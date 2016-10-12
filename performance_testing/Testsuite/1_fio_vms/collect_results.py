@@ -62,14 +62,14 @@ def results_on_csvfile(csv_file_name, Res_dir, table_string):
            writer = csv.writer(outcsv)
            writer.writerows(result)
 
-def collect_results(titles, results, Res_dir):
+def collect_results(titles, results, Res_dir, filename):
     table = PrettyTable(titles)
     for i in results:
         table.add_row(i)
     table_txt = table.get_string()
-    with open('%s/ovs_nodes_iops.table' %Res_dir,'a') as file:
+    with open('%s/%s.table' %(Res_dir, filename),'a') as file:
         file.write('\n%s'%table_txt)
-    results_on_csvfile('ovs_nodes_iops', Res_dir, table_txt)
+    results_on_csvfile(filename, Res_dir, table_txt)
 
 
 
@@ -124,6 +124,7 @@ def main():
     for j in os.listdir(os.getcwd()):
 
         if j.startswith('machine'):
+            disks_count = 0
             os.chdir(j)
 
             avg_total_cpuload = 0
@@ -137,11 +138,54 @@ def main():
 
             iops_list=[]
             disks_runtime=[]
+
+            vm_bw_r = []; vm_bw_w = [];
+            vm_slat_r_min = []; vm_slat_r_max = []; vm_slat_r_avg = [];
+            vm_slat_w_min = []; vm_slat_w_max = []; vm_slat_w_avg = [];
+            vm_disks_results = []
+
             #iterate on disks_results per machine
             for i in os.listdir(os.getcwd()):
                 if i.startswith("result"):
+                    disks_count += 1
                     file = open( i, 'r')
                     f=file.read()
+                    read_match = re.search(r'read :', f)
+                    write_match = re.search(r'write:', f)
+
+                    if read_match:
+                        match_bw_r = re.search(r'read : io=\S+ bw=(\S+),', f)
+                        disk_bw_read = match_bw_r.group(1)  # ex:234KB/s
+                        vm_bw_r.append(disk_bw_read)  # remove kb/s
+
+                    if write_match:
+                        match_bw_w = re.search(r'write: io=\S+ bw=(\S+),', f)
+                        disk_bw_write = match_bw_w.group(1)  # ex:234KB/s
+                        vm_bw_w.append(disk_bw_write)  # remove kb/s
+
+
+                    match_slat = re.finditer(r'slat \((\S+)\): min=(\S+), max=(\S+), avg=\s*(\S+),', f)
+                    c = 0  # count to split read_slat from write_slat
+
+                    if write_match and not read_match:
+                        c = 1
+
+                    for m in match_slat:
+                        slat_unit = m.group(1)  # usec
+                        slat_min = float(m.group(2))  # 123.23 string
+                        slat_max = float(m.group(3))  # 123.23 string
+                        slat_avg = float(m.group(4))  # 123.23 string
+
+                        if c == 0:
+                            vm_slat_r_min.append(slat_min)
+                            vm_slat_r_max.append(slat_max)
+                            vm_slat_r_avg.append(slat_avg)
+                        else:
+                            vm_slat_w_min.append(slat_min)
+                            vm_slat_w_max.append(slat_max)
+                            vm_slat_w_avg.append(slat_avg)
+                        c += 1
+
                     disk_iops=[]
                     match = re.finditer(r'iops=([\S]+),', f)
                     # this for loop in case there are iops for write and read
@@ -178,8 +222,33 @@ def main():
 
             os.chdir('%s' %Res_dir)
 
+            # Info about disks per vm
+            vm_bw_r.insert(0, "BW_R")
+            vm_slat_r_min.insert(0, "SLAT_R_MIN (%s)"%slat_unit)
+            vm_slat_r_max.insert(0, "SLAT_R_MAX (%s)"%slat_unit)
+            vm_slat_r_avg.insert(0, "SLAT_R_AVG (%s)"%slat_unit)
+            vm_bw_w.insert(0, "BW_W")
+            vm_slat_w_min.insert(0, "SLAT_W_MIN (%s)"%slat_unit)
+            vm_slat_w_max.insert(0, "SLAT_W_MAX (%s)"%slat_unit)
+            vm_slat_w_avg.insert(0, "SLAT_W_AVG (%s)"%slat_unit)
+
+            if read_match:
+                vm_disks_results.append(vm_bw_r)
+                vm_disks_results.append(vm_slat_r_min)
+                vm_disks_results.append(vm_slat_r_max)
+                vm_disks_results.append(vm_slat_r_avg)
+            if write_match:
+                vm_disks_results.append(vm_bw_w)
+                vm_disks_results.append(vm_slat_w_min)
+                vm_disks_results.append(vm_slat_w_max)
+                vm_disks_results.append(vm_slat_w_avg)
+
+            titles = ["disk%s" %(i+1) for i in range(disks_count)]
+            titles.insert(0,'vm-%s'%machineId)
+            collect_results(titles, vm_disks_results, Res_dir, "vms_disks_info")
+
     ovs_list, iops_list = sum_iops_per_ovs(vm_ovsip_iops_list)
-    collect_results(ovs_list, iops_list, Res_dir)
+    collect_results(ovs_list, iops_list, Res_dir, "ovs_nodes_iops")
 
 
 
