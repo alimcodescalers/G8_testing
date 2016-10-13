@@ -1,3 +1,6 @@
+import time
+
+
 class statusOverview():
     def __init__(self, framework):
         self.framework = framework
@@ -21,3 +24,12 @@ class statusOverview():
                 return False
             node_staus.append(cells[3].text)
         return node_staus
+
+    def run_health_check(self):
+        self.framework.click('Run Healthcheck')
+        self.framework.assertEqual(self.framework.get_text('action-RunHealthcheckLabel'),
+                                   'Confirm Action Run Healthcheck')
+        self.framework.click('confirm healthcheck')
+        self.framework.wait_until_element_located('alert healthcheck')
+        return self.framework.get_text('alert healthcheck')
+

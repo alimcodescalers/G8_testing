@@ -657,4 +657,8 @@ elements = {'snapshot_ok_button': ['XPATH', 'html/body/div[3]/form/div[3]/button
             'knowledge_base_line4_tab_text3': ['XPATH',
                                                ".//*[@id='wrap']/div/tour/div[2]/div[2]/div/div/div/div[4]/div[1]/textarea"],
             'confirm_alert':['CLASS_NAME', 'btn-primary', 0],
-            'landing_page_login':['LINK_TEXT', 'LOGIN']}
+            'landing_page_login':['LINK_TEXT', 'LOGIN'],
+            'Run Healthcheck':['LINK_TEXT','Run Healthcheck'],
+            'action-RunHealthcheckLabel':['ID','action-RunHealthcheckLabel'],
+            'confirm healthcheck':['XPATH', ".//*[@id='action-RunHealthcheck']/div/div[3]/button[2]"],
+            'alert healthcheck':['CLASS_NAME', 'alert', 1]}
