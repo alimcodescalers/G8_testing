@@ -54,6 +54,9 @@ class Grid():
     def error_conditions(self):
         self.framework.open_base_page("grid_arrow","error_conditions")
 
+    def status_overview(self):
+        self.framework.open_base_page("grid_arrow","status_overview")
+
 class Storage():
 
     def __init__(self, framework):

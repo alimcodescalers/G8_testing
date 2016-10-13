@@ -81,9 +81,9 @@ class BaseTest(unittest.TestCase):
     def find_element(self, element):
         method = self.elements[element][0]
         value = self.elements[element][1]
-        if method in ['XPATH','ID', 'LINK_TEXT']:
+        if method in ['XPATH', 'ID', 'LINK_TEXT']:
             element_value = self.driver.find_element(getattr(By, method), value)
-        elif method in ['CLASS_NAME','NAME']:
+        elif method in ['CLASS_NAME', 'NAME']:
             item_order = self.elements[element][2]
             elements_value = self.driver.find_elements(getattr(By, method), value)
             element_value = elements_value[item_order]
@@ -283,3 +283,22 @@ class BaseTest(unittest.TestCase):
                 storage_menu.append(item)
                 item = ''
         return storage_menu
+
+    def get_table_rows(self):
+        'This method return all rows in the current page else return false'
+        try:
+            tbody = self.driver.find_element_by_tag_name('tbody')
+            rows = tbody.find_elements_by_tag_name('tr')
+            return rows
+        except:
+            self.lg("Can't get the tbody elements")
+            return False
+
+    def get_row_cells(self, row):
+        'This method take a row and return its cells else return false'
+        try:
+            cells = row.find_elements_by_tag_name('td')
+            return cells
+        except:
+            self.lg("Can't get the row cells")
+            return False

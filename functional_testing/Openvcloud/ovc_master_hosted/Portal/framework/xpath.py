@@ -67,6 +67,7 @@ elements = {'snapshot_ok_button': ['XPATH', 'html/body/div[3]/form/div[3]/button
             'knowledge_base_line3_tab_line14': ['XPATH',
                                                 ".//*[@id='wrap']/div/tour/div[3]/div[2]/div/div/div/div[2]/p[27]"],
             'error_conditions': ['XPATH', ".//*[@id='collapse-4']/li[2]/a"],
+            'status_overview':['XPATH', ".//*[@id='collapse-4']/li[8]/a"],
             'support_button': ['XPATH', ".//*[@id='navbar-list']/ul[2]/li[4]/a"],
             'knowledge_base_line5_tab_image9': ['XPATH',
                                                 ".//*[@id='wrap']/div/tour/div[3]/div[2]/div/div/div/div[2]/p[20]/img"],
@@ -656,4 +657,8 @@ elements = {'snapshot_ok_button': ['XPATH', 'html/body/div[3]/form/div[3]/button
             'knowledge_base_line4_tab_text3': ['XPATH',
                                                ".//*[@id='wrap']/div/tour/div[2]/div[2]/div/div/div/div[4]/div[1]/textarea"],
             'confirm_alert':['CLASS_NAME', 'btn-primary', 0],
-            'landing_page_login':['LINK_TEXT', 'LOGIN']}
+            'landing_page_login':['LINK_TEXT', 'LOGIN'],
+            'Run Healthcheck':['LINK_TEXT','Run Healthcheck'],
+            'action-RunHealthcheckLabel':['ID','action-RunHealthcheckLabel'],
+            'confirm healthcheck':['XPATH', ".//*[@id='action-RunHealthcheck']/div/div[3]/button[2]"],
+            'alert healthcheck':['CLASS_NAME', 'alert', 1]}
