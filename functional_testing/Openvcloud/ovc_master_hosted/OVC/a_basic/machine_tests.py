@@ -265,7 +265,6 @@ class BasicTests(BasicACLTest):
 
         self.lg('%s ENDED' % self._testID)
 
-    @unittest.skip("https://github.com/gig-projects/org_quality/issues/446")
     def test006_machine_snapshots(self):
         """ OVC-006
         *Test case  for restoring certain snapshots for multiple snapshots*
@@ -291,6 +290,7 @@ class BasicTests(BasicACLTest):
 
         self.lg('- add portforward for the created virtual machine')
         cs_publicip = self.add_portforwarding(self.machine_id, api=self.account_owner_api, cs_publicport=2000)
+        time.sleep(10)
         machine = self.account_owner_api.cloudapi.machines.get(machineId=self.machine_id)
         account = machine['accounts'][0]
 
@@ -331,7 +331,13 @@ class BasicTests(BasicACLTest):
                 self.account_owner_api.cloudapi.machines.start(machineId=self.machine_id)
                 self.wait_for_status('RUNNING', self.account_owner_api.cloudapi.machines.get,
                                      machineId=self.machine_id)
-                time.sleep(20)
+                for _ in range(6):
+                    try:
+                        self.execute_command_on_physical_node('cd; python machine_script.py %s %s 2000 %s %s result'
+                        % (account['login'], account['password'], cs_publicip, i), nodeID)
+                        break
+                    except:
+                        time.sleep(10)
 
             self.lg('- Rollback to the 3rd snapshot')
             self.account_owner_api.cloudapi.machines.stop(machineId=self.machine_id)
@@ -344,7 +350,13 @@ class BasicTests(BasicACLTest):
             self.account_owner_api.cloudapi.machines.start(machineId=self.machine_id)
             self.wait_for_status('RUNNING', self.account_owner_api.cloudapi.machines.get,
                                  machineId=self.machine_id)
-            time.sleep(20)
+            for _ in range(6):
+                try:
+                    self.execute_command_on_physical_node('cd; python machine_script.py %s %s 2000 %s %s result'
+                    % (account['login'], account['password'], cs_publicip, i), nodeID)
+                    break
+                except:
+                    time.sleep(10)
 
             self.lg('check if the rolling back have succeed')
             count_files = self.execute_command_on_physical_node('cd; python machine_script.py %s %s 2000 %s %s result'
