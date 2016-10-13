@@ -2,7 +2,7 @@
 from gevent import monkey
 monkey.patch_all()
 from libtest import run_cmd_via_gevent, wait_until_remote_is_listening, safe_get_vm, get_logger
-from optparse import OptionParser
+from argparse import ArgumentParser
 import gevent
 import signal
 import time
@@ -41,7 +41,7 @@ def get_cloudspace_template_vm_id(concurrency, ovc, cloudspace_id):
             stop()
         else:
             with concurrency:
-               stop()
+                stop()
         while True:
             gevent.sleep(1)
             vm = safe_get_vm(ovc, concurrency, vm_id)
@@ -260,48 +260,45 @@ def main(options):
 
 
 if __name__ == "__main__":
-    parser = OptionParser()
-    parser.add_option("-u", "--user", dest="username", type="string",
-                      help="username to login on the OVC api")
-    parser.add_option("-p", "--pwd", dest="password", type="string",
-                      help="password to login on the OVC api")
-    parser.add_option("-e", "--env", dest="environment", type="string",
-                      help="environment to login on the OVC api")
-    parser.add_option("-l", "--loc", dest="location", type="string",
-                      help="location to create cloudspaces")
-    parser.add_option("-c", "--clspcs", dest="cloudspaces", type="int",
-                      default=5, help="minimum number of cloudspaces")
-    parser.add_option("-v", "--vms", dest="vmachines", type="int",
-                      default=5, help="minimum number of vmachines per cloudspace")
-    parser.add_option("-i", "--img", dest="image", default='Ubuntu 16.04 x64', type="string",
-                      help="image to use for creating vmachines")
-    parser.add_option("-b", "--boot", dest="bootdisk", type="int",
-                      help="bootdisk size", default=10)
-    parser.add_option("-d", "--data", dest="datadisk", type="int",
-                      help="datadisk size", default=20)
-    parser.add_option("-m", "--mem", dest="memory", default=1024, type="int",
-                      help="amount of memory for the virtual machines")
-    parser.add_option("-k", "--cpu", dest="cpu", default=1, type="int",
-                      help="amount of vcpus for the virtual machines")
-    parser.add_option("-o", "--iops", dest="iops", default=600, type="int",
-                      help="maximum of iops of the disks for the virtual machines")
-    parser.add_option("-n", "--con", dest="concurrency", default=2, type="int",
-                      help="amount of concurrency to execute the job")
-    parser.add_option("-s", "--clone", dest="clone", default=1, type="int",
-                      help="clone the first vm in the cloudspace (000)")
+    parser = ArgumentParser()
+    parser.add_argument("-u", "--user", dest="username",
+                        help="username to login on the OVC api", required=True)
+    parser.add_argument("-p", "--pwd", dest="password",
+                        help="password to login on the OVC api", required=True)
+    parser.add_argument("-e", "--env", dest="environment",
+                        help="environment to login on the OVC api", required=True)
+    parser.add_argument("-l", "--loc", dest="location",
+                        help="location to create cloudspaces")
+    parser.add_argument("-c", "--clspcs", dest="cloudspaces", type=int,
+                        default=5, help="minimum number of cloudspaces")
+    parser.add_argument("-v", "--vms", dest="vmachines", type=int,
+                        default=5, help="minimum number of vmachines per cloudspace")
+    parser.add_argument("-i", "--img", dest="image", default='Ubuntu 16.04 x64',
+                        help="image to use for creating vmachines")
+    parser.add_argument("-b", "--boot", dest="bootdisk", type=int,
+                        help="bootdisk size", default=10)
+    parser.add_argument("-d", "--data", dest="datadisk", type=int,
+                        help="datadisk size", default=20)
+    parser.add_argument("-m", "--mem", dest="memory", default=1024, type=int,
+                        help="amount of memory for the virtual machines")
+    parser.add_argument("-k", "--cpu", dest="cpu", default=1, type=int,
+                        help="amount of vcpus for the virtual machines")
+    parser.add_argument("-o", "--iops", dest="iops", default=600, type=int,
+                        help="maximum of iops of the disks for the virtual machines")
+    parser.add_argument("-n", "--con", dest="concurrency", default=2, type=int,
+                        help="amount of concurrency to execute the job")
+    parser.add_argument("-s", "--clone", dest="clone", default=1, type=int,
+                        help="clone the first vm in the cloudspace (000)")
 
-    (options, args) = parser.parse_args()
-    if not options.username or not options.password or not options.environment:
-        parser.print_usage()
-    else:
-        concurrency = BoundedSemaphore(options.concurrency)
-        gevent.signal(signal.SIGQUIT, gevent.kill)
-        start = time.time()
-        main(options)
-        end = time.time()
-        elapsed = int(end - start)
-        minutes = elapsed / 60
-        seconds = elapsed % 60
-        tmpl = "Deployed {} cloudspace(s) and {} machine(s) in {} minutes and {} seconds"
-        print(tmpl.format(_stats['deployed_cloudspaces'], _stats['deployed_vms'],
-              minutes, seconds))
+    options = parser.parse_args()
+    concurrency = BoundedSemaphore(options.concurrency)
+    gevent.signal(signal.SIGQUIT, gevent.kill)
+    start = time.time()
+    main(options)
+    end = time.time()
+    elapsed = int(end - start)
+    minutes = int(elapsed / 60)
+    seconds = elapsed % 60
+    tmpl = "Deployed {} cloudspace(s) and {} machine(s) in {} minutes and {} seconds"
+    print(tmpl.format(_stats['deployed_cloudspaces'], _stats['deployed_vms'],
+          minutes, seconds))
