@@ -68,7 +68,7 @@ class AccountsTests(Framework):
 
 
     def test04_account_page_paging_table_sorting(self):
-        """ PRTL-029
+        """ PRTL-030
         *Test case to make sure that paging and sorting of accounts page are working as expected*
 
         **Test Scenario:**
@@ -97,7 +97,7 @@ class AccountsTests(Framework):
                 self.assertLess(account_avaliable_, account_paging_option)
 
     def test05_account_page_table_sorting(self):
-        """ PRTL-029
+        """ PRTL-031
         *Test case to make sure that paging and sorting of accounts page are working as expected*
 
         **Test Scenario:**
