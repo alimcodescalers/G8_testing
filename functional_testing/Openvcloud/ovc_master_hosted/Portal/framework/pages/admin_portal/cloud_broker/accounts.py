@@ -188,3 +188,31 @@ class accounts():
             self.framework.lg('%s account is already deleted' % account)
         else:
             self.framework.fail('"%s" account status has an error in the page' % account)
+
+    def get_table_info(self):
+        for _ in range(10):
+            account_info = self.framework.get_text('table cloudbroker account info')
+            if "Showing" in account_info:
+                return account_info
+            else:
+                time.sleep(1)
+        else:
+            self.framework.fail("Can't get the table info")
+
+    def get_previous_next_button(self):
+        pagination = self.framework.get_list_items('pagination')
+        previous_button = pagination[0].find_element_by_tag_name('a')
+        next_button = pagination[(len(pagination)-1)].find_element_by_tag_name('a')
+        return previous_button, next_button
+
+    def get_account_start_number(self):
+        account_info = self.get_table_info()
+        return int(account_info[(account_info.index('g')+2):(account_info.index('to')-1)])
+
+    def get_account_end_number(self):
+        account_info = self.get_table_info()
+        return int(account_info[(account_info.index('to')+3):(account_info.index('of')-1)])
+
+    def get_account_max_number(self):
+        account_info = self.get_table_info()
+        return int(account_info[(account_info.index('f')+2):(account_info.index('entries')-1)])

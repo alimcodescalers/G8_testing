@@ -75,28 +75,19 @@ class AccountsTests(Framework):
         #. go to accounts page.
         #. get number of accounts
         #. try paging from the available page numbers and verify it should succeed
-        #. try paging from start/previous/next/last and verify it should succeed
-        #. try sorting for all fields and verify it should succeed
         """
         self.lg('%s STARTED' % self._testID)
         self.Accounts.get_it()
         self.assertTrue(self.Accounts.is_at())
 
         account_paging_options = [25, 50, 100, 10]
-        for _ in range(10):
-            account_info = self.get_text('table cloudbroker account info')
-            if "Showing" in account_info:
-                break
-            else:
-                time.sleep(1)
-        else:
-            self.fail("Can't get the table info")
+        account_info = self.Accounts.get_table_info()
         account_number_max_number = int(account_info[(account_info.index('f')+2):(account_info.index('entries')-1)])
 
         for account_paging_option in account_paging_options:
             self.select('account selector', account_paging_option)
             time.sleep(5)
-            account_info_ = self.get_text('table cloudbroker account info')
+            account_info_ = self.Accounts.get_table_info()
             account_number_max_number_ = int(account_info_[account_info_.index('f')+2:account_info_.index('en')-1])
             account_avaliable_ = int(account_info_[(account_info_.index('to')+3):(account_info_.index('of')-1)])
             self.assertEqual(account_number_max_number, account_number_max_number_)
@@ -104,3 +95,37 @@ class AccountsTests(Framework):
                 self.assertEqual(account_avaliable_, account_paging_option)
             else:
                 self.assertLess(account_avaliable_, account_paging_option)
+
+    def test05_account_page_table_sorting(self):
+        """ PRTL-029
+        *Test case to make sure that paging and sorting of accounts page are working as expected*
+
+        **Test Scenario:**
+        #. go to accounts page.
+        #. get number of accounts
+        #. try paging from start/previous/next/last and verify it should succeed
+        """
+        self.lg('%s STARTED' % self._testID)
+        self.Accounts.get_it()
+        self.assertTrue(self.Accounts.is_at())
+
+        account_max_number = self.Accounts.get_account_max_number()
+        pagination = self.get_list_items('pagination')
+
+        for _ in range((len(pagination)-3)):
+            account_start_number = self.Accounts.get_account_start_number()
+            account_end_number = self.Accounts.get_account_end_number()
+            previous_button, next_button = self.Accounts.get_previous_next_button()
+
+            next_button.click()
+            time.sleep(1)
+
+            account_start_number_ = self.Accounts.get_account_start_number()
+            account_end_number_ = self.Accounts.get_account_end_number()
+
+            self.assertEqual(account_start_number_, account_start_number+10)
+            if account_end_number_ < account_max_number:
+                self.assertEqual(account_end_number_, account_end_number+10)
+            else:
+                self.assertEqual(account_end_number_, account_max_number)
+
