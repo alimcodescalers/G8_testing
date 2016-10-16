@@ -10,6 +10,17 @@ class accounts():
         self.framework = framework
         self.LeftNavigationMenu = leftNavigationMenu(framework)
 
+    def get_it(self):
+        self.LeftNavigationMenu.CloudBroker.Accounts()
+
+    def is_at(self):
+        for _ in range(10):
+            if 'Accounts' == self.framework.get_text('account_name_value'):
+                return True
+            else:
+                time.sleep(1)
+        else:
+            return False
     def create_new_account(self, account='', username='', max_memory=None):
         account = account or str(uuid.uuid4()).replace('-', '')[0:10]
         username = username

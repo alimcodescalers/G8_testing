@@ -661,4 +661,6 @@ elements = {'snapshot_ok_button': ['XPATH', 'html/body/div[3]/form/div[3]/button
             'Run Healthcheck':['LINK_TEXT','Run Healthcheck'],
             'action-RunHealthcheckLabel':['ID','action-RunHealthcheckLabel'],
             'confirm healthcheck':['XPATH', ".//*[@id='action-RunHealthcheck']/div/div[3]/button[2]"],
-            'alert healthcheck':['CLASS_NAME', 'alert', 1]}
+            'alert healthcheck':['CLASS_NAME', 'alert', 1],
+            'table cloudbroker account info':['ID','table_cloudbroker_account_info'],
+            'account selector':['CLASS_NAME', 'input-sm', 0]}

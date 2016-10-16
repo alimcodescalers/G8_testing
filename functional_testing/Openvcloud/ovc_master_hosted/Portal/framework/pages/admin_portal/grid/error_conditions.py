@@ -1,9 +1,3 @@
-import time
-from random import randint
-from functional_testing.Openvcloud.ovc_master_hosted.Portal.framework.Navigation.left_navigation_menu import \
-    leftNavigationMenu
-import uuid
-
 class errorConditions():
     def __init__(self, framework):
         self.framework = framework

@@ -228,6 +228,7 @@ class BaseTest(unittest.TestCase):
             return False
 
     def select(self, list_element, item_value):
+        item_value = str(item_value)
         self.select_obeject = Select(self.find_element(list_element))
         self.select_list = self.select_obeject.options
 
