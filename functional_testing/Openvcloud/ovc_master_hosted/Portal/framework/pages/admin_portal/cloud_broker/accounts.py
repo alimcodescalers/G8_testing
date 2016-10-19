@@ -21,6 +21,7 @@ class accounts():
                 time.sleep(1)
         else:
             return False
+
     def create_new_account(self, account='', username='', max_memory=None):
         account = account or str(uuid.uuid4()).replace('-', '')[0:10]
         username = username
@@ -98,7 +99,7 @@ class accounts():
                 time.sleep(0.5)
                 if value not in self.framework.get_text('account_name_value'):
                     self.framework.lg("FAIL : %s not in the account name: %s" % (
-                    value, self.framework.get_text('account_name_value')))
+                        value, self.framework.get_text('account_name_value')))
                     return False
             else:
                 value = randint(1, 100)
@@ -202,17 +203,61 @@ class accounts():
     def get_previous_next_button(self):
         pagination = self.framework.get_list_items('pagination')
         previous_button = pagination[0].find_element_by_tag_name('a')
-        next_button = pagination[(len(pagination)-1)].find_element_by_tag_name('a')
+        next_button = pagination[(len(pagination) - 1)].find_element_by_tag_name('a')
         return previous_button, next_button
 
     def get_account_start_number(self):
         account_info = self.get_table_info()
-        return int(account_info[(account_info.index('g')+2):(account_info.index('to')-1)])
+        return int(account_info[(account_info.index('g') + 2):(account_info.index('to') - 1)])
 
     def get_account_end_number(self):
         account_info = self.get_table_info()
-        return int(account_info[(account_info.index('to')+3):(account_info.index('of')-1)])
+        return int(account_info[(account_info.index('to') + 3):(account_info.index('of') - 1)])
 
     def get_account_max_number(self):
         account_info = self.get_table_info()
-        return int(account_info[(account_info.index('f')+2):(account_info.index('entries')-1)])
+        return int(account_info[(account_info.index('f') + 2):(account_info.index('entries') - 1)])
+
+    def get_account_table_data(self):
+        # This method will return a table data
+        self.framework.assertTrue(self.framework.check_element_is_exist('thead'))
+        max_sort_value = 100
+
+        account_max_number = self.get_account_max_number()
+        self.framework.select('account selector', max_sort_value)
+        time.sleep(3)
+        page_numbers = (account_max_number / max_sort_value) + 1
+
+        tableData = {}
+        table_head_items = self.framework.get_table_head_elements()
+
+        for item in table_head_items:
+            tableData[item.text] = []
+
+        for page in range(page_numbers):
+            table_rows = self.framework.get_table_rows()
+            self.framework.assertTrue(table_rows)
+            for row in table_rows:
+                cell_index = 0
+                try:
+                    row_cells = str(row.text).split()
+                except UnicodeEncodeError:
+                    # silent bypass arabic characters
+                    continue
+                if len(row_cells) == 3:
+                    row_cells.append('')
+                elif len(row_cells) > 4:
+                    for _ in range(4, len(row_cells)):
+                        row_cells[4] += (" " + row_cells[_])
+                row_cells = row_cells[:4]
+
+                self.framework.assertTrue(row_cells)
+                for item in table_head_items:
+                    tableData[item.text].append(row_cells[cell_index])
+                    cell_index += 1
+
+            if 0 < page < (page_numbers - 1):
+                previous_button, next_button = self.get_previous_next_button()
+                next_button.click()
+
+        return tableData
