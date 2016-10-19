@@ -83,10 +83,13 @@ class BaseTest(unittest.TestCase):
         value = self.elements[element][1]
         if method in ['XPATH', 'ID', 'LINK_TEXT']:
             element_value = self.driver.find_element(getattr(By, method), value)
-        elif method in ['CLASS_NAME', 'NAME']:
+        elif method in ['CLASS_NAME', 'NAME', 'TAG_NAME']:
             item_order = self.elements[element][2]
             elements_value = self.driver.find_elements(getattr(By, method), value)
-            element_value = elements_value[item_order]
+            if item_order == -1:
+                element_value = elements_value
+            else:
+                element_value = elements_value[item_order]
         else:
             self.fail("This %s method isn't defined" % method)
         return element_value
@@ -228,12 +231,13 @@ class BaseTest(unittest.TestCase):
             return False
 
     def select(self, list_element, item_value):
+        item_value = str(item_value)
         self.select_obeject = Select(self.find_element(list_element))
         self.select_list = self.select_obeject.options
 
         for option in self.select_list:
-            self.lg("select %s from list" % str(option.text))
             if item_value in option.text:
+                self.lg("select %s from list" % str(option.text))
                 self.select_obeject.select_by_visible_text(option.text)
                 item_value = option.text
                 break
@@ -295,10 +299,22 @@ class BaseTest(unittest.TestCase):
             return False
 
     def get_row_cells(self, row):
-        'This method take a row and return its cells else return false'
+        'This method take a row and return its cells elements else return false'
         try:
             cells = row.find_elements_by_tag_name('td')
             return cells
         except:
             self.lg("Can't get the row cells")
+            return False
+
+    def get_table_head_elements(self):
+        # This method return a table head elements.
+        for _ in range(10):
+            try:
+                thead= self.find_element('thead')
+                thead_row = thead.find_element_by_tag_name('tr')
+                return thead_row.find_elements_by_tag_name('th')
+            except:
+                time.sleep(0.5)
+        else:
             return False

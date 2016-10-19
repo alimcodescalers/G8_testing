@@ -13,7 +13,7 @@ class login():
             except AngularNotFoundException:
                 time.sleep(1)
             else:
-                self.framework.click('confirm_alert')
+                #self.framework.click('confirm_alert')
                 self.framework.click('landing_page_login')
                 break
         else:
