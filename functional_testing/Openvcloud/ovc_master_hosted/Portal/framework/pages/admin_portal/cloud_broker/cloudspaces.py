@@ -1,8 +1,5 @@
 import time
 import uuid
-
-from selenium.common.exceptions import TimeoutException
-
 from functional_testing.Openvcloud.ovc_master_hosted.Portal.framework.Navigation.left_navigation_menu import \
     leftNavigationMenu
 
@@ -11,6 +8,18 @@ class cloudspaces():
     def __init__(self, framework):
         self.framework = framework
         self.LeftNavigationMenu = leftNavigationMenu(framework)
+
+    def get_it(self):
+        self.LeftNavigationMenu.CloudBroker.CloudSpaces()
+
+    def is_at(self):
+        for _ in range(10):
+            if 'Cloud Spaces' in self.framework.driver.title:
+                return True
+            else:
+                time.sleep(1)
+        else:
+            return False
 
     def create_cloud_space(self, account, cloud_space=''):
         account = account
@@ -71,3 +80,5 @@ class cloudspaces():
         else:
             self.framework.lg('"%s" cloudspace is already deleted' % cloudspace)
             return True
+
+

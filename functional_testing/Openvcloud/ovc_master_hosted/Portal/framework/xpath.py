@@ -668,4 +668,5 @@ elements = {'snapshot_ok_button': ['XPATH', 'html/body/div[3]/form/div[3]/button
             'thead':['TAG_NAME', 'thead', 0],
             'tr':['TAG_NAME', 'tr', 0],
             'td':['TAG_NAME', 'td', -1],
-            'datatables-row-ID':['CLASS_NAME', 'datatables-row-ID', 0]}
+            'datatables-row-ID':['CLASS_NAME', 'datatables-row-ID', 0],
+            'table cloudbroker cloudspace info':['ID', 'table_cloudbroker_cloudspace_info']}

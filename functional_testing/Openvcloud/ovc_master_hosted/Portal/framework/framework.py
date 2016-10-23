@@ -11,7 +11,7 @@ from functional_testing.Openvcloud.ovc_master_hosted.Portal.framework.pages.end_
 from functional_testing.Openvcloud.ovc_master_hosted.Portal.framework.utils.utils import BaseTest
 from functional_testing.Openvcloud.ovc_master_hosted.Portal.framework.workflow.login import login
 from functional_testing.Openvcloud.ovc_master_hosted.Portal.framework.workflow.logout import logout
-
+from functional_testing.Openvcloud.ovc_master_hosted.Portal.framework.workflow.tables import tables
 
 class Framework(BaseTest):
     def __init__(self, *args, **kwargs):
@@ -38,4 +38,5 @@ class Framework(BaseTest):
         #workflow
         self.Login = login(self)
         self.Logout = logout(self)
+        self.Tables = tables(self)
 

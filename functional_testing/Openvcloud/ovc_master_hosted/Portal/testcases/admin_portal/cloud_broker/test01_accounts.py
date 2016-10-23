@@ -7,7 +7,6 @@ class AccountsTests(Framework):
     def setUp(self):
         super(AccountsTests, self).setUp()
         self.Login.Login(username=self.admin_username, password=self.admin_password)
-        self.lg('Create new username, user:%s password:%s' % (self.username, self.password))
 
     @unittest.skip('bug# 496')
     def test01_edit_account(self):
@@ -20,6 +19,7 @@ class AccountsTests(Framework):
         #. search for it and verify it should succeed
         #. edit account parameters and verify it should succeed
         """
+        self.lg('Create new username, user:%s password:%s' % (self.username, self.password))
         self.Users.create_new_user(self.username, self.password, self.email, self.group)
         self.lg('create new account %s' % self.account)
         self.Accounts.create_new_account(self.account, self.username)
@@ -38,6 +38,7 @@ class AccountsTests(Framework):
         #. disable account and verify it should succeed
         #. enable account and verify it should succeed
         """
+        self.lg('Create new username, user:%s password:%s' % (self.username, self.password))
         self.Users.create_new_user(self.username, self.password, self.email, self.group)
         self.lg('create new account %s' % self.account)
         self.Accounts.create_new_account(self.account, self.username)
@@ -56,6 +57,7 @@ class AccountsTests(Framework):
         #. create account with decimal limitations.
         #. search for it and verify it should succeed
         """
+        self.lg('Create new username, user:%s password:%s' % (self.username, self.password))
         self.Users.create_new_user(self.username, self.password, self.email, self.group)
         self.lg('%s STARTED' % self._testID)
         self.lg('create new account %s with decimal limitations' % self.account)
@@ -82,13 +84,13 @@ class AccountsTests(Framework):
         self.assertTrue(self.Accounts.is_at())
 
         account_paging_options = [25, 50, 100, 10]
-        account_info = self.Accounts.get_table_info()
+        account_info = self.Tables.get_table_info('table cloudbroker account info')
         account_number_max_number = int(account_info[(account_info.index('f') + 2):(account_info.index('entries') - 1)])
 
         for account_paging_option in account_paging_options:
             self.select('account selector', account_paging_option)
             time.sleep(5)
-            account_info_ = self.Accounts.get_table_info()
+            account_info_ = self.Tables.get_table_info('table cloudbroker account info')
             account_number_max_number_ = int(account_info_[account_info_.index('f') + 2:account_info_.index('en') - 1])
             account_avaliable_ = int(account_info_[(account_info_.index('to') + 3):(account_info_.index('of') - 1)])
             self.assertEqual(account_number_max_number, account_number_max_number_)
@@ -110,19 +112,19 @@ class AccountsTests(Framework):
         self.Accounts.get_it()
         self.assertTrue(self.Accounts.is_at())
 
-        account_max_number = self.Accounts.get_account_max_number()
+        account_max_number = self.Tables.get_table_max_number('table cloudbroker account info')
         pagination = self.get_list_items('pagination')
 
         for _ in range((len(pagination) - 3)):
-            account_start_number = self.Accounts.get_account_start_number()
-            account_end_number = self.Accounts.get_account_end_number()
-            previous_button, next_button = self.Accounts.get_previous_next_button()
+            account_start_number = self.Tables.get_table_start_number('table cloudbroker account info')
+            account_end_number = self.Tables.get_table_end_number('table cloudbroker account info')
+            previous_button, next_button = self.Tables.get_previous_next_button()
 
             next_button.click()
             time.sleep(1)
 
-            account_start_number_ = self.Accounts.get_account_start_number()
-            account_end_number_ = self.Accounts.get_account_end_number()
+            account_start_number_ = self.Tables.get_table_start_number('table cloudbroker account info')
+            account_end_number_ = self.Tables.get_table_end_number('table cloudbroker account info')
 
             self.assertEqual(account_start_number_, account_start_number + 10)
             if account_end_number_ < account_max_number:
@@ -151,11 +153,11 @@ class AccountsTests(Framework):
             current_column = element.text
             element.click()
             time.sleep(3)
-            column_before = self.Accounts.get_account_table_data().get(current_column)
+            table_before = self.Tables.get_table_data('table cloudbroker account info')
             element.click()
-            column_after = self.Accounts.get_account_table_data().get(current_column)
-            self.assertEqual(len(column_before), len(column_after),
+            table_after = self.Tables.get_table_data('table cloudbroker account info')
+            self.assertEqual(len(table_before), len(table_after),
                              'The length of account table is changing according to sorting by ID')
-            for temp in range(len(column_before)):
-                self.assertEqual(column_before[temp], column_after[(len(column_after) - temp - 1)])
+            for temp in range(len(table_before)):
+                self.assertEqual(table_before[temp], table_after[(len(table_after) - temp - 1)])
             self.lg('pass %s column' % current_column)
