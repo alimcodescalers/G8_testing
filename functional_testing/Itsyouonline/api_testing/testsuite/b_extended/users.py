@@ -62,7 +62,7 @@ class UsersTestsB(BaseTest):
         """
         self.lg('%s STARTED' % self._testID)
         self.lg('Register a new email address, should succeed with 201')
-        label = 'backup'
+        label = str(uuid.uuid4()).replace('-', '')[0:6]
         email = str(uuid.uuid4()).replace('-', '')[0:10]+'test.com'
         data = {'emailaddress':email, 'label':label}
         response = self.client.api.RegisterNewEmailAddress(data, self.user)
@@ -127,7 +127,7 @@ class UsersTestsB(BaseTest):
         """
         self.lg('%s STARTED' % self._testID)
         self.lg('Add a new apikey for the user, should succeed with 201')
-        label = 'secondary'
+        label = str(uuid.uuid4()).replace('-', '')[0:6]
         data = {'label' : label}
         response = self.client.api.AddApiKey(data, self.user)
         self.lg('AddApiKey [%s] response [%s]' % (self.user, response.json()))
@@ -149,7 +149,7 @@ class UsersTestsB(BaseTest):
         self.assertEqual(response.status_code, 200)
 
         self.lg('Update the apikey\'s label, should succeed with 201')
-        new_label = 'secondary_updated'
+        new_label = str(uuid.uuid4()).replace('-', '')[0:10]
         data = {'label': new_label}
         response = self.client.api.UpdateAPIkey(data, label, self.user)
         self.assertEqual(response.status_code, 201)
@@ -165,7 +165,6 @@ class UsersTestsB(BaseTest):
             response = self.client.api.UpdateAPIkey(data, label, self.user)
         except:
             self.assertEqual(response.status_code, 409)
-
 
         self.lg('Try to delete the created apikey with fake label, should fail with 404')
         try:
@@ -183,8 +182,224 @@ class UsersTestsB(BaseTest):
             response = self.client.api.GetAPIkey(label, self.user)
         except:
             self.assertEqual(response.status_code, 404)
+        self.lg('%s ENDED' % self._testID)
+
+    def test004_put_post_delete_addresses(self):
+        """ ITSYOU-004
+        *Test case for adding, updating and deleting  user's addresses *
+
+        **Test Scenario:**
+
+        #. Register a new address, should succeed with 201
+        #. Add a new address with the same label of the previous address, should fail with 409
+        #. Get this specific address, should succeed with 200
+
+        #. check any of the constrains of the parameters(not Done)
+
+        #. Update the address, should succeed with 201
+        #. Try to delete the address with fake label, should fail with 404
+        #. Delete the created address, should succeed with 204
+        #. Get nonexisting address, should fail with 404
+        """
+        self.lg('%s STARTED' % self._testID)
+        self.lg('Register a new address, should succeed with 201')
+        label = str(uuid.uuid4()).replace('-', '')[0:6]
+        data = {'label': label, 'city':'Cairo', 'country':'Egypt',
+                'nr':'2', 'postalcode':'11234', 'street':'Masr gdida'}
+        response = self.client.api.RegisterNewUserAddress(data, self.user)
+        self.lg('RegisterNewUserAddress [%s] response [%s]' % (self.user, response.json()))
+        self.assertEqual(response.status_code, 201)
+
+        self.lg('Add a new address with the same label of the previous address, should fail with 409')
+        try:
+            response = self.client.api.UpdateUserAddress(data, label, self.user)
+        except:
+            self.assertEqual(response.status_code, 409)
+
+        self.lg('Get this specific address, should succeed with 200')
+        response = self.client.api.GetUserAddressByLabel(label, self.user)
+        self.assertEqual(response.status_code, 200)
+        response = self.client.api.GetUserInformation(self.user)
+        addresses = response['addresses']
+        self.assertEqual(addresses[len(addresses)-1]['label'], label)
+
+        self.lg('Update the address, should succeed with 201')
+        new_label = str(uuid.uuid4()).replace('-', '')[0:6]
+        data = {'postalcode':'99999', 'label': new_label}
+        response = self.client.api.UpdateUserAddress(data, label, self.user)
+        self.assertEqual(response.status_code, 201)
+        response = self.client.api.GetUserAddressByLabel(new_label, self.user)
+        self.assertEqual(response[len(response)-1]['label'], new_label)
+        self.assertEqual(response[len(response)-1]['postalcode'], '99999')
+
+        self.lg('Try to delete the address with fake label, should fail with 404')
+        try:
+            response = self.client.api.DeleteUserAddress('fake_label', self.user)
+        except:
+            self.assertEqual(response.status_code, 404)
+
+        self.lg(' Delete the created address, should succeed with 204')
+        response = self.client.api.DeleteUserAddress(label, self.user)
+        self.assertEqual(response.status_code, 204)
+
+        self.lg('Get nonexisting address, should fail with 404')
+        try:
+            response = self.client.api.GetUserAddressByLabel(label, self.user)
+        except:
+            self.assertEqual(response.status_code, 404)
+        self.lg('%s ENDED' % self._testID)
+
+    # the put_post_delete functions of digital wallet is not implemented
+    def test005_put_post_delete_digitalwallet(self):
+        """ ITSYOU-005
+        *Test case for adding, updating and deleting  user's digital wallet *
+
+        **Test Scenario:**
+
+        #. Register a new digital wallet, should succeed with 201
+        #. Add a new digital wallet with the same label of the previous digital wallet, should fail with 409
+        #. Get this specific digital wallet, should succeed with 200
+        #. Update the digital wallet, should succeed with 201
+        #. Update the digital wallet with outdated expiry date, should fail
+        #. Try to delete the digital wallet with fake label, should fail with 404
+        #. Delete the created digital wallet, should succeed with 204
+        #. Get nonexisting digital wallet, should fail with 404
+        """
 
 
+        self.lg('%s STARTED' % self._testID)
+
+
+        self.lg('Register a new digital wallet, should succeed with 201')
+
+        label = str(uuid.uuid4()).replace('-', '')[0:6]
+        data = {'label': label, 'address': '12345 NYC',
+                'currencysymbol': 'USD', 'expire': datetime_type}
+        response = self.client.api.RegisterDigitalWallet(data, self.user)
+        self.lg('RegisterDigitalWallet [%s] response [%s]' % (self.user, response.json()))
+        self.assertEqual(response.status_code, 201)
+
+        self.lg('Add a new digital wallet with the same label of the previous digital wallet, should fail with 409')
+        try:
+            response = self.client.api.UpdateDigitalWallet(data, label, self.user)
+        except:
+            self.assertEqual(response.status_code, 409)
+
+        self.lg('Get this specific digital wallet, should succeed with 200')
+        response = self.client.api.GetUserDigitalWalletByLabel(label, self.user)
+        self.assertEqual(response.status_code, 200)
+        response = self.client.api.GetUser(self.user)
+        self.assertEqual(response['digitalwallet']['label'], label)
+
+        self.lg('Update the digital wallet, should succeed with 201')
+        new_label = str(uuid.uuid4()).replace('-', '')[0:6]
+        data = {'expire': datetimenew, 'label': new_label}
+        response = self.client.api.UpdateUserDigitalWallet(data, label, self.user)
+        self.assertEqual(response.status_code, 201)
+        response = self.client.api.GetUserDigitalWalletByLabel(new_label, self.user)
+        self.assertEqual(response[len(response)-1]['label'], new_label)
+        self.assertEqual(response[len(response)-1]['expire'], datetimenew)
+
+        self.lg('Update the digital wallet with outdated expiry date')
+        #scenario
+
+
+        self.lg('Try to delete the digital wallet with fake label, should fail with 404')
+        try:
+            response = self.client.api.DeleteUserDigitalWallet('fake_label', self.user)
+        except:
+            self.assertEqual(response.status_code, 404)
+
+
+        self.lg(' Delete the created digital wallet, should succeed with 204')
+        response = self.client.api.DeleteUserDigitalWallet(label, self.user)
+        self.assertEqual(response.status_code, 204)
+
+
+        self.lg('Get nonexisting digital wallet, should fail with 404')
+        try:
+            response = self.client.api.GetUserDigitalWalletByLabel(label, self.user)
+        except:
+            self.assertEqual(response.status_code, 404)
+        self.lg('%s ENDED' % self._testID)
+
+
+
+    def test006_put_post_delete_phonenumbers(self):
+        """ ITSYOU-006
+        *Test case for adding, updating and deleting  user's phonenumbers *
+
+        **Test Scenario:**
+
+        #. Register a new phonenumber, should succeed with 201
+        #. Add a new phonenumber with the same label of the previous phonenumber, should fail with 409
+        #. Get this specific phonenumber, should succeed with 200
+        #. Update the phonenumber, should succeed with 201
+        #. Try to delete the phonenumber with fake label, should fail with 404
+        #. Delete the created phonenumber, should succeed with 204
+        #. Get nonexisting phonenumber, should fail with 404
+        """
+        self.lg('%s STARTED' % self._testID)
+        self.lg('Register a new phonenumber, should succeed with 201')
+        label = str(uuid.uuid4()).replace('-', '')[0:6]
+        data = {'label':label, 'phonenumber':'+01288184444'}
+        response = self.client.api.RegisterNewUserPhonenumber(data, self.user)
+        self.lg('RegisterNewUserPhonenumber [%s] response [%s]' % (self.user, response.json()))
+        self.assertEqual(response.status_code, 201)
+
+        self.lg('Add a new address with the same label of the previous address, should fail with 409')
+        try:
+            response = self.client.api.UpdateUserPhonenumber(data, label, self.user)
+        except:
+            self.assertEqual(response.status_code, 409)
+
+        self.lg('Get this specific address, should succeed with 200')
+        response = self.client.api.GetUserPhonenumberByLabel(label, self.user)
+        self.assertEqual(response.status_code, 200)
+        response = self.client.api.GetUserInformation(self.user)
+        phonenumbers = response['phonenumbers']
+        self.assertEqual(phonenumbers[len(phonenumbers)-1]['label'], label)
+
+        self.lg('Update the phonenumber, should succeed with 201')
+        new_label = str(uuid.uuid4()).replace('-', '')[0:6]
+        data = {'phonenumber': '+201288185555', 'label': new_label}
+        response = self.client.api.UpdateUserPhonenumber(data, label, self.user)
+        self.assertEqual(response.status_code, 201)
+        response = self.client.api.GetUserPhonenumberByLabel(new_label, self.user)
+        self.assertEqual(response[len(response)-1]['label'], new_label)
+        self.assertEqual(response[len(response)-1]['phonenumber'], '201288185555')
+
+        self.lg('Try to delete the phonenumber with fake label, should fail with 404')
+        try:
+            response = self.client.api.DeleteUserPhonenumber('fake_label', self.user)
+        except:
+            self.assertEqual(response.status_code, 404)
+
+        self.lg(' Delete the created phonenumber, should succeed with 204')
+        response = self.client.api.DeleteUserPhonenumber(label, self.user)
+        self.assertEqual(response.status_code, 204)
+
+        self.lg('Get nonexisting address, should fail with 404')
+        try:
+            response = self.client.api.GetUserPhonenumberByLabel(label, self.user)
+        except:
+            self.assertEqual(response.status_code, 404)
+        self.lg('%s ENDED' % self._testID)
+
+    def test007_put_post_delete_bankaccount(self):
+        """ ITSYOU-007
+        *Test case for adding, updating and deleting  user's phonenumbers *
+
+        **Test Scenario:**
+
+        #. Register a new bank account, should succeed with 201
+        #. Add a new bank account with the same label of the previous bank account, should fail with 409
+        #. Get this specific bank account, should succeed with 200
+        #. Update the bank account, should succeed with 201
+        #. Try to delete the bank account with fake label, should fail with 404
+        #. Delete the created bank account, should succeed with 204
+        #. Get nonexisting bank account, should fail with 404
+        """
 
 
 
