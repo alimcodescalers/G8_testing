@@ -1,5 +1,5 @@
 # New features test plan (26 Oct 2016)
-This is only a start plan which can be extended later on while more understandin each feature requirments.
+This is only a start plan which can be extended later on while more understanding each feature requirements.
  
 Prepared by:
 	(Ramez Saeed) 
@@ -22,7 +22,9 @@ Prepared by:
     10.0  RISKS/ASSUMPTIONS
                                  
 ###1.0 INTRODUCTION
-This test plan is a high level test overview for the mentioned new features, more details about the test steps itself should be added in the future when have more info about each feature and try them manullay.
+This test plan is a high level test overview for the mentioned new features,
+more details about the test steps itself should be added in the future when have more info about
+each feature and try them manually.
  
 ###2.0 OBJECTIVES AND TASKS
 ####2.1    Objectives
@@ -33,20 +35,21 @@ This test plan is a high level test overview for the mentioned new features, mor
 
 ###3.0 SCOPE
 	Functional testing
-	Performance testing (@Geert: please provide which fields need to be tested and what/how is the expecetd result for them)
+	Performance testing (@Geert: please provide which fields need to be tested and what/how is the expected result for them)
 
 ### 4.0 FEATURES TO BE TESTED
 	1- Limit machine disk IOPS
 	2- Resources management
 	3- External networks
-	4- AYS automatic snaposhoting
+	4- AYS automatic snapshot
 	5- AYS template for S3 
 	6- AYS own cloud
 	7- Import/Export machine features
 
 ### 5.0 TESTING STRATEGY
 	we need to use the cockpit and AYS blue prints to drive test in these features.
-	@Geert: please provide where we should add the test results as we used to track test results in jenkins but now for cockpit we need to have these result added 			somewhere (Ex.: push test results to github)
+	@Geert: please provide where we should add the test results as we used to track test results in jenkins but now for
+			cockpit we need to have these result added somewhere (Ex.: push test results to github)
 	
 	## install cockpit
 	- We need to install a stable cockpit somewhere to be used for drive test suites (Ex. be-scale-3)
@@ -93,7 +96,7 @@ This test plan is a high level test overview for the mentioned new features, mor
 			expected result: all the data should be aggregated to the master node under directory has the name of the account ID.
 
 		test2:
-			test Upstream aggregation time (dont know how to do that yet, need to try it manually first)
+			test Upstream aggregation time (don't know how to do that yet, need to try it manually first)
 		test3:
 			do the same steps for destroyed/disabled accounts.
 			Expected result: no more data aggregation should be done for destroyed/disabled accounts.
@@ -109,7 +112,7 @@ This test plan is a high level test overview for the mentioned new features, mor
 		test3:
 			test assign a network to specific account (@Jo: please update us with more info how we can do that)
 
-	4- AYS automatic snaposhoting
+	4- AYS automatic snapshot
 		Reference Example:
 			https://github.com/0-complexity/ays_vdc_automated_snapshots/blob/master/specs/vdc-automated-snapshots.md
 		test1:
@@ -130,7 +133,7 @@ This test plan is a high level test overview for the mentioned new features, mor
 			https://github.com/0-complexity/ays_s3_scality/blob/master/specs/initial.md
 			https://github.com/0-complexity/ays_s3_scality/pull/1/files
 		test1:
-			Create AYS template with different combination of params and assert in the backend it had been reflected seuccessfully.
+			Create AYS template with different combination of params and assert in the backend it had been reflected successfully.
 				- **domain**=None, **maximum capacity**=None
 				- **domain**=unexpected_domain, **maximum capacity**=None
 				- **domain**=None, **maximum capacity**=unexpected_value
@@ -138,7 +141,7 @@ This test plan is a high level test overview for the mentioned new features, mor
 		test2:
 			Test If **maximum capacity** is specified, the system will grow the storage dynamically until the **maximum capacity** is reached.
 		test3:
-			Test Dynamic storage capacity and assert in the backend it works exactly as descriped in the specs
+			Test Dynamic storage capacity and assert in the backend it works exactly as described in the specs.
 		test4:
 			Assert for the result of blueprint deployment
 			    - pub ipaddress
@@ -153,10 +156,10 @@ This test plan is a high level test overview for the mentioned new features, mor
 		test1:
 			
 			Input parameters that customers will need to pass when buying an OwnCloud system
-			[domain (optional), ItsYou.Online organisation of people allowed to login, ItsYou.Online organisation of people allowed to administer]
+			[domain (optional), ItsYou.Online organization of people allowed to login, ItsYou.Online organization of people allowed to administer]
 			create AYS blueprint template with different combination for the needed params
 			assert that the passed params are reflected correctly in the created ownclod
-			try to login/administer with unauthuntechated user
+			try to login/administer with not authenticated user
     		test2:
 			test Dynamic storage capacity
 		test3:
@@ -185,12 +188,12 @@ This test plan is a high level test overview for the mentioned new features, mor
 	1- Limit machine disk IOPS:
 		Edit the performance existing FIO test to set the IOPS on disks and check the changes, expected that with each IOPS decrease the Env should handle more IOPS on different VMS.
 
-	4- AYS automatic snaposhoting
-		Load the environmnet with a lot of VMs
+	4- AYS automatic snapshot
+		Load the environment with a lot of VMs
 		put a small interval for automatic snapshot for all the VM
 		start write to all the VMs and check the performance is affected by the snapshots running in background or not.
 	6- AYS own cloud
-		test load the owncloud (@Geert: need to know how we can load it, and what we should mesure here)
+		test load the owncloud (@Geert: need to know how we can load it, and what we should measure here)
 
 
 ### 6.0 ENVIRONMENT REQUIREMENTS
@@ -219,6 +222,8 @@ This test plan is a high level test overview for the mentioned new features, mor
 	- support from the development team to help adding AYS templates as per tests requirements
 
 ### 10.0 RISKS/ASSUMPTIONS
-	- Please note that there is maybe delay of delevery because of there is no knowlage about these new features in the testing team, so testing team will need some time for learning curve and manual tries for these features.
-	- will use the new testing proceadure which is running everything through cockpit and AYS which is not fully clear for the testing team yet.
+	- Please note that there is maybe delay of delivery because of there is no knowledge about these new features
+		in the testing team, so testing team will need some time for learning curve and manual tries for these features.
+	- will use the new testing procedure which is running everything through cockpit and AYS which is not fully clear
+		for the testing team yet.
 
