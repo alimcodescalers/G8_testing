@@ -1,11 +1,11 @@
-New features test plan
+# New features test plan (26 Oct 2016)
 This is only a start plan which can be extended later on while more understandin each feature requirments.
  
 Prepared by:
 	(Ramez Saeed) 
 	(26 Oct 2016)
 
-TABLE OF CONTENTS
+## TABLE OF CONTENTS
     1.0  INTRODUCTION                         
     2.0  OBJECTIVES AND TASKS                         
         2.1  Objectives                                         
@@ -21,21 +21,21 @@ TABLE OF CONTENTS
     9.0  Dependencies
     10.0  RISKS/ASSUMPTIONS
                                  
-1.0 INTRODUCTION
-	This test plan is a high level test overview for the mentioned new features, more details about the test steps itself should be added in the future when have 		more info about each feature and try them manullay.
+###1.0 INTRODUCTION
+This test plan is a high level test overview for the mentioned new features, more details about the test steps itself should be added in the future when have more info about each feature and try them manullay.
  
-2.0 OBJECTIVES AND TASKS
-2.1    Objectives
+###2.0 OBJECTIVES AND TASKS
+####2.1    Objectives
 	create test coverage for all the mentioned new features.
 
-2.2    Tasks
+####2.2    Tasks
 	https://github.com/gig-projects/org_quality/issues/509
 
-3.0 SCOPE
+###3.0 SCOPE
 	Functional testing
 	Performance testing (@Geert: please provide which fields need to be tested and what/how is the expecetd result for them)
 
-4.0 FEATURES TO BE TESTED
+### 4.0 FEATURES TO BE TESTED
 	1- Limit machine disk IOPS
 	2- Resources management
 	3- External networks
@@ -44,7 +44,7 @@ TABLE OF CONTENTS
 	6- AYS own cloud
 	7- Import/Export machine features
 
-5.0 TESTING STRATEGY
+### 5.0 TESTING STRATEGY
 	we need to use the cockpit and AYS blue prints to drive test in these features.
 	@Geert: please provide where we should add the test results as we used to track test results in jenkins but now for cockpit we need to have these result added 			somewhere (Ex.: push test results to github)
 	
