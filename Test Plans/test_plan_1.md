@@ -68,7 +68,8 @@ This test plan is a high level test overview for the mentioned new features, mor
 		client.cloudapi.accounts.list()
 
 		```
-5.1    System and Integration Testing
+### 5.1    System and Integration Testing
+	
 	1- Limit machine disk IOPS:
 		test1:
 			create a blueprint to add (account, CS, VM)
@@ -180,9 +181,9 @@ This test plan is a high level test overview for the mentioned new features, mor
 			assert that G8 performs the export and sends results via email to the user
 
 
-5.2    Performance and Stress Testing
+### 5.2    Performance and Stress Testing
 	1- Limit machine disk IOPS:
-		Edit the performance existing FIO test to set the IOPS on disks and check the changes, expected that with each IOPS decrease the Env should handle more 		IOPS on different VMS.
+		Edit the performance existing FIO test to set the IOPS on disks and check the changes, expected that with each IOPS decrease the Env should handle more IOPS on different VMS.
 
 	4- AYS automatic snaposhoting
 		Load the environmnet with a lot of VMs
@@ -192,11 +193,11 @@ This test plan is a high level test overview for the mentioned new features, mor
 		test load the owncloud (@Geert: need to know how we can load it, and what we should mesure here)
 
 
-6.0 ENVIRONMENT REQUIREMENTS
+### 6.0 ENVIRONMENT REQUIREMENTS
 	1- Virtual machine to have the cockpit installed.
 	2- test environment has all the new features installed and updated.
  
-7.0 CONTROL PROCEDURES
+### 7.0 CONTROL PROCEDURES
 	Problem Reporting
 	@Geert: Please Document the procedures to follow when an incident is encountered during the testing 
 		process and who is the goto person for each feature.
@@ -207,17 +208,17 @@ This test plan is a high level test overview for the mentioned new features, mor
   
 
 
-8.0 RESOURCES/ROLES & RESPONSIBILITIES
+### 8.0 RESOURCES/ROLES & RESPONSIBILITIES
 	QA team members who are involved in this:
 		Ramez Saeed
 		Islam Taha
 
-9.0 DEPENDENCIES
+### 9.0 DEPENDENCIES
 	- stable cockpit deployment and installation
 	- stable AYS installation
 	- support from the development team to help adding AYS templates as per tests requirements
 
-10.0 RISKS/ASSUMPTIONS
-	- Please note that there is maybe delay of delevery because of there is no knowlage about these new features in the testing team, so testing team will need some 			time for learning curve and manual tries for these features.
+### 10.0 RISKS/ASSUMPTIONS
+	- Please note that there is maybe delay of delevery because of there is no knowlage about these new features in the testing team, so testing team will need some time for learning curve and manual tries for these features.
 	- will use the new testing proceadure which is running everything through cockpit and AYS which is not fully clear for the testing team yet.
 
