@@ -75,12 +75,14 @@ each feature and try them manually.
 	
 	1- Limit machine disk IOPS:
 		test1:
-			create a blueprint to add (account, CS, VM)
-			limit the IOPS for the VM while creation
-			add a new disk to the VM and limit its IOPS too
-			run FIO command on the two disks and assert that the max IOPS doesn't exceed the limit
-			decrease the IOPS limits and run again
-			increase the IOPS limits and run again
+			1. create a blueprint to add (account, CS, VM) and deploy
+			2. run fio test, store result
+			3. edit blueprint to limit the IOPS of the VM and deploy
+			4. run fio test, validate result against last deployed blueprint
+			5. add a new disk to the VM in the blueprint, limit its IOPS and deploy
+			6. run fio test, validate result against last deployed blueprint
+			7. decrease the IOPS limits in the blueprint and deploy
+			8. run fio test, validate result against last deployed blueprint
 				
 	2- Resources management
 		Reference:
@@ -194,6 +196,13 @@ each feature and try them manually.
 		start write to all the VMs and check the performance is affected by the snapshots running in background or not.
 	6- AYS own cloud
 		test load the owncloud (@Geert: need to know how we can load it, and what we should measure here)
+		1. lots of storage: push over 5tb to the owncloud ==> expected result automatic scaling of the owncloud ays service kicks in and dynamically adds storage to the owncloud machine / btrfs /data filesystem
+		   Hints:
+		      create 100 mb random file
+		      encrypt random file
+		      encrypt encrypted random file
+		      ...
+		2. lots of clients: mount owncloud over webdav for 100, 1000, 10000 times and trigger filemodification on 10% of the mounts
 
 
 ### 6.0 ENVIRONMENT REQUIREMENTS
