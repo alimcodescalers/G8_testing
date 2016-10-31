@@ -1,5 +1,5 @@
 from functional_testing.Itsyouonline.api_testing.utils import BaseTest
-import unittest
+import types
 import uuid
 
 class UsersTestsB(BaseTest):
@@ -271,10 +271,10 @@ class UsersTestsB(BaseTest):
 
 
         self.lg('Register a new digital wallet, should succeed with 201')
-
+        expire = '2018-10-02T22:00:00Z'
         label = str(uuid.uuid4()).replace('-', '')[0:6]
         data = {'label': label, 'address': '12345 NYC',
-                'currencysymbol': 'USD', 'expire': datetime_type}
+                'currencysymbol': 'USD', 'expire': expire}
         response = self.client.api.RegisterDigitalWallet(data, self.user)
         self.lg('RegisterDigitalWallet [%s] response [%s]' % (self.user, response.json()))
         self.assertEqual(response.status_code, 201)
@@ -292,13 +292,14 @@ class UsersTestsB(BaseTest):
         self.assertEqual(response['digitalwallet']['label'], label)
 
         self.lg('Update the digital wallet, should succeed with 201')
+        datetime_new = '2019-10-02T22:00:00Z'
         new_label = str(uuid.uuid4()).replace('-', '')[0:6]
-        data = {'expire': datetimenew, 'label': new_label}
+        data = {'expire': datetime_new, 'label': new_label}
         response = self.client.api.UpdateUserDigitalWallet(data, label, self.user)
         self.assertEqual(response.status_code, 201)
         response = self.client.api.GetUserDigitalWalletByLabel(new_label, self.user)
         self.assertEqual(response[len(response)-1]['label'], new_label)
-        self.assertEqual(response[len(response)-1]['expire'], datetimenew)
+        self.assertEqual(response[len(response)-1]['expire'], datetime_new)
 
         self.lg('Update the digital wallet with outdated expiry date')
         #scenario
@@ -322,8 +323,6 @@ class UsersTestsB(BaseTest):
         except:
             self.assertEqual(response.status_code, 404)
         self.lg('%s ENDED' % self._testID)
-
-
 
     def test006_put_post_delete_phonenumbers(self):
         """ ITSYOU-006
@@ -388,7 +387,7 @@ class UsersTestsB(BaseTest):
 
     def test007_put_post_delete_bankaccount(self):
         """ ITSYOU-007
-        *Test case for adding, updating and deleting  user's phonenumbers *
+        *Test case for adding, updating and deleting  user's bank account *
 
         **Test Scenario:**
 
@@ -396,10 +395,236 @@ class UsersTestsB(BaseTest):
         #. Add a new bank account with the same label of the previous bank account, should fail with 409
         #. Get this specific bank account, should succeed with 200
         #. Update the bank account, should succeed with 201
+        #. Update the bank account's BIC with wrong BIC, should fail
         #. Try to delete the bank account with fake label, should fail with 404
         #. Delete the created bank account, should succeed with 204
         #. Get nonexisting bank account, should fail with 404
         """
+        self.lg('%s STARTED' % self._testID)
+        self.lg('Register a new bank account, should succeed with 201')
+        label = str(uuid.uuid4()).replace('-', '')[0:6]
+        data = {'label': label, 'bic': '21232333', 'country':'Egypt', 'iban':'123123123123'}
+        response = self.client.api.CreateUserBankAccount(data, self.user)
+        self.lg('CreateUserBankAccount [%s] response [%s]' % (self.user, response.json()))
+        self.assertEqual(response.status_code, 201)
+
+        self.lg('Add a new bank account with the same label of the previous bank account, should fail with 409')
+        try:
+            response = self.client.api.CreateUserBankAccount(data, label, self.user)
+        except:
+            self.assertEqual(response.status_code, 409)
+
+        self.lg('Get this specific bank account, should succeed with 200')
+        response = self.client.api.GetUserBankAccountByLabel(label, self.user)
+        self.assertEqual(response.status_code, 200)
+        response = self.client.api.GetUser(self.user)
+        bankaccounts = response['bankaccounts']
+        self.assertEqual(bankaccounts[len(bankaccounts)-1]['label'], label)
+
+        self.lg('Update the bank account, should succeed with 201')
+
+        new_label = str(uuid.uuid4()).replace('-', '')[0:6]
+        data = {'label': new_label, 'bic': '21sds234', 'country': 'Egypt', 'iban': '1231231'}
+        response = self.client.api.UpdateUserBankAccount(data, self.user, label)
+        self.assertEqual(response.status_code, 201)
+        response = self.client.api.GetUserBankAccountByLabel(new_label, self.user)
+        self.assertEqual(response[len(response)-1]['label'], new_label)
+        self.assertEqual(response[len(response)-1]['bic'], '21sds234')
+
+        self.lg("Update the bank account's BIC with wrong BIC, should fail")
+        data = {'label': label, 'bic': '212', 'country': 'Egypt', 'iban': '123123123123'}
+        try:
+            self.client.api.UpdateUserBankAccount(data, self.user, label)
+        except:
+            raise
+
+        self.lg('Try to delete the bank account with fake label, should fail with 404')
+        try:
+            response = self.client.api.DeleteUserBankAccount('fake_label', self.user)
+        except:
+            self.assertEqual(response.status_code, 404)
+
+        self.lg('Delete the created bank account, should succeed with 204')
+        response = self.client.api.DeleteUserBankAccount(label, self.user)
+        self.assertEqual(response.status_code, 204)
+
+        self.lg('Get nonexisting bank account, should fail with 404')
+        try:
+            response = self.client.api.GetUserBankAccountByLabel(label, self.user)
+        except:
+            self.assertEqual(response.status_code, 404)
+        self.lg('%s ENDED' % self._testID)
+
+    def test008_delete_facebook_account(self):
+        """ ITSYOU-008
+        *Test case for deleting facebook account.*
+
+        **Test Scenario:**
+
+        #. Check if facebook account exists, should succeed
+        #. Delete facebook account, should succeed
+        #. Check if the facebook account is deleted, should succeed
+        """
+        self.lg('%s STARTED' % self._testID)
+        self.lg('Check if facebook account exists, should succeed')
+        response = self.client.api.GetUser(self.user)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('facebook', response.json().keys())
+        self.assertEqual(type(response.json()['facebook']), types.DictType)
+        empty_account = {'id':'', 'link':'', 'name':'', 'picture':''}
+        self.assertNotEqual(response.json()['facebook'], empty_account)
+        self.lg('Delete facebook account, should succeed')
+        response = self.client.api.DeleteFacebookAccount(self.user)
+        self.assertEqual(response.status_code, 204)
+        self.lg('Check if the facebook account is deleted, should succeed')
+        response = self.client.api.GetUser(self.user)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()['facebook'], empty_account)
+        self.lg('%s ENDED' % self._testID)
+
+    def test009_delete_github_account(self):
+        """ ITSYOU-009
+        *Test case for deleting github account*
+
+        **Test Scenario:**
+
+        #. Check if github account exists, should succeed
+        #. Delete github account, should succeed
+        #. Check if the github account is deleted, should succeed
+        """
+        self.lg('%s STARTED' % self._testID)
+        self.lg('Check if github account exists, should succeed')
+        response = self.client.api.GetUser(self.user)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('github', response.json().keys())
+        self.assertEqual(type(response.json()['github']), types.DictType)
+        empty_account = {u'avatar_url': u'', u'html_url': u'', u'id': 0, u'login': u'', u'name': u''}
+        self.assertNotEqual(response.json()['github'], empty_account)
+        self.lg('Delete github account, should succeed')
+        response = self.client.api.DeleteGithubAccount(username=self.user)
+        self.assertEqual(response.status_code, 204)
+        self.lg('Check if the github account is deleted, should succeed')
+        response = self.client.api.GetUser(self.user)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('github', response.json().keys())
+        self.assertEqual(type(response.json()['github']), types.DictType)
+        self.assertEqual(response.json()['github'], empty_account)
+        self.lg('%s ENDED' % self._testID)
+
+    def test010_put_delete_organization_auth(self):
+        """ ITSYOU-010
+        *Test case for leaving, accepting, rejecting  user's invitation or organization
+        and updating, deleting user's authorization as well*
+
+        **Test Scenario:**
+
+        #. Create a new organization with user1, should succeed
+        #. Send invitation to user2 to join an organization, should succeed (organization api)
+        #. Accept membership in organization, should succeed with 201
+
+        #. Modify certain information to be granted to specific organization, should succeed
+        #. Remove the authorization for the organization, should succeed
+
+        #. Leave an organization with unknown user, should fail with 404
+        #. Leave an organization, get list of organization
+        #. send another invitation, should succeed
+        #. Reject the invitation, should succeed with 204
+        """
+        self.lg('Create a new organization with user1, should succeed')
+        globalid = str(uuid.uuid4()).replace('-', '')[0:10]
+        data = {'dns':[], globalid:globalid, 'includes':[],
+                'members':[], 'owners':[self.user], 'publicKeys':[]}
+        response = self.client.api.CreateNewOrganization(data)
+        self.assertEqual(response.status_code, 201)
+
+        self.lg('Send invitation to someone to join an organization, should succeed')
+        role = 'member'; user2 = 'anotheruser'
+        data = {'username': user2}
+        response = self.client.api.AddOrganizationMember(data, globalid)
+        self.assertEqual(response.status_code, 201)
+        response = self.client.api.GetNotifications(user2)
+        invitations = response['invitations']
+        self.assertEqual(invitations[len(invitations)-1]['organization'], globalid)
+        self.assertEqual(invitations[len(invitations)-1]['status'], 'pending')
+
+        self.lg('Accept membership in organization, should succeed with 201')
+        data={'created':'datatime..don\'t know what is that',
+              'organization':globalid, 'role':role, 'user': user2}
+        response = self.client.api.AcceptMembership(data, globalid, role, user2)
+        self.assertEqual(response.status_code, 201)
+        response = self.client.api.GetUserOrganizations(user2)
+        self.assertIn(globalid, response[role])
+        response = self.client.api.GetNotifications(user2)
+        invitations = response['invitations']
+        self.assertEqual(invitations[len(invitations)-1]['status'], 'accepted')
+
+
+        self.lg('Modify certain information to be granted to specific organization, should succeed')
+        # not sure if this data is right
+        data = {"emailaddresses": [{"requestedlabel": "main", "reallabel": "main"}],
+                "phonenumbers": [{"requestedlabel": "main", "reallabel": "main"}]}
+        grantedto = globalid
+        response = self.client.api.UpdateAuthorization(data, grantedto, user2)
+        self.assertEqual(response.status_code, 201)
+        response = self.client.api.GetAuthorization(grantedto, user2)
+        self.assertIn('emailaddresses', response)
+
+        self.lg('Remove the authorization for the organization, should succeed')
+        response = self.client.api.DeleteAuthorization(grantedto, user2)
+        self.assertEqual(response.status_code, 204)
+        response = self.client.api.GetAuthorization(grantedto, user2)
+        self.assertNotIn('emailaddresses', response)
+        self.assertNotIn('phonenumbers', response)
+
+
+        self.lg('Leave an organization with unkown user, should fail with 404')
+        try:
+            response = self.client.api.LeaveOrganization(globalid, 'unknow_user')
+        except:
+            self.assertEqual(response.status_code, 404)
+
+        self.lg('Leave an organization, should succeed with 204')
+        self.client.api.LeaveOrganization(globalid, user2)
+        self.assertEqual(response.status_code, 204)
+        response = self.client.api.GetUserOrganizations(user2)
+        self.assertNotIn(globalid, response[role])
+
+        self.lg('Send the invitation once more, should succeed')
+        data = {'role': role, 'username': user2}
+        response = self.client.api.AddOrganizationMember(data, globalid)
+        self.assertEqual(response.status_code, 201)
+
+        self.lg('Reject the invitation, should succeed with 204')
+        self.client.api.RejectMembership(globalid, role, user2)
+        self.assertEqual(response.status_code, 204)
+        response = self.client.api.GetUserOrganizations(user2)
+        self.assertNotIn(globalid, response[role])
+        response = self.client.api.GetNotifications(user2)
+        invitations = response['invitations']
+        self.assertEqual(invitations[len(invitations)-1]['status'], 'rejected')
+
+    def test011_create_contract(self):
+        """ ITSYOU-011
+        *Test case for creating  user's contract*
+
+        **Test Scenario:**
+
+        #. Create a new contract, should succeed
+        #. Create an new contract with unauthorized user, should fail with 404 (not implemented yet)
+        """
+        self.lg('Create a new contract, should succeed')
+        contractid = str(uuid.uuid4()).replace('-', '')[0:6]
+        expire = '2019-10-02T22:00:00Z'
+        data = {'content':'test', 'contractId':contractid, 'contractType':'partnership',
+                'expires':expire, 'parties':[{'name':'', 'type':''}],
+                'signatures':[{'date':'', 'publicKey':'', 'signature':'', 'signedBy':''}]}
+        response = self.client.api.CreateUserContract(data, self.user)
+        self.assertEqual(response.status_code, 201)
+
+    def test012_post_delete_registry(self):
+        pass
+
+
 
 
 
