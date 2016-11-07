@@ -1,9 +1,23 @@
+from functional_testing.Openvcloud.ovc_master_hosted.Portal.framework.Navigation.left_navigation_menu import leftNavigationMenu
 import uuid
-
+import time
 
 class virtualmachines():
     def __init__(self, framework):
         self.framework = framework
+        self.LeftNavigationMenu = leftNavigationMenu(framework)
+
+    def get_it(self):
+        self.LeftNavigationMenu.CloudBroker.VirtualMachines()
+
+    def is_at(self):
+        for temp in range(5):
+            if 'Virtual Machines' in self.framework.driver.title:
+                return True
+            else:
+                time.sleep(0.5)
+        else:
+            return False
 
     def create_virtual_machine(self, cloudspace='', machine_name='', image='', memory='', disk=''):
         cloudspace = cloudspace
