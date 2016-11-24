@@ -109,7 +109,6 @@ class BasicTests(BasicACLTest):
 
         self.lg('%s ENDED' % self._testID)
 
-    @unittest.skip("https://github.com/0-complexity/openvcloud/issues/424")
     def test003_create_machine_with_resize(self):
         """ OVC-003
         *Test case for testing resize operation with all combinations*
@@ -153,8 +152,6 @@ class BasicTests(BasicACLTest):
 
         self.lg('%s ENDED' % self._testID)
 
-    @unittest.skip("openvcloud Bug-57: Admin can't resize the machine more than one time in the same halt"
-                   " using Cloudbroker or the End use portal")
     def test004_create_machine_with_resize_in_halted(self):
         """ OVC-004
         *Test case for testing resize operation in the halted machine*
@@ -467,12 +464,11 @@ class BasicTests(BasicACLTest):
 
         self.lg('%s ENDED' % self._testID)
 
-    #@parameterized.expand(['تست_عربى',
-    #                       'утрчиогфрыуи',
-    #                       'é€èêëâæüéêæâàâ',
-    #                       'ωβνμκλπιυρσζαωθ',
-    #                       'îöşüû«»“âç'])
-    @unittest.skip("https://github.com/gig-projects/org_quality/issues/452")
+    @parameterized.expand(['تست_عربى',
+                           'утрчиогфрыуи',
+                           'é€èêëâæüéêæâàâ',
+                           'ωβνμκλπιυρσζαωθ',
+                           'îöşüû«»“âç'])
     def test008_test_different_Language(self, language):
         """ OVC-008
         *Test case  for testing different language*
