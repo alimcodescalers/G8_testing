@@ -486,7 +486,7 @@ class BasicTests(BasicACLTest):
         """
         language += str(random.randrange(1, 1000))
         self.lg('- create an account with %s name' % (language))
-        self.accountId = self.api.cloudbroker.account.create(language, self.username, self.email, self.location)
+        self.accountId = self.api.cloudbroker.account.create(language, self.username, self.email)
         self.assertEqual(self.api.cloudapi.accounts.get(accountId=self.accountId)['id'], self.accountId)
 
         self.lg('- create cloudspace with %s name' % (language))
