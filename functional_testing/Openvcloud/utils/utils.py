@@ -95,6 +95,8 @@ class BaseTest(unittest.TestCase):
             maxMemoryCapacity=maxMemoryCapacity, maxVDiskCapacity=maxDiskCapacity,
             maxCPUCapacity=maxCPUCapacity, maxNumPublicIP=maxNumPublicIP)
         self.assertTrue(cloudspaceId)
+        self.wait_for_status('DEPLOYED', api.cloudapi.cloudspaces.get,
+                             cloudspaceId=cloudspaceId)
         return cloudspaceId
 
     def cloudbroker_account_create(self, name, username, email, maxMemoryCapacity=-1,

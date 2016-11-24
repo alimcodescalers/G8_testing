@@ -424,7 +424,6 @@ class Write(ACLCLOUDSPACE):
 
         self.lg('%s ENDED' % self._testID)
 
-    @unittest.skip("openvcloud Bug-49: User can't update the port forwarding fields")
     def test004_cloudspace_portforwarding_add_update_delete(self):
         """ ACL-32
         *Test case for add/update/delete portforwarding api with user has write access on cloud space level.*
