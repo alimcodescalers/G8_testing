@@ -195,9 +195,13 @@ class Deployer(object):
                                                                      location=options.location,
                                                                      name=name,
                                                                      access=options.username)
-
-            print("Deploying cloudspace {}".format(name))
-            self.ovc.api.cloudapi.cloudspaces.deploy(cloudspaceId=cloudspace_id)
+            print("Checking if cloudspace {} is deployed".format(name))
+            while True:
+                cs = self.ovc.api.cloudapi.cloudspaces.get(cloudspaceId=cloudspace_id)
+                if cs['status'] == 'DEPLOYED':
+                    break
+                print('Waiting for cloudspace {} to be deployed'.format(name))
+                time.sleep(15)
             _stats['deployed_cloudspaces'] += 1
             return cloudspace_id
 
