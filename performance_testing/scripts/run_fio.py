@@ -33,9 +33,13 @@ def prepare_fio_test(ovc, options, machine_id, publicip, publicport):
     wait_until_remote_is_listening(publicip, int(publicport), True, machine_id)
 
     templ = 'sshpass -p{} scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null '
-    templ += '-P {} {}/1_fio_vms/Machine_script.py  {}@{}:'
-    cmd = templ.format(account['password'], publicport, options.testsuite, account['login'], publicip)
+    templ1 = templ + '-P {} {}/1_fio_vms/Machine_script.py  {}@{}:'
+    cmd = templ1.format(account['password'], publicport, options.testsuite, account['login'], publicip)
     run_cmd_via_gevent(cmd)
+    if options.filesystem == '1'
+        templ2 = templ + '-P {} {}/1_fio_vms/mount_disks.sh  {}@{}:'
+        cmd2 = templ2.format(account['password'], publicport, options.testsuite, account['login'], publicip)
+        run_cmd_via_gevent(cmd2)
 
     return machine_id, publicip, publicport, account
 
@@ -163,7 +167,7 @@ if __name__ == "__main__":
                       default=8000, help="Cap the bandwidth to this number of IOPS")
     parser.add_option("-j", "--numjobs", dest="numjobs", type="int",
                       default=1, help=" Number of clones (processes/threads performing the same workload) of this job")
-    parser.add_option("-j", "--fs", dest="filesystem", type="int",
+    parser.add_option("-f", "--fs", dest="filesystem", type="int",
                       default=1, help="Equate filesystem to 1 if the disks will use the filesytem and equate it to 0 if you will use the disks as block devices")
     parser.add_option("-v", "--vms", dest="required_vms", type="int",
                       default=2, help=" selected number of virtual machines to run fio on")
