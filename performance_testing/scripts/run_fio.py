@@ -54,7 +54,6 @@ def fio_test(options, machine_id, publicip, publicport, account):
                        options.testrun_time, machine_id, account['password'], 1, disks_num,
                        options.data_size, options.write_type, options.block_size, options.iodepth,
                        options.direct_io, options.rwmixwrite, options.rate_iops, options.numjobs, options.type)
-    import ipdb;ipdb.set_trace()
     print('FIO testing has been started on machine: {}'.format(machine_id))
     run_cmd_via_gevent(cmd)
     machines_complete.add(machine_id)
@@ -172,7 +171,7 @@ if __name__ == "__main__":
                       default=8000, help="Cap the bandwidth to this number of IOPS")
     parser.add_option("-j", "--numjobs", dest="numjobs", type="int",
                       default=1, help=" Number of clones (processes/threads performing the same workload) of this job")
-    parser.add_option("-f", "--fs", dest="type", type="int",
+    parser.add_option("-f", "--fs", dest="type", type="string",
                       default=1, help="Use disk as a block device or make it use the filesystem, choice are 'filesystem' or 'blkdevice'")
     parser.add_option("-v", "--vms", dest="required_vms", type="int",
                       default=2, help=" selected number of virtual machines to run fio on")

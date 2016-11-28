@@ -32,7 +32,7 @@ if __name__ == "__main__":
     rwmixwrite = sys.argv[11]
     rate_iops = int(sys.argv[12])
     numjobs = int(sys.argv[13])
-    filesystem = sys.argv[14])
+    filesystem = sys.argv[14]
     datasize_process = data_size/numjobs
 
     disk_list = ['b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k']
