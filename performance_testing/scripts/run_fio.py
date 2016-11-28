@@ -12,6 +12,19 @@ import datetime
 machines_running = set()
 machines_complete = set()
 
+
+def mount_disks(ovc, machine_id, publicip, publicport):
+    # only one data disk for this test
+    machine = safe_get_vm(ovc, concurrency, machine_id)
+    account = machine['accounts'][0]
+    templ = 'sshpass -p "{}" ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p {} {}@{} '
+    templ += ' bash mount_disk.sh {} b'
+    cmd = templ.format(account['password'], publicport, account['login'], publicip,
+                       account['password'])
+    print('mounting disks for machine:%s' % machine_id)
+    run_cmd_via_gevent(cmd)
+
+
 def prepare_fio_test(ovc, options, machine_id, publicip, publicport):
     print("Preparing fio test on machine {}".format(machine_id))
     machine = safe_get_vm(ovc, concurrency, machine_id)
@@ -32,11 +45,11 @@ def fio_test(options, machine_id, publicip, publicport, account):
     # only one data disk for this test
     disks_num = 1
     templ = 'sshpass -p "{}" ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p {} {}@{} '
-    templ += ' python Machine_script.py {} {} {} {} {} {} {} {} {} {} {} {} {}'
+    templ += ' python Machine_script.py {} {} {} {} {} {} {} {} {} {} {} {} {} {}'
     cmd = templ.format(account['password'], publicport, account['login'], publicip,
                        options.testrun_time, machine_id, account['password'], 1, disks_num,
                        options.data_size, options.write_type, options.block_size, options.iodepth,
-                       options.direct_io, options.rwmixwrite, options.rate_iops, options.numjobs)
+                       options.direct_io, options.rwmixwrite, options.rate_iops, options.numjobs, options.filesystem)
     print('FIO testing has been started on machine: {}'.format(machine_id))
     run_cmd_via_gevent(cmd)
     machines_complete.add(machine_id)
@@ -99,6 +112,10 @@ def main(options):
     pjobs = [gevent.spawn(prepare_fio_test, ovc, options, *vm) for vm in vms]
     gevent.joinall(pjobs)
 
+    # mount disks if the filesystem will be used
+    mjobs = [gevent.spawn(mount_disks, ovc, *vm) for vm in vms]
+    gevent.joinall(mjobs)
+
     # run fio tests
     rjobs = [gevent.spawn(fio_test, options, *job.value) for job in pjobs if job.value is not None]
     gevent.joinall(rjobs)
@@ -146,6 +163,8 @@ if __name__ == "__main__":
                       default=8000, help="Cap the bandwidth to this number of IOPS")
     parser.add_option("-j", "--numjobs", dest="numjobs", type="int",
                       default=1, help=" Number of clones (processes/threads performing the same workload) of this job")
+    parser.add_option("-j", "--fs", dest="filesystem", type="int",
+                      default=1, help="Equate filesystem to 1 if the disks will use the filesytem and equate it to 0 if you will use the disks as block devices")
     parser.add_option("-v", "--vms", dest="required_vms", type="int",
                       default=2, help=" selected number of virtual machines to run fio on")
     parser.add_option("-r", "--rdir", dest="results_dir", type="string",
