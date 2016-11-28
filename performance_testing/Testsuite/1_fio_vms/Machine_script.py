@@ -5,7 +5,7 @@ import multiprocessing
 
 
 def FIO_test(disk, testrun_time, machineId, account_pass, iteration, datasize_process, write_type, rwmixwrite, bs, iodepth, direct_io, rate_iops, numjobs, filesystem):
-    if filesystem == '1':
+    if filesystem == 'filesystem':
         os.system('echo %s | sudo -S fio --bs=%s --iodepth=%s --direct=%s --ioengine=libaio --name=test_iter%s_vd%s --size=%sM --readwrite=%s --rwmixwrite=%s'
               ' --group_reporting --directory=/mnt/vd%s --runtime=%s --output=machine%s_iter%s_%s_results/result%s_iter%s_vd%s.txt --rate_iops=%s --numjobs=%s'
               % (account_pass, bs, iodepth, direct_io, iteration, disk, datasize_process, write_type, rwmixwrite, disk, testrun_time, machineId, iteration,
@@ -32,7 +32,7 @@ if __name__ == "__main__":
     rwmixwrite = sys.argv[11]
     rate_iops = int(sys.argv[12])
     numjobs = int(sys.argv[13])
-    filesystem = int(sys.argv[14])
+    filesystem = sys.argv[14])
     datasize_process = data_size/numjobs
 
     disk_list = ['b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k']

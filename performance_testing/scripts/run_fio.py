@@ -18,7 +18,7 @@ def mount_disks(ovc, machine_id, publicip, publicport):
     machine = safe_get_vm(ovc, concurrency, machine_id)
     account = machine['accounts'][0]
     templ = 'sshpass -p "{}" ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p {} {}@{} '
-    templ += ' bash mount_disk.sh {} b'
+    templ += ' bash mount_disks.sh {} b'
     cmd = templ.format(account['password'], publicport, account['login'], publicip,
                        account['password'])
     print('mounting disks for machine:%s' % machine_id)
@@ -36,7 +36,7 @@ def prepare_fio_test(ovc, options, machine_id, publicip, publicport):
     templ1 = templ + '-P {} {}/1_fio_vms/Machine_script.py  {}@{}:'
     cmd = templ1.format(account['password'], publicport, options.testsuite, account['login'], publicip)
     run_cmd_via_gevent(cmd)
-    if options.filesystem == '1'
+    if options.type == 'filesystem':
         templ2 = templ + '-P {} {}/1_fio_vms/mount_disks.sh  {}@{}:'
         cmd2 = templ2.format(account['password'], publicport, options.testsuite, account['login'], publicip)
         run_cmd_via_gevent(cmd2)
@@ -53,7 +53,8 @@ def fio_test(options, machine_id, publicip, publicport, account):
     cmd = templ.format(account['password'], publicport, account['login'], publicip,
                        options.testrun_time, machine_id, account['password'], 1, disks_num,
                        options.data_size, options.write_type, options.block_size, options.iodepth,
-                       options.direct_io, options.rwmixwrite, options.rate_iops, options.numjobs, options.filesystem)
+                       options.direct_io, options.rwmixwrite, options.rate_iops, options.numjobs, options.type)
+    import ipdb;ipdb.set_trace()
     print('FIO testing has been started on machine: {}'.format(machine_id))
     run_cmd_via_gevent(cmd)
     machines_complete.add(machine_id)
@@ -77,6 +78,9 @@ def assemble_fio_test_results(results_dir, account, publicport, cloudspace_publi
 
 def main(options):
     from JumpScale import j
+
+    if not options.type:   # if filename is not given
+        parser.error("type is not given, choice are 'filesystem' or 'blkdevice'")
 
     # Check dependencies
     if not os.path.exists(options.results_dir):
@@ -117,8 +121,9 @@ def main(options):
     gevent.joinall(pjobs)
 
     # mount disks if the filesystem will be used
-    mjobs = [gevent.spawn(mount_disks, ovc, *vm) for vm in vms]
-    gevent.joinall(mjobs)
+    if options.type == 'filesystem':
+        mjobs = [gevent.spawn(mount_disks, ovc, *vm) for vm in vms]
+        gevent.joinall(mjobs)
 
     # run fio tests
     rjobs = [gevent.spawn(fio_test, options, *job.value) for job in pjobs if job.value is not None]
@@ -167,8 +172,8 @@ if __name__ == "__main__":
                       default=8000, help="Cap the bandwidth to this number of IOPS")
     parser.add_option("-j", "--numjobs", dest="numjobs", type="int",
                       default=1, help=" Number of clones (processes/threads performing the same workload) of this job")
-    parser.add_option("-f", "--fs", dest="filesystem", type="int",
-                      default=1, help="Equate filesystem to 1 if the disks will use the filesytem and equate it to 0 if you will use the disks as block devices")
+    parser.add_option("-f", "--fs", dest="type", type="int",
+                      default=1, help="Use disk as a block device or make it use the filesystem, choice are 'filesystem' or 'blkdevice'")
     parser.add_option("-v", "--vms", dest="required_vms", type="int",
                       default=2, help=" selected number of virtual machines to run fio on")
     parser.add_option("-r", "--rdir", dest="results_dir", type="string",
