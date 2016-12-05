@@ -69,9 +69,8 @@ echo -e "${GREEN}** Installing portal test suite requirements ...${NC}"
 pip2 install -r requirements.txt
 echo -e "${GREEN}** Running tests ...${NC}"
 
-
-#sudo apt-get install xvfb
-nosetests -v $directory --with-selenium --headless  --browser $browser --tc-file=config.ini --tc=main.passwd:$passwd --tc=main.env:$environment --tc=main.location:$location --tc=main.admin:$user_id --with-xunit --xunit-file='testresults.xml' --with-progressive
+apt-get install xvfb
+nosetests -v -s $directory --with-selenium --headless  --browser $browser --tc-file=config.ini --tc=main.passwd:$passwd --tc=main.env:$environment --tc=main.location:$location --tc=main.admin:$user_id --with-xunit --xunit-file='testresults.xml' --with-progressive
 
 # Collect result
 echo -e "${GREEN}** DONE ** ...${NC}"
