@@ -13,6 +13,7 @@ from pytractor import webdriver
 from selenium.webdriver import FirefoxProfile
 from selenium.webdriver.support.wait import WebDriverWait
 from functional_testing.Openvcloud.ovc_master_hosted.Portal.framework import xpath
+import os
 
 
 class BaseTest(unittest.TestCase):
