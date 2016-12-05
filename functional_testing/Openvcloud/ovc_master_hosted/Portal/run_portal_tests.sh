@@ -65,6 +65,7 @@ which pip2 || sudo apt-get install -y python-pip
 echo -e "${GREEN}** Activating virtual env ...${NC}"
 virtualenv venv
 source venv/bin/activate
+pip install seleniumbase --upgrade
 echo -e "${GREEN}** Installing portal test suite requirements ...${NC}"
 pip2 install -r requirements.txt
 echo -e "${GREEN}** Running tests ...${NC}"
