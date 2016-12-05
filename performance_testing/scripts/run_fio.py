@@ -78,8 +78,8 @@ def assemble_fio_test_results(results_dir, account, publicport, cloudspace_publi
 def main(options):
     from JumpScale import j
 
-    if not options.type:   # if filename is not given
-        parser.error("type is not given, choice are 'filesystem' or 'blkdevice'")
+    if options.type not in ['filesystem', 'blkdevice']:
+        parser.error("type is not correctly given, choice are 'filesystem' or 'blkdevice'")
 
     # Check dependencies
     if not os.path.exists(options.results_dir):
