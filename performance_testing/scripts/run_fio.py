@@ -21,8 +21,9 @@ def mount_disks(ovc, options, machine_id, publicip, publicport):
     templ += ' bash mount_disks.sh {0} b {4}'
     cmd = templ.format(account['password'], publicport, account['login'], publicip,
                        options.type)
-    print('mounting disks for machine:%s' % machine_id)
-    run_cmd_via_gevent(cmd)
+    if options.type == "filesytem":
+        print('mounting disks for machine:%s' % machine_id)
+    os.system(cmd)
 
 
 def prepare_fio_test(ovc, options, machine_id, publicip, publicport):
