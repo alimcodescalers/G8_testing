@@ -12,6 +12,20 @@ import datetime
 machines_running = set()
 machines_complete = set()
 
+
+def mount_disks(ovc, options, machine_id, publicip, publicport):
+    # only one data disk for this test
+    machine = safe_get_vm(ovc, concurrency, machine_id)
+    account = machine['accounts'][0]
+    templ = 'sshpass -p "{0}" ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p {1} {2}@{3} '
+    templ += ' bash mount_disks.sh {0} b {4}'
+    cmd = templ.format(account['password'], publicport, account['login'], publicip,
+                       options.type)
+    if options.type == "filesytem":
+        print('mounting disks for machine:%s' % machine_id)
+    run_cmd_via_gevent(cmd)
+
+
 def prepare_fio_test(ovc, options, machine_id, publicip, publicport):
     print("Preparing fio test on machine {}".format(machine_id))
     machine = safe_get_vm(ovc, concurrency, machine_id)
@@ -20,9 +34,13 @@ def prepare_fio_test(ovc, options, machine_id, publicip, publicport):
     wait_until_remote_is_listening(publicip, int(publicport), True, machine_id)
 
     templ = 'sshpass -p{} scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null '
-    templ += '-P {} {}/1_fio_vms/Machine_script.py  {}@{}:'
-    cmd = templ.format(account['password'], publicport, options.testsuite, account['login'], publicip)
+    templ1 = templ + '-P {} {}/1_fio_vms/Machine_script.py  {}@{}:'
+    cmd = templ1.format(account['password'], publicport, options.testsuite, account['login'], publicip)
     run_cmd_via_gevent(cmd)
+    if options.type == 'filesystem':
+        templ2 = templ + '-P {} {}/1_fio_vms/mount_disks.sh  {}@{}:'
+        cmd2 = templ2.format(account['password'], publicport, options.testsuite, account['login'], publicip)
+        run_cmd_via_gevent(cmd2)
 
     return machine_id, publicip, publicport, account
 
@@ -32,11 +50,11 @@ def fio_test(options, machine_id, publicip, publicport, account):
     # only one data disk for this test
     disks_num = 1
     templ = 'sshpass -p "{}" ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p {} {}@{} '
-    templ += ' python Machine_script.py {} {} {} {} {} {} {} {} {} {} {} {} {}'
+    templ += ' python Machine_script.py {} {} {} {} {} {} {} {} {} {} {} {} {} {}'
     cmd = templ.format(account['password'], publicport, account['login'], publicip,
                        options.testrun_time, machine_id, account['password'], 1, disks_num,
                        options.data_size, options.write_type, options.block_size, options.iodepth,
-                       options.direct_io, options.rwmixwrite, options.rate_iops, options.numjobs)
+                       options.direct_io, options.rwmixwrite, options.rate_iops, options.numjobs, options.type)
     print('FIO testing has been started on machine: {}'.format(machine_id))
     run_cmd_via_gevent(cmd)
     machines_complete.add(machine_id)
@@ -99,6 +117,10 @@ def main(options):
     pjobs = [gevent.spawn(prepare_fio_test, ovc, options, *vm) for vm in vms]
     gevent.joinall(pjobs)
 
+    # mount disks if the filesystem will be used
+    mjobs = [gevent.spawn(mount_disks, ovc, options, *vm) for vm in vms]
+    gevent.joinall(mjobs)
+
     # run fio tests
     rjobs = [gevent.spawn(fio_test, options, *job.value) for job in pjobs if job.value is not None]
     gevent.joinall(rjobs)
@@ -146,6 +168,8 @@ if __name__ == "__main__":
                       default=8000, help="Cap the bandwidth to this number of IOPS")
     parser.add_option("-j", "--numjobs", dest="numjobs", type="int",
                       default=1, help=" Number of clones (processes/threads performing the same workload) of this job")
+    parser.add_option("-f", "--fs", dest="type", choices = ['filesystem', 'blkdevice'],
+                      help="Use disk as a block device or make it use the filesystem, choice are 'filesystem' or 'blkdevice'")
     parser.add_option("-v", "--vms", dest="required_vms", type="int",
                       default=2, help=" selected number of virtual machines to run fio on")
     parser.add_option("-r", "--rdir", dest="results_dir", type="string",

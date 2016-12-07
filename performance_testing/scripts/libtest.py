@@ -33,7 +33,7 @@ def run_cmd_via_gevent(cmd):
         return out.decode('utf-8')
     else:
         error_output = err.decode('utf-8')
-        raise RuntimeError("Failed to execute command.\n\ncommand:\n{}\n\n".format(cmd, error_output))
+        raise RuntimeError("Failed to execute command.\n\ncommand:\n{}\n\n{}".format(cmd, error_output))
 
 
 def wait_until_remote_is_listening(address, port, report_failure=False, machine_name='unknown'):
