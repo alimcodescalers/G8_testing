@@ -23,7 +23,7 @@ def mount_disks(ovc, options, machine_id, publicip, publicport):
                        options.type)
     if options.type == "filesytem":
         print('mounting disks for machine:%s' % machine_id)
-    os.system(cmd)
+    run_cmd_via_gevent(cmd)
 
 
 def prepare_fio_test(ovc, options, machine_id, publicip, publicport):
