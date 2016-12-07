@@ -79,9 +79,6 @@ def assemble_fio_test_results(results_dir, account, publicport, cloudspace_publi
 def main(options):
     from JumpScale import j
 
-    if options.type not in ['filesystem', 'blkdevice']:
-        parser.error("type is not correctly given, choice are 'filesystem' or 'blkdevice'")
-
     # Check dependencies
     if not os.path.exists(options.results_dir):
         print("Not all dependencies are met. Make sure the result directory exists.")
@@ -171,8 +168,8 @@ if __name__ == "__main__":
                       default=8000, help="Cap the bandwidth to this number of IOPS")
     parser.add_option("-j", "--numjobs", dest="numjobs", type="int",
                       default=1, help=" Number of clones (processes/threads performing the same workload) of this job")
-    parser.add_option("-f", "--fs", dest="type", type="string",
-                      default=1, help="Use disk as a block device or make it use the filesystem, choice are 'filesystem' or 'blkdevice'")
+    parser.add_option("-f", "--fs", dest="type", choices = ['filesystem', 'blkdevice'],
+                      help="Use disk as a block device or make it use the filesystem, choice are 'filesystem' or 'blkdevice'")
     parser.add_option("-v", "--vms", dest="required_vms", type="int",
                       default=2, help=" selected number of virtual machines to run fio on")
     parser.add_option("-r", "--rdir", dest="results_dir", type="string",
