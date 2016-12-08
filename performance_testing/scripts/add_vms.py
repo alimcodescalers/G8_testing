@@ -30,6 +30,7 @@ def get_vm_name(cloudspace_id, counter):
 
 
 class Deployer(object):
+
     def __init__(self, options):
         self.options = options
         self.ovc = j.clients.openvcloud.get(options.environment,
@@ -46,25 +47,29 @@ class Deployer(object):
 
         # Get location gid
         print('Getting location gid')
-        self.gid = next((loc['gid'] for loc in self.ovc.api.cloudapi.locations.list() if loc['locationCode'] == options.location), None)
+        self.gid = next((loc['gid'] for loc in self.ovc.api.cloudapi.locations.list()
+                         if loc['locationCode'] == options.location), None)
         if self.gid is None:
             print('FAILURE: Could not determine gid')
             sys.exit(1)
 
     def create_performance_test_image(self):
-        image_id = next((img['id'] for img in self.ovc.api.cloudapi.images.list(accountId=self.account_id) if img['name'] == TEMPLATE_NAME), None)
+        image_id = next((img['id'] for img in self.ovc.api.cloudapi.images.list(
+            accountId=self.account_id) if img['name'] == TEMPLATE_NAME), None)
         if image_id:
             print('Found template for performance_testing')
             return image_id
         print('Checking if source image is available')
-        image_id = next((img['id'] for img in self.ovc.api.cloudapi.images.list() if img['name'] == options.image), None)
+        image_id = next((img['id'] for img in self.ovc.api.cloudapi.images.list()
+                         if img['name'] == options.image), None)
         if image_id is None:
             print('FAILURE: Could not find image.')
             sys.exit(1)
 
         print('Creating template_space')
         cloudspace_id = self.deploy_cloudspace('template_space')
-        machine = self.safe_deploy_vm('template_vm', cloudspace_id, image_id)
+        size_id = self.get_size_id(cloudspace_id)
+        machine = self.safe_deploy_vm('template_vm', cloudspace_id, image_id, size_id=size_id)
         cloudspace = self.ovc.api.cloudapi.cloudspaces.get(cloudspaceId=cloudspace_id)
         print('Installing requirements')
         self.install_req(machine, cloudspace)
@@ -79,6 +84,15 @@ class Deployer(object):
                                                           proto='tcp')
         return templateid
 
+    def get_size_id(self, cloudspace_id):
+        sizes = self.ovc.api.cloudapi.sizes.list(cloudspaceId=cloudspace_id)
+        size_id = next((s['id'] for s in sizes if (self.options.bootdisk in s['disks'] and
+                                                   self.options.memory == s['memory'] and
+                                                   self.options.cpu == s['vcpus'])), None)
+        if size_id is None:
+            raise ValueError("Could not find size_id matching VM specifications")
+        return size_id
+
     def install_req(self, machine, cloudspace):
         account = machine['accounts'][0]
 
@@ -88,19 +102,21 @@ class Deployer(object):
         # Copy install_deps.sh to vm
         templ = 'sshpass -p "{0}" scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'
         templ += ' -P {1} install_deps.sh {2}@{3}:/home/{2}'
-        cmd = templ.format(account['password'], machine['public_port'], account['login'], cloudspace['externalnetworkip'])
+        cmd = templ.format(account['password'], machine['public_port'],
+                           account['login'], cloudspace['externalnetworkip'])
         run_cmd_via_gevent(cmd)
 
         # Run bash script on vm
         templ = 'sshpass -p "{0}" ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p {1} {2}@{3} '
         templ += '\'echo "{0}" | sudo -S bash /home/{2}/install_deps.sh\''
-        cmd = templ.format(account['password'], machine['public_port'], account['login'], cloudspace['externalnetworkip'])
+        cmd = templ.format(account['password'], machine['public_port'],
+                           account['login'], cloudspace['externalnetworkip'])
         run_cmd_via_gevent(cmd)
 
-    def safe_deploy_vm(self, name, cloudspace_id, image_id, datadisk=None, iops=None):
+    def safe_deploy_vm(self, name, cloudspace_id, image_id, datadisk=None, iops=None, size_id=None):
         while True:
             try:
-                return self.deploy_vm(name, cloudspace_id, image_id, datadisk, iops)
+                return self.deploy_vm(name, cloudspace_id, image_id, datadisk, iops, size_id)
             except Exception as e:
                 templ = "Failed creating machine {} in cloudspace {}, \nError: {}\nretrying ..."
                 logger.error(templ.format(name, cloudspace_id, str(e)))
@@ -118,12 +134,8 @@ class Deployer(object):
                         logger.error(templ.format(name, cloudspace_id, str(e)))
                         gevent.sleep(10)
 
-    def deploy_vm(self, name, cloudspace_id, image_id, datadisk=None, iops=None):
+    def deploy_vm(self, name, cloudspace_id, image_id, datadisk=None, iops=None, size_id=None):
         # Listing sizes
-        sizes = self.ovc.api.cloudapi.sizes.list(cloudspaceId=cloudspace_id)
-        size_id = next((s['id'] for s in sizes if (self.options.bootdisk in s['disks'] and
-                                                   self.options.memory == s['memory'] and
-                                                   self.options.cpu == s['vcpus'])), None)
         if size_id is None:
             raise ValueError("No matching size for vm found.")
 
@@ -172,7 +184,8 @@ class Deployer(object):
         print("Configuring portforward for machine {}".format(name))
         cloudspace = self.ovc.api.cloudapi.cloudspaces.get(cloudspaceId=cloudspace_id)
         with get_publicport_semaphore(cloudspace_id):
-            public_ports = [int(pf['publicPort']) for pf in self.ovc.api.cloudapi.portforwarding.list(cloudspaceId=cloudspace_id)]
+            public_ports = [int(pf['publicPort'])
+                            for pf in self.ovc.api.cloudapi.portforwarding.list(cloudspaceId=cloudspace_id)]
             public_ports.append(19999)
             public_port = max(public_ports) + 1
             with concurrency:
@@ -219,7 +232,8 @@ def main(options):
 
     jobs = list()
     print('Checking if we need more cloudspaces')
-    cloudspaces = list(filter(lambda space: space['name'].startswith('space-'), deployer.ovc.api.cloudapi.cloudspaces.list()))
+    cloudspaces = list(filter(lambda space: space['name'].startswith(
+        'space-'), deployer.ovc.api.cloudapi.cloudspaces.list()))
     if len(cloudspaces) < options.cloudspaces:
         jobs.extend([gevent.spawn(deployer.deploy_cloudspace, 'space-{0:0>3}'.format(x))
                      for x in range(len(cloudspaces) + 1, int(options.cloudspaces) + 1)])
@@ -227,7 +241,8 @@ def main(options):
     gevent.joinall(jobs)
     jobs = list()
     # Add vms in existing cloudspaces
-    cloudspaces = list(filter(lambda space: space['name'].startswith('space-'), deployer.ovc.api.cloudapi.cloudspaces.list()))
+    cloudspaces = list(filter(lambda space: space['name'].startswith(
+        'space-'), deployer.ovc.api.cloudapi.cloudspaces.list()))
     print('Checking if we need more vms in existing cloudspaces')
     for cloudspace in cloudspaces:
         cloudspace_id = cloudspace['id']
@@ -235,7 +250,8 @@ def main(options):
         for vm in deployer.ovc.api.cloudapi.machines.list(cloudspaceId=cloudspace_id):
             if vm['name'] in expected_vms:
                 expected_vms.remove(vm['name'])
-        jobs.extend([gevent.spawn(deployer.safe_deploy_vm, vm_name, cloudspace_id, templateimage_id, options.datadisk, options.iops)
+        size_id = deployer.get_size_id(cloudspace_id)
+        jobs.extend([gevent.spawn(deployer.safe_deploy_vm, vm_name, cloudspace_id, templateimage_id, options.datadisk, options.iops, size_id)
                      for vm_name in expected_vms])
     gevent.joinall(jobs)
 
@@ -279,4 +295,4 @@ if __name__ == "__main__":
     seconds = elapsed % 60
     tmpl = "Deployed {} cloudspace(s) and {} machine(s) in {} minutes and {} seconds"
     print(tmpl.format(_stats['deployed_cloudspaces'], _stats['deployed_vms'],
-          minutes, seconds))
+                      minutes, seconds))
