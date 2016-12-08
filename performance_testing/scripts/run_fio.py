@@ -5,7 +5,7 @@ from libtest import run_cmd_via_gevent, wait_until_remote_is_listening, safe_get
 import gevent
 from gevent.lock import BoundedSemaphore
 import signal
-from optparse import OptionParser
+from argparse import ArgumentParser
 import os
 import datetime
 
@@ -143,46 +143,42 @@ def main(options):
 
 
 if __name__ == "__main__":
-    parser = OptionParser()
-    parser.add_option("-u", "--user", dest="username", type="string",
-                      help="username to login on the OVC api")
-    parser.add_option("-p", "--pwd", dest="password", type="string",
-                      help="password to login on the OVC api")
-    parser.add_option("-e", "--env", dest="environment", type="string",
-                      help="environment to login on the OVC api")
-    parser.add_option("-d", "--ds", dest="data_size", type="int",
-                      default=1000, help="Amount of data to be written per each data disk per VM (in MB)")
-    parser.add_option("-t", "--run_time", dest="testrun_time", type="int",
-                      default=300, help=" Test-rum time per virtual machine  (in seconds)")
-    parser.add_option("-w", "--IO_type", dest="write_type", type="string",
-                      default="randrw", help="Type of I/O pattern")
-    parser.add_option("-m", "--mixwrite", dest="rwmixwrite", type="int",
-                      default=20, help=" Percentage of a mixed workload that should be writes")
-    parser.add_option("-b", "--bs", dest="block_size", type="string",
-                      default='4k', help="Block size")
-    parser.add_option("-i", "--iodp", dest="iodepth", type="int",
-                      default=128, help="number of I/O units to keep in flight against the file")
-    parser.add_option("-o", "--dio", dest="direct_io", type="int",
-                      default=1, help="If direct_io = 1, use non-buffered I/O.")
-    parser.add_option("-x", "--max_iops", dest="rate_iops", type="int",
-                      default=8000, help="Cap the bandwidth to this number of IOPS")
-    parser.add_option("-j", "--numjobs", dest="numjobs", type="int",
-                      default=1, help=" Number of clones (processes/threads performing the same workload) of this job")
-    parser.add_option("-f", "--fs", dest="type", choices = ['filesystem', 'blkdevice'],
-                      help="Use disk as a block device or make it use the filesystem, choice are 'filesystem' or 'blkdevice'")
-    parser.add_option("-v", "--vms", dest="required_vms", type="int",
-                      default=2, help=" selected number of virtual machines to run fio on")
-    parser.add_option("-r", "--rdir", dest="results_dir", type="string",
-                      default="/root/G8_testing/tests_results/FIO_test", help="absolute path fot results directory")
-    parser.add_option("-n", "--con", dest="concurrency", default=2, type="int",
-                      help="amount of concurrency to execute the job")
-    parser.add_option("-s", "--ts", dest="testsuite", default="../Testsuite", type="string",
-                      help="location to find Testsuite directory")
+    parser = ArgumentParser()
+    parser.add_argument("-u", "--user", dest="username", required=True,
+                        help="username to login on the OVC api")
+    parser.add_argument("-p", "--pwd", dest="password", required=True,
+                        help="password to login on the OVC api")
+    parser.add_argument("-e", "--env", dest="environment", required=True,
+                        help="environment to login on the OVC api")
+    parser.add_argument("-d", "--ds", dest="data_size", type=int,
+                        default=1000, help="Amount of data to be written per each data disk per VM (in MB)")
+    parser.add_argument("-t", "--run_time", dest="testrun_time", type=int,
+                        default=300, help=" Test-rum time per virtual machine  (in seconds)")
+    parser.add_argument("-w", "--IO_type", dest="write_type",
+                        default="randrw", help="Type of I/O pattern")
+    parser.add_argument("-m", "--mixwrite", dest="rwmixwrite", type=int,
+                        default=20, help=" Percentage of a mixed workload that should be writes")
+    parser.add_argument("-b", "--bs", dest="block_size", default='4k', help="Block size")
+    parser.add_argument("-i", "--iodp", dest="iodepth", type=int,
+                        default=128, help="number of I/O units to keep in flight against the file")
+    parser.add_argument("-o", "--dio", dest="direct_io", type=int,
+                        default=1, help="If direct_io = 1, use non-buffered I/O.")
+    parser.add_argument("-x", "--max_iops", dest="rate_iops", type=int,
+                        default=8000, help="Cap the bandwidth to this number of IOPS")
+    parser.add_argument("-j", "--numjobs", dest="numjobs", type=int,
+                        default=1, help=" Number of clones (processes/threads performing the same workload) of this job")
+    parser.add_argument("-f", "--fs", dest="type", choices = ['filesystem', 'blkdevice'], required=True,
+                        help="Use disk as a block device or make it use the filesystem, choice are 'filesystem' or 'blkdevice'")
+    parser.add_argument("-v", "--vms", dest="required_vms", type=int,
+                        default=2, help=" selected number of virtual machines to run fio on")
+    parser.add_argument("-r", "--rdir", dest="results_dir", default="/root/G8_testing/tests_results/FIO_test",
+                        help="absolute path fot results directory")
+    parser.add_argument("-n", "--con", dest="concurrency", default=2, type=int,
+                        help="amount of concurrency to execute the job")
+    parser.add_argument("-s", "--ts", dest="testsuite", default="../Testsuite",
+                        help="location to find Testsuite directory")
 
-    (options, args) = parser.parse_args()
-    if not options.username or not options.password or not options.environment:
-        parser.print_usage()
-    else:
-        gevent.signal(signal.SIGQUIT, gevent.kill)
-        concurrency = BoundedSemaphore(options.concurrency)
-        main(options)
+    options = parser.parse_args()
+    gevent.signal(signal.SIGQUIT, gevent.kill)
+    concurrency = BoundedSemaphore(options.concurrency)
+    main(options)
