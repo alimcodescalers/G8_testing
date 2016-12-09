@@ -94,6 +94,8 @@
   -j NUMJOBS, --numjobs=NUMJOBS
                          Number of clones (processes/threads performing the
                         same workload) of this job
+  -f TYPE, --fs=TYPE    Use disk as a block device or make it use the
+                        filesystem, choice are 'filesystem' or 'blkdevice'
   -v REQUIRED_VMS, --vms=REQUIRED_VMS
                          selected number of virtual machines to run fio on
   -r RESULTS_DIR, --rdir=RESULTS_DIR
@@ -101,7 +103,7 @@
   -n CONCURRENCY, --con=CONCURRENCY
                         amount of concurrency to execute the job
   -s TESTSUITE, --ts=TESTSUITE
-                        location to find Testsuite directory
+
   ```
 
 - You can rerun **run\_fio.py** as many times as needed, using different parameters
@@ -117,12 +119,14 @@
 
 - Also results will be pushed on the environment repo under **testresults** directory
 
-  In order to make this work make sure to identify who you are:
+  - In order to make this work make sure to identify who you are:
 
   ```
   git config --global user.email "you@example.com"
   git config --global user.name "Your Name"
   ```
+  - Also make sure to have your ssh key on the machine that will be used for running the test. And that you 
+    have access on the environment repo where the results will be pushed.
 
 - In the test result file we can view the following information:
   - Total IOPS per virtual machine per iteration
