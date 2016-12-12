@@ -196,7 +196,6 @@ class Write(ACLACCOUNT):
 
         self.lg('%s ENDED' % self._testID)
 
-    @unittest.skip("https://github.com/0-complexity/openvcloud/issues/353")
     def test004_machine_createTemplate(self):
         """ ACL-10
         *Test case for machine_createTemplate api with user has write access.*

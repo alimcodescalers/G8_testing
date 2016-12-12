@@ -63,7 +63,6 @@ class NetworkBasicTests(BasicACLTest):
             self.assertTrue(str(cloud_space_networkId[csNumbers]) in released_network_Id)
         self.lg('%s ENDED' % self._testID)
 
-    @unittest.skip("https://github.com/0-complexity/openvcloud/issues/425")
     def test002_clean_ovs_bridge(self):
         ''' OVC-011
          * Test case verify the cleaning OVS bridges when deleting a cloudspace operation
@@ -103,7 +102,6 @@ class NetworkBasicTests(BasicACLTest):
 
         self.lg('%s ENDED' % self._testID)
 
-    @unittest.skip("https://github.com/gig-projects/org_quality/issues/452")
     def test003_port_forwarding_creation(self):
         '''OVC- 007
         * Test case verify the adding port forward to a machine
@@ -208,7 +206,6 @@ class NetworkBasicTests(BasicACLTest):
                          'HALTED')
         self.lg('%s ENDED' % self._testID)
 
-    @unittest.skip("https://github.com/gig-projects/org_quality/issues/452")
     def test004_move_virtual_firewall(self):
         """ OVC-014
         * Test case for moving virtual firewall form one node to another
