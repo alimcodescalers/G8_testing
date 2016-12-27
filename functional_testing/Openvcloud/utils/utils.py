@@ -10,7 +10,6 @@ from nose.tools import TimeExpired
 from testconfig import config
 SESSION_DATA = {'vms': []}
 
-
 class API(object):
     API = {}
 
@@ -73,13 +72,16 @@ class BaseTest(unittest.TestCase):
 
         self.account_owner_api = self.get_authenticated_user_api(self.account_owner)
         # self.cloudspace_id = self.account_owner_api.cloudapi.cloudspaces.list()[0]['id']
-        self.cloudspace_id = self.cloudapi_cloudspace_create(account_id=self.account_id,
+	if self.create_default_cloudspace:
+		self.lg('- create default cloudspace for :%s' % self.account_owner)
+		self.cloudspace_id = self.cloudapi_cloudspace_create(account_id=self.account_id,
                                                              location=self.location,
                                                              access=self.account_owner,
                                                              api=self.account_owner_api,
                                                              name='default')
 
-    def acl_setup(self):
+    def acl_setup(self, create_default_cloudspace=True):
+	self.create_default_cloudspace = create_default_cloudspace
         self.default_setup()
         self.user = self.cloudbroker_user_create()
         self.user_api = self.get_authenticated_user_api(self.user)
