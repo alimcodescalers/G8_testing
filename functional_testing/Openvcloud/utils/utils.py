@@ -10,6 +10,7 @@ from nose.tools import TimeExpired
 from testconfig import config
 SESSION_DATA = {'vms': []}
 
+
 class API(object):
     API = {}
 
