@@ -10,7 +10,7 @@ from JumpScale.portal.portal.PortalClient2 import ApiError
 class ACLACCOUNT(BasicACLTest):
     def setUp(self):
         super(ACLACCOUNT, self).setUp()
-        self.acl_setup()
+        self.acl_setup(create_default_cloudspace=False)
 
 
 class Read(ACLACCOUNT):
