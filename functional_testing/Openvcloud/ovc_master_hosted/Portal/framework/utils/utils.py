@@ -23,6 +23,7 @@ class BaseTest(unittest.TestCase):
         self.environment_storage = config['main']['location']
         self.admin_username = config['main']['admin']
         self.admin_password = config['main']['passwd']
+        self.GAuth_secret = config['main']['secret']
         self.browser = config['main']['browser']
         self.base_page = self.environment_url + '/ays'
         self.elements = xpath.elements.copy()
