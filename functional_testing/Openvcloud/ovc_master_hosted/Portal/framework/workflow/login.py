@@ -1,7 +1,5 @@
 from pytractor.exceptions import AngularNotFoundException
 import time
-import os, sys
-import json
 import pyotp
 
 class login():
