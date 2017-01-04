@@ -11,4 +11,4 @@ pytractor
 mozmill
 chromedriver_installer
 netaddr
-pyotp
+pyotppyotp>=2.2.1
