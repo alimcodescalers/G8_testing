@@ -29,12 +29,12 @@ class GridTests(Framework):
         self.assertEqual(self.get_text("grid_portal_header1"), "Grid Portal")
         self.assertEqual(self.get_text("error_conditions_header1"), "Error Conditions")
         self.assertEqual(self.get_text("error_conditions_header2"), "Error Conditions")
-        self.assertEqual(self.get_text("ec_table_header2"), "Time Stamp")
-        self.assertEqual(self.get_text("ec_table_header3"), "Error Message")
-        self.assertEqual(self.get_text("ec_table_header4"), "Level")
-        self.assertEqual(self.get_text("ec_table_header5"), "App name")
-        self.assertEqual(self.get_text("ec_table_header6"), "Node ID")
-        self.assertEqual(self.get_text("ec_table_header7"), "GID")
+        self.assertEqual(self.get_text("ec_table_header1"), "Last Occurence")
+        self.assertEqual(self.get_text("ec_table_header2"), "Error Message")
+        self.assertEqual(self.get_text("ec_table_header3"), "App name")
+        self.assertEqual(self.get_text("ec_table_header4"), "Occurrences")
+        self.assertEqual(self.get_text("ec_table_header5"), "Node ID")
+        self.assertEqual(self.get_text("ec_table_header6"), "Grid ID")
 
         self.lg('check if show 10 and 25 entries works as expected')
 

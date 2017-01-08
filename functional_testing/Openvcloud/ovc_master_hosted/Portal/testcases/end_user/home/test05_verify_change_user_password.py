@@ -10,7 +10,7 @@ class ChangePassword(Framework):
         super(ChangePassword, self).setUp()
         self.Login.Login()
 
-    @unittest.skip('')
+    @unittest.skip('users created from admin portal cannot be accessed from itsyou.online')
     def test01_verify_change_user_password(self):
         """ PRTL-022
         *Test case for create new user and change his password*

@@ -85,14 +85,14 @@ class AccountsTests(Framework):
 
         account_paging_options = [25, 50, 100, 10]
         account_info = self.Tables.get_table_info('table cloudbroker account info')
-        account_number_max_number = int(account_info[(account_info.index('f') + 2):(account_info.index('entries') - 1)])
+        account_number_max_number = int(account_info[(account_info.index('f') + 2):(account_info.index('entries') - 1)].replace(',',''))
 
         for account_paging_option in account_paging_options:
             self.select('account selector', account_paging_option)
             time.sleep(5)
             account_info_ = self.Tables.get_table_info('table cloudbroker account info')
-            account_number_max_number_ = int(account_info_[account_info_.index('f') + 2:account_info_.index('en') - 1])
-            account_avaliable_ = int(account_info_[(account_info_.index('to') + 3):(account_info_.index('of') - 1)])
+            account_number_max_number_ = int(account_info_[account_info_.index('f') + 2:account_info_.index('en') - 1].replace(',',''))
+            account_avaliable_ = int(account_info_[(account_info_.index('to') + 3):(account_info_.index('of') - 1)].replace(',',''))
             self.assertEqual(account_number_max_number, account_number_max_number_)
             if account_number_max_number > account_paging_option:
                 self.assertEqual(account_avaliable_, account_paging_option)

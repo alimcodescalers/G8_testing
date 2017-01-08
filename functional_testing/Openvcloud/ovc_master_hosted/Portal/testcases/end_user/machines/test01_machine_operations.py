@@ -11,9 +11,23 @@ class Write(Framework):
     def setUp(self):
         super(Write, self).setUp()
         self.Login.Login()
+        self.lg('create new account')
+        self.Accounts.create_new_account(self.account, self.admin_username+"@itsyouonline")
+        self.lg('create new cloudspace')
+        self.CloudSpaces.create_cloud_space(self.account, self.cloudspace)
+        self.EUHome.get_it()
         self.assertTrue(self.EUMachines.end_user_create_virtual_machine(machine_name=self.machine_name))
         self.EUMachines.end_user_get_machine_page(machine_name=self.machine_name)
         self.EUMachines.end_user_get_machine_info(machine_name=self.machine_name)
+
+    def tearDown(self):
+        super(Write, self).tearDown()
+        self.Accounts.get_it()
+        self.lg('delete cloudspace')
+        self.CloudSpaces.delete_cloudspace(self.cloudspace)
+        self.lg('delete account')
+        self.Accounts.delete_account(self.account)
+        self.Logout.Admin_Logout()
 
     def test01_machine_stop_start_reboot_reset_pause_resume(self):
         """ PRTL-007

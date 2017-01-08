@@ -8,58 +8,73 @@ class Read(Framework):
     def setUp(self):
         super(Read, self).setUp()
         self.Login.Login()
+        self.lg('create new account')
+        self.Accounts.create_new_account(self.account, self.admin_username+"@itsyouonline")
+        self.lg('create new cloudspace')
+        self.CloudSpaces.create_cloud_space(self.account, self.cloudspace)
+        self.EUHome.get_it()
+
+    def tearDown(self):
+        super(Read, self).tearDown()
+        self.Accounts.get_it()
+        self.lg('delete cloudspace')
+        self.CloudSpaces.delete_cloudspace(self.cloudspace)
+        self.lg('delete account')
+        self.Accounts.delete_account(self.account)
+        self.Logout.Admin_Logout()
+
 
 #     def test01_machine_get(self):
 #         """
 #         *Test case for get machine.*
-# 
+#
 #         **Test Scenario:**
-# 
+#
 #         #. create new machine, should succeed
 #         #. get machine, should succeed
 #         """
-# 
+#
 #     def test02_machine_list(self):
 #         """
 #         *Test case for list machine.*
-# 
+#
 #         **Test Scenario:**
-# 
+#
 #         #. create new machine, should succeed
 #         #. list machines should see 1 machine, should succeed
 #         """
 #         pass
-# 
+#
 #     def test03_machine_getConsoleUrl(self):
 #         """
 #         *Test case for getConsoleUrl machine.*
-# 
+#
 #         **Test Scenario:**
-# 
+#
 #         #. create new machine, should succeed
 #         #. getConsoleUrl machine, should succeed
 #         """
 #         pass
-# 
+#
 #     def test04_machine_listSnapshots(self):
 #         """
 #         *Test case for listSnapshots machine.*
-# 
+#
 #         **Test Scenario:**
-# 
+#
 #         #. create snapshot for a machine with the account user, should succeed
 #         #. try to listSnapshots of created machine with new user [user], should return 403
 #         #. add user to the machine with read access
 #         #. listSnapshots of created machine with new user [user], should succeed
 #         """
 #         pass
-# 
+#
 #     def test05_machine_getHistory(self):
 #         """
 #         *Test case for getHistory machine.*
-# 
+#
 #         **Test Scenario:**
-# 
+#
 #         #. create new machine, should succeed
 #         #. getHistory of created machine, should succeed
 #         """
@@ -82,7 +97,7 @@ class Read(Framework):
 
         #. create new machine, should succeed
         #. delete the new machine
-        
+
         """
         self.lg('%s STARTED' % self._testID)
         self.lg(' create %s machine ' % self.machine_name)

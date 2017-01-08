@@ -48,8 +48,8 @@ class VirtualMachinesTest(Framework):
         #. try paging from start/previous/next/last and verify it should succeed.
         """
         self.lg('%s STARTED' % self._testID)
-        self.Users.get_it()
-        self.assertTrue(self.Users.is_at())
+        self.VirtualMachines.get_it()
+        self.assertTrue(self.VirtualMachines.is_at())
 
         vms_max_number = self.Tables.get_table_max_number('table cloudbroker vmachine info')
         pagination = self.get_list_items('pagination')

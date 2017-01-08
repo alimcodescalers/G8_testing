@@ -24,7 +24,7 @@ class tables():
 
     def get_table_max_number(self, table_info_element):
         account_info = self.get_table_info(table_info_element)
-        return int(account_info[(account_info.index('f') + 2):(account_info.index('entries') - 1)])
+        return int(account_info[(account_info.index('f') + 2):(account_info.index('entries') - 1)].replace(',',''))
 
     def get_previous_next_button(self):
         pagination = self.framework.get_list_items('pagination')

@@ -47,17 +47,21 @@ class login():
         self.framework.set_text('password_textbox', password)
         self.framework.click('login_button')
 
+        time.sleep(5)
+
         #chech if google auth code is required
-        require_GAuth_code = self.framework.wait_until_element_located('GAuth_textbox')
-        if require_GAuth_code :
+        if 'https://itsyou.online/login' in self.framework.driver.current_url:
+            self.framework.wait_until_element_located('GAuth_textbox')
             self.framework.set_text('GAuth_textbox', self.get_GAuth_code())
             self.framework.click('login_button')
 
-        require_authorize = self.framework.wait_until_element_located('authorize_button')
-        if require_authorize:
+        time.sleep(5)
+
+        if 'https://itsyou.online/#/authorize' in self.framework.driver.current_url:
+            self.framework.wait_until_element_located('authorize_button')
             self.framework.click('authorize_button')
 
-        time.sleep(15)
+        self.framework.wait_until_element_located('logout_button')
         self.framework.assertEqual(self.framework.driver.title, 'OpenvCloud - Decks',
                                    "Can't Login using username [%s] and passsword [%s]" % (username, password))
 

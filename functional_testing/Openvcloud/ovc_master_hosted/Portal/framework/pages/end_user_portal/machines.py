@@ -15,17 +15,15 @@ class machines():
         machine_name = machine_name or str(uuid.uuid4()).replace('-', '')[0:10]
         machine_description = str(uuid.uuid4()).replace('-', '')[0:10]
         randome_package = randint(1, 6)
-        if image_name != "windows_2012":
-            random_disk_size = randint(1, 8)
-        else:
-            random_disk_size = randint(1, 6)
-            self.framework.click("windows")
 
         self.framework.lg("Create a machine name: %s image:%s" % (machine_name, image_name))
         self.framework.set_text("machine_name", machine_name)
         self.framework.set_text("machine_description_", machine_description)
         self.framework.click(image_name)
         self.framework.click("package_%i" % randome_package)
+        num_available_disk_sizes = len(self.framework.find_element('disk_sizes').find_elements_by_tag_name('button'))
+
+        random_disk_size = randint(1, num_available_disk_sizes)
         self.framework.click("disk_size_%i" % random_disk_size)
 
         self.framework.click("create_machine")
@@ -120,13 +118,13 @@ class machines():
                                        "get access to the screen. In case of a black screen, hit any key "
                                        "to disable the screen saving mode of your virtual machine.")
             self.framework.assertEqual(self.framework.get_text("console_ipaddress"), self.framework.machine_ipaddress)
-            self.framework.assertTrue(self.framework.element_is_displayed("capture_button"))
-            self.framework.assertTrue(self.framework.element_is_displayed("send_ctrl/alt/del_button"))
+            self.framework.assertTrue(self.framework.find_element("capture_button").is_displayed())
+            self.framework.assertTrue(self.framework.find_element("send_ctrl/alt/del_button").is_displayed())
         else:
             self.framework.assertEqual(self.framework.get_text("console_message_halted"),
                                        "A machine must be started to access the console!")
-            self.framework.assertFalse(self.framework.element_is_displayed("capture_button"))
-            self.framework.assertFalse(self.framework.element_is_displayed("send_ctrl/alt/del_button"))
+            self.framework.assertFalse(self.framework.find_element("capture_button").is_displayed())
+            self.framework.assertFalse(self.framework.find_element("send_ctrl/alt/del_button").is_displayed())
 
     def end_user_start_machine(self, machine):
         self.framework.click_link(machine)
@@ -146,12 +144,11 @@ class machines():
 
             if self.framework.check_element_is_exist("end_user_machine_table"):
                 self.framework.lg('Open the machine page to destroy it')
-                machine_table = self.framework.driver.find_element_by_xpath(
-                    self.framework.elements["end_user_machine_table"])
+                machine_table = self.framework.find_element("end_user_machine_table")
                 machine_table_rows = machine_table.find_elements_by_class_name("ng-scope")
 
                 for counter in range(len(machine_table_rows)):
-                    machine_name_xpath = self.framework.elements["end_user_machine_name_table"] % (counter + 1)
+                    machine_name_xpath = self.framework.elements["end_user_machine_name_table"][1] % (counter + 1)
                     machine_name = self.framework.driver.find_element_by_xpath(machine_name_xpath)
                     if virtual_machine == machine_name.text:
                         machine_name.click()
@@ -183,7 +180,7 @@ class machines():
         if self.framework.check_element_is_exist("end_user_selected_account"):
             print(account, self.framework.get_text("end_user_selected_account"))
             if account not in self.framework.get_text("end_user_selected_account"):
-                accounts_xpath = self.framework.elements["end_user_accounts_list"]
+                accounts_xpath = self.framework.elements["end_user_accounts_list"][1]
                 for temp in range(100):
                     try:
                         account_item = self.framework.driver.find_element_by_xpath(accounts_xpath % temp)
@@ -193,7 +190,7 @@ class machines():
                     else:
                         if account in account_item.text:
                             account_item.click()
-                            cloud_space_xpath = self.framework.elements["end_user_cloud_space"] % account
+                            cloud_space_xpath = self.framework.elements["end_user_cloud_space"][1] % account
                             self.framework.driver.find_element_by_xpath(cloud_space_xpath).click()
                             return True
             else:
