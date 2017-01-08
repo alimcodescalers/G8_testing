@@ -49,16 +49,13 @@ class login():
 
         time.sleep(5)
 
-        #chech if google auth code is required
-        if 'https://itsyou.online/login' in self.framework.driver.current_url:
-            self.framework.wait_until_element_located('GAuth_textbox')
+        require_GAuth = self.framework.wait_until_element_located('GAuth_textbox')
+        if require_GAuth:
             self.framework.set_text('GAuth_textbox', self.get_GAuth_code())
             self.framework.click('login_button')
 
-        time.sleep(5)
-
-        if 'https://itsyou.online/#/authorize' in self.framework.driver.current_url:
-            self.framework.wait_until_element_located('authorize_button')
+        require_authorize = self.framework.wait_until_element_located('authorize_button')
+        if require_authorize:
             self.framework.click('authorize_button')
 
         self.framework.wait_until_element_located('logout_button')

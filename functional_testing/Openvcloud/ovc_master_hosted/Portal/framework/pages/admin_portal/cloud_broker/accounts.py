@@ -35,8 +35,9 @@ class accounts():
 
         if max_memory:
             self.framework.set_text("account_maxmemory", max_memory)
-        self.framework.click("account_confirm")
 
+        self.framework.click("account_confirm")
+        time.sleep(3)
         self.framework.set_text("account_search", account)
         self.framework.wait_until_element_located_and_has_text("account_table_first_element", account)
 
@@ -189,4 +190,3 @@ class accounts():
             self.framework.lg('%s account is already deleted' % account)
         else:
             self.framework.fail('"%s" account status has an error in the page' % account)
-
