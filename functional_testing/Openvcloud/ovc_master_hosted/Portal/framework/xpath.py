@@ -598,7 +598,7 @@ elements = {'snapshot_ok_button': ['XPATH', 'html/body/div[3]/form/div[3]/button
             'machine_pause': ['XPATH', ".//*[@id='actions']/div/div[2]/ul/li[3]/a"], 'package_5': ['XPATH',
                                                                                                    ".//*[@id='wrap']/div/tour/div[3]/div[2]/div/div/div/div[2]/div/div/div/div[5]/div/div/ul/li[5]/a"],
             'disk_sizes': ['XPATH', '//*[@id="wrap"]/div/tour/div[3]/div[2]/div/div/div/div[2]/div/div/div/div[6]/div'],
-
+            'packages':   ['XPATH', '//*[@id="wrap"]/div/tour/div[3]/div[2]/div/div/div/div[2]/div/div/div/div[5]/div/div'],
             'new_pw_2': ['XPATH',
                          ".//*[@id='wrap']/div/tour/div[3]/div[2]/div/div/div/div[2]/div/form/div[1]/div[3]/input"],
             'console_tab': ['XPATH', ".//*[@id='console']/a"],

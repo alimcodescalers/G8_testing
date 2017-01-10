@@ -26,12 +26,19 @@ class machines():
 
         machine_name = machine_name or str(uuid.uuid4()).replace('-', '')[0:10]
         machine_description = str(uuid.uuid4()).replace('-', '')[0:10]
-        randome_package = randint(1, 6)
+
+        num_available_packages = len(self.framework.find_element('packages').find_elements_by_tag_name('li'))
+        randome_package = randint(1, num_available_packages)
 
         self.framework.lg("Create a machine name: %s image:%s" % (machine_name, image_name))
         self.framework.set_text("machine_name", machine_name)
         self.framework.set_text("machine_description_", machine_description)
-        self.framework.click('linux')
+
+        if 'windows' in image_name:
+            self.framework.click('windows')
+        elif "ubuntu" in image_name:
+            self.framework.click('linux')
+
         self.framework.click(image_name)
         self.framework.click("package_%i" % randome_package)
         num_available_disk_sizes = len(self.framework.find_element('disk_sizes').find_elements_by_tag_name('button'))
