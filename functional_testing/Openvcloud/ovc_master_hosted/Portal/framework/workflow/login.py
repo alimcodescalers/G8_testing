@@ -46,17 +46,16 @@ class login():
         self.framework.set_text('username_textbox', username)
         self.framework.set_text('password_textbox', password)
         self.framework.click('login_button')
+        time.sleep(20)
 
-        time.sleep(5)
-
-        require_GAuth = self.framework.wait_until_element_located('GAuth_textbox')
-        if require_GAuth:
+        if len(self.framework.find_elements('GAuth_textbox')) > 0:
             self.framework.set_text('GAuth_textbox', self.get_GAuth_code())
             self.framework.click('login_button')
+            time.sleep(20)
 
-        require_authorize = self.framework.wait_until_element_located('authorize_button')
-        if require_authorize:
+        if len(self.framework.find_elements("authorize_button")) > 0:
             self.framework.click('authorize_button')
+            time.sleep(20)
 
         self.framework.wait_until_element_located('logout_button')
         self.framework.assertEqual(self.framework.driver.title, 'OpenvCloud - Decks',

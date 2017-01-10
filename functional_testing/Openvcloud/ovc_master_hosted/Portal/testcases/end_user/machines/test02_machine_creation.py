@@ -8,19 +8,11 @@ class Read(Framework):
     def setUp(self):
         super(Read, self).setUp()
         self.Login.Login()
-        self.lg('create new account')
-        self.Accounts.create_new_account(self.account, self.admin_username+"@itsyouonline")
-        self.lg('create new cloudspace')
-        self.CloudSpaces.create_cloud_space(self.account, self.cloudspace)
-        self.EUHome.get_it()
+        self.EUMachines.create_default_account_cloudspace(self.admin_username, self.account, self.cloudspace)
 
     def tearDown(self):
         super(Read, self).tearDown()
-        self.Accounts.get_it()
-        self.lg('delete cloudspace')
-        self.CloudSpaces.delete_cloudspace(self.cloudspace)
-        self.lg('delete account')
-        self.Accounts.delete_account(self.account)
+        self.EUMachines.delete_default_account_cloudspace(self.account)
         self.Logout.Admin_Logout()
 
 

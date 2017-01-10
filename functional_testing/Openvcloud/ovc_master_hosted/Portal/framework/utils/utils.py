@@ -58,6 +58,7 @@ class BaseTest(unittest.TestCase):
             executionTime = time.time() - self._startTime
         self.lg('Testcase %s ExecutionTime is %s sec.' % (self._testID, executionTime))
 
+
     def set_browser(self):
         if self.browser == 'chrome':
             self.driver = webdriver.Chrome()
@@ -79,6 +80,15 @@ class BaseTest(unittest.TestCase):
 
     def lg(self, msg):
         self._logger.info(msg)
+
+    def find_elements(self, element):
+        method = self.elements[element][0]
+        value = self.elements[element][1]
+        if method in ['XPATH', 'ID', 'LINK_TEXT', 'CLASS_NAME', 'NAME', 'TAG_NAME']:
+            elements_value = self.driver.find_elements(getattr(By, method), value)
+        else:
+            self.fail("This %s method isn't defined" % method)
+        return elements_value
 
     def find_element(self, element):
         method = self.elements[element][0]

@@ -117,7 +117,7 @@ elements = {'snapshot_ok_button': ['XPATH', 'html/body/div[3]/form/div[3]/button
             'machines_tab': ['XPATH', ".//*[@id='wrap']/div/tour/div[3]/div[2]/div/div/div/div[2]/ul/li[3]/a"],
             'snapshot_alert_message': ['XPATH', '//html/body/div[3]/div[2]'],
             'machine_disk_list': ['XPATH', ".//*[@id='createmachine']/div/div[2]/div[3]/div[6]/select"],
-            'linux': ['XPATH', ".//*[@id='tabbable']/ul/li[1]/a"],
+            'linux': ['LINK_TEXT', "Linux"],
             'logout_button': ['CLASS_NAME', "logout", 0],
             'ays_text': ['XPATH', 'html/body/div[1]/div/div[1]/div/nav/div/ul/li[1]/ul[1]/a[2]'],
             'entries_select_option2': ['XPATH', ".//*[@id='table_system_eco_length']/label/select/option[2]"],

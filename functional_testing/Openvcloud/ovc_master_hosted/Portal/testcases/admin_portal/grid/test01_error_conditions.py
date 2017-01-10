@@ -29,7 +29,7 @@ class GridTests(Framework):
         self.assertEqual(self.get_text("grid_portal_header1"), "Grid Portal")
         self.assertEqual(self.get_text("error_conditions_header1"), "Error Conditions")
         self.assertEqual(self.get_text("error_conditions_header2"), "Error Conditions")
-        self.assertEqual(self.get_text("ec_table_header1"), "Last Occurence")
+        self.assertEqual(self.get_text("ec_table_header1"), "Last Occurrence")
         self.assertEqual(self.get_text("ec_table_header2"), "Error Message")
         self.assertEqual(self.get_text("ec_table_header3"), "App name")
         self.assertEqual(self.get_text("ec_table_header4"), "Occurrences")

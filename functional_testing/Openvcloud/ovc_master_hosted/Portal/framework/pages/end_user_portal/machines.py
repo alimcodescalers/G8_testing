@@ -7,6 +7,18 @@ class machines():
     def __init__(self, framework):
         self.framework = framework
 
+    def create_default_account_cloudspace(self, user, account, cloudspace):
+        self.framework.lg('create new account')
+        self.framework.Accounts.create_new_account(account, user+"@itsyouonline")
+        self.framework.lg('create new cloudspace')
+        self.framework.CloudSpaces.create_cloud_space(account, cloudspace)
+        self.framework.EUHome.get_it()
+
+    def delete_default_account_cloudspace(self, account):
+        self.framework.Accounts.get_it()
+        self.framework.lg('delete account')
+        self.framework.Accounts.delete_account(account)
+
     def end_user_create_virtual_machine(self, image_name="ubuntu_14_04", machine_name=''):
         self.framework.RightNavigationMenu.Machines.home()
 
@@ -19,6 +31,7 @@ class machines():
         self.framework.lg("Create a machine name: %s image:%s" % (machine_name, image_name))
         self.framework.set_text("machine_name", machine_name)
         self.framework.set_text("machine_description_", machine_description)
+        self.framework.click('linux')
         self.framework.click(image_name)
         self.framework.click("package_%i" % randome_package)
         num_available_disk_sizes = len(self.framework.find_element('disk_sizes').find_elements_by_tag_name('button'))
