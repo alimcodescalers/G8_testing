@@ -63,16 +63,16 @@ class BaseTest(unittest.TestCase):
         else:
             signal.alarm(900)
 
-    def default_setup(self):
-        self.location = self.get_location()['locationCode']
-
+    def default_setup(self,create_default_cloudspace = True):
+        self.create_default_cloudspace= create_default_cloudspace 
+        self.location = self.get_location()['locationCode']    
         self.account_owner = self.username
         self.lg('- create account for :%s' % self.account_owner)
         self.account_id = self.cloudbroker_account_create(self.account_owner, self.account_owner,
                                                           self.email)
 
         self.account_owner_api = self.get_authenticated_user_api(self.account_owner)
-        # self.cloudspace_id = self.account_owner_api.cloudapi.cloudspaces.list()[0]['id']
+   
 	if self.create_default_cloudspace:
 		self.lg('- create default cloudspace for :%s' % self.account_owner)
 		self.cloudspace_id = self.cloudapi_cloudspace_create(account_id=self.account_id,
@@ -82,8 +82,7 @@ class BaseTest(unittest.TestCase):
                                                              name='default')
 
     def acl_setup(self, create_default_cloudspace=True):
-	self.create_default_cloudspace = create_default_cloudspace
-        self.default_setup()
+        self.default_setup(create_default_cloudspace)
         self.user = self.cloudbroker_user_create()
         self.user_api = self.get_authenticated_user_api(self.user)
 
