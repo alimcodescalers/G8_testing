@@ -28,7 +28,7 @@ class level1_groups(ACLACCOUNT):
         #. add user2 to crated account should return succeed 
         #. delete user1 from created account should return succeed 
         #. delete created account by user 1 should return succeed 
-        """
+        """      
         self.lg('%s STARTED' % self._testID)
         self.user_group=['admin','level1']
         self.lg('create user1 and user2  with level1 + admin group')
@@ -44,76 +44,50 @@ class level1_groups(ACLACCOUNT):
         self.lg(' 2- create account with user 1  ' )
 
 
-        try:
-           accountId = self.user1_api.cloudbroker.account.create(name=self.user1, username=self.user1, email='%s@gmail.com'%self.user1,
+        
+        accountId = self.user1_api.cloudbroker.account.create(name=self.user1, username=self.user1, email='%s@gmail.com'%self.user1,
                                                         maxMemoryCapacity=-1,
                                                         maxVDiskCapacity=-1,
                                                         maxCPUCapacity=-1,
                                                         maxNumPublicIP=-1)
-           self.assertTrue(accountId)
-
-        except ApiError as e:
-            self.lg('- expected error raised %s' % e.message)
-            self.assertNotEqual(e.message, '403 Forbidden')
+        self.assertTrue(accountId)
 
         self.lg(' 3- disable account 1 by user 2  ' )
-        try:
-            response = self.user2_api.cloudbroker.account.disable(accountId = accountId , reason =" test" )
-            self.assertTrue(response)
-
-        except ApiError as e:
-            self.lg('- expected error raised %s' % e.message)
-            self.assertEqual(e.message, '403 Forbidden')
-
+        
+        response = self.user2_api.cloudbroker.account.disable(accountId = accountId , reason =" test" )
+        self.assertTrue(response)
         self.lg(' 4- update account 1 by user 2  ' )
-        try:
-            response = self.user2_api.cloudbroker.account.update(accountId = accountId , name = self.user2 )
-            self.assertTrue(response)
-            details= self.user2_api.cloudapi.accounts.get(accountId=accountId)
-            self.assertEqual(details["name"],self.user2)
-
-        except ApiError as e:
-            self.lg('- expected error raised %s' % e.message)
-            self.assertEqual(e.message, '403 Forbidden')
+        
+        response = self.user2_api.cloudbroker.account.update(accountId = accountId , name = self.user2 )
+        self.assertTrue(response)
+        details= self.user2_api.cloudapi.accounts.get(accountId=accountId)
+        self.assertEqual(details["name"],self.user2)
 
         self.lg(' 5- enable account 1 by user 2  ' )
-        try:
-            response = self.user2_api.cloudbroker.account.enable(accountId = accountId , reason = "test" )
-            self.assertTrue(response)
+        
+        response = self.user2_api.cloudbroker.account.enable(accountId = accountId , reason = "test" )
+        self.assertTrue(response)
 
-        except ApiError as e:
-            self.lg('- expected error raised %s' % e.message)
-            self.assertEqual(e.message, '403 Forbidden')
         self.lg('6- get list of account of user2 ')
         account_list=self.user2_api.cloudapi.accounts.list()
         self.assertEqual(account_list,[])
         self.lg('7- add user 2 to account ')
-        try:
-            response = self.user2_api.cloudbroker.account.addUser(accountId = accountId , username = self.user2, accesstype = 'ARCXDU' )
-            self.lg('%s'% response)
-            self.assertTrue(response)
         
-        except ApiError as e:
-            self.lg('- expected error raised %s' % e.message)
-            self.assertEqual(e.message, '403 Forbidden')
+        response = self.user2_api.cloudbroker.account.addUser(accountId = accountId , username = self.user2, accesstype = 'ARCXDU' )
+        self.lg('%s'% response)
+        self.assertTrue(response)
+        
         self.lg(' 8- delete user1 from created account ')
         
-        try:
-            #response = self.user2_api.cloudapi.accounts.deleteUser(accountId = accountId ,userId =self.user1)
-            response = self.user2_api.cloudbroker.account.deleteUser(accountId = accountId , username = self.user1,recursivedelete='true' )
-            self.assertTrue(response)
-        except ApiError as e:
-            self.lg('- expected error raised %s' % e.message)
-            self.assertEqual(e.message, '403 Forbidden')
-        
-        
+       
+         
+        response = self.user2_api.cloudbroker.account.deleteUser(accountId = accountId , username = self.user1,recursivedelete='true' )
+        self.assertTrue(response)
+       
         self.lg('9-delete created account by user1 ')
-        try:
-            self.user1_api.cloudbroker.account.delete(accountId = accountId ,reason="test")
-        except ApiError as e:
-            self.lg('- expected error raised %s' % e.message)
-            self.assertEqual(e.message, '403 Forbidden')
         
+        self.user1_api.cloudbroker.account.delete(accountId = accountId ,reason="test")
+       
     
     def test_2_level1_group(self):
         """ ACL
@@ -157,20 +131,15 @@ class level1_groups(ACLACCOUNT):
 
         self.lg('- update cloudspace name by user1')
 
-        try:
-            response= self.user1_api.cloudbroker.cloudspace.update(cloudspaceId = cloudspaceId1,name=self.account_owner)
-            self.assertTrue(response)
-        except ApiError as e :
-            self.lg('- expected error raised %s' % e.message)
-            self.assertNotEqual(e.message, '403 Forbbiden')
+        
+        response= self.user1_api.cloudbroker.cloudspace.update(cloudspaceId = cloudspaceId1,name=self.account_owner)
+        self.assertTrue(response)
+
         self.lg('- add extraIP for cloudspace1') 
        
-        try:
-            response= self.user1_api.cloudbroker.cloudspace.addExtraIP(cloudspaceId = cloudspaceId1,ipaddress='192.168.21.115')
-            self.assertTrue(response)
-        except ApiError as e :
-            self.lg('- expected error raised %s' % e.message)
-            self.assertEqual(e.message, '403 Forbbiden')
+        
+        response= self.user1_api.cloudbroker.cloudspace.addExtraIP(cloudspaceId = cloudspaceId1,ipaddress='192.168.21.115')
+        self.assertTrue(response)
         self.lg('- deploy VFW')
         try:
             self.user1_api.cloudbroker.cloudspace.deployVFW(cloudspaceId = cloudspaceId1)
@@ -178,12 +147,9 @@ class level1_groups(ACLACCOUNT):
             self.lg('- expected error raised %s' % e.message)
             self.assertEqual(e.message, '403 Forbbiden')
         self.lg('- start VFW')
-        try:
-            response= self.user1_api.cloudbroker.cloudspace.startVFW(cloudspaceId = cloudspaceId1)
-            self.assertTrue(response)
-        except ApiError as e :
-            self.lg('- expected error raised %s' % e.message)
-            self.assertEqual(e.message, '403 Forbbiden')
+        
+        response= self.user1_api.cloudbroker.cloudspace.startVFW(cloudspaceId = cloudspaceId1)
+        self.assertTrue(response)
         self.lg('- reset VFW')
         try:
             self.user1_api.cloudbroker.cloudspace.resetVFW(cloudspaceId = cloudspaceId1)
@@ -206,30 +172,21 @@ class level1_groups(ACLACCOUNT):
             self.assertEqual(e.message, '403 Forbbiden')
 
         self.lg('- add user1 to cloudspace')
-        try:
-            response= self.user1_api.cloudbroker.cloudspace.addUser(cloudspaceId = cloudspaceId1,username=self.user1,accesstype='ARCXDU')
-            self.assertTrue(response)
-        except ApiError as e :
-            self.lg('- expected error raised %s' % e.message)
-            self.assertEqual(e.message, '403 Forbbiden')
+        
+        response= self.user1_api.cloudbroker.cloudspace.addUser(cloudspaceId = cloudspaceId1,username=self.user1,accesstype='ARCXDU')
+        self.assertTrue(response)
+
+        
 
         self.lg('- delete user2 from cloudspace1')
-        try:
-            response= self.user1_api.cloudbroker.cloudspace.deleteUser(cloudspaceId = cloudspaceId1,username=self.user2,recursivedelete='true')
-            self.assertTrue(response)
-        except ApiError as e :
-            self.lg('- expected error raised %s' % e.message)
-            self.assertEqual(e.message, '403 Forbbiden')
-
+        
+        response= self.user1_api.cloudbroker.cloudspace.deleteUser(cloudspaceId = cloudspaceId1,username=self.user2,recursivedelete='true')
+        self.assertTrue(response)
 
         self.lg('-destroy  cloudspace1')
- 
-
-        try:
-            self.user2_api.cloudbroker.cloudspace.destroy(accountId=self.account_id,cloudspaceId = cloudspaceId1,reason="test")
-        except ApiError as e :
-            self.lg('- expected error raised %s' % e.message)
-            self.assertEqual(e.message, '403 Forbbiden')
+       
+        self.user2_api.cloudbroker.cloudspace.destroy(accountId=self.account_id,cloudspaceId = cloudspaceId1,reason="test")
+        self.wait_for_status('DESTROYED', self.api.cloudapi.cloudspaces.get,cloudspaceId= cloudspaceId1)  
 
        
 
@@ -278,42 +235,38 @@ class level1_groups(ACLACCOUNT):
         response= self.user2_api.cloudbroker.machine.addUser(machineId=machine1_id,username= self.user2 ,accesstype='ARCXDU')
         self.assertTrue(response)
         self.lg('- delete user2 from vm1')
-        try:
+       
 
-            response= self.user2_api.cloudbroker.machine.deleteUser(machineId=machine1_id,username= self.user2)
-            self.assertTrue(response)
-        except ApiError as e :
-            self.lg('-expected error raised %s'%e.message)
-            self.assertEqual(e.message,'403 Forbidden')
- 
+        response= self.user2_api.cloudbroker.machine.deleteUser(machineId=machine1_id,username= self.user2)
+        self.assertTrue(response)
+
         self.lg('start,then puase,then resume vm1 by user 2')
-        try:
-            self.user2_api.cloudbroker.machine.start(machineId=machine1_id,reason="test")
-            self.user2_api.cloudbroker.machine.pause(machineId=machine1_id,reason="test")
-         
-            self.user2_api.cloudbroker.machine.resume(machineId=machine1_id,reason="test")
-     
-        except ApiError as e :
-            self.lg('-expected error raised %s' % e.message)
-            self.assertEqual(e.message,'403 Forbidden')
+        
+        self.user2_api.cloudbroker.machine.start(machineId=machine1_id,reason="test")
+        self.assertEqual(self.api.cloudapi.machines.get(machineId=machine1_id)['status'],
+                             'RUNNING')
+        self.user2_api.cloudbroker.machine.pause(machineId=machine1_id,reason="test")
+        self.assertEqual(self.api.cloudapi.machines.get(machineId=machine1_id)['status'],
+                             'PAUSED')
 
+        self.user2_api.cloudbroker.machine.resume(machineId=machine1_id,reason="test")
+        self.assertEqual(self.api.cloudapi.machines.get(machineId=machine1_id)['status'],
+                             'RUNNING')
         self.lg('stop vm1 then reboot it by user2 ')
-        try:
-            self.user2_api.cloudbroker.machine.stop(machineId=machine1_id,reason="test")
-            self.user2_api.cloudbroker.machine.reboot(machineId=machine1_id,reason="test")
-        except ApiError as e :
-            self.lg('-expected error raised %s' % e.message)
-            self.assertEqual(e.message,'403 Forbidden')
+        
+        self.user2_api.cloudbroker.machine.stop(machineId=machine1_id,reason="test")
+        self.assertEqual(self.api.cloudapi.machines.get(machineId=machine1_id)['status'],
+                             'HALTED')
 
+        self.user2_api.cloudbroker.machine.reboot(machineId=machine1_id,reason="test")
+        self.assertEqual(self.api.cloudapi.machines.get(machineId=machine1_id)['status'],
+                             'RUNNING')
+     
         self.lg('list machines in cloudspace by user2')
 
-        try:
-            response=self.user2_api.cloudbroker.machine.list(cloudspaceId=cloudspaceId1)
-            self.assertTrue(response)
-
-        except ApiError as e :
-            self.lg('-expected error raised %s' % e.message)
-            self.assertEqual(e.message,'403 Forbidden')
+        
+        response=self.user2_api.cloudbroker.machine.list(cloudspaceId=cloudspaceId1)
+        self.assertTrue(response)
 
         self.lg('take snapeshots')
         try:
@@ -324,14 +277,11 @@ class level1_groups(ACLACCOUNT):
             self.assertEqual(e.message,'403 Forbidden')
 
         self.lg('list snapeshots')
-        try:
-            self.listsnapshots=self.user2_api.cloudbroker.machine.listSnapshots(machineId=machine1_id,result="test")
-            self.assertTrue(self.listsnapshots)
-            self.epoch_snapshot = self.listsnapshots[0]["epoch"]
-        except ApiError as e :
-            self.lg('-expected error raised %s' % e.message)
-            self.assertEqual(e.message,'403 Forbidden')
         
+        self.listsnapshots=self.user2_api.cloudbroker.machine.listSnapshots(machineId=machine1_id,result="test")
+        self.assertTrue(self.listsnapshots)
+        self.epoch_snapshot = self.listsnapshots[0]["epoch"]
+       
         self.lg('Rollback virtual machine to a snapshot ')
        
         try:
@@ -369,7 +319,7 @@ class level1_groups(ACLACCOUNT):
         #. create user2 with admin,levle1,level2,level3,all groups by user1 should return succeed
         #. try by user1 to update password of user1 should return succeed
         #. sent reset password links to user1 by user2 should return succeed
-        #. edit user1 group to admine and level1  should be forbidden as not mentioned on documentation
+        #. edit user1 group to admine and level1  should be succeed
         #. delete user2  by user2 should return succeed
 
         """
@@ -380,15 +330,11 @@ class level1_groups(ACLACCOUNT):
         self.user1 = self.cloudbroker_user_create(group = self.user1_groups )
         self.user1_api = self.get_authenticated_user_api(self.user1)
         self.lg('create  user2  with all group')
-        try:
-            self.user2 = self.cloudbroker_user_create(group = self.user2_groups, api = self.user1_api)
-            # self.user2= self.user1_api.cloudbroker.user.create(username="username",emailaddress="username@example.com",
-            #                              password="username",groups=self.user2_groups)
-
-        except ApiError as e :
-            self.lg('- expected error raised %s' % e.message)
-            self.assertEqual(e.message,'403 Forbidden')
-            self.lg('-update password for user2')
+       
+        self.user2 = self.cloudbroker_user_create(group = self.user2_groups, api = self.user1_api)
+        self.assertTrue(self.user2)
+       
+        self.lg('-update password for user2')
         response= self.user1_api.cloudbroker.user.updatePassword( username = self.user2 , password = self.user2)
         self.assertTrue(response)
  
@@ -396,17 +342,11 @@ class level1_groups(ACLACCOUNT):
         response= self.user1_api.cloudbroker.user.sendResetPasswordLink( username = self.user2 )
         self.assertTrue(response)
 
-        try:
-            response= self.user1_api.system.usermanager.editUser(username=self.user2,groups=self.user1_groups,emails="%s@gig.com"%self.user2)
-            # self.user2= self.user1_api.cloudbroker.user.create(username="username",emailaddress="username@example.com",
-            #                              password="username",groups=self.user2_groups)
-            self.assertFalse(response)
-        except ApiError as e :
-            self.lg('- expected error raised %s' % e.message)
-            self.assertEqual(e.message,'403 Forbidden')
-
-
-
+        
+        response= self.user1_api.system.usermanager.editUser(username=self.user2,groups=self.user1_groups,emails="%s@gig.com"%self.user2)            
+        self.assertTrue(response)
         self.lg('delete user2 by user1')
         response= self.user1_api.cloudbroker.user.delete( username = self.user2 )
         self.assertTrue(response)
+        self.CLEANUP['username'].remove(self.user2)
+

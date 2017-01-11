@@ -20,8 +20,8 @@ class group_creation(ACLACCOUNT):
 
         **Test Scenario:**
 
-        #. create group with level1, admin should result be TRUE
-        #. add user1  to the created group,should succeed
+        #. create group 
+        #. add user1  to the created group,should return succeed
         #. get user 1 groups list  should have created group 
         #. delete created group
         #. get user1 groups list should be empty 
@@ -39,21 +39,16 @@ class group_creation(ACLACCOUNT):
         self.lg('2- add user %s to the group ' % user)
         response= self.cloudbroker_group_edit(self.name_group,"test","test",user)
         self.assertTrue(response)
-        try:
-           user_group_list=self.get_user_group_list(user)
-           self.lg('3-get groups for user %s' % user) 
-           self.assertEqual(user_group_list,self.name_group)
-        except : 
-           self.lg('- unexpected error raised error')
-         
+        user_group_list=self.get_user_group_list(user)
+        self.lg('3-get groups for user %s' % user) 
+        self.assertEqual(user_group_list,self.name_group)
+        
         self.lg('4- delete created group  %s' % self.name_group)
         self.cloudbroker_group_delete(self.name_group)
-        try:
-           user_group_list=self.get_user_group_list(user)
-           self.lg('5- get groups for user %s' % user)
-           self.assertEqual(user_group_list,[])
-        except :             
-           self.lg('- unexpected error raised error')
+       
+        user_group_list=self.get_user_group_list(user)
+        self.lg('5- get groups for user %s' % user)
+        self.assertEqual(user_group_list,[])
     
     def tearDown(self): 
         try:
@@ -69,7 +64,7 @@ class group_creation(ACLACCOUNT):
 
         **Test Scenario:**
 
-        #. create group with level1, admin should result be TRUE
+        #. create group 
         #. add not exist user to created group should be forbidden
         #. delete created group
         """
@@ -97,7 +92,7 @@ class group_creation(ACLACCOUNT):
 
         **Test Scenario:**
 
-        #. create group with level1, admin 
+        #. create group  
         #. create user 1 and user2 with created group and user domain 
         #. get user1 and user2 groups list should have created group 
         #. delete created group 
@@ -107,7 +102,7 @@ class group_creation(ACLACCOUNT):
         self.name_group = str(uuid.uuid4()).replace('-', '')[0:10]
         groupsdomain= [self.name_group ,'user']
         users = str(uuid.uuid4()).replace('-', '')[0:10]
-        self.lg('1- create group with level1 and admin  domain ')
+        self.lg('1- create group ')
         group_status= self.cloudbroker_group_create(self.name_group,"test","test")
         self.assertTrue(group_status)
         self.lg('group statues %s ' % group_status)
@@ -121,7 +116,7 @@ class group_creation(ACLACCOUNT):
             self.lg('4-get groups for user1 %s' % self.user1)
             self.assertTrue(self.name_group in user_group_list)
         except:
-            self.lg('- expected error raised error')
+            self.lg('- unexpected error raised error')
         
         try:
             user_group_list=self.get_user_group_list(self.user2)
@@ -148,54 +143,39 @@ class group_creation(ACLACCOUNT):
 
         **Test Scenario:**
 
-        #. create group with level1, admin
+        #. create group 
         #. create user1 with  user domain
         #. create account with user 1 should be forbidden
         #. add user1 to created group
         #. try to create account with user1 should succeed
-        #. delete created group with user1 should succeed
-        #. try to create account with user1 shoul fail
+
         """
         self.lg('%s STARTED' % self._testID)
         self.name_group = str(uuid.uuid4()).replace('-', '')[0:10]
         self.group_domain= "admin,level1"
         users = str(uuid.uuid4()).replace('-', '')[0:10]
-        self.lg('1- create group with level1 and admin  domain ')
+        self.lg('1- create group  ')
         group_status= self.cloudbroker_group_create(self.name_group,self.group_domain,"test")
         self.assertTrue(group_status)
         self.lg('group statues %s ' % group_status)
-        self.user1 = self.cloudbroker_user_create(group = 'user' )
         self.lg('2- create user %s with user domain ' % self.user1)
-        self.lg('3- create account with user1 %s with user domain ' % self.user1)
+        self.user1 = self.cloudbroker_user_create(group = 'user' )
         self.user1_api = self.get_authenticated_user_api(self.user1)
-        try:        
-           accountId = self.user1_api.cloudbroker.account.create(name=self.user1, username=self.user1, email='%s@gmail.com'%self.user1,
+
+        self.lg('3- create account with user1 %s with user domain ' % self.user1)
+       
+       
+        accountId = self.user1_api.cloudbroker.account.create(name=self.user1, username=self.user1, email='%s@gmail.com'%self.user1,
                                                         maxMemoryCapacity=-1,
                                                         maxVDiskCapacity=-1,
                                                         maxCPUCapacity=-1,
                                                         maxNumPublicIP=-1)
-                                                        
-        except ApiError as e:
-            self.lg('- expected error raised %s' % e.message)
-            self.assertEqual(e.message, '403 Forbidden')
-   
+        self.assertTrue(accountId)                                                
+         
         
         self.lg('4-add user1 to created group')
         response=self.cloudbroker_group_edit(self.name_group,self.group_domain,"test",self.user1)
         self.lg('response %s' % response )
         self.assertTrue(response) 
-        time.sleep(30)
-        self.lg('5- create account with user1 after add him to created group')
-       
-        try:
-            accountId = self.user1_api.cloudbroker.account.create(name=self.user1, username=self.user1, email='%s@gmail.com'%self.user1,
-                                                        maxMemoryCapacity=-1,
-                                                        maxVDiskCapacity=-1,
-                                                        maxCPUCapacity=-1,
-                                                        maxNumPublicIP=-1)
-            self.assertTrue(accountId.status_code)
              
-        except ApiError as e:
-            self.lg('- expected error raised %s' % e.message)
-            self.assertNotEqual(e.message, '403 Forbidden')
 
