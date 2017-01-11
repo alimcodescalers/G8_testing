@@ -19,30 +19,30 @@ class machines():
         self.framework.lg('delete account')
         self.framework.Accounts.delete_account(account)
 
-    def end_user_create_virtual_machine(self, image_name="ubuntu_14_04", machine_name=''):
-        self.framework.RightNavigationMenu.Machines.home()
+    def end_user_create_virtual_machine(self, image_name="Ubuntu 16.04 x64", machine_name=''):
 
+        self.framework.RightNavigationMenu.Machines.home()
         self.framework.click("create_machine_button")
 
         machine_name = machine_name or str(uuid.uuid4()).replace('-', '')[0:10]
         machine_description = str(uuid.uuid4()).replace('-', '')[0:10]
 
-        num_available_packages = len(self.framework.find_element('packages').find_elements_by_tag_name('li'))
-        randome_package = randint(1, num_available_packages)
-
         self.framework.lg("Create a machine name: %s image:%s" % (machine_name, image_name))
         self.framework.set_text("machine_name", machine_name)
         self.framework.set_text("machine_description_", machine_description)
 
-        if 'windows' in image_name:
+        if 'Windows' in image_name:
             self.framework.click('windows')
-        elif "ubuntu" in image_name:
+        elif "Ubuntu" in image_name:
             self.framework.click('linux')
 
         self.framework.click(image_name)
-        self.framework.click("package_%i" % randome_package)
-        num_available_disk_sizes = len(self.framework.find_element('disk_sizes').find_elements_by_tag_name('button'))
 
+        num_available_packages = len(self.framework.find_element('packages').find_elements_by_tag_name('li'))
+        randome_package = randint(1, num_available_packages)
+        self.framework.click("package_%i" % randome_package)
+
+        num_available_disk_sizes = len(self.framework.find_element('disk_sizes').find_elements_by_tag_name('button'))
         random_disk_size = randint(1, num_available_disk_sizes)
         self.framework.click("disk_size_%i" % random_disk_size)
 
@@ -57,6 +57,7 @@ class machines():
             self.framework.lg("FAIL : %s Machine can't create in 30 sec" % machine_name)
             return False
 
+
         time.sleep(5)
         for temp in range(50):
             if self.framework.get_text("machine_ipaddress") != "Undefined":
@@ -68,6 +69,7 @@ class machines():
         else:
             self.framework.lg("FAIL : %s Machine isn't RUNNING" % machine_name)
             return False
+
 
     def end_user_get_machine_page(self, machine_name=''):
         machine_name = machine_name
