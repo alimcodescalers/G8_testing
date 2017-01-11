@@ -102,6 +102,21 @@ class BaseTest(unittest.TestCase):
                              cloudspaceId=cloudspaceId)
         return cloudspaceId
 
+    def cloudbroker_cloudspace_create(self, account_id, location, access, api=None,
+                                   name='', maxMemoryCapacity=-1, maxDiskCapacity=-1,
+                                   maxCPUCapacity=-1, maxNumPublicIP=-1):
+        if api is None:
+            api = self.api
+        cloudspaceId = api.cloudbroker.cloudspace.create(
+            accountId=account_id, location=location, access=access,
+            name=name or str(uuid.uuid4()).replace('-', '')[0:10],
+            maxMemoryCapacity=maxMemoryCapacity, maxVDiskCapacity=maxDiskCapacity,
+            maxCPUCapacity=maxCPUCapacity, maxNumPublicIP=maxNumPublicIP)
+        self.assertTrue(cloudspaceId)
+        self.wait_for_status('DEPLOYED', api.cloudapi.cloudspaces.get,
+                             cloudspaceId=cloudspaceId)
+        return cloudspaceId
+
     def cloudbroker_account_create(self, name, username, email, maxMemoryCapacity=-1,
                                    maxVDiskCapacity=-1, maxCPUCapacity=-1, maxNumPublicIP=-1):
         accountId = self.api.cloudbroker.account.create(name, username, email,
@@ -114,10 +129,13 @@ class BaseTest(unittest.TestCase):
         self.lg('- account ID: %s' % accountId)
         return accountId
 
-    def cloudbroker_user_create(self, username='', email='', password=''):
+    def cloudbroker_user_create(self, username='', email='', password='',group=[],api=None):
+        if api is None:
+            api = self.api
         username = username or str(uuid.uuid4()).replace('-', '')[0:10]
-        self.api.cloudbroker.user.create(username, email or "%s@example.com" % username,
-                                         password or username)
+            
+        api.cloudbroker.user.create(username=username, emailaddress=email or "%s@example.com" % username,
+                                         password=password or username,groups=group)
         self.CLEANUP['username'].append(username)
         return username
 
@@ -201,6 +219,50 @@ class BaseTest(unittest.TestCase):
         machine = api.cloudapi.machines.get(machineId=machine_id)
         self.assertEqual(machine['status'], 'RUNNING')
         return machine_id
+    def cloudbroker_create_machine(self, cloudspace_id, api='', name='', size_id=0, image_id=0,
+                                disksize=10, datadisks=[], wait=True, stackId=None):
+        api = api or self.api
+        name = name or str(uuid.uuid4())
+        sizeId = size_id or self.get_size(cloudspace_id)['id']
+        imageId = image_id or self.get_image()['id']
+
+        if not stackId:
+            machine_id = api.cloudbroker.machine.create(cloudspaceId=cloudspace_id, name=name,
+                                                      sizeId=sizeId, imageId=imageId,
+                                                      disksize=disksize, datadisks=datadisks)
+        else:
+            machine_id = api.cloudbroker.machine.createOnStack(cloudspaceId=cloudspace_id, name=name,
+                                                               sizeId=sizeId, imageId=imageId,
+                                                               disksize=disksize, stackid=stackId)
+        self.assertTrue(machine_id)
+        if wait:
+            self.wait_for_status('DEPLOYED', api.cloudapi.cloudspaces.get,
+                                 cloudspaceId=cloudspace_id)
+        machine = api.cloudapi.machines.get(machineId=machine_id)
+        self.assertEqual(machine['status'], 'RUNNING')
+        return machine_id
+    
+    def cloudbroker_group_create(self, name,group_domain ,description ):
+        
+        group_status = self.api.system.usermanager.createGroup(name=name,domain=group_domain,description=description)
+        return group_status
+    
+    def cloudbroker_group_delete(self,groupname):
+        self.api.system.usermanager.deleteGroup(id=groupname)
+   
+    def cloudbroker_group_edit(self,groupname,groupdomain,description,users):
+
+        edit_succeed=self.api.system.usermanager.editGroup(name= groupname,domain= groupdomain,description="test",users=users)
+        return edit_succeed
+    
+    def get_user_group_list(self,username):
+        user_group_list=self.api.system.usermanager.usergroupsget(user=username)
+        self.lg('get groups for user %s' % username)     
+           
+
+
+        user_group_list=self.api.system.usermanager.usergroupsget(user=username)
+        return user_group_list
 
     def wait_for_status(self, status, func, timeout=300, **kwargs):
         """
@@ -297,6 +359,20 @@ class BaseTest(unittest.TestCase):
                                            machineId=machine_id,
                                            localPort=vm_port,
                                            protocol=protocol)
+        return cs_publicip
+
+
+    def cloudbroker_add_portforwarding(self, machine_id, api='', cloudspace_id='', cs_publicip='', cs_publicport=444, vm_port=22,
+                           protocol='tcp'):
+        api = api or self.api
+        # wait until machine takes an ip
+        time.sleep(60)
+
+        cloudspace_id = cloudspace_id or self.cloudspace_id
+        cloudspace = self.api.cloudapi.cloudspaces.get(cloudspaceId=cloudspace_id)
+        cs_publicip = cs_publicip or str(netaddr.IPNetwork(cloudspace['publicipaddress']).ip)
+        api.cloudbrocker.machine.createPortForward(destPort=cs_publicport,machineId=machine_id,localPort=vm_port,proto=protocol)
+       
         return cs_publicip
 
     def get_cloudspace_network_id(self, cloudspaceID):
