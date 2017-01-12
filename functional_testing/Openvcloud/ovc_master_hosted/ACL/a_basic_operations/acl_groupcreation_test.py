@@ -39,17 +39,21 @@ class group_creation(ACLACCOUNT):
         self.lg('2- add user %s to the group ' % user)
         response= self.cloudbroker_group_edit(self.name_group,"test","test",user)
         self.assertTrue(response)
-        user_group_list=self.get_user_group_list(user)
-        self.lg('3-get groups for user %s' % user) 
-        self.assertEqual(user_group_list,self.name_group)
-        
+        try:
+            user_group_list=self.get_user_group_list(user)
+            self.lg('3-get groups for user %s' % user) 
+            self.assertEqual(user_group_list,self.name_group)
+        except:
+            self.lg('-unexpected error raised ')
+       
         self.lg('4- delete created group  %s' % self.name_group)
         self.cloudbroker_group_delete(self.name_group)
-       
-        user_group_list=self.get_user_group_list(user)
-        self.lg('5- get groups for user %s' % user)
-        self.assertEqual(user_group_list,[])
-    
+        try: 
+            user_group_list=self.get_user_group_list(user)
+            self.lg('5- get groups for user %s' % user)
+            self.assertEqual(user_group_list,[])
+        except: 
+            self.lg('unexpected error raised')
     def tearDown(self): 
         try:
             self.lg('delete group  %s' % self.name_group)
@@ -135,47 +139,4 @@ class group_creation(ACLACCOUNT):
 
         except:
             self.lg('- expected error raised error')
-
-    
-    def test_4_group_creation(self):
-        """ ACL
-        *Test case for add fake user to group*
-
-        **Test Scenario:**
-
-        #. create group 
-        #. create user1 with  user domain
-        #. create account with user 1 should be forbidden
-        #. add user1 to created group
-        #. try to create account with user1 should succeed
-
-        """
-        self.lg('%s STARTED' % self._testID)
-        self.name_group = str(uuid.uuid4()).replace('-', '')[0:10]
-        self.group_domain= "admin,level1"
-        users = str(uuid.uuid4()).replace('-', '')[0:10]
-        self.lg('1- create group  ')
-        group_status= self.cloudbroker_group_create(self.name_group,self.group_domain,"test")
-        self.assertTrue(group_status)
-        self.lg('group statues %s ' % group_status)
-        self.lg('2- create user %s with user domain ' % self.user1)
-        self.user1 = self.cloudbroker_user_create(group = 'user' )
-        self.user1_api = self.get_authenticated_user_api(self.user1)
-
-        self.lg('3- create account with user1 %s with user domain ' % self.user1)
-       
-       
-        accountId = self.user1_api.cloudbroker.account.create(name=self.user1, username=self.user1, email='%s@gmail.com'%self.user1,
-                                                        maxMemoryCapacity=-1,
-                                                        maxVDiskCapacity=-1,
-                                                        maxCPUCapacity=-1,
-                                                        maxNumPublicIP=-1)
-        self.assertTrue(accountId)                                                
-         
-        
-        self.lg('4-add user1 to created group')
-        response=self.cloudbroker_group_edit(self.name_group,self.group_domain,"test",self.user1)
-        self.lg('response %s' % response )
-        self.assertTrue(response) 
-             
 
