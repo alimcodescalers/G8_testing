@@ -194,6 +194,20 @@ class BaseTest(unittest.TestCase):
             self.fail("can't find %s element" % element)
         time.sleep(1)
 
+
+    def click_item(self, element, ID):
+        for temp in range(10):
+            method = self.elements[element][0]
+            value = self.elements[element][1]
+            try:
+                self.driver.find_element(getattr(By, method), value % tuple(ID)).click()
+                break
+            except:
+                time.sleep(1)
+        else:
+            self.fail("can't find %s element" % element)
+        time.sleep(1)
+
     def click_link(self, link):
         self.get_page(link)
 
@@ -319,13 +333,14 @@ class BaseTest(unittest.TestCase):
             self.lg("Can't get the row cells")
             return False
 
-    def get_table_head_elements(self):
+    def get_table_head_elements(self, element):
         # This method return a table head elements.
         for _ in range(10):
             try:
-                thead= self.find_element('thead')
-                thead_row = thead.find_element_by_tag_name('tr')
-                return thead_row.find_elements_by_tag_name('th')
+                table = self.find_element(element)
+                thead = table.find_elements_by_tag_name('thead')
+                thead_row = thead[0].find_elements_by_tag_name('tr')
+                return thead_row[0].find_elements_by_tag_name('th')
             except:
                 time.sleep(0.5)
         else:

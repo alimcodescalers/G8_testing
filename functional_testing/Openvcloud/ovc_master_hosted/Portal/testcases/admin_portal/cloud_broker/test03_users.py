@@ -60,7 +60,7 @@ class UsersTests(Framework):
             previous_button, next_button = self.Tables.get_previous_next_button()
 
             next_button.click()
-            time.sleep(1)
+            time.sleep(3)
 
             users_start_number_ = self.Tables.get_table_start_number('table system user info')
             users_end_number_ = self.Tables.get_table_end_number('table system user info')
@@ -71,7 +71,7 @@ class UsersTests(Framework):
             else:
                 self.assertEqual(users_end_number_, users_max_number)
 
-    @unittest.skip('https://github.com/0-complexity/openvcloud/issues/554')
+    #@unittest.skip('https://github.com/0-complexity/openvcloud/issues/554')
     def test03_users_page_table_sorting(self):
         """ PRTL-041
         *Test case to make sure that paging and sorting of users page are working as expected*
@@ -85,15 +85,21 @@ class UsersTests(Framework):
         self.Users.get_it()
         self.assertTrue(self.Users.is_at())
 
-        table_head_elements = self.get_table_head_elements()
+        table_head_elements = self.get_table_head_elements('table system user')
         self.assertNotEqual(table_head_elements, False)
 
         for element in table_head_elements:
             current_column = element.text
+            if current_column == 'Groups':
+                continue
+
+            self.driver.execute_script("window.scrollTo(0, 0)")
             element.click()
             time.sleep(3)
             table_before = self.Tables.get_table_data('table system user info')
+            self.driver.execute_script("window.scrollTo(0, 0)");
             element.click()
+            time.sleep(3)
             table_after = self.Tables.get_table_data('table system user info')
             self.assertEqual(len(table_before), len(table_after),
                              'The length of users table is changing according to sorting by %s' % current_column)

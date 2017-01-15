@@ -24,14 +24,14 @@ class VirtualMachinesTest(Framework):
 
         vms_paging_options = [25, 50, 100, 10]
         vms_info = self.Tables.get_table_info('table cloudbroker vmachine info')
-        vms_number_max_number = int(vms_info[(vms_info.index('f') + 2):(vms_info.index('entries') - 1)])
+        vms_number_max_number = int(vms_info[(vms_info.index('f') + 2):(vms_info.index('entries') - 1)].replace(',', ''))
 
         for vms_paging_option in vms_paging_options:
             self.select('account selector', vms_paging_option)
             time.sleep(5)
             vms_info_ = self.Tables.get_table_info('table cloudbroker vmachine info')
-            vms_number_max_number_ = int(vms_info_[vms_info_.index('f') + 2:vms_info_.index('en') - 1])
-            vms_avaliable_ = int(vms_info_[(vms_info_.index('to') + 3):(vms_info_.index('of') - 1)])
+            vms_number_max_number_ = int(vms_info_[vms_info_.index('f') + 2:vms_info_.index('en') - 1].replace(',', ''))
+            vms_avaliable_ = int(vms_info_[(vms_info_.index('to') + 3):(vms_info_.index('of') - 1)].replace(',', ''))
             self.assertEqual(vms_number_max_number, vms_number_max_number_)
             if vms_number_max_number > vms_paging_option:
                 self.assertEqual(vms_avaliable_, vms_paging_option)
@@ -71,7 +71,7 @@ class VirtualMachinesTest(Framework):
             else:
                 self.assertEqual(vms_end_number_, vms_max_number)
 
-    @unittest.skip('https://github.com/0-complexity/openvcloud/issues/554')
+    #@unittest.skip('https://github.com/0-complexity/openvcloud/issues/554')
     def test03_vms_page_table_sorting(self):
         """ PRTL-041
         *Test case to make sure that paging and sorting of vms page are working as expected*
@@ -82,18 +82,20 @@ class VirtualMachinesTest(Framework):
         #. sorting of all fields of vms table, should be working as expected
         """
         self.lg('%s STARTED' % self._testID)
-        self.Users.get_it()
-        self.assertTrue(self.Users.is_at())
-
-        table_head_elements = self.get_table_head_elements()
+        self.VirtualMachines.get_it()
+        self.assertTrue(self.VirtualMachines.is_at())
+        table_head_elements = self.get_table_head_elements('table cloudbroker vmachine')
         self.assertNotEqual(table_head_elements, False)
 
         for element in table_head_elements:
             current_column = element.text
+            self.driver.execute_script("window.scrollTo(0, 0)")
             element.click()
             time.sleep(3)
             table_before = self.Tables.get_table_data('table cloudbroker vmachine info')
+            self.driver.execute_script("window.scrollTo(0, 0)")
             element.click()
+            time.sleep(3)
             table_after = self.Tables.get_table_data('table cloudbroker vmachine info')
             self.assertEqual(len(table_before), len(table_after),
                              'The length of vms table is changing according to sorting by %s' % current_column)

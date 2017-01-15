@@ -8,7 +8,6 @@ class AccountsTests(Framework):
         super(AccountsTests, self).setUp()
         self.Login.Login(username=self.admin_username, password=self.admin_password)
 
-    @unittest.skip('bug# 496')
     def test01_edit_account(self):
         """ PRTL-023
         *Test case to make sure that edit actions on accounts are working as expected*
@@ -26,7 +25,7 @@ class AccountsTests(Framework):
         self.Accounts.open_account_page(self.account)
         self.assertTrue(self.Accounts.account_edit_all_items(self.account))
 
-    @unittest.skip("bug# 431 and 496")
+    #@unittest.skip("bug# 431 and 496")
     def test02_disable_enable_account(self):
         """ PRTL-024
         *Test case to make sure that enable/disable actions on accounts are working as expected*
@@ -121,7 +120,7 @@ class AccountsTests(Framework):
             previous_button, next_button = self.Tables.get_previous_next_button()
 
             next_button.click()
-            time.sleep(1)
+            time.sleep(3)
 
             account_start_number_ = self.Tables.get_table_start_number('table cloudbroker account info')
             account_end_number_ = self.Tables.get_table_end_number('table cloudbroker account info')
@@ -132,7 +131,7 @@ class AccountsTests(Framework):
             else:
                 self.assertEqual(account_end_number_, account_max_number)
 
-    @unittest.skip("BUG# 509")
+    #@unittest.skip("BUG# 509")
     def test06_account_page_table_sorting(self):
         """ PRTL-032
         *Test case to make sure that paging and sorting of accounts page are working as expected*
@@ -145,19 +144,26 @@ class AccountsTests(Framework):
         self.lg('%s STARTED' % self._testID)
         self.Accounts.get_it()
         self.assertTrue(self.Accounts.is_at())
-
-        table_head_elements = self.get_table_head_elements()
+        table_head_elements = self.get_table_head_elements('table cloudbroker account')
         self.assertNotEqual(table_head_elements, False)
 
         for element in table_head_elements:
+
             current_column = element.text
+            if element.text == "Access Controler List":
+                continue
+
+            self.driver.execute_script("window.scrollTo(0, 0)")
             element.click()
             time.sleep(3)
             table_before = self.Tables.get_table_data('table cloudbroker account info')
+            self.driver.execute_script("window.scrollTo(0, 0)")
             element.click()
+            time.sleep(3)
             table_after = self.Tables.get_table_data('table cloudbroker account info')
             self.assertEqual(len(table_before), len(table_after),
                              'The length of account table is changing according to sorting by ID')
             for temp in range(len(table_before)):
                 self.assertEqual(table_before[temp], table_after[(len(table_after) - temp - 1)])
             self.lg('pass %s column' % current_column)
+            time.sleep(2)

@@ -23,6 +23,7 @@ class machines():
 
         self.framework.RightNavigationMenu.Machines.home()
         self.framework.click("create_machine_button")
+        time.sleep(2)
 
         machine_name = machine_name or str(uuid.uuid4()).replace('-', '')[0:10]
         machine_description = str(uuid.uuid4()).replace('-', '')[0:10]
@@ -33,20 +34,27 @@ class machines():
 
         if 'Windows' in image_name:
             self.framework.click('windows')
+            time.sleep(2)
+
         elif "Ubuntu" in image_name:
             self.framework.click('linux')
+            time.sleep(2)
 
         self.framework.click(image_name)
+        time.sleep(2)
 
         num_available_packages = len(self.framework.find_element('packages').find_elements_by_tag_name('li'))
         randome_package = randint(1, num_available_packages)
-        self.framework.click("package_%i" % randome_package)
+        self.framework.click_item("package", [randome_package])
+        time.sleep(2)
 
         num_available_disk_sizes = len(self.framework.find_element('disk_sizes').find_elements_by_tag_name('button'))
         random_disk_size = randint(1, num_available_disk_sizes)
-        self.framework.click("disk_size_%i" % random_disk_size)
+        self.framework.click_item("disk_size", [random_disk_size])
+        time.sleep(2)
 
         self.framework.click("create_machine")
+        time.sleep(2)
         for temp in range(50):
             if "console" in self.framework.get_url():
                 time.sleep(1)

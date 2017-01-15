@@ -74,14 +74,14 @@ class Read(Framework):
 
 
     '''
-    @parameterized.expand(["ubuntu_14_04",
-                           "ubuntu_15_10",
-                           "ubuntu_16_04",
-                           "windows_2012"
+    @parameterized.expand(["Ubuntu 16.04 x64",
+                           "Ubuntu 14.04 x64",
+                           "Ubuntu 15.10 x64",
+                           "Windows 2012r2 Standard"
                            ])
     '''
 
-    def test06_machine_create(self, image_name="ubuntu_14_04"):
+    def test06_machine_create(self, image_name="Ubuntu 16.04 x64"):
         """ PRTL-011
         *Test case for creating/deleting machine with all avaliable image name, random package and random disk size*
 
