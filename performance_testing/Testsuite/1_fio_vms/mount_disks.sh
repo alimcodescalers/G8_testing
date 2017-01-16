@@ -12,7 +12,7 @@ then
     echo $password | sudo -S umount -l /dev/vd$disk
     echo $password | sudo -S mkfs.ext4 /dev/vd$disk
     echo $password | sudo -S mkdir -p /mnt/vd$disk
-    echo $password | sudo -S mount /dev/vd$disk /mnt/vd$disk
+    echo $password | sudo -S mount /dev/vd$disk /mnt/vd$disk -o noatime
 else
     if [ $(mount | grep -c /mnt/vdb) == 1 ]
     then

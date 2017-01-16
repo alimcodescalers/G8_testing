@@ -37,10 +37,9 @@ def prepare_fio_test(ovc, options, machine_id, publicip, publicport):
     templ1 = templ + '-P {} {}/1_fio_vms/Machine_script.py  {}@{}:'
     cmd = templ1.format(account['password'], publicport, options.testsuite, account['login'], publicip)
     run_cmd_via_gevent(cmd)
-    if options.type == 'filesystem':
-        templ2 = templ + '-P {} {}/1_fio_vms/mount_disks.sh  {}@{}:'
-        cmd2 = templ2.format(account['password'], publicport, options.testsuite, account['login'], publicip)
-        run_cmd_via_gevent(cmd2)
+    templ2 = templ + '-P {} {}/1_fio_vms/mount_disks.sh  {}@{}:'
+    cmd2 = templ2.format(account['password'], publicport, options.testsuite, account['login'], publicip)
+    run_cmd_via_gevent(cmd2)
 
     return machine_id, publicip, publicport, account
 
@@ -101,6 +100,8 @@ def main(options):
     ovc = j.clients.openvcloud.get(options.environment, options.username, options.password)
     cloudspaces_per_user = ovc.api.cloudapi.cloudspaces.list()
     for cs in cloudspaces_per_user:
+        if cs['name'] == 'template_space':
+            continue
         portforwards = ovc.api.cloudapi.portforwarding.list(cloudspaceId=cs['id'])
         for pi in portforwards:
             if 'machineId' not in pi or pi['machineId'] in vms_index:
