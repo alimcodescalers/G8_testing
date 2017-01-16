@@ -25,8 +25,7 @@ class statusOverview():
     def run_health_check(self):
         self.framework.click('Run Healthcheck')
         self.framework.assertEqual(self.framework.get_text('action-RunHealthcheckLabel'),
-                                   'Confirm Action Run Healthcheck')
+                                   'Confirm Action Run Health Check')
         self.framework.click('confirm healthcheck')
         self.framework.wait_until_element_located('alert healthcheck')
         return self.framework.get_text('alert healthcheck')
-

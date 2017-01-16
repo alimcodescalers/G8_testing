@@ -1,3 +1,4 @@
+import unittest
 import uuid
 from functional_testing.Openvcloud.ovc_master_hosted.Portal.framework.framework import Framework
 
@@ -9,6 +10,7 @@ class ChangePassword(Framework):
         super(ChangePassword, self).setUp()
         self.Login.Login()
 
+    @unittest.skip('users created from admin portal cannot be accessed from itsyou.online')
     def test01_verify_change_user_password(self):
         """ PRTL-022
         *Test case for create new user and change his password*
@@ -64,4 +66,3 @@ class ChangePassword(Framework):
         self.lg("Do logout")
         self.click("end_user_logout")
         self.lg('%s ENDED' % self._testID)
-

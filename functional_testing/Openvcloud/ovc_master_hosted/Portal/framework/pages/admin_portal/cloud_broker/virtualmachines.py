@@ -22,7 +22,7 @@ class virtualmachines():
     def create_virtual_machine(self, cloudspace='', machine_name='', image='', memory='', disk=''):
         cloudspace = cloudspace
         machine_name = machine_name or str(uuid.uuid4()).replace('-', '')[0:10]
-        self.framework.image = image or 'Ubuntu 14.04'
+        self.framework.image = image or 'Ubuntu 16.04 x64'
         self.framework.memory = memory or '1024 MB'
         self.framework.disk = disk or '50 GB'
 

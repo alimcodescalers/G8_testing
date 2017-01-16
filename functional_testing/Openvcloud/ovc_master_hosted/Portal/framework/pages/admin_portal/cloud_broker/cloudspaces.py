@@ -36,7 +36,7 @@ class cloudspaces():
         self.framework.set_text("cloud_space_user_name", account_username)
 
         self.framework.click("cloud_space_confirm")
-
+        time.sleep(3)
         self.framework.set_text("cloud_space_search", self.framework.cloud_space_name)
         self.framework.wait_until_element_located_and_has_text("cloud_space_table_first_element_2",
                                                                self.framework.cloud_space_name)
@@ -74,11 +74,9 @@ class cloudspaces():
                 if self.framework.wait_until_element_located_and_has_text("cloudspace_page_status", "DESTROYED"):
                     return True
                 else:
-                    self.framework.get_page(self.framework.driver.current_url)
+                    self.framework.driver.refresh()
             else:
                 self.framework.fail("Can't delete this '%s' cloudspcae")
         else:
             self.framework.lg('"%s" cloudspace is already deleted' % cloudspace)
             return True
-
-

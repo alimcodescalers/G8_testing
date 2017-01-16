@@ -24,7 +24,7 @@ class tables():
 
     def get_table_max_number(self, table_info_element):
         account_info = self.get_table_info(table_info_element)
-        return int(account_info[(account_info.index('f') + 2):(account_info.index('entries') - 1)])
+        return int(account_info[(account_info.index('f') + 2):(account_info.index('entries') - 1)].replace(',',''))
 
     def get_previous_next_button(self):
         pagination = self.framework.get_list_items('pagination')
@@ -40,17 +40,21 @@ class tables():
         account_max_number = self.get_table_max_number(element)
         self.framework.select('account selector', max_sort_value)
         time.sleep(3)
-        page_numbers = (account_max_number / max_sort_value) + 1
+        min_page_numbers = (account_max_number / max_sort_value)
+        if (account_max_number % max_sort_value) > 0:
+            page_numbers = min_page_numbers+1
+
 
         tableData = []
         for page in range(page_numbers):
             table_rows = self.framework.get_table_rows()
             self.framework.assertTrue(table_rows)
             for row in table_rows:
-                tableData.append(row.text)
+                tableData.append([x.text for x in row.find_elements_by_tag_name('td')])
 
-            if 0 < page < (page_numbers - 1):
+            if  page < (page_numbers-1):
                 previous_button, next_button = self.get_previous_next_button()
                 next_button.click()
+                time.sleep(2)
 
         return tableData

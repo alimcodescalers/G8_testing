@@ -3,7 +3,6 @@ import unittest
 from functional_testing.Openvcloud.ovc_master_hosted.Portal.framework.framework import Framework
 
 
-@unittest.skip("bug#356")
 class AdminMenu(Framework):
     def __init__(self, *args, **kwargs):
         super(AdminMenu, self).__init__(*args, **kwargs)
@@ -108,5 +107,3 @@ class AdminMenu(Framework):
         self.click("end_user")
         self.driver.get(self.get_url())
         self.assertEqual(self.get_text("end_user_home"),"Home")
-
-

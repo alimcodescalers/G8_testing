@@ -35,8 +35,9 @@ class accounts():
 
         if max_memory:
             self.framework.set_text("account_maxmemory", max_memory)
-        self.framework.click("account_confirm")
 
+        self.framework.click("account_confirm")
+        time.sleep(5)
         self.framework.set_text("account_search", account)
         self.framework.wait_until_element_located_and_has_text("account_table_first_element", account)
 
@@ -67,39 +68,38 @@ class accounts():
 
         self.framework.assertEqual(self.framework.get_text("account_action_edit_page"), 'Confirm Action Edit')
 
-        edit_items = ['name', 'Max Memory Capacity (GB)', 'Max VDisk Capacity (GB)', 'Max Number of CPU Cores',
-                      'Max Primary Storage(NAS) Capacity (TB)', 'Max Secondary Storage(Archive) Capacity (TB)',
-                      'Max Network Transfer In Operator (GB)', 'Max Network Transfer Peering (GB)',
-                      'Max Number of Public IP Addresses']
+        edit_items = ['account_edit_Name', 'account_edit_Max Memory Capacity', 'account_edit_Max VDisk Capacity', 'account_edit_Max Number of CPU Cores',
+                      'account_edit_Max External Network Transfer', 'account_edit_Max Number of Public IP Addresses']
+
         for item in edit_items:
             if item == edit_item:
-                xpath = self.framework.elements['account_action_edit_page_items'][1] % (edit_items.index(item) + 1)
+                name = self.framework.elements[item][1]
                 break
         else:
             self.framework.fail("%s isn't an item in the list" % edit_item)
 
-        self.framework.driver.find_element_by_xpath(xpath).clear()
-        self.framework.driver.find_element_by_xpath(xpath).send_keys(edit_value)
+        self.framework.driver.find_element_by_name(name).clear()
+        self.framework.driver.find_element_by_name(name).send_keys(edit_value)
 
         self.framework.click('account_action_edit_page_confirm')
 
     def account_edit_all_items(self, account):
-        edit_items = ['name', 'Max Memory Capacity (GB)', 'Max VDisk Capacity (GB)', 'Max Number of CPU Cores',
-                      'Max Primary Storage(NAS) Capacity (TB)', 'Max Secondary Storage(Archive) Capacity (TB)',
-                      'Max Network Transfer In Operator (GB)', 'Max Network Transfer Peering (GB)',
-                      'Max Number of Public IP Addresses']
+        edit_items = ['account_edit_Name', 'account_edit_Max Memory Capacity', 'account_edit_Max VDisk Capacity', 'account_edit_Max Number of CPU Cores',
+                      'account_edit_Max External Network Transfer', 'account_edit_Max Number of Public IP Addresses']
 
         for item in edit_items:
-            if item == 'name':
+            if item == 'account_edit_Name':
                 value = str(uuid.uuid4()).replace('-', '')[0:10]
                 self.account_edit(account, item, value)
                 self.framework.CLEANUP["accounts"].remove(self.framework.account)
                 self.framework.account = value
                 self.framework.CLEANUP["accounts"].append(self.framework.account)
-                time.sleep(0.5)
-                if value not in self.framework.get_text('account_name_value'):
-                    self.framework.lg("FAIL : %s not in the account name: %s" % (
-                        value, self.framework.get_text('account_name_value')))
+                for _ in range(10):
+                    if value  in self.framework.get_text('account_name_value'):
+                        break
+                    else:
+                        time.sleep(1)
+                else:
                     return False
             else:
                 value = randint(1, 100)
@@ -107,10 +107,11 @@ class accounts():
                 xpath = self.framework.elements['account_action_page_items'][1] % edit_items.index(item)
                 try:
                     for _ in range(10):
-                        if str(value) not in self.framework.driver.find_element_by_xpath(xpath).text:
-                            time.sleep(0.5)
-                        else:
+
+                        if str(value) in self.framework.driver.find_element_by_xpath(xpath).text:
                             break
+                        else:
+                            time.sleep(1)
                     else:
                         self.framework.lg(
                             "FAIL : %d no in %s" % (value, self.framework.driver.find_element_by_xpath(xpath).text))
@@ -137,8 +138,11 @@ class accounts():
         self.framework.set_text("account_disable_reason", "disable")
         self.framework.click("account_disable_confirm")
 
-        if self.framework.get_text("account_page_status") == "DISABLED":
-            return True
+        for _ in range(10):
+            if self.framework.get_text("account_page_status") == "DISABLED":
+                return True
+            else:
+                time.sleep(1)
         else:
             self.framework.lg("FAIL : account status : %s" % self.framework.get_text("account_page_status"))
             return False
@@ -156,15 +160,17 @@ class accounts():
 
         self.framework.click('account_action')
         self.framework.click('account_enable')
-
+        time.sleep(2)
         self.framework.assertEqual(self.framework.get_text("account_enable_page"), "Confirm Action Enable")
         self.framework.set_text("account_enable_reason", "Enable")
         self.framework.click("account_enable_confirm")
 
-        if self.framework.get_text("account_page_status") == "CONFIRMED":
-            return True
+        for _ in range(10):
+            if self.framework.get_text("account_page_status") == "CONFIRMED":
+                return True
+            else:
+                time.sleep(1)
         else:
-
             self.framework.lg("FAIL : account status : %s" % self.framework.get_text("account_page_status"))
             return False
 
@@ -189,4 +195,3 @@ class accounts():
             self.framework.lg('%s account is already deleted' % account)
         else:
             self.framework.fail('"%s" account status has an error in the page' % account)
-
