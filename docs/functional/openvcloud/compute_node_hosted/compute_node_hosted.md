@@ -14,6 +14,6 @@ Following functional tests require access to the physical compute nodes:
 * [Cloud Spaces Limit Test](5_cloudspace_limits_test/5_cloudspace_limits_test.md)
 * [VM Live Migration Test](6_vm_live_migration_test/6_vm_live_migration_test.md)
 * [Node Maintenance Test](8_node_maintenance_test/8_node_maintenance_test.md)
-* [Snapshots Limit Test](9_vm_unlimited _snapshots/9_vm_unlimited _snapshots.md)
+* [Snapshots Limit Test](9_vm_unlimited_snapshots/9_vm_unlimited_snapshots.md)
 
 How to get access to a physical compute node is documented in the [OpenvCloud Operator's Guide](https://www.gitbook.com/book/gig/ovcdoc_public/details), see the [Connect to an Environement](https://gig.gitbooks.io/ovcdoc_public/content/Sysadmin/Connect/connect.html) section for all details.
