@@ -9,6 +9,7 @@ usage(){
 	echo "Options:"
 	echo "    -i    the admin user id"
 	echo "    -p    the secret password"
+	echo "    -s    the Google Auth secret"
 	echo "    -u    the browser name"
 	echo "    -b    the testsuite branch"
 	echo "    -d    directory contains testsuite"
@@ -22,10 +23,11 @@ fi
 
 
 OPTIND=1
-while getopts ":i:p:u:b:d:" opt; do
+while getopts ":i:p:s:u:b:d:" opt; do
   case $opt in
 	i) user_id="$OPTARG";;
 	p) passwd="$OPTARG";;
+	s) secret="$OPTARG";;
 	u) browser="$OPTARG";;
     b) branch="$OPTARG";;
     d) directory="$OPTARG";;
@@ -71,7 +73,7 @@ sudo apt-get install xvfb
 echo -e "${GREEN}** Installing portal test suite requirements ...${NC}"
 echo -e "${GREEN}** Running tests ...${NC}"
 
-xvfb-run -a nosetests -v -s $directory --tc-file=config.ini --tc=main.passwd:$passwd --tc=main.env:$environment --tc=main.location:$location --tc=main.admin:$user_id --with-xunit --xunit-file='testresults.xml' --with-progressive
+xvfb-run -a nosetests -v -s $directory --tc-file=config.ini --tc=main.passwd:$passwd --tc=main.secret:$secret --tc=main.env:$environment --tc=main.location:$location --tc=main.admin:$user_id --with-xunit --xunit-file='testresults.xml' --with-progressive
 
 # Collect result
 echo -e "${GREEN}** DONE ** ...${NC}"
