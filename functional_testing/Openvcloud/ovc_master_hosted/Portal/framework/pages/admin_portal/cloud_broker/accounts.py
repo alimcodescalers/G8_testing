@@ -98,7 +98,7 @@ class accounts():
                     if value  in self.framework.get_text('account_name_value'):
                         break
                     else:
-                        time.sleep(1)
+                        time.sleep(2)
                 else:
                     return False
             else:
@@ -111,7 +111,7 @@ class accounts():
                         if str(value) in self.framework.driver.find_element_by_xpath(xpath).text:
                             break
                         else:
-                            time.sleep(1)
+                            time.sleep(2)
                     else:
                         self.framework.lg(
                             "FAIL : %d no in %s" % (value, self.framework.driver.find_element_by_xpath(xpath).text))

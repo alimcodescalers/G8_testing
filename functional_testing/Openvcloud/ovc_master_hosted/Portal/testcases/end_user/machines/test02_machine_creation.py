@@ -11,9 +11,9 @@ class Read(Framework):
         self.EUMachines.create_default_account_cloudspace(self.admin_username, self.account, self.cloudspace)
 
     def tearDown(self):
-        super(Read, self).tearDown()
-        self.EUMachines.delete_default_account_cloudspace(self.account)
+        self.EUMachines.delete_default_account_cloudspace(self.account, self.cloudspace)
         self.Logout.Admin_Logout()
+        super(Read, self).tearDown()
 
 
 #     def test01_machine_get(self):

@@ -26,8 +26,8 @@ class AdminMenu(Framework):
 
         compo_menu = ["At Your Service", "Cloud Broker", "Statistics", "Grid", "Storage", "System", "End User"]
         ays_menu = ['Services', 'Templates']
-        cloud_broker_menu = ['Accounts', 'Cloud Spaces', 'Locations', 'Stacks', 'Images', 'Public Networks',
-                             'Private Networks', 'Users', 'Groups', 'Virtual Machines', 'Software Versions']
+        cloud_broker_menu = ['Accounts', 'Cloud Spaces', 'Locations', 'Stacks', 'Images', 'External Networks',
+                             'Private Networks', 'Users', 'Groups', 'Virtual Machines', 'Software Versions', 'Storage Routers']
         grid_menu = ['Audits', 'Error Conditions', 'Jobs', 'Job Queues', 'JumpScript', 'Logs', 'Grid Nodes',
                      'Status Overview', 'Virtual Machines']
 

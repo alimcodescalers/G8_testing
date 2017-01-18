@@ -54,7 +54,7 @@ class BaseTest(unittest.TestCase):
         We have to use API to tear down all accounts and users
         '''
 
-        # self.driver.quit()
+        self.driver.quit()
         if hasattr(self, '_startTime'):
             executionTime = time.time() - self._startTime
         self.lg('Testcase %s ExecutionTime is %s sec.' % (self._testID, executionTime))
@@ -239,8 +239,14 @@ class BaseTest(unittest.TestCase):
         return self.find_element(element).get_attribute(attribute)
 
     def get_url(self):
-        return self.driver.current_url
-
+        try:
+            curent_url = self.driver.current_url
+            self.driver.ignore_synchronization = False
+        except:
+            self.driver.ignore_synchronization = True
+            curent_url = self.driver.current_url
+        return curent_url
+        
     def set_text(self, element, value):
         self.wait_until_element_located(element)
         self.find_element(element).clear()
