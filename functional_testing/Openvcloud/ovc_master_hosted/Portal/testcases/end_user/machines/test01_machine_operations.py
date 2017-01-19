@@ -163,7 +163,7 @@ class Write(Framework):
         self.EUMachines.end_user_verify_machine_elements("HALTED")
         self.click("snapshot_tab")
         self.click("first_snapshot_rollback")
-        time.sleep(2)
+        time.sleep(5)
         self.assertEqual(self.get_text("snapshot_confirm_message"),
                          "Snapshots newer then current snapshot will be removed.")
         self.click("snapshot_confirm_ok")

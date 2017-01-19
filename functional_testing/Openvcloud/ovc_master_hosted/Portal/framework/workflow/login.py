@@ -7,11 +7,11 @@ class login():
         self.framework = framework
 
     def GetIt(self):
-        for temp in range(5):
+        for temp in range(10):
             try:
                 self.framework.driver.get(self.framework.environment_url)
             except AngularNotFoundException:
-                time.sleep(1)
+                time.sleep(2)
             else:
                 #self.framework.click('confirm_alert')
                 self.framework.click('landing_page_login')

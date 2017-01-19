@@ -64,7 +64,7 @@ class cloudspaces():
                 break
             else:
                 time.sleep(2)
-                self.framework.driver.refresh()
+                self.framework.get_page(self.framework.driver.current_url)
         else:
             self.framework.lg('"%s" cloudspace status : Deploying' % cloudspace)
             return False
@@ -85,7 +85,7 @@ class cloudspaces():
                 if self.framework.wait_until_element_located_and_has_text("cloudspace_page_status", "DESTROYED"):
                     return True
                 else:
-                    self.framework.driver.refresh()
+                    self.framework.get_page(self.framework.driver.current_url)
             else:
                 self.framework.fail("Can't delete this '%s' cloudspcae")
         else:
