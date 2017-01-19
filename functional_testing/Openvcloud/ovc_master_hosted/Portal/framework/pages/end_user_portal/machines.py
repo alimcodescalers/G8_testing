@@ -191,7 +191,7 @@ class machines():
                 self.framework.click("destroy_machine")
                 self.framework.click("destroy_machine_confirm")
                 time.sleep(10)
-                if self.framework.get_text("machine_list") == "Machines":
+                if self.framework.get_text("machine_list") == "Machines" or self.framework.element_is_displayed('no_machines_message'):
                     return True
                 else:
                     self.framework.lg("FAIL : Can't delete %s machine" % virtual_machine)
