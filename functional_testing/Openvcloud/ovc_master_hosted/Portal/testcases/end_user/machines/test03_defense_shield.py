@@ -18,9 +18,9 @@ class DefenseShield(Framework):
         self.EUHome.get_it()
 
     def tearDown(self):
-        super(DefenseShield, self).tearDown()
-        self.EUMachines.delete_default_account_cloudspace(self.account)
+        self.EUMachines.delete_default_account_cloudspace(self.account, self.cloudspace)
         self.Logout.Admin_Logout()
+        super(DefenseShield, self).tearDown()
 
     def test001_defense_shield_page(self):
         """ PRTL-006

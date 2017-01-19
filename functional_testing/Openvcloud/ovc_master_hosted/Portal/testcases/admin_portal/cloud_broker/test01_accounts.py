@@ -18,10 +18,10 @@ class AccountsTests(Framework):
         #. search for it and verify it should succeed
         #. edit account parameters and verify it should succeed
         """
-        self.lg('Create new username, user:%s password:%s' % (self.username, self.password))
-        self.Users.create_new_user(self.username, self.password, self.email, self.group)
+        #self.lg('Create new username, user:%s password:%s' % (self.username, self.password))
+        #self.Users.create_new_user(self.username, self.password, self.email, self.group)
         self.lg('create new account %s' % self.account)
-        self.Accounts.create_new_account(self.account, self.username)
+        self.Accounts.create_new_account(self.account, self.admin_username+"@itsyouonline")
         self.Accounts.open_account_page(self.account)
         self.assertTrue(self.Accounts.account_edit_all_items(self.account))
 
@@ -37,10 +37,10 @@ class AccountsTests(Framework):
         #. disable account and verify it should succeed
         #. enable account and verify it should succeed
         """
-        self.lg('Create new username, user:%s password:%s' % (self.username, self.password))
-        self.Users.create_new_user(self.username, self.password, self.email, self.group)
+        #self.lg('Create new username, user:%s password:%s' % (self.username, self.password))
+        #self.Users.create_new_user(self.username, self.password, self.email, self.group)
         self.lg('create new account %s' % self.account)
-        self.Accounts.create_new_account(self.account, self.username)
+        self.Accounts.create_new_account(self.account, self.admin_username+"@itsyouonline")
         self.Accounts.open_account_page(self.account)
         self.assertTrue(self.Accounts.account_disable(self.account))
         self.assertTrue(self.Accounts.account_edit_all_items(self.account))
@@ -56,12 +56,12 @@ class AccountsTests(Framework):
         #. create account with decimal limitations.
         #. search for it and verify it should succeed
         """
-        self.lg('Create new username, user:%s password:%s' % (self.username, self.password))
-        self.Users.create_new_user(self.username, self.password, self.email, self.group)
+        #self.lg('Create new username, user:%s password:%s' % (self.username, self.password))
+        #self.Users.create_new_user(self.username, self.password, self.email, self.group)
         self.lg('%s STARTED' % self._testID)
         self.lg('create new account %s with decimal limitations' % self.account)
         max_memory = '3.5'
-        self.Accounts.create_new_account(self.account, self.username, max_memory=max_memory)
+        self.Accounts.create_new_account(self.account, self.admin_username+"@itsyouonline", max_memory=max_memory)
         self.Accounts.open_account_page(self.account)
         account_maxmemory = self.get_text("account_page_maxmemory")
         self.assertTrue(account_maxmemory.startswith(max_memory), "Account max memory is [%s]"

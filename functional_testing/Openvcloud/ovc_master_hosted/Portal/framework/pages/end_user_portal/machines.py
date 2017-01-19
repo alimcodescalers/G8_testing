@@ -2,7 +2,6 @@ import uuid
 from random import randint
 import time
 
-
 class machines():
     def __init__(self, framework):
         self.framework = framework
@@ -14,8 +13,9 @@ class machines():
         self.framework.CloudSpaces.create_cloud_space(account, cloudspace)
         self.framework.EUHome.get_it()
 
-    def delete_default_account_cloudspace(self, account):
-        self.framework.Accounts.get_it()
+    def delete_default_account_cloudspace(self, account, cloudspace):
+        self.framework.lg('delete Cloudspace')
+        self.framework.assertTrue(self.framework.CloudSpaces.delete_cloudspace(cloudspace))
         self.framework.lg('delete account')
         self.framework.Accounts.delete_account(account)
 
