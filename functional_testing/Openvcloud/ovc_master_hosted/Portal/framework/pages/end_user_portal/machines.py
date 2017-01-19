@@ -15,7 +15,7 @@ class machines():
 
     def delete_default_account_cloudspace(self, account, cloudspace):
         self.framework.lg('delete Cloudspace')
-        self.framework.CloudSpaces.delete_cloudspace(cloudspace)
+        self.framework.assertTrue(self.framework.CloudSpaces.delete_cloudspace(cloudspace))
         self.framework.lg('delete account')
         self.framework.Accounts.delete_account(account)
 

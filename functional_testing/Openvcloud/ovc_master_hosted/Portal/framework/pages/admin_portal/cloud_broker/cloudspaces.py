@@ -59,7 +59,7 @@ class cloudspaces():
         self.framework.lg('open %s cloudspace' % cloudspace)
         self.open_cloudspace_page(cloudspace)
 
-        for _ in range(20):
+        for _ in range(50):
             if self.framework.get_text("cloudspace_page_status") in ["DEPLOYED", "VIRTUAL", "DESTROYED"]:
                 break
             else:
