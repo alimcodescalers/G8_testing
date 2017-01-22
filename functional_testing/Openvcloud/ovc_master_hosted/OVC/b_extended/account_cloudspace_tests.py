@@ -129,7 +129,7 @@ class ExtendedTests(BasicACLTest):
 
         self.lg('- Add publicip to this VM, should fail as max_IPs=1')
         try:
-            self.account_owner_api.cloudapi.machines.attachPublicNetwork(machineId=machineId)
+            self.account_owner_api.cloudapi.machines.attachExternalNetwork(machineId=machineId)
         except ApiError as e:
             self.lg('- expected error raised %s' % e.message)
             self.assertEqual(e.message, '400 Bad Request')
@@ -200,7 +200,7 @@ class ExtendedTests(BasicACLTest):
 
         self.lg('- Add publicip to the 2nd VM, should fail as T_IPs=2')
         try:
-            self.account_owner_api.cloudapi.machines.attachPublicNetwork(machineId=machineId_2)
+            self.account_owner_api.cloudapi.machines.attachExternalNetwork(machineId=machineId_2)
         except ApiError as e:
             self.lg('- expected error raised %s' % e.message)
             self.assertEqual(e.message, '400 Bad Request')
@@ -263,7 +263,7 @@ class ExtendedTests(BasicACLTest):
 
         self.lg('- Add publicip to the 2nd VM, should fail as T_IPs=1')
         try:
-            self.account_owner_api.cloudapi.machines.attachPublicNetwork(machineId=machineId)
+            self.account_owner_api.cloudapi.machines.attachExternalNetwork(machineId=machineId)
         except ApiError as e:
             self.lg('- expected error raised %s' % e.message)
             self.assertEqual(e.message, '400 Bad Request')
