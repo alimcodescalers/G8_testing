@@ -11,11 +11,11 @@ class ACLACCOUNT(BasicACLTest):
         self.acl_setup(False)
 
 
-class level1_groups(ACLACCOUNT):
+class level1_group(ACLACCOUNT):
     
-    def test_1_level1_group(self):
-        """ ACL
-        *Test case for cloudspace_create api with user has write access.*
+    def test001_level1_and_accounts(self):
+        """ ACL-61
+        *Test case for  user with level1+admin groups dealing with accounts .*
 
         **Test Scenario:**
 
@@ -24,7 +24,7 @@ class level1_groups(ACLACCOUNT):
         #. disable created account by user2 should return succeed 
         #. update  created account name by user2 should succeed 
         #. get list of accounts for user2 should be empty 
-        #. enable  created account by user2 should return succeed
+        #. enable created account by user2 should return succeed
         #. add user2 to crated account should return succeed 
         #. delete user1 from created account should return succeed 
         #. delete created account by user 1 should return succeed 
@@ -89,9 +89,9 @@ class level1_groups(ACLACCOUNT):
         self.user1_api.cloudbroker.account.delete(accountId = accountId ,reason="test")
        
     
-    def test_2_level1_group(self):
-        """ ACL
-        *Test case for cloudspace_create api with user has write access.*
+    def test002_level1_and_cloudspaces(self):
+        """ ACL-62
+        *test case for user with level1+admin groups dealing with cloudspaces.*
 
         **Test Scenario:**
 
@@ -190,10 +190,10 @@ class level1_groups(ACLACCOUNT):
 
        
 
-    def test_3_level1_group(self):
+    def test003_level1_and_VMS(self):
 
-        """ ACL
-        *Test case for cloudspace_create api with user has write access.*
+        """ ACL-63
+        *test case for user with level1+admin groups dealing with vms.*
 
         **Test Scenario:**
 
@@ -309,10 +309,10 @@ class level1_groups(ACLACCOUNT):
             self.assertEqual(e.message,'403 Forbidden')
     
         """
-    def test_4_user_group(self):
+    def test004_level1_and_usermangment(self):
 
-        """ ACL
-        *Test case for cloudspace_create api with user has write access.*
+        """ ACL-64
+        *user with level1+admin group manage other users .*
 
         **Test Scenario:**
         #. create user1 with level1 + admin
@@ -320,7 +320,7 @@ class level1_groups(ACLACCOUNT):
         #. try by user1 to update password of user1 should return succeed
         #. sent reset password links to user1 by user2 should return succeed
         #. edit user1 group to admine and level1  should be succeed
-        #. delete user2  by user2 should return succeed
+        #. delete user2  by user1 should return succeed
 
         """
         self.lg('%s STARTED' % self._testID)

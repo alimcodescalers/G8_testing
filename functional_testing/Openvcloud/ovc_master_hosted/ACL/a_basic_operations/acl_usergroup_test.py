@@ -12,10 +12,10 @@ class ACLACCOUNT(BasicACLTest):
         self.acl_setup(True)
         self.machine_id=self.cloudapi_create_machine(self.cloudspace_id,self.account_owner_api)
          
-class user_groups(ACLACCOUNT):
-    def test_1_user_group(self):
-        """ ACL
-        *Test case for cloudspace_create api with user has write access.*
+class user_group(ACLACCOUNT):
+    def test001_usergroup_create_account_cloudspace(self):
+        """ ACL-58
+        *Test case for create user with only user group.*
 
         **Test Scenario:**
 
@@ -109,9 +109,9 @@ class user_groups(ACLACCOUNT):
             self.lg('- expected error raised %s ' %e.message)
             self.assertEqual(e.message,'403 Forbidden')
  
-    def test_2_user_group(self):
-        """ ACL
-        *Test case for cloudspace_create api with user has write access.*
+    def test002_usergroup_add_account(self):
+        """ ACL-59
+        *Test case for create user with only user group.*
 
         **Test Scenario:**
 
@@ -145,15 +145,15 @@ class user_groups(ACLACCOUNT):
 
        
         cloudspaceId = self.cloudapi_cloudspace_create( account_id=accountId,location=location,access=self.user1,api=self.user1_api)
+        self.assertTrue(cloudspaceId)
                                                           
-        self.lg('creat cloudspace  with Id %s' % cloudspaceId)
-        self.assertTrue(cloudspaceId) 
+        self.lg('creat cloudspace  with Id %s' % cloudspaceId) 
         self.lg(' 4- git list of accounts ' )
         
         accounts_list = self.user1_api.cloudapi.accounts.list()
         self.assertEqual(len(accounts_list),1,'user have only one account')
         self.assertEqual(accounts_list[0]['id'],accountId)
-        
+        
         self.lg(' 5- git list of cloudspaces ' )        
         cloudspaces_list = self.user1_api.cloudapi.cloudspaces.list()
         self.assertEqual(len(cloudspaces_list),1,'user have only one cloudspace')
@@ -163,9 +163,9 @@ class user_groups(ACLACCOUNT):
         self.assertTrue(update_response)
 
           
-    def test_3_user_group(self):
-        """ ACL
-        *Test case for cloudspace_create api with user has write access.*
+    def test003_usergroup_delete_user_from_account(self):
+        """ ACL-60
+        *Test case for create user with only user group.*
 
         **Test Scenario:**
 

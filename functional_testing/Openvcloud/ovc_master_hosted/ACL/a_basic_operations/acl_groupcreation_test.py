@@ -15,8 +15,8 @@ class ACLACCOUNT(BasicACLTest):
 
 class group_creation(ACLACCOUNT):
     def test_1_group_creation(self):
-        """ ACL
-        *Test case for cloudspace_create api with user has write access.*
+        """ ACL-55
+        *Test case for group creation and add user to created group.*
 
         **Test Scenario:**
 
@@ -63,7 +63,7 @@ class group_creation(ACLACCOUNT):
             self.lg('there is no group to delete')
              
     def test_2_group_creation(self):
-        """ ACL
+        """ ACL-56
         *Test case for add fake user to group*
 
         **Test Scenario:**
@@ -91,8 +91,8 @@ class group_creation(ACLACCOUNT):
             self.assertEqual(e.message, '403 Forbidden') 
 
     def test_3_group_creation(self):
-        """ ACL
-        *Test case for add fake user to group*
+        """ ACL-57
+        *Test case for create user with created group *
 
         **Test Scenario:**
 
