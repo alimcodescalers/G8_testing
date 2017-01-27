@@ -1,10 +1,11 @@
 ## OpenvCloud Portals Functional Tests
 
-There are currently two sets of functional test suites for the OpenvCloud Portals:
-- One covering the **End User Portal** ("end\_user")
-- Another is covering the **Cloud Broker Portal** ("admin\_portal")
+There are currently two sets of functional test suites for the OpenvCloud portals:
 
-The actual tests are auto-documented [here](http://85.255.197.106:8888/) using **Sphinx**. For instructions on how to set-up this auto-documentation see the [section about auto-documentation](../../sphinx.md) in this guide.
+- One covering the **End User Portal**
+- Another is covering the **Cloud Broker Portal**
+
+The documentation for these functional tests is embedded in the actual test code. For instructions on how to setup an **Read the Docs** site from the embedded documentation see the section [Setup a Read the Docs site for your Testing Suite](../../sphinx.md) in this guide.
 
 ### Requirements
 
