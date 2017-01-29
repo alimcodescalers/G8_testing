@@ -47,7 +47,8 @@ class BaseTest(unittest.TestCase):
         super(BaseTest, self).__init__(*args, **kwargs)
 
     def setUp(self):
-        self.CLEANUP = {'username': [], 'accountId': []}
+
+        self.CLEANUP = {'username': [], 'accountId': [],'groupname':[]}
         self._testID = self._testMethodName
         self._startTime = time.time()
         self._logger = logging.LoggerAdapter(logging.getLogger('openvcloud_testsuite'),
@@ -63,16 +64,16 @@ class BaseTest(unittest.TestCase):
         else:
             signal.alarm(900)
 
-    def default_setup(self):
-        self.location = self.get_location()['locationCode']
-
+    def default_setup(self,create_default_cloudspace = True):
+        self.create_default_cloudspace= create_default_cloudspace 
+        self.location = self.get_location()['locationCode']    
         self.account_owner = self.username
         self.lg('- create account for :%s' % self.account_owner)
         self.account_id = self.cloudbroker_account_create(self.account_owner, self.account_owner,
                                                           self.email)
 
         self.account_owner_api = self.get_authenticated_user_api(self.account_owner)
-        # self.cloudspace_id = self.account_owner_api.cloudapi.cloudspaces.list()[0]['id']
+   
 	if self.create_default_cloudspace:
 		self.lg('- create default cloudspace for :%s' % self.account_owner)
 		self.cloudspace_id = self.cloudapi_cloudspace_create(account_id=self.account_id,
@@ -82,8 +83,7 @@ class BaseTest(unittest.TestCase):
                                                              name='default')
 
     def acl_setup(self, create_default_cloudspace=True):
-	self.create_default_cloudspace = create_default_cloudspace
-        self.default_setup()
+        self.default_setup(create_default_cloudspace)
         self.user = self.cloudbroker_user_create()
         self.user_api = self.get_authenticated_user_api(self.user)
 
@@ -133,7 +133,7 @@ class BaseTest(unittest.TestCase):
         if api is None:
             api = self.api
         username = username or str(uuid.uuid4()).replace('-', '')[0:10]
-            
+
         api.cloudbroker.user.create(username=username, emailaddress=email or "%s@example.com" % username,
                                          password=password or username,groups=group)
         self.CLEANUP['username'].append(username)
@@ -241,24 +241,23 @@ class BaseTest(unittest.TestCase):
         machine = api.cloudapi.machines.get(machineId=machine_id)
         self.assertEqual(machine['status'], 'RUNNING')
         return machine_id
-    
+
     def cloudbroker_group_create(self, name,group_domain ,description ):
-        
+
         group_status = self.api.system.usermanager.createGroup(name=name,domain=group_domain,description=description)
-        return group_status
-    
-    def cloudbroker_group_delete(self,groupname):
-        self.api.system.usermanager.deleteGroup(id=groupname)
-   
+        self.lg('groupstatues %s ' % group_status)
+        self.assertTrue(group_status)
+        self.CLEANUP['groupname'] = [name]
+
     def cloudbroker_group_edit(self,groupname,groupdomain,description,users):
 
         edit_succeed=self.api.system.usermanager.editGroup(name= groupname,domain= groupdomain,description="test",users=users)
         return edit_succeed
-    
+
     def get_user_group_list(self,username):
         user_group_list=self.api.system.usermanager.usergroupsget(user=username)
-        self.lg('get groups for user %s' % username)     
-           
+        self.lg('get groups for user %s' % username)
+
 
 
         user_group_list=self.api.system.usermanager.usergroupsget(user=username)
@@ -372,7 +371,7 @@ class BaseTest(unittest.TestCase):
         cloudspace = self.api.cloudapi.cloudspaces.get(cloudspaceId=cloudspace_id)
         cs_publicip = cs_publicip or str(netaddr.IPNetwork(cloudspace['publicipaddress']).ip)
         api.cloudbrocker.machine.createPortForward(destPort=cs_publicport,machineId=machine_id,localPort=vm_port,proto=protocol)
-       
+
         return cs_publicip
 
     def get_cloudspace_network_id(self, cloudspaceID):
@@ -469,4 +468,10 @@ class BasicACLTest(BaseTest):
             for user in users:
                 self.lg('Teardown -- delete user: %s' % user)
                 api.cloudbroker.user.delete(user)
+        groups = self.CLEANUP.get('groupname')
+        if groups:
+            print groups
+            for group in groups:
+                self.lg('Teardown -- delete group: %s' % group)
+                self.api.system.usermanager.deleteGroup(id=group)
         super(BasicACLTest, self).tearDown()
