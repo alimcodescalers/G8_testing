@@ -37,19 +37,15 @@ class group_creation(ACLACCOUNT):
         self.lg('2- add user %s to the group ' % user)
         response= self.cloudbroker_group_edit(self.name_group,"test","test",user)
         self.assertTrue(response)
-        try:
-            user_group_list=self.get_user_group_list(user)
-            self.lg('3-get groups for user %s' % user)
-            self.assertEqual(user_group_list,self.name_group)
-        except:
-            self.lg('-unexpected error raised ')
-
+        #skip("BUG # 656")
+        #user_group_list=self.get_user_group_list(user)
+        #self.lg('3-get groups for user %s' % user)
+        #self.assertEqual(user_group_list,self.name_group)
         self.lg('4- delete created group  %s' % self.name_group)
         self.api.system.usermanager.deleteGroup(id=self.name_group)
-        
+
         self.CLEANUP['groupname'].remove(self.name_group)
         # Skip("BUG # 656")
-
         # self.lg('5- get groups for user %s' % user)
         # user_group_list=self.get_user_group_list(user)
         # self.assertEqual(user_group_list,[])
@@ -108,7 +104,7 @@ class group_creation(ACLACCOUNT):
         # Skip("BUG # 656")
         #user_group_list=self.get_user_group_list(self.user1)
         #self.lg('4-get groups for user1 %s' % self.user1)
-             
+
         #skip("BUG # 656")
         #user_group_list=self.get_user_group_list(self.user2)
         #self.lg('5-get groups for user2 %s' % self.user2)
