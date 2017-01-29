@@ -24,6 +24,8 @@ class AccountsTests(Framework):
         self.Accounts.create_new_account(self.account, self.admin_username+"@itsyouonline")
         self.Accounts.open_account_page(self.account)
         self.assertTrue(self.Accounts.account_edit_all_items(self.account))
+        self.Accounts.delete_account(self.account)
+
 
     #@unittest.skip("bug# 431 and 496")
     def test02_disable_enable_account(self):
@@ -46,6 +48,7 @@ class AccountsTests(Framework):
         self.assertTrue(self.Accounts.account_edit_all_items(self.account))
         self.assertTrue(self.Accounts.account_enable(self.account))
         self.assertTrue(self.Accounts.account_edit_all_items(self.account))
+        self.Accounts.delete_account(self.account)
 
     def test03_add_account_with_decimal_limitations(self):
         """ PRTL-026
@@ -67,6 +70,8 @@ class AccountsTests(Framework):
         self.assertTrue(account_maxmemory.startswith(max_memory), "Account max memory is [%s]"
                                                                   " and expected is [%s]" % (
                         account_maxmemory, max_memory))
+
+        self.Accounts.delete_account(self.account)
         self.lg('%s ENDED' % self._testID)
 
     def test04_account_page_paging_table(self):
