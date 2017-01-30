@@ -10,16 +10,16 @@ The functional tests can be categorized into three categories:
 - [Hosted on a compute node](openvcloud/compute_node_hosted/compute_node_hosted.md)
 - [Hosted on any remote machine](openvcloud/remote_machine_hosted/remote_machine_hosted.md)
 
-Only the Portal tests can be run from both the master node or any remote node, that's why it appears under both categories:
+Only the Portal test and API test can be run from both the master node or any remote node, that's why they appear under both categories:
 
 | Section                                        | master node | compute node | remote node |
 |:-----------------------------------------------|:-----------:|:------------:|:-----------:|
 |[Portal testing](#portal)                       | X           |              | X           |
-|[API testing](#api)                             | X           |              |             |
+|[API testing](#api)                             | X           |              | X           |
 |[Network configuration test](#network-config)   |             | X            |             |
 |[Virtual machines limit test](#vm-limit)        |             | X            |             |
 |[Cloud Spaces limit test](#cloudspace-limit)    |             | X            |             |
-|[VM Live migration test](#vm-migration)         |             | X            |             |
+|[VM live migration test](#vm-migration)         |             | X            |             |
 |[Node maintenance test](#node-maintenance)      |             | X            |             |
 |[Snapshots limit test](#snapshots-limit)        |             | X            |             |
 
@@ -67,12 +67,12 @@ See [VM Live Migration Test](openvcloud/compute_node_hosted/6_vm_live_migration_
 
 
 <a id="node-maintenance"></a>
-### Node Maintenance Test
+### Node maintenance test
 
 See [Node Maintenance Test](openvcloud/compute_node_hosted/8_node_maintenance_test/8_node_maintenance_test.md)
 
 
 <a id="snapshots-limit"></a>
-### Snapshots Limit Test
+### Snapshots limit test
 
 See [Snapshots Limit Test](openvcloud/compute_node_hosted/9_vm_unlimited_snapshots/9_vm_unlimited snapshots.md)
