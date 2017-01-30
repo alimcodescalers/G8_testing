@@ -28,7 +28,7 @@ class AdminMenu(Framework):
         ays_menu = ['Services', 'Templates']
         cloud_broker_menu = ['Accounts', 'Cloud Spaces', 'Locations', 'Stacks', 'Images', 'External Networks',
                              'Private Networks', 'Users', 'Groups', 'Virtual Machines', 'Software Versions', 'Storage Routers']
-        grid_menu = ['Audits', 'Error Conditions', 'Jobs', 'Job Queues', 'JumpScript', 'Logs', 'Grid Nodes',
+        grid_menu = ['Audits', 'Error Conditions', 'Jobs', 'Job Queues', 'JumpScripts', 'Logs', 'Grid Nodes',
                      'Status Overview', 'Virtual Machines']
 
         storage_menu = self.get_storage_list()

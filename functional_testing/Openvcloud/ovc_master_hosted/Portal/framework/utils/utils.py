@@ -125,8 +125,8 @@ class BaseTest(unittest.TestCase):
 
     def get_page(self, page_url):
         try:
-            self.driver.get(page_url)
             self.driver.ignore_synchronization = False
+            self.driver.get(page_url)
         except AngularNotFoundException:
             self.driver.ignore_synchronization = True
             self.driver.get(page_url)
@@ -246,7 +246,7 @@ class BaseTest(unittest.TestCase):
             self.driver.ignore_synchronization = True
             curent_url = self.driver.current_url
         return curent_url
-        
+
     def set_text(self, element, value):
         self.wait_until_element_located(element)
         self.find_element(element).clear()

@@ -633,6 +633,7 @@ elements = {'snapshot_ok_button': ['XPATH', 'html/body/div[3]/form/div[3]/button
             'cloudbroker_text': ['XPATH', 'html/body/div[1]/div/div[1]/div/nav/div/ul/li[2]/ul[1]/a[2]'],
             'defense_shield_header_label': ['XPATH', ".//*[@id='DefenseShield']/div[2]/h2"],
             'machine_list': ['XPATH', ".//*[@id='tabbable']/h1"],
+            'no_machines_message':['XPATH', '//*[@id="wrap"]/div/tour/div[3]/div[2]/div/div/div/div[2]/div[1]/div/div/p[1]'],
             'machine_images_list': ['XPATH', ".//*[@id='createmachine']/div/div[2]/div[3]/div[4]/select"],
             'knowledge_base_line6_tab_line7': ['XPATH',
                                                ".//*[@id='wrap']/div/tour/div[3]/div[2]/div/div/div/div[2]/p[13]"],
