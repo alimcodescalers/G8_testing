@@ -10,6 +10,7 @@ usage(){
 	echo "    -n    node on the grid"
 	echo "    -b    testsuite branch to run tests from"
 	echo "    -d    directory to install the testsuite"
+	echo "    -c    controller node port"
 }
 
 if [[ ( $1 == "--help") ||  $1 == "-h" ]]
@@ -19,11 +20,12 @@ then
 fi
 
 OPTIND=1
-while getopts ":n:b:d:" opt; do
+while getopts ":n:b:d:c:" opt; do
   case $opt in
     n) node="$OPTARG";;
     b) branch="$OPTARG";;
     d) directory="$OPTARG";;
+		c) ctrlport="$OPTARG";;
     \?) echo "Invalid option -$OPTARG" >&2 ; exit 1;;
   esac
 done
@@ -38,22 +40,27 @@ environment=$2
 testsuite=$3
 node=${node:-ovc_master}
 branch=${branch:-master}
+ctrlport=${ctrlport:-22}
 dir=`uuidgen`
 directory=${directory:-/opt/code/$dir}
 echo -e "${GREEN}** Session working directory is: [$directory]${NC}"
+echo $ctrlport
 
 su jenkins
 eval $(ssh-agent -s)
 private_key="$HOME/.ssh/id_awesomo"
 if [ ! -e $private_key ]; then
     private_key="$HOME/.ssh/id_rsa"
-fi 
+fi
 echo $private_key
 ssh-add $private_key
 ssh-add -l
 
-python3 tools/sshconfigen.py -r $grid >> ~/.ssh/config
-eval $(bash tools/gen_connection_params.sh $grid $node) # This script returns SSHKEY, PROXY and HOST
+#python3 tools/sshconfigen.py -o $ctrlport -r $grid >> ~/.ssh/config
+eval $(bash tools/gen_connection_params.sh $grid $node $ctrlport) # This script returns SSHKEY, PROXY and HOST
+echo $PROXY
+echo $HOST
+echo $SSHKEY
 
 
 script="'bash -s' < tools/setup_run_tests_local.sh $branch $directory $environment $testsuite "
@@ -72,4 +79,3 @@ eval "scp -r -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -i $SSH
 script="rm -rf $directory"
 eval "ssh -A -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -M -l root -i $SSHKEY -o ProxyCommand=\"$PROXY\" $HOST $script" 2> /dev/null
 echo -e "${GREEN}** DONE **${NC}"
-

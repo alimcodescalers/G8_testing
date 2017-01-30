@@ -2,6 +2,7 @@
 
 environment=$1
 node=$2
+ctrlport=$3
 repodir="/opt/code/github/gig-projects/"
 userrepodir="$HOME/code/github/gig-projects/"
 if [ -e $userrepodir ]; then
@@ -57,19 +58,22 @@ if [ "$node" != git ]; then
 fi
 sshkey="${envrepo}/keys/git_root"
 chmod 600 $sshkey
-if [ -e "${envrepo}/services/jumpscale__node.ssh__ovc_reflector" ]; then
-    host="${environment}.demo.greenitglobe.com"
-    port=22
-else
-    masterservice="${envrepo}/services/jumpscale__node.ssh__ovc_master/service.hrd"
-    host=$(grep 'publicip' $masterservice | egrep -o "[0-9]{1,3}\.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}")
-    port=$(grep 'publicport' $masterservice | egrep -o "[0-9]+{2,5}")
-fi
+# if [ -e "${envrepo}/services/jumpscale__node.ssh__ovc_reflector" ]; then
+#     host="${environment}.demo.greenitglobe.com"
+#     port=22
+# else
+#     masterservice="${envrepo}/services/jumpscale__node.ssh__ovc_master/service.hrd"
+#     host=$(grep 'publicip' $masterservice | egrep -o "[0-9]{1,3}\.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}")
+#     port=$(grep 'publicport' $masterservice | egrep -o "[0-9]+{2,5}")
+# fi
+host="${environment}.demo.greenitglobe.com"
+port=22
 args=""
 
 
 function hostip() {
-    egrep "instance\.ip" $nodeservice | egrep -o "[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}"
+    ssloffloader_service="${envrepo}/services/jumpscale__node.ssh__ovc_proxy/openvcloud__ssloffloader__main/service.hrd"
+    egrep "instance\.master\.ipadress" $ssloffloader_service | egrep -o "[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}"
 }
 
 function fwdport() {
@@ -82,10 +86,9 @@ case $node in
         ;;
     *)
         fwdport="$(fwdport)"
-        proxy="\"ssh -A -M -l root -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -i $sshkey -q $host nc -q0 %h $fwdport\""
+        proxy="\"ssh -A -M -l root -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -i $sshkey -q $host -p $ctrlport nc -q0 %h $fwdport\""
         host="$(hostip)"
 esac
 
 result="SSHKEY=$sshkey; PROXY=$proxy; HOST=$host"
 echo $result
-

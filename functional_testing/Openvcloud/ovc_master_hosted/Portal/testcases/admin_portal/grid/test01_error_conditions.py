@@ -1,13 +1,15 @@
 import re
 import time
 from functional_testing.Openvcloud.ovc_master_hosted.Portal.framework.framework import Framework
-
+import unittest
 
 class GridTests(Framework):
     def setUp(self):
         super(GridTests, self).setUp()
         self.Login.Login()
 
+
+    @unittest.skip('bug #695')
     def test001_error_condition_page(self):
 
         """ PRTL-021

@@ -49,8 +49,9 @@ class DefenseShield(Framework):
         self.lg('click Download OpenVPN Config button, should download .zip file')
         self.click('defense_shield_button1')
         time.sleep(5)
-        download_directory = os.path.abspath('.') + '/downloaded_files'
-        downloaded_file_path = download_directory + '/openvpn.zip'
-        self.assertTrue(os.path.exists(downloaded_file_path))
-        shutil.rmtree(download_directory)
+        home = os.environ['HOME']
+        directory = home+'/Downloads/'
+        downloaded_files = os.listdir(directory)
+        self.assertIn('openvpn.zip', downloaded_files)
+        os.remove(directory+'openvpn.zip')
         self.lg('end test case')
