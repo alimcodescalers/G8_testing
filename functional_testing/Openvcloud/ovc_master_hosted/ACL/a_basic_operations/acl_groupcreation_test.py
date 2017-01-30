@@ -50,8 +50,7 @@ class group_creation(ACLACCOUNT):
         # user_group_list=self.get_user_group_list(user)
         # self.assertEqual(user_group_list,[])
 
-
-
+    @unittest.skip("bug https://github.com/0-complexity/openvcloud/issues/651")
     def test_2_group_creation(self):
         """ ACL-56
         *Test case for add fake user to group*
