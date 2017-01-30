@@ -27,6 +27,7 @@ while getopts ":i:p:s:u:b:d:r:" opt; do
   case $opt in
 	i) user_id="$OPTARG";;
 	p) passwd="$OPTARG";;
+	s) secret="$OPTARG";;
 	u) browser="$OPTARG";;
   b) branch="$OPTARG";;
   d) directory="$OPTARG";;
@@ -75,17 +76,15 @@ if [[ -z "${remote_webdriver}" ]]; then
 	echo -e "${GREEN}** Installing portal test suite requirements ...${NC}"
 
 	echo -e "${GREEN}** Installing xvfv ...${NC}"
-	sudo apt-get install xvfb
+	sudo apt-get install -y xvfb
 
 	echo -e "${GREEN}** Installing chromeium ...${NC}"
-	sudo apt-get install chromium-chromedriver
-	sudo rm /usr/bin/chromedriver
-	sudo rm /usr/local/bin/chromedriver
+	sudo apt-get install -y chromium-chromedriver
 	sudo ln -fs /usr/lib/chromium-browser/chromedriver /usr/bin/chromedriver
 	sudo ln -fs /usr/lib/chromium-browser/chromedriver /usr/local/bin/chromedriver
 
 	echo -e "${GREEN}** Installing firefox ...${NC}"
-	sudo apt-get intstall firefox
+	sudo apt-get intstall -y firefox
 	wget https://github.com/mozilla/geckodriver/releases/download/v0.13.0/geckodriver-v0.13.0-linux64.tar.gz -O /tmp/eckodriver.tar.gz
 	tar -C /opt -xzf /tmp/eckodriver.tar.gz
 	chmod 755 /opt/eckodriver
