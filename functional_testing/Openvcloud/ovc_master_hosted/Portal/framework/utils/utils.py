@@ -4,14 +4,16 @@ import uuid
 import logging
 from testconfig import config
 from pytractor.exceptions import AngularNotFoundException
+from pytractor.exceptions import AngularNotFoundException
+from pytractor import webdriver
 from selenium.common.exceptions import TimeoutException, StaleElementReferenceException
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import Select
-from pytractor import webdriver
 from selenium.webdriver import FirefoxProfile
 from selenium.webdriver.support.wait import WebDriverWait
+from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from functional_testing.Openvcloud.ovc_master_hosted.Portal.framework import xpath
 import os
 
@@ -25,6 +27,7 @@ class BaseTest(unittest.TestCase):
         self.admin_password = config['main']['passwd']
         self.GAuth_secret = config['main']['secret']
         self.browser = config['main']['browser']
+        self.remote_webdriver = config['main']['remote_webdriver'] + '/wd/hub'
         self.base_page = self.environment_url + '/ays'
         self.elements = xpath.elements.copy()
 
@@ -35,7 +38,11 @@ class BaseTest(unittest.TestCase):
         self._logger = logging.LoggerAdapter(logging.getLogger('portal_testsuite'),
                                              {'testid': self.shortDescription() or self._testID})
         self.lg('Testcase %s Started at %s' % (self._testID, self._startTime))
-        self.set_browser()
+        if self.remote_webdriver:
+            self.driver = webdriver.Remote(command_executor=self.remote_webdriver, desired_capabilities=DesiredCapabilities.CHROME)
+        else:
+            self.set_browser()
+        self.driver.set_window_size(1200, 800)
         self.wait = WebDriverWait(self.driver, 15)
 
         self.username = str(uuid.uuid4()).replace('-', '')[0:10]

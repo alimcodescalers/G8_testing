@@ -9,10 +9,10 @@ usage(){
 	echo "Options:"
 	echo "    -i    the admin user id"
 	echo "    -p    the secret password"
-	echo "    -s    the Google Auth secret"
 	echo "    -u    the browser name"
 	echo "    -b    the testsuite branch"
 	echo "    -d    directory contains testsuite"
+	echo "    -r    remote webdriver url"
 }
 
 if [[ ( $1 == "--help") ||  $1 == "-h" ]]
@@ -23,15 +23,15 @@ fi
 
 
 OPTIND=1
-while getopts ":i:p:s:u:b:d:" opt; do
+while getopts ":i:p:u:b:d:r:" opt; do
   case $opt in
 	i) user_id="$OPTARG";;
 	p) passwd="$OPTARG";;
-	s) secret="$OPTARG";;
 	u) browser="$OPTARG";;
-    b) branch="$OPTARG";;
-    d) directory="$OPTARG";;
-    \?) echo "Invalid option -$OPTARG" >&2 ; exit 1;;
+  b) branch="$OPTARG";;
+  d) directory="$OPTARG";;
+	r) remote_webdriver="$OPTARG";;
+  \?) echo "Invalid option -$OPTARG" >&2 ; exit 1;;
   esac
 done
 shift $((OPTIND-1))
@@ -53,7 +53,7 @@ location=$2
 browser=${browser:-firefox}
 branch=${branch:-master}
 directory=${directory:-end_user}
-
+remote_webdriver=${remote_webdriver}
 
 echo -e "${GREEN}**  environment $environment ...${NC}"
 echo -e "${GREEN}**  location $location ...${NC}"
@@ -65,16 +65,39 @@ echo -e "${GREEN}**  directory $directory ...${NC}"
 cd functional_testing/Openvcloud/ovc_master_hosted/Portal
 which pip2 || sudo apt-get install -y python-pip
 echo -e "${GREEN}** Activating virtual env ...${NC}"
-virtualenv venv
-source venv/bin/activate
-pip2 install -r requirements.txt
-sudo apt-get install xvfb
-sudo apt-get install chromium-chromedriver
-#sudo pip install seleniumbase --upgrade
-echo -e "${GREEN}** Installing portal test suite requirements ...${NC}"
-echo -e "${GREEN}** Running tests ...${NC}"
+virtualenv env
+source env/bin/activate
 
-xvfb-run -a nosetests -v -s  --logging-level=WARNING $directory --tc-file=config.ini --tc=main.passwd:$passwd --tc=main.secret:$secret --tc=main.env:$environment --tc=main.location:$location --tc=main.admin:$user_id --with-xunit --xunit-file='testresults.xml' --with-progressive
+echo -e "${GREEN}** Installing the requirements ...${NC}"
+pip2 install -r requirements.txt
+
+if [[ -z "${remote_webdriver}" ]]; then
+	echo -e "${GREEN}** Installing portal test suite requirements ...${NC}"
+
+	echo -e "${GREEN}** Installing xvfv ...${NC}"
+	sudo apt-get install xvfb
+
+	echo -e "${GREEN}** Installing chromeium ...${NC}"
+	sudo apt-get install chromium-chromedriver
+	sudo rm /usr/bin/chromedriver
+	sudo rm /usr/local/bin/chromedriver
+	sudo ln -fs /usr/lib/chromium-browser/chromedriver /usr/bin/chromedriver
+	sudo ln -fs /usr/lib/chromium-browser/chromedriver /usr/local/bin/chromedriver
+
+	echo -e "${GREEN}** Installing firefox ...${NC}"
+	sudo apt-get intstall firefox
+	wget https://github.com/mozilla/geckodriver/releases/download/v0.13.0/geckodriver-v0.13.0-linux64.tar.gz -O /tmp/eckodriver.tar.gz
+	tar -C /opt -xzf /tmp/eckodriver.tar.gz
+	chmod 755 /opt/eckodriver
+	ln -fs /opt/eckodriver /usr/bin/eckodriver
+
+	echo -e "${GREEN}** Running tests ...${NC}"
+		xvfb-run -a nosetests -v -s $directory --tc-file=config.ini --tc=main.admin:$user_id --tc=main.passwd:$passwd --tc=main.env:$environment --tc=main.location:$location --with-xunit --xunit-file='testresults.xml' --with-progressive
+fi
+
+if [[ -n "${remote_webdriver}" ]]; then
+	nosetests -v -s $directory --tc-file=config.ini --tc=main.admin:$user_id --tc=main.passwd:$passwd --tc=main.env:$environment --tc=main.location:$location --tc=main.remote_webdriver:$remote_webdriver --with-xunit --xunit-file='testresults.xml' --with-progressive
+fi
 
 # Collect result
 echo -e "${GREEN}** DONE ** ...${NC}"
