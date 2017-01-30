@@ -23,7 +23,7 @@ fi
 
 
 OPTIND=1
-while getopts ":i:p:u:b:d:r:" opt; do
+while getopts ":i:p:s:u:b:d:r:" opt; do
   case $opt in
 	i) user_id="$OPTARG";;
 	p) passwd="$OPTARG";;
@@ -92,11 +92,11 @@ if [[ -z "${remote_webdriver}" ]]; then
 	ln -fs /opt/eckodriver /usr/bin/eckodriver
 
 	echo -e "${GREEN}** Running tests ...${NC}"
-		xvfb-run -a nosetests -v -s $directory --tc-file=config.ini --tc=main.admin:$user_id --tc=main.passwd:$passwd --tc=main.env:$environment --tc=main.location:$location --with-xunit --xunit-file='testresults.xml' --with-progressive
+		xvfb-run -a nosetests -v -s  --logging-level=WARNING $directory --tc-file=config.ini --tc=main.passwd:$passwd --tc=main.secret:$secret --tc=main.env:$environment --tc=main.location:$location --tc=main.admin:$user_id --with-xunit --xunit-file='testresults.xml' --with-progressive
 fi
 
 if [[ -n "${remote_webdriver}" ]]; then
-	nosetests -v -s $directory --tc-file=config.ini --tc=main.admin:$user_id --tc=main.passwd:$passwd --tc=main.env:$environment --tc=main.location:$location --tc=main.remote_webdriver:$remote_webdriver --with-xunit --xunit-file='testresults.xml' --with-progressive
+	nosetests -v -s  --logging-level=WARNING $directory --tc-file=config.ini --tc=main.passwd:$passwd --tc=main.secret:$secret --tc=main.env:$environment --tc=main.location:$location --tc=main.admin:$user_id --tc=main.remote_webdriver:$remote_webdriver --with-xunit --xunit-file='testresults.xml' --with-progressive
 fi
 
 # Collect result
