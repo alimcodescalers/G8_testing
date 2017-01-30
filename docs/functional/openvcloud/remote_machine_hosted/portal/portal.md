@@ -5,7 +5,7 @@ There are currently two sets of functional test suites for the OpenvCloud portal
 - One covering the **End User Portal**
 - Another is covering the **Cloud Broker Portal**
 
-The documentation for these functional tests is embedded in the actual test code. For instructions on how to setup an **Read the Docs** site from the embedded documentation see the section [Setup a Read the Docs site for your Testing Suite](../../sphinx.md) in this guide.
+The documentation for these functional tests is embedded in the actual test code. For instructions on how to setup an **Read the Docs** site consolidating the embedded documentation see the section [Setup a Read the Docs site for your Testing Suite](../../sphinx.md) in this guide.
 
 ### Requirements
 
