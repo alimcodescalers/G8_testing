@@ -38,6 +38,7 @@ class BaseTest(unittest.TestCase):
         self._logger = logging.LoggerAdapter(logging.getLogger('portal_testsuite'),
                                              {'testid': self.shortDescription() or self._testID})
         self.lg('Testcase %s Started at %s' % (self._testID, self._startTime))
+        self.set_browser()
         if self.remote_webdriver:
             self.driver = webdriver.Remote(command_executor=self.remote_webdriver, desired_capabilities=DesiredCapabilities.CHROME)
         else:
@@ -68,23 +69,30 @@ class BaseTest(unittest.TestCase):
 
 
     def set_browser(self):
-        if self.browser == 'chrome':
-            self.driver = webdriver.Chrome()
-        elif self.browser == 'firefox':
-            fp = FirefoxProfile()
-            fp.set_preference("browser.download.folderList", 2)
-            fp.set_preference("browser.download.manager.showWhenStarting", False)
-            fp.set_preference("browser.download.dir", os.path.expanduser("~") + "/Downloads/")
-            fp.set_preference("browser.helperApps.neverAsk.saveToDisk", "application/zip, application/octet-stream")
-            self.driver = webdriver.Firefox(firefox_profile=fp)
-        elif self.browser == 'ie':
-            self.driver = webdriver.Ie()
-        elif self.browser == 'opera':
-            self.driver = webdriver.Opera()
-        elif self.browser == 'safari':
-            self.driver = webdriver.Safari
+        if self.remote_webdriver:
+            if self.browser == 'chrome':
+                desired_capabilities = DesiredCapabilities.CHROME
+            else:
+                desired_capabilities = DesiredCapabilities.FIREFOX
+            self.driver = webdriver.Remote(command_executor=self.remote_webdriver, desired_capabilities=desired_capabilities)
         else:
-            self.fail("Invalid browser configuration [%s]" % self.browser)
+            if self.browser == 'chrome':
+                self.driver = webdriver.Chrome()
+            elif self.browser == 'firefox':
+                fp = FirefoxProfile()
+                fp.set_preference("browser.download.folderList", 2)
+                fp.set_preference("browser.download.manager.showWhenStarting", False)
+                fp.set_preference("browser.download.dir", os.path.expanduser("~") + "/Downloads/")
+                fp.set_preference("browser.helperApps.neverAsk.saveToDisk", "application/zip, application/octet-stream")
+                self.driver = webdriver.Firefox(firefox_profile=fp)
+            elif self.browser == 'ie':
+                self.driver = webdriver.Ie()
+            elif self.browser == 'opera':
+                self.driver = webdriver.Opera()
+            elif self.browser == 'safari':
+                self.driver = webdriver.Safari
+            else:
+                self.fail("Invalid browser configuration [%s]" % self.browser)
 
     def lg(self, msg):
         self._logger.info(msg)
