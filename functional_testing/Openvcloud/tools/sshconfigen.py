@@ -114,7 +114,7 @@ class SSHConfigGenerator:
         print("  Port %s" % reflectorport)
         print("  User root")
         print("  IdentityFile %s" % self.identityfile)
-        print("  ProxyCommand ssh -A -i %s -q root@%s nc -q0 %%h %%p" % (self.identityfile, self.host))
+        print("  ProxyCommand ssh -A -i %s -o options.ctrlport -q root@%s nc -q0 %%h %%p" % (self.identityfile, self.host))
         print("")
 
     def generate(self):
@@ -133,6 +133,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(usage="Generate ssh config for environmetns")
     parser.add_argument('-p', '--path', help="repo path", default=None)
     parser.add_argument('-r', '--reponame', help="Name of the repo", default=None)
+    parser.add_argument('-o', '--ctrlport', help="port to access thecontroller node", default=22)
     options = parser.parse_args()
     generator = SSHConfigGenerator(options.path, options.reponame)
 generator.generate()
