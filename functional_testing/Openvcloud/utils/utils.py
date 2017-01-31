@@ -338,7 +338,8 @@ class BaseTest(unittest.TestCase):
         nodeIds_list.remove(scl.node.get('%s_%s' % (j.application.whoAmI.gid, str(current_VFW_nodeId))).guid)
         for nodeId in nodeIds_list[1:]:
             node = scl.node.get(nodeId)
-            if node.active == True:
+            node_details=self.api.system.gridmanager.getNodes(id = node.id)
+            if (node.active == True ) and ( "fw" in node_details[0]["roles"]): 
                 return node.id
         return -1
 
