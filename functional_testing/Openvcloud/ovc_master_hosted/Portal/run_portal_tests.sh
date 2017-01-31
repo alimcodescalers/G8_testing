@@ -91,14 +91,14 @@ if [[ -z "${remote_webdriver}" ]]; then
 	wget https://github.com/mozilla/geckodriver/releases/download/v0.13.0/geckodriver-v0.13.0-linux64.tar.gz -O /tmp/eckodriver.tar.gz
 	tar -C /opt -xzf /tmp/eckodriver.tar.gz
 	chmod 755 /opt/geckodriver
-	ln -fs /opt/geckodriver /usr/bin/geckodriver
+	ln -fs /opt/geckodriver /usr/bin/eckodriver
 
 	echo -e "${GREEN}** Running tests ...${NC}"
-		xvfb-run -a nosetests -v -s  --logging-level=WARNING $directory --tc-file=config.ini --tc=main.passwd:$passwd --tc=main.secret:$secret --tc=main.env:$environment --tc=main.location:$location --tc=main.admin:$user_id --with-xunit --xunit-file='testresults.xml' --with-progressive
+		xvfb-run -a nosetests -v -s  --logging-level=WARNING $directory --tc-file=config.ini --tc=main.passwd:$passwd --tc=main.secret:$secret --tc=main.env:$environment --tc=main.location:$location --tc=main.admin:$user_id --tc=main.browser:$browser --with-xunit --xunit-file='testresults.xml' --with-progressive
 fi
 
 if [[ -n "${remote_webdriver}" ]]; then
-	nosetests -v -s  --logging-level=WARNING $directory --tc-file=config.ini --tc=main.passwd:$passwd --tc=main.secret:$secret --tc=main.env:$environment --tc=main.location:$location --tc=main.admin:$user_id --tc=main.remote_webdriver:$remote_webdriver --with-xunit --xunit-file='testresults.xml' --with-progressive
+	nosetests -v -s  --logging-level=WARNING $directory --tc-file=config.ini --tc=main.passwd:$passwd --tc=main.secret:$secret --tc=main.env:$environment --tc=main.location:$location --tc=main.admin:$user_id --tc=main.remote_webdriver:$remote_webdriver --tc=main.browser:$browser --with-xunit --xunit-file='testresults.xml' --with-progressive
 fi
 
 # Collect result
