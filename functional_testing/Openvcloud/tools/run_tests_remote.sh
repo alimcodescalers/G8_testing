@@ -44,24 +44,23 @@ ctrlport=${ctrlport:-22}
 dir=`uuidgen`
 directory=${directory:-/opt/code/$dir}
 echo -e "${GREEN}** Session working directory is: [$directory]${NC}"
-echo $ctrlport
 
-su jenkins
-eval $(ssh-agent -s)
-private_key="$HOME/.ssh/id_awesomo"
-if [ ! -e $private_key ]; then
-    private_key="$HOME/.ssh/id_rsa"
+jenkins_key="$HOME/.ssh/id_awesomo"
+private_key="$HOME/.ssh/id_rsa"
+if [ -e $jenkins_key ]; then
+	echo $jenkins_key
+	eval $(ssh-agent -s)
+	ssh-add $jenkins_key
+elif [ -e $private_key ]; then
+	echo $private_key
+	eval $(ssh-agent -s)
+	ssh-add $private_key
+else
+	echo -e "${GREEN}** no private key found ${NC}"
 fi
-echo $private_key
-ssh-add $private_key
 ssh-add -l
 
-#python3 tools/sshconfigen.py -o $ctrlport -r $grid >> ~/.ssh/config
 eval $(bash tools/gen_connection_params.sh $grid $node $ctrlport) # This script returns SSHKEY, PROXY and HOST
-echo $PROXY
-echo $HOST
-echo $SSHKEY
-
 
 script="'bash -s' < tools/setup_run_tests_local.sh $branch $directory $environment $testsuite "
 eval "ssh -A -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -M -l root -i $SSHKEY -o ProxyCommand=\"$PROXY\" $HOST $script"
