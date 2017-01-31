@@ -14,7 +14,7 @@ from selenium.webdriver import FirefoxProfile
 from selenium.webdriver.support.wait import WebDriverWait
 from functional_testing.Openvcloud.ovc_master_hosted.Portal.framework import xpath
 import os
-
+from selenium.webdriver.common.keys import Keys
 
 class BaseTest(unittest.TestCase):
     def __init__(self, *args, **kwargs):
@@ -246,11 +246,37 @@ class BaseTest(unittest.TestCase):
             self.driver.ignore_synchronization = True
             curent_url = self.driver.current_url
         return curent_url
-        
+
     def set_text(self, element, value):
+
         self.wait_until_element_located(element)
         self.find_element(element).clear()
         self.find_element(element).send_keys(value)
+
+    def set_text_columns(self, element, search_value ,ID):
+        method = self.elements[element][0]
+        value  = self.elements[element][1] % ID
+        #self.wait_until_element_located(element)
+        time.sleep(1)
+        element_value = self.driver.find_element(getattr(By, method), value)
+        element_value.send_keys(search_value)
+
+
+
+    def clear_text(self,element):
+        self.wait_until_element_located(element)
+        self.find_element(element).clear()
+        self.find_element(element).send_keys(Keys.ENTER)
+
+
+    def clear_text_columns(self,element,ID):
+        method = self.elements[element][0]
+        value = self.elements[element][1] % ID
+        #self.wait_until_element_located(element)
+        time.sleep(1)
+        element_value = self.driver.find_element(getattr(By, method), value)
+        element_value.clear()
+        element_value.send_keys(Keys.ENTER)
 
     def move_curser_to_element(self, element):
         element = self.elements[element]
@@ -321,10 +347,16 @@ class BaseTest(unittest.TestCase):
                 item = ''
         return storage_menu
 
-    def get_table_rows(self):
+    def get_table_rows(self,element=" "):
         'This method return all rows in the current page else return false'
         try:
-            tbody = self.driver.find_element_by_tag_name('tbody')
+            if element == " ":
+                tbody =  self.driver.find_element_by_tag_name('tbody')
+            else:
+
+                element = self.find_element('table cloudbroker vmachine')
+                tbody =  element.find_element_by_tag_name('tbody')
+
             rows = tbody.find_elements_by_tag_name('tr')
             return rows
         except:
@@ -344,6 +376,7 @@ class BaseTest(unittest.TestCase):
         # This method return a table head elements.
         for _ in range(10):
             try:
+
                 table = self.find_element(element)
                 thead = table.find_elements_by_tag_name('thead')
                 thead_row = thead[0].find_elements_by_tag_name('tr')
@@ -351,4 +384,5 @@ class BaseTest(unittest.TestCase):
             except:
                 time.sleep(0.5)
         else:
+
             return False
