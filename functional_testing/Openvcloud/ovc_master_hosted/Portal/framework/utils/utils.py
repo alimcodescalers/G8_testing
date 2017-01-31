@@ -38,7 +38,6 @@ class BaseTest(unittest.TestCase):
         self._logger = logging.LoggerAdapter(logging.getLogger('portal_testsuite'),
                                              {'testid': self.shortDescription() or self._testID})
         self.lg('Testcase %s Started at %s' % (self._testID, self._startTime))
-        import ipdb; ipdb.set_trace()
         self.set_browser()
 
         self.driver.set_window_size(1200, 800)
