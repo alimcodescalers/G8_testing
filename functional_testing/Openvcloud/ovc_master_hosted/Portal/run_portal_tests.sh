@@ -87,11 +87,11 @@ if [[ -z "${remote_webdriver}" ]]; then
 	sudo ln -fs /usr/lib/chromium-browser/chromedriver /usr/local/bin/chromedriver
 
 	echo -e "${GREEN}** Installing firefox ...${NC}"
-	sudo apt-get intstall -y firefox
+	sudo apt-get install -y firefox
 	wget https://github.com/mozilla/geckodriver/releases/download/v0.13.0/geckodriver-v0.13.0-linux64.tar.gz -O /tmp/eckodriver.tar.gz
 	tar -C /opt -xzf /tmp/eckodriver.tar.gz
-	chmod 755 /opt/eckodriver
-	ln -fs /opt/eckodriver /usr/bin/eckodriver
+	chmod 755 /opt/geckodriver
+	ln -fs /opt/geckodriver /usr/bin/geckodriver
 
 	echo -e "${GREEN}** Running tests ...${NC}"
 		xvfb-run -a nosetests -v -s  --logging-level=WARNING $directory --tc-file=config.ini --tc=main.passwd:$passwd --tc=main.secret:$secret --tc=main.env:$environment --tc=main.location:$location --tc=main.admin:$user_id --with-xunit --xunit-file='testresults.xml' --with-progressive
