@@ -27,7 +27,7 @@ class BaseTest(unittest.TestCase):
         self.admin_password = config['main']['passwd']
         self.GAuth_secret = config['main']['secret']
         self.browser = config['main']['browser']
-        self.remote_webdriver = config['main']['remote_webdriver'] + '/wd/hub'
+        self.remote_webdriver = config['main']['remote_webdriver']
         self.base_page = self.environment_url + '/ays'
         self.elements = xpath.elements.copy()
 
@@ -38,11 +38,9 @@ class BaseTest(unittest.TestCase):
         self._logger = logging.LoggerAdapter(logging.getLogger('portal_testsuite'),
                                              {'testid': self.shortDescription() or self._testID})
         self.lg('Testcase %s Started at %s' % (self._testID, self._startTime))
+        import ipdb; ipdb.set_trace()
         self.set_browser()
-        if self.remote_webdriver:
-            self.driver = webdriver.Remote(command_executor=self.remote_webdriver, desired_capabilities=DesiredCapabilities.CHROME)
-        else:
-            self.set_browser()
+
         self.driver.set_window_size(1200, 800)
         self.wait = WebDriverWait(self.driver, 15)
 
@@ -74,7 +72,7 @@ class BaseTest(unittest.TestCase):
                 desired_capabilities = DesiredCapabilities.CHROME
             else:
                 desired_capabilities = DesiredCapabilities.FIREFOX
-            self.driver = webdriver.Remote(command_executor=self.remote_webdriver, desired_capabilities=desired_capabilities)
+            self.driver = webdriver.Remote(command_executor=self.remote_webdriver + '/wd/hub', desired_capabilities=desired_capabilities)
         else:
             if self.browser == 'chrome':
                 self.driver = webdriver.Chrome()
