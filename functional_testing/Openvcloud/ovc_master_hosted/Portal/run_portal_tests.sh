@@ -78,7 +78,7 @@ pip2 install -r requirements.txt
 if [[ -z "${remote_webdriver}" ]]; then
 	echo -e "${GREEN}** Installing portal test suite requirements ...${NC}"
 
-	echo -e "${GREEN}** Installing xvfv ...${NC}"
+	echo -e "${GREEN}** Installing xvfb ...${NC}"
 	sudo apt-get install -y xvfb
 
 	echo -e "${GREEN}** Installing chromeium ...${NC}"
@@ -88,10 +88,7 @@ if [[ -z "${remote_webdriver}" ]]; then
 
 	echo -e "${GREEN}** Installing firefox ...${NC}"
 	sudo apt-get install -y firefox
-	wget https://github.com/mozilla/geckodriver/releases/download/v0.13.0/geckodriver-v0.13.0-linux64.tar.gz -O /tmp/eckodriver.tar.gz
-	tar -C /opt -xzf /tmp/eckodriver.tar.gz
-	chmod 755 /opt/geckodriver
-	ln -fs /opt/geckodriver /usr/bin/eckodriver
+	which geckodriver || (wget https://github.com/mozilla/geckodriver/releases/download/v0.13.0/geckodriver-v0.13.0-linux64.tar.gz -O /tmp/geckodriver.tar.gz; tar -C /opt -xzf /tmp/geckodriver.tar.gz;	chmod 755 /opt/geckodriver;	ln -fs /opt/geckodriver /usr/bin/geckodriver)
 
 	echo -e "${GREEN}** Running tests ...${NC}"
 		xvfb-run -a nosetests -v -s  --logging-level=WARNING $directory --tc-file=config.ini --tc=main.passwd:$passwd --tc=main.secret:$secret --tc=main.env:$environment --tc=main.location:$location --tc=main.admin:$user_id --tc=main.browser:$browser --with-xunit --xunit-file='testresults.xml' --with-progressive
