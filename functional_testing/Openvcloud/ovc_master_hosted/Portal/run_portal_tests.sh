@@ -59,6 +59,9 @@ echo -e "${GREEN}**  user_id $user_id ...${NC}"
 echo -e "${GREEN}**  browser $browser ...${NC}"
 echo -e "${GREEN}**  directory $directory ...${NC}"
 
+echo -e "${GREEN}** System updateing ...${NC}"
+sudo apt-get update
+
 cd functional_testing/Openvcloud/ovc_master_hosted/Portal
 which pip2 || sudo apt-get install -y python-pip python-dev build-essential
 sudo pip install --upgrade pip
