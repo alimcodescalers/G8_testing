@@ -81,7 +81,7 @@ if [[ -z "${remote_webdriver}" ]]; then
 	echo -e "${GREEN}** Installing xvfb ...${NC}"
 	sudo apt-get install -y xvfb
 
-	echo -e "${GREEN}** Installing chromeium ...${NC}"
+	echo -e "${GREEN}** Installing chromium ...${NC}"
 	sudo apt-get install -y chromium-chromedriver
 	sudo ln -fs /usr/lib/chromium-browser/chromedriver /usr/bin/chromedriver
 	sudo ln -fs /usr/lib/chromium-browser/chromedriver /usr/local/bin/chromedriver
