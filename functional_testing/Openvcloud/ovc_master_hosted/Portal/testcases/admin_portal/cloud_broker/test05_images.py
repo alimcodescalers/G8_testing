@@ -7,10 +7,8 @@ from random import randint
 class ImagesTests(Framework):
     def setUp(self):
         super(ImagesTests, self).setUp()
-        # self.Login.Login(username=self.admin_username, password=self.admin_password)
-        self.driver.get(self.environment_url)
-        self.driver.add_cookie({'name':'beaker.session.id', 'value':'455ac2e6c46e411894ee1fc98117e643'})
-        self.driver.refresh()
+        self.Login.Login(username=self.admin_username, password=self.admin_password)
+
     def test01_image_page_paging_table(self):
         """ PRTL-042
         *Test case to make sure that paging and sorting of image  page are working as expected*
@@ -137,7 +135,7 @@ class ImagesTests(Framework):
             self.set_text("image_search", table_before[random_elemn][column])
             time.sleep(1)
             table_after = self.Tables.get_table_data('table cloudbroker image info')
-            self.assertEqual(table_after[0][column] ,table_before[random_elemn][column] )
+            self.assertTrue(any(table_before[random_elemn][column] in s for s in table_after[0] ))
 
         self.clear_text("image_search")
         time.sleep(1)

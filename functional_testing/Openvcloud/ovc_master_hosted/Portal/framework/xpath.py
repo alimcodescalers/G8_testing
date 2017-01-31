@@ -35,7 +35,7 @@ elements = {'snapshot_ok_button': ['XPATH', 'html/body/div[3]/form/div[3]/button
                                                 ".//*[@id='wrap']/div/tour/div[3]/div[2]/div/div/div/div[2]/p[19]"],
             'cloudapi_images_show': ['XPATH', ".//*[@id='endpointListTogger_cloudapi__images']"],
             'password': ['XPATH', ".//*[@id='createuser']/div/div[2]/div[3]/div[3]/input"],
-            'account_first_id': ['XPATH', ".//*[@id='table_libvirt_imag']/tbody/tr[1]/td[1]/a"],
+            'account_first_id': ['XPATH', ".//*[@id='table_cloudbroker_account']/tbody/tr[1]/td[1]/a"],
             'image_first_id': ['XPATH', ".//*[@id='table_libvirt_image']/tbody/tr/td[2]"],
             'knowledge_base_line3_tab_image5': ['XPATH',
                                                 ".//*[@id='wrap']/div/tour/div[3]/div[2]/div/div/div/div[2]/p[9]/img"],
