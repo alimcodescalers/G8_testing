@@ -62,6 +62,7 @@ echo -e "${GREEN}**  directory $directory ...${NC}"
 cd functional_testing/Openvcloud/ovc_master_hosted/Portal
 which pip2 || sudo apt-get install -y python-pip python-dev build-essential
 sudo pip install --upgrade pip
+which virtualenv || pip install virtualenv
 sudo pip install --upgrade virtualenv
 
 echo -e "${GREEN}** Activating virtual env ...${NC}"
