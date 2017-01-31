@@ -160,15 +160,6 @@ nosetests -v -s  --logging-level=WARNING <testsuite_directory> --tc-file=config.
 xvfb-run -a nosetests -v -s  --logging-level=WARNING <testsuite_directory> --tc-file=config.ini  2>testresults.log
 ```
 
-
-Currently we have two test suites: **end\_user** and **admin\_portal**.
-
-So for running the **end\_user** test suite:
-
-```
-nosetests -v --with-selenium --browser chrome end_user --tc-file=config.ini  2>testresults.log
-```
-
 You can also overwrite the **config.ini** parameters:
 
 ```
