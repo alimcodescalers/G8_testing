@@ -7,17 +7,9 @@ class login():
         self.framework = framework
 
     def GetIt(self):
-        for temp in range(10):
-            try:
-                self.framework.get_page(self.framework.environment_url)
-            except AngularNotFoundException:
-                time.sleep(5)
-            else:
-                #self.framework.click('confirm_alert')
-                self.framework.click('landing_page_login')
-                break
-        else:
-            self.framework.fail('AngularNotFoundException')
+        self.framework.get_page(self.framework.environment_url)
+        time.sleep(5)
+        self.framework.click('landing_page_login')
 
         if not self.IsAt():
             self.framework.fail("The login page isn't loading well.")
