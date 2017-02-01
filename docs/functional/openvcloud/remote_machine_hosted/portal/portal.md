@@ -165,3 +165,7 @@ You can also overwrite the **config.ini** parameters:
 ```
 nosetests -v testsuite --tc-file=config.ini --tc=main.url:http://be-conv-2.demo.greenitglobe.com/  --tc=main.admin:gig 2>testresults.log
 ```
+
+## 4. Appendix:
+### 4.1 How to get itsyouonline secret?
+- During registering a new itsyou.online account, scan the QR code using any QR scanner or you can use **right-click QRcode reader** it is a free **google chrome extension**, and you will find the secret code after secret parameter in the message.
