@@ -9,7 +9,7 @@ class login():
     def GetIt(self):
         for temp in range(10):
             try:
-                self.framework.driver.get(self.framework.environment_url)
+                self.framework.get_page(self.framework.environment_url)
             except AngularNotFoundException:
                 time.sleep(5)
             else:
