@@ -10,7 +10,7 @@ class ImagesTests(Framework):
         self.Login.Login(username=self.admin_username, password=self.admin_password)
 
     def test01_image_page_paging_table(self):
-        """ PRTL-042
+        """ PRTL-041
         *Test case to make sure that paging and sorting of image  page are working as expected*
 
         **Test Scenario:**cd
@@ -44,7 +44,7 @@ class ImagesTests(Framework):
                 self.assertLess(image_avaliable_, image_paging_option)
 
     def test02_image_page_table_sorting(self):
-        """ PRTL-043
+        """ PRTL-042
         *Test case to make sure that paging and sorting of images page are working as expected*
 
         **Test Scenario:**
@@ -82,7 +82,7 @@ class ImagesTests(Framework):
             self.lg('pass %s column' % current_column)
 
     def test03_cloudspace_page_table_paging_buttons(self):
-        """ PRTL-044
+        """ PRTL-043
         *Test case to make sure that paging and sorting of images page are working as expected*
 
         **Test Scenario:**
@@ -110,7 +110,7 @@ class ImagesTests(Framework):
                 self.assertEqual(image_end_number_, image_max_number)
 
     def test04_image_page_searchbox(self):
-        """ PRTL-045
+        """ PRTL-044
         *Test case to make sure that search boxes of images page are working as expected*
 
         **Test Scenario:**
@@ -155,7 +155,7 @@ class ImagesTests(Framework):
 
 
     def test05_stack_table_in_image_page_test(self):
-        """ PRTL-046
+        """ PRTL-045
         **Test Scenario:**
         #. go to images page.
         #. open random image page
@@ -240,7 +240,7 @@ class ImagesTests(Framework):
 
 
     def test06_VM_table_in_image_page_test(self):
-        """ PRTL-047
+        """ PRTL-046
         **Test Scenario:**
         #. go to images page.
         #. open random image page
@@ -329,7 +329,7 @@ class ImagesTests(Framework):
                 self.assertEqual(VM_end_number_, VM_max_number)
 
     def test07_search_boxes_in_image_page_test(self):
-        """ PRTL-048
+        """ PRTL-047
         *Test case to make sure that search boxes of images page are working as expected*
         **Test Scenario:**
         #. go to images page.
