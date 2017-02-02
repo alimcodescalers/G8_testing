@@ -14,6 +14,7 @@
     * [Snapshots Limit Test](functional/openvcloud/compute_node_hosted/9_vm_unlimited_snapshots/9_vm_unlimited snapshots.md)
   * [Hosted on any Remote Machine](functional/openvcloud/remote_machine_hosted/remote_machine_hosted.md)
     * [Portal Testing](functional/openvcloud/remote_machine_hosted/portal/portal.md)
+  * [Test Examples](functional/test_examples.md)
 * [Performance Testing](performance/performance.md)
   * [UnixBench Test](performance/unixbench_test/unixbench_test.md)
   * [FIO Test](performance/fio_test/fio_test.md)
