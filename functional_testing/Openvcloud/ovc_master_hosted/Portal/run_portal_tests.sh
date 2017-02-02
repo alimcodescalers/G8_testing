@@ -94,6 +94,7 @@ if [[ -z "${remote_webdriver}" ]]; then
 		tar -C /opt/firefox -xvf /tmp/firefox.tar.gz
 		ln -fs /opt/firefox/firefox /usr/bin/firefox
 		ln -fs /opt/firefox/firefox /usr/local/bin/firefox
+	fi
 	#which geckodriver || (wget https://github.com/mozilla/geckodriver/releases/download/v0.13.0/geckodriver-v0.13.0-linux64.tar.gz -O /tmp/geckodriver.tar.gz; tar -C /opt -xzf /tmp/geckodriver.tar.gz;	chmod 755 /opt/geckodriver;	ln -fs /opt/geckodriver /usr/bin/geckodriver)
 
 	echo -e "${GREEN}** Running tests ...${NC}"
