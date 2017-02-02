@@ -18,6 +18,7 @@ class AdminMenu(Framework):
         *Test case to make sure that the admin portal menu work as expected*
 
         **Test Scenario:**
+
         #. click on the admin menu
         #. verify all items
         #. for every main item verify its items and behavior

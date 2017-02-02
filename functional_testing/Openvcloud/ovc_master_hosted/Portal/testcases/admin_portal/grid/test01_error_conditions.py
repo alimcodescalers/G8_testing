@@ -13,7 +13,7 @@ class GridTests(Framework):
     def test001_error_condition_page(self):
 
         """ PRTL-021
-        *Test case for checking error condition page in the admin portal
+        *Test case for checking error condition page in the admin portal*
 
         **Test Scenario:**
 

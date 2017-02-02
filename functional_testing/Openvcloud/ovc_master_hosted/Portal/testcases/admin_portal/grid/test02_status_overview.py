@@ -11,6 +11,7 @@ class StatusTests(Framework):
         *Test case to make sure that the process status is working as expected*
 
         **Test Scenario:**
+
         #. go to status overview page
         #. verify machines table status/color
         #. press on "Run Healthcheck"
@@ -23,9 +24,10 @@ class StatusTests(Framework):
 
     def test02_health_check(self):
         """ PRTL-030
-        *Test case to make sure that the health check is working as expected. *
+        *Test case to make sure that the health check is working as expected* 
 
         **Test Scenario:**
+
         #. go to status overview page
         #. press on "Run Healthcheck"
         #. verify expected behavior
