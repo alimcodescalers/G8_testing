@@ -91,7 +91,8 @@ if [[ -z "${remote_webdriver}" ]]; then
 	which firefox && firefox_version=(firefox -v)
 	if [[ firefox_version != 'Mozilla Firefox 47.0.1' ]]; then
 		wget 'https://ftp.mozilla.org/pub/firefox/releases/47.0.1/linux-x86_64/en-US/firefox-47.0.1.tar.bz2' -O /tmp/firefox.tar.gz
-		tar -C /opt/firefox -xvf /tmp/firefox.tar.gz
+		tar -C /opt/ -xvf /tmp/firefox.tar.gz
+		chmod 775 /opt/firefox/firefox
 		ln -fs /opt/firefox/firefox /usr/bin/firefox
 		ln -fs /opt/firefox/firefox /usr/local/bin/firefox
 	fi
