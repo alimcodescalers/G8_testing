@@ -42,14 +42,10 @@ Following functional tests are available:
 - [Snapshots limit test](#snapshots-limit)
 
 
-
-
-
-
 The functional tests can be categorized into three categories:
 
-- [Hosted on ovc_master](openvcloud/ovc_master_hosted/ovc_master_hosted.md)
-- [Hosted on a compute node](openvcloud/compute_node_hosted/compute_node_hosted.md)
+- [Hosted on the master node](openvcloud/ovc_master_hosted/ovc_master_hosted.md)
+- [Hosted on any compute node](openvcloud/compute_node_hosted/compute_node_hosted.md)
 - [Hosted on any remote machine](openvcloud/remote_machine_hosted/remote_machine_hosted.md)
 
 Only the Portal and API tests can run from both the master node or any remote node, that's why they appear under both categories:
@@ -354,3 +350,5 @@ See [Node Maintenance Test](openvcloud/compute_node_hosted/8_node_maintenance_te
 ### Snapshots limit test
 
 See [Snapshots Limit Test](openvcloud/compute_node_hosted/9_vm_unlimited_snapshots/9_vm_unlimited snapshots.md)
+
+[Examples](test_examples.md)
