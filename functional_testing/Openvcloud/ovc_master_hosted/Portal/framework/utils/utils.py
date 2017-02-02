@@ -4,7 +4,6 @@ import uuid
 import logging
 from testconfig import config
 from pytractor.exceptions import AngularNotFoundException
-from pytractor.exceptions import AngularNotFoundException
 from pytractor import webdriver
 from selenium.common.exceptions import TimeoutException, StaleElementReferenceException
 from selenium.webdriver.common.action_chains import ActionChains
@@ -40,7 +39,7 @@ class BaseTest(unittest.TestCase):
         self.lg('Testcase %s Started at %s' % (self._testID, self._startTime))
         self.set_browser()
 
-        self.driver.set_window_size(1200, 800)
+        self.driver.maximize_window()
         self.wait = WebDriverWait(self.driver, 15)
 
         self.username = str(uuid.uuid4()).replace('-', '')[0:10]
