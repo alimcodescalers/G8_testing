@@ -13,6 +13,7 @@ class CloudspacesTests(Framework):
         *Test case to make sure that paging and sorting of cloudspaces page are working as expected*
 
         **Test Scenario:**
+
         #. go to cloudspaces page.
         #. get number of cloudspaces
         #. try paging from the available page numbers and verify it should succeed
@@ -42,6 +43,7 @@ class CloudspacesTests(Framework):
         *Test case to make sure that paging and sorting of accounts page are working as expected*
 
         **Test Scenario:**
+
         #. go to accounts page.
         #. get number of accounts
         #. try paging from start/previous/next/last and verify it should succeed
@@ -76,6 +78,7 @@ class CloudspacesTests(Framework):
         *Test case to make sure that paging and sorting of accounts page are working as expected*
 
         **Test Scenario:**
+        
         #. go to accounts page.
         #. get number of accounts
         #. sorting of all fields of accounts table, should be working as expected

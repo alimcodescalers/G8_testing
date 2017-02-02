@@ -14,6 +14,7 @@ class UsersTests(Framework):
         *Test case to make sure that paging and sorting of users page are working as expected*
 
         **Test Scenario:**
+
         #. go to users page.
         #. get number of users
         #. try paging from the available page numbers and verify it should succeed
@@ -43,6 +44,7 @@ class UsersTests(Framework):
         *Test case to make sure that paging and sorting of users page are working as expected*
 
         **Test Scenario:**
+
         #. go to users page.
         #. get number of users.
         #. try paging from start/previous/next/last and verify it should succeed.
@@ -77,6 +79,7 @@ class UsersTests(Framework):
         *Test case to make sure that paging and sorting of users page are working as expected*
 
         **Test Scenario:**
+
         #. go to users page.
         #. get number of users
         #. sorting of all fields of users table, should be working as expected

@@ -20,7 +20,9 @@ class APIsTests(Framework):
     def test01_list_images_using_account(self):
         """ PRTL-025
         *Test case for check list images using accountId is working.*
+
         **Test Scenario:**
+
         #. check list images without accountId, should succeed
         #. check list images with valid accountId, should succeed
         #. check list images with invalid accountId, should succeed
