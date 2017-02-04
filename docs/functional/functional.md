@@ -6,7 +6,7 @@ Functional testing requires that the system was installed properly, as documente
 
 Following functional tests are available:
 
-- [Portal testing](#portal)
+- [Portal Test Suite](#portal)
   - [End User Portal tests](#end-user)
     - [Home page](#home-page)
     - [Machine page](#home-page)
@@ -15,7 +15,8 @@ Following functional tests are available:
     - [Home page](#admin-home)
     - [Cloud Broker Portal](#cloud-broker)
     - [Grid Portal](#grid-portal)
-- [API testing](#api)
+
+- [API Test Suite](#api)
   - [Access Control List (ACL) APIs](#acl-apis)
     - [Basic tests](#acl-basic)
       - [Accounts](#account-basic)
@@ -34,6 +35,7 @@ Following functional tests are available:
       - [Extended Cloud Space tests](#cloudspace-tests)
       - [Extended JumpScale tests](#jumpscale-tests)
       - [Extended machine tests](#machine-tests)
+
 - [Network configuration test](#network-config)
 - [Virtual machines limit test](#vm-limit)
 - [Cloud spaces limit test](#cloudspace-limit)
@@ -187,7 +189,7 @@ Not implemented yet:
 
 
 <a id="api"></a>
-### API tests
+### API Test Suite
 
 - [Access Control List (ACL) APIs](#acl-apis)
 - [OpenvCloud APIs, covering all non-ACL APIs](#other-api)
@@ -270,12 +272,11 @@ See [API Testing](openvcloud/ovc_master_hosted/API/API.md) for instructions on h
 <a id="other-apis"></a>
 #### Other OpenvCloud APIs, covering all non-ACL APIs
 
-- [Basic Tests](#other-basic)
-- [Extended Tests](#other-extended)
-- [Advanced Tests](#other-advanced)
+- [Other OVC API Basic Tests](#other-basic)
+- [Other OVC API Extended Tests](#other-extended)
 
 <a id="other-basic"></a>
-#### Basic Tests
+#### Other OVC API Basic Tests
 
 <a id="basic-machine"></a>
 - All **basic machine tests** are implemented in the `BasicTests` class (`OVC/a_basic/machine_tests.py`):
@@ -301,7 +302,7 @@ See [API Testing](openvcloud/ovc_master_hosted/API/API.md) for instructions on h
 
 
 <a id="other-extended"></a>
-#### Extended Tests
+#### Other OVC API Extended Tests
 
 <a id="account-tests"></a>
 - All **extended Account tests** are implemented in the `ExtendedTests` class (`OVC/b_extended/account_cloudspace_tests.py`)
@@ -350,5 +351,3 @@ See [Node Maintenance Test](openvcloud/compute_node_hosted/8_node_maintenance_te
 ### Snapshots limit test
 
 See [Snapshots Limit Test](openvcloud/compute_node_hosted/9_vm_unlimited_snapshots/9_vm_unlimited snapshots.md)
-
-[Test Examples](test_examples.md)
