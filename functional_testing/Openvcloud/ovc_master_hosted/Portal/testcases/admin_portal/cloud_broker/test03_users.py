@@ -25,14 +25,14 @@ class UsersTests(Framework):
 
         users_paging_options = [25, 50, 100, 10]
         users_info = self.Tables.get_table_info('table system user info')
-        users_number_max_number = int(users_info[(users_info.index('f') + 2):(users_info.index('entries') - 1)])
+        users_number_max_number = int(users_info[(users_info.index('f') + 2):(users_info.index('entries') - 1)].replace(',',''))
 
         for users_paging_option in users_paging_options:
             self.select('account selector', users_paging_option)
             time.sleep(5)
             users_info_ = self.Tables.get_table_info('table system user info')
-            users_number_max_number_ = int(users_info_[users_info_.index('f') + 2:users_info_.index('en') - 1])
-            users_avaliable_ = int(users_info_[(users_info_.index('to') + 3):(users_info_.index('of') - 1)])
+            users_number_max_number_ = int(users_info_[users_info_.index('f') + 2:users_info_.index('en') - 1].replace(',',''))
+            users_avaliable_ = int(users_info_[(users_info_.index('to') + 3):(users_info_.index('of') - 1)].replace(',',''))
             self.assertEqual(users_number_max_number, users_number_max_number_)
             if users_number_max_number > users_paging_option:
                 self.assertEqual(users_avaliable_, users_paging_option)
