@@ -97,7 +97,7 @@ if [[ -z "${remote_webdriver}" ]]; then
 	# 	ln -fs /opt/firefox/firefox /usr/local/bin/firefox
 	# fi
 	sudo apt-get install -y firefox
-	which geckodriver || (wget https://github.com/mozilla/geckodriver/releases/download/v0.13.0/geckodriver-v0.13.0-linux64.tar.gz -O /tmp/geckodriver.tar.gz; tar -C /opt -xzf /tmp/geckodriver.tar.gz;	chmod 755 /opt/geckodriver;	ln -fs /opt/geckodriver /usr/bin/geckodriver)
+	which geckodriver || (wget https://github.com/mozilla/geckodriver/releases/download/v0.14.0/geckodriver-v0.14.0-linux64.tar.gz -O /tmp/geckodriver.tar.gz; tar -C /opt -xzf /tmp/geckodriver.tar.gz;	chmod 755 /opt/geckodriver;	ln -fs /opt/geckodriver /usr/bin/geckodriver)
 
 	echo -e "${GREEN}** Running tests ...${NC}"
 		xvfb-run -a nosetests -v -s  --logging-level=WARNING $directory --tc-file=config.ini --tc=main.passwd:$passwd --tc=main.secret:$secret --tc=main.env:$environment --tc=main.location:$location --tc=main.admin:$user_id --tc=main.browser:$browser --with-xunit --xunit-file='testresults.xml' --with-progressive
