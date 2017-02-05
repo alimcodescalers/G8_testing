@@ -25,6 +25,7 @@ By following the steps outlined here below you can extracted all the embedded do
 - Run the build script:
 
   ```
+  cd G8_tests
   bash G8_testing/functional_testing/Openvcloud/tools/build_docs.sh
   ```
 

@@ -32,7 +32,28 @@ cd opt/code/{arbriatray-name}
 tailf G8_testing/functional_testing/Openvcloud/logs/openvcloud_testsuite.log
 ```
 
-At the end of the test both `testresults.xml` and `logs/openvcloud_testsuite.log` were copied into `/opt/testresults`, where a subdirectories exists for each test.
+At the end of the test both `testresults.xml` and `logs/openvcloud_testsuite.log` were copied into `/opt/testresults`, where a subdirectories exists for each test:
+
+```
+|-- ACL
+|   |-- a_basic_operations
+|   |   |-- acl_account_test
+|   |   |-- acl_cloudspace_test
+|   |   `-- acl_machine_test
+|   `-- b_try_operations
+|       |-- acl_account_test
+|       |-- acl_cloudspace_test
+|       `-- acl_machine_test
+`-- OVC
+    |-- a_basic
+    |   |-- machine_tests
+    |   `-- network_tests
+    `-- b_extended
+        |-- account_cloudspace_tests
+        |-- cloudspace_tests
+        |-- jumpscale_tests
+        `-- machine_tests
+```        
 
 We used `xmllint` the quickly review `testresults.xml`:
 
