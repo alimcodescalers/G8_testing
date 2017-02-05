@@ -26,9 +26,13 @@ def get_config(hrdfile):
         return config
 
 class SSHConfigGenerator:
-    def __init__(self, rootpath, reponame):
+    def __init__(self, rootpath, reponame, controller):
         self._rootpath = rootpath
         self._reponame = reponame
+        if controller is None:
+            self._controller = 22
+        else:
+            self._controller = controller
         if not rootpath and not reponame:
             raise RuntimeError("Pass either rootpath or reponame")
         self._host = None
@@ -114,7 +118,7 @@ class SSHConfigGenerator:
         print("  Port %s" % reflectorport)
         print("  User root")
         print("  IdentityFile %s" % self.identityfile)
-        print("  ProxyCommand ssh -A -i %s -o options.ctrlport -q root@%s nc -q0 %%h %%p" % (self.identityfile, self.host))
+        print("  ProxyCommand ssh -A -i %s -q root@%s -p %s nc -q0 %%h %%p" % (self.identityfile, self.host, self._controller))
         print("")
 
     def generate(self):
@@ -132,8 +136,8 @@ if __name__ == '__main__':
     import argparse
     parser = argparse.ArgumentParser(usage="Generate ssh config for environmetns")
     parser.add_argument('-p', '--path', help="repo path", default=None)
+    parser.add_argument('-c', '--controller', help="controller port", default=None)
     parser.add_argument('-r', '--reponame', help="Name of the repo", default=None)
-    parser.add_argument('-o', '--ctrlport', help="port to access thecontroller node", default=22)
     options = parser.parse_args()
-    generator = SSHConfigGenerator(options.path, options.reponame)
-generator.generate()
+    generator = SSHConfigGenerator(options.path, options.reponame, options.controller)
+    generator.generate()
