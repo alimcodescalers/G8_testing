@@ -1,6 +1,6 @@
 .. _portal:
 
-Portal Test Suite:
+Portal Test Suite
 ---------------------------
 
 used to test the portal by getting the x-paths for every clickable link and test it.
