@@ -5,6 +5,8 @@ The goal of the portal test suit is testing the OpenvCloud portals. There are cu
 - One covering the **End User Portal**
 - Another is covering the **Cloud Broker Portal**
 
+The portal testing framework has been building depending on selenium framework to automate different browsers on different OS.
+
 The documentation for these functional tests is embedded in the actual test code. For instructions on how to setup an **Read the Docs** site consolidating the embedded documentation see the section [Setup a Read the Docs site for your Testing Suite](../../sphinx.md) in this guide.
 
 ## 2. Portal Test Suit Architecture:
