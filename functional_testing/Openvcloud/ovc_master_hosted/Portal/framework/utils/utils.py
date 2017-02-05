@@ -4,14 +4,15 @@ import uuid
 import logging
 from testconfig import config
 from pytractor.exceptions import AngularNotFoundException
+from pytractor import webdriver
 from selenium.common.exceptions import TimeoutException, StaleElementReferenceException
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import Select
-from pytractor import webdriver
 from selenium.webdriver import FirefoxProfile
 from selenium.webdriver.support.wait import WebDriverWait
+from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from functional_testing.Openvcloud.ovc_master_hosted.Portal.framework import xpath
 import os
 
@@ -25,6 +26,7 @@ class BaseTest(unittest.TestCase):
         self.admin_password = config['main']['passwd']
         self.GAuth_secret = config['main']['secret']
         self.browser = config['main']['browser']
+        self.remote_webdriver = config['main']['remote_webdriver']
         self.base_page = self.environment_url + '/ays'
         self.elements = xpath.elements.copy()
 
@@ -36,6 +38,8 @@ class BaseTest(unittest.TestCase):
                                              {'testid': self.shortDescription() or self._testID})
         self.lg('Testcase %s Started at %s' % (self._testID, self._startTime))
         self.set_browser()
+
+        self.driver.maximize_window()
         self.wait = WebDriverWait(self.driver, 15)
 
         self.username = str(uuid.uuid4()).replace('-', '')[0:10]
@@ -61,23 +65,31 @@ class BaseTest(unittest.TestCase):
 
 
     def set_browser(self):
-        if self.browser == 'chrome':
-            self.driver = webdriver.Chrome()
-        elif self.browser == 'firefox':
-            fp = FirefoxProfile()
-            fp.set_preference("browser.download.folderList", 2)
-            fp.set_preference("browser.download.manager.showWhenStarting", False)
-            fp.set_preference("browser.download.dir", os.path.expanduser("~") + "/Downloads/")
-            fp.set_preference("browser.helperApps.neverAsk.saveToDisk", "application/zip, application/octet-stream")
-            self.driver = webdriver.Firefox(firefox_profile=fp)
-        elif self.browser == 'ie':
-            self.driver = webdriver.Ie()
-        elif self.browser == 'opera':
-            self.driver = webdriver.Opera()
-        elif self.browser == 'safari':
-            self.driver = webdriver.Safari
+        if self.remote_webdriver:
+            if self.browser == 'chrome':
+                desired_capabilities = DesiredCapabilities.CHROME
+            else:
+                desired_capabilities = DesiredCapabilities.FIREFOX
+            self.driver = webdriver.Remote(command_executor=self.remote_webdriver + '/wd/hub', desired_capabilities=desired_capabilities)
         else:
-            self.fail("Invalid browser configuration [%s]" % self.browser)
+            if self.browser == 'chrome':
+                self.driver = webdriver.Chrome()
+            elif self.browser == 'firefox':
+                fp = FirefoxProfile()
+                fp.set_preference("browser.download.folderList", 2)
+                fp.set_preference("browser.download.manager.showWhenStarting", False)
+                fp.set_preference("browser.download.dir", os.path.expanduser("~") + "/Downloads/")
+                fp.set_preference("browser.helperApps.neverAsk.saveToDisk", "application/zip, application/octet-stream")
+                self.driver = webdriver.Firefox(firefox_profile=fp)
+                self.driver = webdriver.Firefox()
+            elif self.browser == 'ie':
+                self.driver = webdriver.Ie()
+            elif self.browser == 'opera':
+                self.driver = webdriver.Opera()
+            elif self.browser == 'safari':
+                self.driver = webdriver.Safari
+            else:
+                self.fail("Invalid browser configuration [%s]" % self.browser)
 
     def lg(self, msg):
         self._logger.info(msg)
@@ -125,10 +137,10 @@ class BaseTest(unittest.TestCase):
 
     def get_page(self, page_url):
         try:
-            self.driver.ignore_synchronization = False
+            #self.driver.ignore_synchronization = False
             self.driver.get(page_url)
         except AngularNotFoundException:
-            self.driver.ignore_synchronization = True
+            #self.driver.ignore_synchronization = True
             self.driver.get(page_url)
 
     def element_is_enabled(self, element):
