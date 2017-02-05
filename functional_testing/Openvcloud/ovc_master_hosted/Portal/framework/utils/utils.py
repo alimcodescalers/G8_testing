@@ -39,7 +39,7 @@ class BaseTest(unittest.TestCase):
         self.lg('Testcase %s Started at %s' % (self._testID, self._startTime))
         self.set_browser()
 
-        self.driver.maximize_window()
+        self.driver.set_window_size(1200, 800)
         self.wait = WebDriverWait(self.driver, 15)
 
         self.username = str(uuid.uuid4()).replace('-', '')[0:10]
@@ -137,11 +137,16 @@ class BaseTest(unittest.TestCase):
 
     def get_page(self, page_url):
         try:
-            #self.driver.ignore_synchronization = False
+            self.driver.ignore_synchronization = False
             self.driver.get(page_url)
         except AngularNotFoundException:
-            #self.driver.ignore_synchronization = True
+            self.driver.ignore_synchronization = True
             self.driver.get(page_url)
+
+        screen_dimention = self.driver.get_window_size()
+        screen_size = screen_dimention['width'] * screen_dimention['height']
+        if screen_size < 1200*800:
+            self.driver.set_window_size(1200, 800)
 
     def element_is_enabled(self, element):
         return self.find_element(element).is_enabled()
