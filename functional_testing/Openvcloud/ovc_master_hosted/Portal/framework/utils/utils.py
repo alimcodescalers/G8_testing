@@ -354,7 +354,7 @@ class BaseTest(unittest.TestCase):
                 tbody =  self.driver.find_element_by_tag_name('tbody')
             else:
 
-                element = self.find_element('table cloudbroker vmachine')
+                element = self.find_element(element)
                 tbody =  element.find_element_by_tag_name('tbody')
 
             rows = tbody.find_elements_by_tag_name('tr')

@@ -40,7 +40,7 @@ class tables():
         self.framework.select( selector , max_sort_value)
         time.sleep(3)
         min_page_numbers = (account_max_number / max_sort_value)
-        if (account_max_number % max_sort_value) >= 0:
+        if (account_max_number % max_sort_value) > 0:
             page_numbers = min_page_numbers+1
         tableData = []
         for page in range(page_numbers):

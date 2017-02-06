@@ -22,7 +22,7 @@ class images():
             return False
 
     def open_image_page(self, image=''):
-        #self.LeftNavigationMenu.CloudBroker.Images()
+        self.LeftNavigationMenu.CloudBroker.Images()
         self.framework.set_text("image_search", image)
         self.framework.wait_until_element_located_and_has_text("image_table_first_element_2",
                                                                image)
