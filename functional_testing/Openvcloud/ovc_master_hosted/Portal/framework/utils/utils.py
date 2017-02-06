@@ -347,10 +347,10 @@ class BaseTest(unittest.TestCase):
                 item = ''
         return storage_menu
 
-    def get_table_rows(self,element=" "):
+    def get_table_rows(self,element= None):
         'This method return all rows in the current page else return false'
         try:
-            if element == " ":
+            if element == None:
                 tbody =  self.driver.find_element_by_tag_name('tbody')
             else:
 

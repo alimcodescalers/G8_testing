@@ -32,7 +32,7 @@ class tables():
         next_button = pagination[(len(pagination) - 1)].find_element_by_tag_name('a')
         return previous_button, next_button
 
-    def get_table_data(self, element,selector = 'account selector',table_element=" "):
+    def get_table_data(self, element,selector = 'account selector',table_element=None):
         # This method will return a table data as a list
         self.framework.assertTrue(self.framework.check_element_is_exist(element))
         max_sort_value = 100

@@ -103,6 +103,8 @@ class ImagesTests(Framework):
             previous_button, next_button = self.Tables.get_previous_next_button()
             next_button.click()
             time.sleep(1)
+
+            image_start_number_ = self.Tables.get_table_start_number('table cloudbroker image info')
             image_end_number_ = self.Tables.get_table_end_number('table cloudbroker image info')
             self.assertEqual(image_start_number_, image_start_number + 10)
             if image_end_number_ < image_max_number:
@@ -236,6 +238,8 @@ class ImagesTests(Framework):
             next_button.click()
             time.sleep(1)
             stack_end_number_ = self.Tables.get_table_end_number('table cloudbroker stack info')
+            stack_start_number_ = self.Tables.get_table_start_number('table cloudbroker image info')
+
             self.assertEqual(stack_start_number_, stack_start_number + 10)
             if stack_end_number_ < stack_max_number:
                 self.assertEqual(stack_end_number_, stack_end_number + 10)
@@ -325,6 +329,7 @@ class ImagesTests(Framework):
             next_button.click()
             time.sleep(1)
             VM_end_number_ = self.Tables.get_table_end_number('table cloudbroker vmachine info')
+            VM_start_number_ = self.Tables.get_table_start_number('table cloudbroker vmachine info')
             self.assertEqual(VM_start_number_, VM_start_number + 10)
             if VM_end_number_ < VM_max_number:
                 self.assertEqual(VM_end_number_, VM_end_number + 10)
@@ -396,7 +401,7 @@ class ImagesTests(Framework):
 
         table_head_elements_VM = self.get_table_head_elements('table cloudbroker vmachine')
         self.assertNotEqual(table_head_elements_VM, False)
-        table_before_VM = self.Tables.get_table_data('table cloudbroker vmachine info','VM_table selector','table cloudbroker vmachin')
+        table_before_VM = self.Tables.get_table_data('table cloudbroker vmachine info','VM_table selector','table cloudbroker vmachine')
         time.sleep(1)
 
         self.lg('5- try search of all elements in vm table by main search box')
@@ -412,7 +417,7 @@ class ImagesTests(Framework):
                     continue
                 self.set_text("VM_search", table_before_VM[random_elemn][column])
                 time.sleep(1)
-                table_after = self.Tables.get_table_data('table cloudbroker vmachine info','VM_table selector','table cloudbroker vmachin')
+                table_after = self.Tables.get_table_data('table cloudbroker vmachine info','VM_table selector','table cloudbroker vmachine')
                 self.assertTrue(any(table_before_VM[random_elemn][column] in s for s in table_after[0] ))
             self.clear_text("VM_search")
 
@@ -422,6 +427,6 @@ class ImagesTests(Framework):
 
             for column in range(columns) :
                 self.set_text_columns("VM_table_element_search" ,table_before_VM[random_elemn][column], column+1 )
-                table_after1=self.Tables.get_table_data('table cloudbroker vmachine info','VM_table selector','table cloudbroker vmachin')
+                table_after1=self.Tables.get_table_data('table cloudbroker vmachine info','VM_table selector','table cloudbroker vmachine')
                 self.assertEqual(table_after1[0][column],table_before_VM[random_elemn][column])
                 self.clear_text_columns("VM_table_element_search",column+1)
