@@ -34,7 +34,7 @@ class login():
         self.GetIt()
         self.framework.lg('check the login page title, should succeed')
         self.framework.assertEqual(self.framework.driver.title, 'Log in - It\'s You Online')
-        self.framework.lg('Do login using username [%s] and passsword [%s]' % (username, password))
+        self.framework.lg('Do login using')
         self.framework.set_text('username_textbox', username)
         self.framework.set_text('password_textbox', password)
         self.framework.click('login_button')
@@ -50,8 +50,7 @@ class login():
             time.sleep(20)
 
         self.framework.wait_until_element_located('logout_button')
-        self.framework.assertEqual(self.framework.driver.title, 'OpenvCloud - Decks',
-                                   "Can't Login using username [%s] and passsword [%s]" % (username, password))
+        self.framework.assertEqual(self.framework.driver.title, 'OpenvCloud - Decks', "Can't Login")
 
     def LoginFail(self, username='', password=''):
         username = username
@@ -59,7 +58,7 @@ class login():
         self.GetIt()
         self.framework.lg('check the login page title, should succeed')
         self.framework.assertEqual(self.framework.driver.title, 'Log in - It\'s You Online')
-        self.framework.lg('Do login using username [%s] and passsword [%s]' % (username, password))
+        self.framework.lg('Do login')
         self.framework.set_text('username_textbox', username)
         self.framework.set_text('password_textbox', password)
         self.framework.click('login_button')
