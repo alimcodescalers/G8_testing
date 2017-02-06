@@ -7,8 +7,8 @@ used to test the portal by getting the x-paths for every clickable link and test
 (work in progress)
 
 
-End user
-========
+End User Portal
+===============
 
 used to test the end user portal which is written with AngularJs .
 (work in progress)
@@ -68,16 +68,16 @@ Machine Page
     :undoc-members:
     :show-inheritance:
 
-Apis page
+APIs Page
 ^^^^^^^^^
 (work in progress)
 
 
-Admin portal 
+Admin Portal 
 ============
 used to test the Admin user portal (writen with wiki)
 
-Apis page
+APIs page
 ^^^^^^^^^
 
 .. automodule:: functional_testing.Openvcloud.ovc_master_hosted.Portal.testcases.admin_portal.apis.test01_apis
@@ -86,8 +86,8 @@ Apis page
     :undoc-members:
     :show-inheritance:
 
-Cloud brocker
-^^^^^^^^^^^^^
+Cloud Brocker Portal
+^^^^^^^^^^^^^^^^^^^^
 
 .. automodule:: functional_testing.Openvcloud.ovc_master_hosted.Portal.testcases.admin_portal.cloud_broker.test01_accounts
 .. autoclass:: functional_testing.Openvcloud.ovc_master_hosted.Portal.testcases.admin_portal.cloud_broker.test01_accounts.AccountsTests
@@ -130,8 +130,8 @@ General
     :show-inheritance:
 
 
-Grid
-^^^^
+Grid Portal
+^^^^^^^^^^^
 
 .. automodule:: functional_testing.Openvcloud.ovc_master_hosted.Portal.testcases.admin_portal.grid.test01_error_conditions
 .. autoclass:: functional_testing.Openvcloud.ovc_master_hosted.Portal.testcases.admin_portal.grid.test01_error_conditions.GridTests
