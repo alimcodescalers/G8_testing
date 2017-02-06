@@ -81,11 +81,12 @@ class ImagesTests(Framework):
             column_value = column_value + 1
             self.lg('pass %s column' % current_column)
 
-    def test03_cloudspace_page_table_paging_buttons(self):
+    def test03_image_page_table_paging_buttons(self):
         """ PRTL-043
         *Test case to make sure that paging and sorting of images page are working as expected*
 
         **Test Scenario:**
+
         #. go to images page.
         #. get number of images
         #. try paging from start/previous/next/last and verify it should succeed
@@ -114,6 +115,7 @@ class ImagesTests(Framework):
         *Test case to make sure that search boxes of images page are working as expected*
 
         **Test Scenario:**
+
         #. go to images page.
         #. try use general search box  to search for values in  all columns and verfiy it return the right value
         #. try use the search box in every column and  verfiy it return the right value
@@ -156,7 +158,9 @@ class ImagesTests(Framework):
 
     def test05_stack_table_in_image_page_test(self):
         """ PRTL-045
+
         **Test Scenario:**
+
         #. go to images page.
         #. open random image page
         #. get number of stacks
@@ -241,7 +245,9 @@ class ImagesTests(Framework):
 
     def test06_VM_table_in_image_page_test(self):
         """ PRTL-046
+
         **Test Scenario:**
+
         #. go to images page.
         #. open random image page
         #. get number of vms
@@ -297,14 +303,11 @@ class ImagesTests(Framework):
             self.driver.execute_script("window.scrollTo(0, 0)")
             element.click()
             time.sleep(3)
-            table_before = self.Tables.get_table_data('table cloudbroker vmachine info','VM_table selector','table cloudbroker vmachin')
-            # no data in table
-            if table_before[0][0] =='No data available in table':
-                break
+            table_before = self.Tables.get_table_data('table cloudbroker vmachine info','VM_table selector','table cloudbroker vmachine')
             self.driver.execute_script("window.scrollTo(0, 0)")
             element.click()
             time.sleep(3)
-            table_after = self.Tables.get_table_data('table cloudbroker vmachine info','VM_table selector','table cloudbroker vmachin')
+            table_after = self.Tables.get_table_data('table cloudbroker vmachine info','VM_table selector','table cloudbroker vmachine')
             self.assertEqual(len(table_before), len(table_after),
                              'The length of image table is changing according to sorting by %s'%current_column)
             for temp in range(len(table_before)):
@@ -331,7 +334,9 @@ class ImagesTests(Framework):
     def test07_search_boxes_in_image_page_test(self):
         """ PRTL-047
         *Test case to make sure that search boxes of images page are working as expected*
+
         **Test Scenario:**
+
         #. go to images page.
         #. open one random  image page
         #. try use general search box  to search for values in  all columns and verfiy it return the right value in stack table
@@ -349,6 +354,7 @@ class ImagesTests(Framework):
         rows= len(table_elements)
         random_elemn= randint(0,rows-1)
         image_element=table_elements[random_elemn][1]
+
         self.Images.open_image_page(image_element)
         self.lg('-try search boxes in stack table')
 
@@ -356,10 +362,10 @@ class ImagesTests(Framework):
         table_before = self.Tables.get_table_data('table cloudbroker stack info')
         columns = len(table_head_elements)
         rows= len(table_before)
-        random_elemn= randint(0,rows-1)
 
         self.lg('3- try search of all elements by main search box')
-        if table_before[0][0]!='No data available in table' :
+        if table_before!=[]:
+            random_elemn= randint(0,rows-1)
             for column in range(columns) :
                 #skip("bug #https://github.com/0-complexity/openvcloud/issues/696")
                 if column == 1 :
@@ -397,9 +403,8 @@ class ImagesTests(Framework):
 
         columns = len(table_head_elements_VM)
         rows= len(table_before_VM)
-        random_elemn= randint(0,rows-1)
-
-        if table_before_VM[0][0]!='No data available in table' :
+        if table_before_VM != [] :
+            random_elemn= randint(0,rows-1)
 
             for column in range(columns) :
                 #skip("bug #https://github.com/0-complexity/openvcloud/issues/696")
