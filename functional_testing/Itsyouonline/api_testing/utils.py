@@ -136,7 +136,7 @@ class BaseTest(unittest.TestCase):
         self.assertEqual(response.status_code, 204)
 
     def DeleteAllUserEmails(self, username):
-        self.lg('Delete all user\'s emails , should fail with 409')
+        self.lg('Delete all user\'s emails, should fail with 409')
         response = self.client_1.api.GetEmailAddresses(username)
         self.assertEqual(response.status_code, 200)
         labels = [x['label'] for x in response.json()]
@@ -145,7 +145,7 @@ class BaseTest(unittest.TestCase):
             self.assertEqual(response.status_code, 204)
 
     def DeleteAllUserPhonenumbers(self, username):
-        self.lg('Delete all user\'s phonenumbers , should fail with 409')
+        self.lg('Delete all user\'s phonenumbers, should fail with 409')
         response = self.client_1.api.GetUserPhoneNumbers(username)
         self.assertEqual(response.status_code, 200)
         labels = [x['label'] for x in response.json()]
@@ -155,7 +155,7 @@ class BaseTest(unittest.TestCase):
             self.assertEqual(response.status_code, 204)
 
     def DeleteAllUserAddresses(self, username):
-        self.lg('Delete all user\'s addresses , should fail with 409')
+        self.lg('Delete all user\'s addresses, should fail with 409')
         response = self.client_1.api.GetUserAddresses(username)
         self.assertEqual(response.status_code, 200)
         labels = [x['label'] for x in response.json()]
@@ -173,7 +173,7 @@ class BaseTest(unittest.TestCase):
             self.assertEqual(response.status_code, 204)
 
     def DeleteAllUserPublicKeys(self, username):
-        self.lg('Delete all user\'s publickeys , should fail with 409')
+        self.lg('Delete all user\'s publickeys, should fail with 409')
         response = self.client_1.api.GetUserPublicKeys(username)
         self.assertEqual(response.status_code, 200)
         labels = [x['label'] for x in response.json()]
@@ -182,7 +182,7 @@ class BaseTest(unittest.TestCase):
             self.assertEqual(response.status_code, 204)
 
     def DeleteAllUserDigitalWallet(self, username):
-        self.lg('Delete all user\'s publickeys , should fail with 409')
+        self.lg('Delete all user\'s digital wallet , should fail with 409')
         response = self.client_1.api.GetUserDigitalWallets(username)
         self.assertEqual(response.status_code, 200)
         labels = [x['label'] for x in response.json()]
@@ -191,7 +191,7 @@ class BaseTest(unittest.TestCase):
             self.assertEqual(response.status_code, 204)
 
     def DeleteAllUserRegistries(self, username):
-        self.lg('Delete all user\'s publickeys , should fail with 409')
+        self.lg('Delete all user\'s registries, should fail with 409')
         response = self.client_1.api.GetRegistries(username)
         self.assertEqual(response.status_code, 200)
         keys = [x['Key'] for x in response.json()]
@@ -200,7 +200,7 @@ class BaseTest(unittest.TestCase):
             self.assertEqual(response.status_code, 204)
 
     def DeleteAllUserApiKeys(self, username):
-        self.lg('Delete all user\'s publickeys , should fail with 409')
+        self.lg('Delete all user\'s apikeys, should fail with 409')
         response = self.client_1.api.ListAPIKeys(username)
         self.assertEqual(response.status_code, 200)
         labels = [x['label'] for x in response.json()[1:]]
