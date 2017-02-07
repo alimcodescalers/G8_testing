@@ -190,10 +190,11 @@ class BaseTest(unittest.TestCase):
 
     def wait_until_element_attribute_has_text(self, element, attribute, text):
         for _ in range(10):
-            if element.get_attribute(attribute) == text:
-                return True
-            else:
-                time.sleep(2)
+            try:
+                if element.get_attribute(attribute) == text:
+                    return True
+            except:
+                time.sleep(1)
         else:
             return False
 
