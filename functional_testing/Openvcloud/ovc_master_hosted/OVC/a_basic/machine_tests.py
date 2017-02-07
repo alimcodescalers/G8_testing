@@ -109,7 +109,6 @@ class BasicTests(BasicACLTest):
 
         self.lg('%s ENDED' % self._testID)
 
-    @unittest.skip("https://github.com/0-complexity/openvcloud/issues/424")
     def test003_create_machine_with_resize(self):
         """ OVC-003
         *Test case for testing resize operation with all combinations*
@@ -123,7 +122,7 @@ class BasicTests(BasicACLTest):
         #. Check that the machine is updated
         """
 
-        self.lg('2- get all available sizes to use and choose one random, should succeed')
+        self.lg('1- get all available sizes to use and choose one random and creat vm with it , should succeed')
         size = random.choice(self.api.cloudapi.sizes.list(cloudspaceId=self.cloudspace_id))
         disksize = random.choice(size['disks'])
         self.lg('- using memory size [%s] with disk '
@@ -132,18 +131,28 @@ class BasicTests(BasicACLTest):
                                                        size_id=size['id'],
                                                        disksize=disksize)
 
-        self.lg('4- Resize the machine with all possible combinations, should succeed')
-        sizesMaxValue = len(self.api.cloudapi.sizes.list(self.cloudspace_id))
-        for resizeId in xrange(1, sizesMaxValue+1):
+        self.lg('2- Resize the machine with all possible combinations, should succeed')
+        basic_sizes=[512,1024,4096,8192,16384,2048]
+        
+        sizesMaxValue = len(basic_sizes)
+
+        self.lg('sizesMaxValue%s'%sizesMaxValue)
+        #sizesMaxValue = len(self.api.cloudapi.sizes.list(self.cloudspace_id))
+        for sizes in xrange(0, sizesMaxValue):
             self.lg('3- Stop the machine')
             self.account_owner_api.cloudapi.machines.stop(machineId=self.machine_id)
             self.assertEqual(self.api.cloudapi.machines.get(machineId=self.machine_id)['status'],
-                             'HALTED')
-
+                              'HALTED')
+            sizes_list= self.api.cloudapi.sizes.list(cloudspaceId=self.cloudspace_id)
+            y = [i['memory']==basic_sizes[sizes] for i in sizes_list]
+            for i, item in enumerate(y):
+                if item:
+                    resizeId=sizes_list[i]['id']
+            self.lg('resizeId %s'%resizeId)
             self.account_owner_api.cloudapi.machines.resize(machineId=self.machine_id,
                                                             sizeId=resizeId)
 
-            self.lg('5- Start the machine')
+            self.lg('4- Start the machine')
             self.account_owner_api.cloudapi.machines.start(machineId=self.machine_id)
             self.assertEqual(self.api.cloudapi.machines.get(machineId=self.machine_id)['status'],
                              'RUNNING')
@@ -153,8 +162,6 @@ class BasicTests(BasicACLTest):
 
         self.lg('%s ENDED' % self._testID)
 
-    @unittest.skip("openvcloud Bug-57: Admin can't resize the machine more than one time in the same halt"
-                   " using Cloudbroker or the End use portal")
     def test004_create_machine_with_resize_in_halted(self):
         """ OVC-004
         *Test case for testing resize operation in the halted machine*
@@ -178,21 +185,34 @@ class BasicTests(BasicACLTest):
                                                        size_id=size['id'],
                                                        disksize=disksize)
 
-        self.lg('4- Resize the machine with all possible combinations, should succeed')
         self.lg('3- Stop the machine')
         self.account_owner_api.cloudapi.machines.stop(machineId=self.machine_id)
         self.assertEqual(self.api.cloudapi.machines.get(machineId=self.machine_id)['status'],
                          'HALTED')
 
-        self.lg('4- Resize it more than one time')
-        sizesMaxValue = len(self.api.cloudapi.sizes.list(self.cloudspace_id))
-        for resizeId in xrange(1, sizesMaxValue+1):
+        self.lg('4- Resize the machine with all possible combinations more than one , should succeed')
+        basic_sizes=[512,1024,4096,8192,16384,2048]
+        #sizesMaxValue = len(self.api.cloudapi.sizes.list(self.cloudspace_id))
+        sizesMaxValue = len(basic_sizes)
+
+        self.lg('sizesMaxValue%s'%sizesMaxValue)        
+        #sizesMaxValue=6
+        for sizes in xrange(0, sizesMaxValue):
+            sizes_list= self.api.cloudapi.sizes.list(cloudspaceId=self.cloudspace_id)
+            y = [i['memory']==basic_sizes[sizes] for i in sizes_list]
+            for i, item in enumerate(y):
+                if item:
+                    resizeId=sizes_list[i]['id']
+                
+
+
             self.account_owner_api.cloudapi.machines.resize(machineId=self.machine_id,
                                                             sizeId=resizeId)
             for i in xrange(0, 60):
-                if self.api.cloudapi.machines.get(machineId=self.machine_id)['sizeid'] == resizeId:
-                    time.sleep(1)
-
+                if self.api.cloudapi.machines.get(machineId=self.machine_id)['sizeid'] == resizeId:   
+                   time.sleep(1)
+                   break 
+           
             self.assertEqual(self.api.cloudapi.machines.get(machineId=self.machine_id)['sizeid'],
                              resizeId)
 
@@ -467,12 +487,11 @@ class BasicTests(BasicACLTest):
 
         self.lg('%s ENDED' % self._testID)
 
-    #@parameterized.expand(['تست_عربى',
-    #                       'утрчиогфрыуи',
-    #                       'é€èêëâæüéêæâàâ',
-    #                       'ωβνμκλπιυρσζαωθ',
-    #                       'îöşüû«»“âç'])
-    @unittest.skip("https://github.com/gig-projects/org_quality/issues/452")
+    @parameterized.expand(['تست_عربى',
+                           'утрчиогфрыуи',
+                           'é€èêëâæüéêæâàâ',
+                           'ωβνμκλπιυρσζαωθ',
+                           'îöşüû«»“âç'])
     def test008_test_different_Language(self, language):
         """ OVC-008
         *Test case  for testing different language*
@@ -490,7 +509,7 @@ class BasicTests(BasicACLTest):
         """
         language += str(random.randrange(1, 1000))
         self.lg('- create an account with %s name' % (language))
-        self.accountId = self.api.cloudbroker.account.create(language, self.username, self.email, self.location)
+        self.accountId = self.api.cloudbroker.account.create(language, self.username, self.email)
         self.assertEqual(self.api.cloudapi.accounts.get(accountId=self.accountId)['id'], self.accountId)
 
         self.lg('- create cloudspace with %s name' % (language))
@@ -617,6 +636,7 @@ class BasicTests(BasicACLTest):
             flag = self.execute_command_on_physical_node('cd; python machine_script.py %s %s %s 3000 2000'
                                                          %(account['login'], account['password'],
                                                            cs_publicip), nodeID)
+            self.lg('flag%s'%flag) 
             self.assertEqual('True', flag[len(flag)-5:len(flag)-1])
         finally:
             self.execute_command_on_physical_node('cd; rm machine_script.py', nodeID)
@@ -684,7 +704,9 @@ class BasicTests(BasicACLTest):
         self.assertTrue(imageId, 'No windows image found on the environment')
         self.lg('- Get all sizes')
         diskSizes = self.api.cloudapi.sizes.list(cloudspaceId)[0]['disks']
-        for diskSize in diskSizes:
+        basic_sizes=[10,20,50,100,250,500,1000,2000]
+        diff_sizes = random.sample(basic_sizes,4)
+        for diskSize in diff_sizes:
             self.lg('- Create a new machine with disk size %s' % diskSize)
             try:
                 machineId = self.cloudapi_create_machine(cloudspaceId,image_id=imageId,disksize=diskSize)

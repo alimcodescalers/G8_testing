@@ -9,13 +9,20 @@ class APIsTests(Framework):
     def setUp(self):
         super(APIsTests, self).setUp()
         self.Login.Login()
+        self.EUMachines.create_default_account_cloudspace(self.admin_username, self.account, self.cloudspace)
         self.click("machine_api_button")
+
+    def tearDown(self):
+        self.EUMachines.delete_default_account_cloudspace(self.account, self.cloudspace)
+        super(APIsTests, self).tearDown()
 
     @unittest.skip("bug: 178")
     def test01_list_images_using_account(self):
         """ PRTL-025
         *Test case for check list images using accountId is working.*
+
         **Test Scenario:**
+
         #. check list images without accountId, should succeed
         #. check list images with valid accountId, should succeed
         #. check list images with invalid accountId, should succeed

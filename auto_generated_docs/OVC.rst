@@ -1,13 +1,18 @@
-.. _acl:
+.. _OVC:
 
-Access Control List Basic Tests
--------------------------------
+API Test Suites
+-------------------------
+
+
+ACL API Test Suite
+******************
+
+Basic Tests
+===============
 Used to test the basic (the happy path scenarios) access control on three levels account, cloud_space and virtual_machine.
 
-.. toctree::
-
-Account Level Tests
-===================
+Basic Accounts Tests
+^^^^^^^^^^^^^^^^^^^^
 
 .. automodule:: functional_testing.Openvcloud.ovc_master_hosted.ACL.a_basic_operations.acl_account_test
 
@@ -26,8 +31,8 @@ Account Level Tests
     :undoc-members:
     :show-inheritance:
 
-Cloud space Level Tests
-=======================
+Basic Cloud Spaces Tests
+^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. automodule:: functional_testing.Openvcloud.ovc_master_hosted.ACL.a_basic_operations.acl_cloudspace_test
 
@@ -46,8 +51,8 @@ Cloud space Level Tests
     :undoc-members:
     :show-inheritance:
 
-Virtual Machine Level Tests
-===========================
+Basic Virtual Machines Tests
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. automodule:: functional_testing.Openvcloud.ovc_master_hosted.ACL.a_basic_operations.acl_machine_test
 
@@ -66,12 +71,13 @@ Virtual Machine Level Tests
     :undoc-members:
     :show-inheritance:
 
-Access Control List Extended Tests
------------------------------------
+Extended Tests
+==================
+
 Used to test the not-acceptable access control (the un-happy path scenarios) on three levels account, cloud_space and virtual_machine.
 
-Account Level Tests
-===================
+Extended Accounts Tests
+^^^^^^^^^^^^^^^^^^^^^^^
 
 .. automodule:: functional_testing.Openvcloud.ovc_master_hosted.ACL.b_try_operations.acl_account_test
 
@@ -90,8 +96,8 @@ Account Level Tests
     :undoc-members:
     :show-inheritance:
 
-Cloud space Level Tests
-=======================
+Extended Cloud Spaces Tests
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. automodule:: functional_testing.Openvcloud.ovc_master_hosted.ACL.b_try_operations.acl_cloudspace_test
 
@@ -110,8 +116,8 @@ Cloud space Level Tests
     :undoc-members:
     :show-inheritance:
 
-Virtual Machine Level Tests
-===========================
+Extended Virtual Machines Tests
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. automodule:: functional_testing.Openvcloud.ovc_master_hosted.ACL.b_try_operations.acl_machine_test
 
@@ -126,6 +132,70 @@ Virtual Machine Level Tests
     :show-inheritance:
 
 .. autoclass:: functional_testing.Openvcloud.ovc_master_hosted.ACL.b_try_operations.acl_machine_test.Admin
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Other API Test Suite
+********************
+Used to test the basic cloud_api for the openvcloud component
+
+Basic Tests
+===========
+
+Basic Machines Tests
+^^^^^^^^^^^^^^^^^^^^
+
+.. automodule:: functional_testing.Openvcloud.ovc_master_hosted.OVC.a_basic.machine_tests
+.. autoclass:: functional_testing.Openvcloud.ovc_master_hosted.OVC.a_basic.machine_tests.BasicTests
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+Basic Network Tests
+^^^^^^^^^^^^^^^^^^^
+
+.. automodule:: functional_testing.Openvcloud.ovc_master_hosted.OVC.a_basic.network_tests
+.. autoclass:: functional_testing.Openvcloud.ovc_master_hosted.OVC.a_basic.network_tests.NetworkBasicTests
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Extended Tests
+==============
+
+Extended Cloud Space Tests
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. automodule:: functional_testing.Openvcloud.ovc_master_hosted.OVC.b_extended.account_cloudspace_tests
+.. autoclass:: functional_testing.Openvcloud.ovc_master_hosted.OVC.b_extended.account_cloudspace_tests.ExtendedTests
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+.. automodule:: functional_testing.Openvcloud.ovc_master_hosted.OVC.b_extended.cloudspace_tests
+.. autoclass:: functional_testing.Openvcloud.ovc_master_hosted.OVC.b_extended.cloudspace_tests.CloudspaceTests
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Extended JumpScale Tests
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. automodule:: functional_testing.Openvcloud.ovc_master_hosted.OVC.b_extended.jumpscale_tests
+.. autoclass:: functional_testing.Openvcloud.ovc_master_hosted.OVC.b_extended.jumpscale_tests.JumpscaleTests
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+Extended Machine Tests
+^^^^^^^^^^^^^^^^^^^^^^
+.. automodule:: functional_testing.Openvcloud.ovc_master_hosted.OVC.b_extended.machine_tests
+.. autoclass:: functional_testing.Openvcloud.ovc_master_hosted.OVC.b_extended.machine_tests.ExtendedTests
     :members:
     :undoc-members:
     :show-inheritance:

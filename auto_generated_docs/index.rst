@@ -1,24 +1,18 @@
 Welcome to the OpenvCloud Test Suite Coverage Documentation
 ===========================================================
 
-Access Control List APIs Test Suite
+OVC API Test Suites
 -----------------------------------
 .. toctree::
-   :maxdepth: 2
+   :maxdepth:2
 
-   acl
+   OVC
 
-Openvcloud APIs Test Suite
---------------------------
-.. toctree::
-   :maxdepth: 2
-
-   ovc
 
 Portal Test Suite
 -----------------
 .. toctree::
-   :maxdepth: 2
+   :maxdepth:2
 
    portal
 

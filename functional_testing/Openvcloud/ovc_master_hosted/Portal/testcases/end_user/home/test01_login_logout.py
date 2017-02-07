@@ -2,7 +2,7 @@ import unittest
 import uuid
 from nose_parameterized import parameterized
 from functional_testing.Openvcloud.ovc_master_hosted.Portal.framework.framework import Framework
-
+import time
 
 #@unittest.skip("bug: #423")
 class LoginLogoutPortalTests(Framework):
@@ -29,13 +29,6 @@ class LoginLogoutPortalTests(Framework):
                          "Automate using the simple API.")
         self.assertEqual(self.element_link("machines_link"),
                         "%s/g8vdc/#/MachineDeck" % url)
-        self.assertTrue(self.wait_element("defense_shield_pic"))
-        self.assertEqual(self.get_text("defense_shield_label"),
-                         "Your private Defense Shield providing privacy and secure "
-                         "access to your Cloud Space.")
-        self.assertEqual(self.element_link("defense_shield_link"),
-                        "%s/g8vdc/#/NetworkDeck" % url)
-        self.lg('%s ENDED' % self._testID)
 
     def test002_logout_and_portal_title(self):
         """ PRTL-002
@@ -58,6 +51,7 @@ class LoginLogoutPortalTests(Framework):
         self.assertEqual(self.driver.title, 'OpenvCloud - Decks')
         self.lg('do logout, should succeed')
         self.Logout.End_User_Logout()
+        time.sleep(5)
         self.assertEqual(self.driver.title, 'OpenvCloud - Decks')
         self.lg('do login using admin username/password again, should succeed')
         self.Login.Login()

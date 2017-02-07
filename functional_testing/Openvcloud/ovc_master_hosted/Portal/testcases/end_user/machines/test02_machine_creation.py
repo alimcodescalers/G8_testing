@@ -8,58 +8,65 @@ class Read(Framework):
     def setUp(self):
         super(Read, self).setUp()
         self.Login.Login()
+        self.EUMachines.create_default_account_cloudspace(self.admin_username, self.account, self.cloudspace)
+
+    def tearDown(self):
+        self.EUMachines.delete_default_account_cloudspace(self.account, self.cloudspace)
+        self.Logout.Admin_Logout()
+        super(Read, self).tearDown()
+
 
 #     def test01_machine_get(self):
 #         """
 #         *Test case for get machine.*
-# 
+#
 #         **Test Scenario:**
-# 
+#
 #         #. create new machine, should succeed
 #         #. get machine, should succeed
 #         """
-# 
+#
 #     def test02_machine_list(self):
 #         """
 #         *Test case for list machine.*
-# 
+#
 #         **Test Scenario:**
-# 
+#
 #         #. create new machine, should succeed
 #         #. list machines should see 1 machine, should succeed
 #         """
 #         pass
-# 
+#
 #     def test03_machine_getConsoleUrl(self):
 #         """
 #         *Test case for getConsoleUrl machine.*
-# 
+#
 #         **Test Scenario:**
-# 
+#
 #         #. create new machine, should succeed
 #         #. getConsoleUrl machine, should succeed
 #         """
 #         pass
-# 
+#
 #     def test04_machine_listSnapshots(self):
 #         """
 #         *Test case for listSnapshots machine.*
-# 
+#
 #         **Test Scenario:**
-# 
+#
 #         #. create snapshot for a machine with the account user, should succeed
 #         #. try to listSnapshots of created machine with new user [user], should return 403
 #         #. add user to the machine with read access
 #         #. listSnapshots of created machine with new user [user], should succeed
 #         """
 #         pass
-# 
+#
 #     def test05_machine_getHistory(self):
 #         """
 #         *Test case for getHistory machine.*
-# 
+#
 #         **Test Scenario:**
-# 
+#
 #         #. create new machine, should succeed
 #         #. getHistory of created machine, should succeed
 #         """
@@ -67,14 +74,14 @@ class Read(Framework):
 
 
     '''
-    @parameterized.expand(["ubuntu_14_04",
-                           "ubuntu_15_10",
-                           "ubuntu_16_04",
-                           "windows_2012"
+    @parameterized.expand(["Ubuntu 16.04 x64",
+                           "Ubuntu 14.04 x64",
+                           "Ubuntu 15.10 x64",
+                           "Windows 2012r2 Standard"
                            ])
     '''
 
-    def test06_machine_create(self, image_name="ubuntu_14_04"):
+    def test06_machine_create(self, image_name="Ubuntu 16.04 x64"):
         """ PRTL-011
         *Test case for creating/deleting machine with all avaliable image name, random package and random disk size*
 
@@ -82,7 +89,7 @@ class Read(Framework):
 
         #. create new machine, should succeed
         #. delete the new machine
-        
+
         """
         self.lg('%s STARTED' % self._testID)
         self.lg(' create %s machine ' % self.machine_name)

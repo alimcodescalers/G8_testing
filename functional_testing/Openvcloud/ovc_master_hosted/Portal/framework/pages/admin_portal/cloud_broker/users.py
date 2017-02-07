@@ -7,7 +7,10 @@ class users():
         self.framework = framework
         self.LeftNavigationMenu = leftNavigationMenu(framework)
 
-    def IsAt(self):
+    def get_it(self):
+        self.LeftNavigationMenu.CloudBroker.Users()
+
+    def is_at(self):
         for temp in range(5):
             if self.framework.get_text("users_page") == "Users":
                 return True

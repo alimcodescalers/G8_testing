@@ -1,16 +1,17 @@
-## Auto-documentation with Sphinx
+## Setup a Read the Docs site for your Testing Suite
 
-For following tests auto-documentation generated with **Sphinx** is available:
+All documentation for following functional tests is embedded in the actual test code:
+
 - [OpenvCloud API Functional Tests](ovc_master_hosted/API/API.md)
-- [OpenvCloud Portal Functional Testing](remote_machine_hosted//portal/portal.md)
+- [OpenvCloud Portal Functional Testing](remote_machine_hosted/portal/portal.md)
 
-Click [here](http://85.255.197.106:8888/) to see an online version.
 
-Do the following to install a local version and keep it up to date:
+By following the steps outlined here below you can extracted all the embedded documentation from the actual test code and convert it into a [Read the Docs](http://docs.readthedocs.io/) site using the [Sphinx](https://en.wikipedia.org/wiki/Sphinx_(documentation_generator) documentation generator:
+
 
 - Make sure that **pip** and **virtualenv** are installed to your system:
 
-  ```shell
+  ```
   sudo apt-get install python-pip
   sudo pip install virtualenv
   ```
@@ -24,13 +25,37 @@ Do the following to install a local version and keep it up to date:
 - Run the build script:
 
   ```
+  cd G8_tests
   bash G8_testing/functional_testing/Openvcloud/tools/build_docs.sh
   ```
 
-- Open the generated **index.html** in your browser of choice:
+- Make sure you have installed a web server, for instance `nginx`:
 
   ```
-  firefox G8_testing/auto_generated_docs/_build/html/index.html
+  sudo apt-get update
+  sudo apt-get install nginx
   ```
+
+- Set the root directory to `_build/html/`, for `nginx` you do that by updating `sites-available/default`:
+
+  ```
+  sudo vi /etc/nginx/sites-available/default
+  ```
+
+  Change as following:
+
+  ```
+  #root /var/www/html;
+  root /opt/code/github/G8_testing/auto_generated_docs/_build/html;
+  ```      
+
+- Check the configuration change and restart the web server:
+
+  ```
+  sudo nginx -t
+  sudo systemctl restart nginx
+  ```
+
+- Open the generated **index.html** in your browser of choice:
 
   ![](sphinx.png)

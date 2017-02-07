@@ -4,15 +4,17 @@ import uuid
 import logging
 from testconfig import config
 from pytractor.exceptions import AngularNotFoundException
+from pytractor import webdriver
 from selenium.common.exceptions import TimeoutException, StaleElementReferenceException
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import Select
-from pytractor import webdriver
 from selenium.webdriver import FirefoxProfile
 from selenium.webdriver.support.wait import WebDriverWait
+from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from functional_testing.Openvcloud.ovc_master_hosted.Portal.framework import xpath
+import os
 
 
 class BaseTest(unittest.TestCase):
@@ -22,7 +24,9 @@ class BaseTest(unittest.TestCase):
         self.environment_storage = config['main']['location']
         self.admin_username = config['main']['admin']
         self.admin_password = config['main']['passwd']
+        self.GAuth_secret = config['main']['secret']
         self.browser = config['main']['browser']
+        self.remote_webdriver = config['main']['remote_webdriver']
         self.base_page = self.environment_url + '/ays'
         self.elements = xpath.elements.copy()
 
@@ -33,6 +37,9 @@ class BaseTest(unittest.TestCase):
         self._logger = logging.LoggerAdapter(logging.getLogger('portal_testsuite'),
                                              {'testid': self.shortDescription() or self._testID})
         self.lg('Testcase %s Started at %s' % (self._testID, self._startTime))
+        self.set_browser()
+
+        self.driver.set_window_size(1200, 800)
         self.wait = WebDriverWait(self.driver, 15)
 
         self.username = str(uuid.uuid4()).replace('-', '')[0:10]
@@ -51,32 +58,50 @@ class BaseTest(unittest.TestCase):
         We have to use API to tear down all accounts and users
         '''
 
-        # self.driver.quit()
+        self.driver.quit()
         if hasattr(self, '_startTime'):
             executionTime = time.time() - self._startTime
         self.lg('Testcase %s ExecutionTime is %s sec.' % (self._testID, executionTime))
 
+
     def set_browser(self):
-        if self.browser == 'chrome':
-            self.driver = webdriver.Chrome()
-        elif self.browser == 'firefox':
-            fp = FirefoxProfile()
-            fp.set_preference("browser.download.folderList", 2)
-            fp.set_preference("browser.download.manager.showWhenStarting", False)
-            fp.set_preference("browser.download.dir", os.path.expanduser("~") + "/Downloads/")
-            fp.set_preference("browser.helperApps.neverAsk.saveToDisk", "application/zip, application/octet-stream")
-            self.driver = webdriver.Firefox(firefox_profile=fp)
-        elif self.browser == 'ie':
-            self.driver = webdriver.Ie()
-        elif self.browser == 'opera':
-            self.driver = webdriver.Opera()
-        elif self.browser == 'safari':
-            self.driver = webdriver.Safari
+        if self.remote_webdriver:
+            if self.browser == 'chrome':
+                desired_capabilities = DesiredCapabilities.CHROME
+            else:
+                desired_capabilities = DesiredCapabilities.FIREFOX
+            self.driver = webdriver.Remote(command_executor=self.remote_webdriver + '/wd/hub', desired_capabilities=desired_capabilities)
         else:
-            self.fail("Invalid browser configuration [%s]" % self.browser)
+            if self.browser == 'chrome':
+                self.driver = webdriver.Chrome()
+            elif self.browser == 'firefox':
+                fp = FirefoxProfile()
+                fp.set_preference("browser.download.folderList", 2)
+                fp.set_preference("browser.download.manager.showWhenStarting", False)
+                fp.set_preference("browser.download.dir", os.path.expanduser("~") + "/Downloads/")
+                fp.set_preference("browser.helperApps.neverAsk.saveToDisk", "application/zip, application/octet-stream")
+                self.driver = webdriver.Firefox(firefox_profile=fp)
+                self.driver = webdriver.Firefox()
+            elif self.browser == 'ie':
+                self.driver = webdriver.Ie()
+            elif self.browser == 'opera':
+                self.driver = webdriver.Opera()
+            elif self.browser == 'safari':
+                self.driver = webdriver.Safari
+            else:
+                self.fail("Invalid browser configuration [%s]" % self.browser)
 
     def lg(self, msg):
         self._logger.info(msg)
+
+    def find_elements(self, element):
+        method = self.elements[element][0]
+        value = self.elements[element][1]
+        if method in ['XPATH', 'ID', 'LINK_TEXT', 'CLASS_NAME', 'NAME', 'TAG_NAME']:
+            elements_value = self.driver.find_elements(getattr(By, method), value)
+        else:
+            self.fail("This %s method isn't defined" % method)
+        return elements_value
 
     def find_element(self, element):
         method = self.elements[element][0]
@@ -112,11 +137,16 @@ class BaseTest(unittest.TestCase):
 
     def get_page(self, page_url):
         try:
-            self.driver.get(page_url)
             self.driver.ignore_synchronization = False
+            self.driver.get(page_url)
         except AngularNotFoundException:
             self.driver.ignore_synchronization = True
             self.driver.get(page_url)
+
+        screen_dimention = self.driver.get_window_size()
+        screen_size = screen_dimention['width'] * screen_dimention['height']
+        if screen_size < 1200*800:
+            self.driver.set_window_size(1200, 800)
 
     def element_is_enabled(self, element):
         return self.find_element(element).is_enabled()
@@ -182,6 +212,20 @@ class BaseTest(unittest.TestCase):
             self.fail("can't find %s element" % element)
         time.sleep(1)
 
+
+    def click_item(self, element, ID):
+        for temp in range(10):
+            method = self.elements[element][0]
+            value = self.elements[element][1]
+            try:
+                self.driver.find_element(getattr(By, method), value % tuple(ID)).click()
+                break
+            except:
+                time.sleep(1)
+        else:
+            self.fail("can't find %s element" % element)
+        time.sleep(1)
+
     def click_link(self, link):
         self.get_page(link)
 
@@ -212,7 +256,13 @@ class BaseTest(unittest.TestCase):
         return self.find_element(element).get_attribute(attribute)
 
     def get_url(self):
-        return self.driver.current_url
+        try:
+            curent_url = self.driver.current_url
+            self.driver.ignore_synchronization = False
+        except:
+            self.driver.ignore_synchronization = True
+            curent_url = self.driver.current_url
+        return curent_url
 
     def set_text(self, element, value):
         self.wait_until_element_located(element)
@@ -307,13 +357,14 @@ class BaseTest(unittest.TestCase):
             self.lg("Can't get the row cells")
             return False
 
-    def get_table_head_elements(self):
+    def get_table_head_elements(self, element):
         # This method return a table head elements.
         for _ in range(10):
             try:
-                thead= self.find_element('thead')
-                thead_row = thead.find_element_by_tag_name('tr')
-                return thead_row.find_elements_by_tag_name('th')
+                table = self.find_element(element)
+                thead = table.find_elements_by_tag_name('thead')
+                thead_row = thead[0].find_elements_by_tag_name('tr')
+                return thead_row[0].find_elements_by_tag_name('th')
             except:
                 time.sleep(0.5)
         else:

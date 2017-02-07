@@ -3,7 +3,6 @@ import unittest
 from functional_testing.Openvcloud.ovc_master_hosted.Portal.framework.framework import Framework
 
 
-@unittest.skip("bug#356")
 class AdminMenu(Framework):
     def __init__(self, *args, **kwargs):
         super(AdminMenu, self).__init__(*args, **kwargs)
@@ -19,6 +18,7 @@ class AdminMenu(Framework):
         *Test case to make sure that the admin portal menu work as expected*
 
         **Test Scenario:**
+
         #. click on the admin menu
         #. verify all items
         #. for every main item verify its items and behavior
@@ -27,9 +27,9 @@ class AdminMenu(Framework):
 
         compo_menu = ["At Your Service", "Cloud Broker", "Statistics", "Grid", "Storage", "System", "End User"]
         ays_menu = ['Services', 'Templates']
-        cloud_broker_menu = ['Accounts', 'Cloud Spaces', 'Locations', 'Stacks', 'Images', 'Public Networks',
-                             'Private Networks', 'Users', 'Groups', 'Virtual Machines', 'Software Versions']
-        grid_menu = ['Audits', 'Error Conditions', 'Jobs', 'Job Queues', 'JumpScript', 'Logs', 'Grid Nodes',
+        cloud_broker_menu = ['Accounts', 'Cloud Spaces', 'Locations', 'Stacks', 'Images', 'External Networks',
+                             'Private Networks', 'Users', 'Groups', 'Virtual Machines', 'Software Versions', 'Storage Routers']
+        grid_menu = ['Audits', 'Error Conditions', 'Jobs', 'Job Queues', 'JumpScripts', 'Logs', 'Grid Nodes',
                      'Status Overview', 'Virtual Machines']
 
         storage_menu = self.get_storage_list()
@@ -108,5 +108,3 @@ class AdminMenu(Framework):
         self.click("end_user")
         self.driver.get(self.get_url())
         self.assertEqual(self.get_text("end_user_home"),"Home")
-
-

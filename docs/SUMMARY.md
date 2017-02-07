@@ -1,11 +1,11 @@
 ## Summary
 
 * [Introduction](README.md)
-* [Auto-documentation with Sphinx](functional/openvcloud/sphinx.md))
 * [Functional Testing](functional/functional.md)
-  * [Hosted on ovc_master](functional/openvcloud/ovc_master_hosted/ovc_master_hosted.md)
+  * [Setup a Read the Docs site for your Testing Suite](functional/openvcloud/sphinx.md)
+  * [Hosted on the Master Node](functional/openvcloud/ovc_master_hosted/ovc_master_hosted.md)
     * [API Testing](functional/openvcloud/ovc_master_hosted/API/API.md)
-  * [Hosted on a Compute Node](functional/openvcloud/compute_node_hosted/compute_node_hosted.md)
+  * [Hosted on any Compute Node](functional/openvcloud/compute_node_hosted/compute_node_hosted.md)
     * [Network Configuration Test](functional/openvcloud/compute_node_hosted/1_network_config_test/1_network_config_test.md)
     * [Virtual Machines Limit Test](functional/openvcloud/compute_node_hosted/3_Env_Limit_test/3_Env_Limit_test.md)
     * [Cloud Spaces Limit Test](functional/openvcloud/compute_node_hosted/5_cloudspace_limits_test/5_cloudspace_limits_test.md)
@@ -13,7 +13,7 @@
     * [Node Maintenance Test](functional/openvcloud/compute_node_hosted/8_node_maintenance_test/8_node_maintenance_test.md)
     * [Snapshots Limit Test](functional/openvcloud/compute_node_hosted/9_vm_unlimited_snapshots/9_vm_unlimited snapshots.md)
   * [Hosted on any Remote Machine](functional/openvcloud/remote_machine_hosted/remote_machine_hosted.md)
-    * [Portal Testing](functional/openvcloud/remote_machine_hosted//portal/portal.md)
+    * [Portal Testing](functional/openvcloud/remote_machine_hosted/portal/portal.md)
 * [Performance Testing](performance/performance.md)
   * [UnixBench Test](performance/unixbench_test/unixbench_test.md)
   * [FIO Test](performance/fio_test/fio_test.md)

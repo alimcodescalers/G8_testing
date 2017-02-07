@@ -4,7 +4,7 @@ from ....utils.utils import BasicACLTest
 
 from JumpScale.portal.portal.PortalClient2 import ApiError
 from JumpScale.baselib.http_client.HttpClient import HTTPError
-
+import random
 
 class ExtendedTests(BasicACLTest):
 
@@ -35,9 +35,16 @@ class ExtendedTests(BasicACLTest):
         self.lg('2- get all available sizes to use, should succeed')
         sizes = self.api.cloudapi.sizes.list(cloudspaceId=self.cloudspace_id)
         self.lg('- using image [%s]' % image_name)
+        basic_sizes=[512,1024,4096,8192,16384,2048]
+        random_sizes= random.sample(basic_sizes,3)
         for size in sizes:
+            if size['memory'] not in random_sizes:
+                continue
             self.lg('- using image [%s] with memory size [%s]' % (image_name, size['memory']))
-            for disk in size['disks']:
+            disk_sizes=[10,20,50,100,250,500,1000,2000]
+            random_disks= random.sample(disk_sizes,3)
+
+            for disk in random_disks:
                 self.lg('- using image [%s] with memory size [%s] with disk '
                         '[%s]' % (image_name, size['memory'], disk))
                 machine_id = self.cloudapi_create_machine(cloudspace_id=self.cloudspace_id,

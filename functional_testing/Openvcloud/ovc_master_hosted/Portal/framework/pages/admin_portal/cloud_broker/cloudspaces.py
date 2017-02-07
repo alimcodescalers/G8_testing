@@ -36,7 +36,7 @@ class cloudspaces():
         self.framework.set_text("cloud_space_user_name", account_username)
 
         self.framework.click("cloud_space_confirm")
-
+        time.sleep(3)
         self.framework.set_text("cloud_space_search", self.framework.cloud_space_name)
         self.framework.wait_until_element_located_and_has_text("cloud_space_table_first_element_2",
                                                                self.framework.cloud_space_name)
@@ -58,6 +58,17 @@ class cloudspaces():
 
         self.framework.lg('open %s cloudspace' % cloudspace)
         self.open_cloudspace_page(cloudspace)
+
+        for _ in range(50):
+            if self.framework.get_text("cloudspace_page_status") in ["DEPLOYED", "VIRTUAL", "DESTROYED"]:
+                break
+            else:
+                time.sleep(2)
+                self.framework.get_page(self.framework.driver.current_url)
+        else:
+            self.framework.lg('"%s" cloudspace status : Deploying' % cloudspace)
+            return False
+
         if self.framework.get_text("cloudspace_page_status") != "DESTROYED":
             self.framework.lg('start deleting "%s" cloudspace' % cloudspace)
             self.framework.click('cloudspace_action')
@@ -68,7 +79,7 @@ class cloudspaces():
 
             self.framework.set_text('cloudspace_delete_reason', "Test")
             self.framework.click("cloudspace_delete_confirm")
-            time.sleep(0.5)
+            time.sleep(5)
             self.framework.get_page(self.framework.driver.current_url)
             for temp in range(10):
                 if self.framework.wait_until_element_located_and_has_text("cloudspace_page_status", "DESTROYED"):
@@ -80,5 +91,3 @@ class cloudspaces():
         else:
             self.framework.lg('"%s" cloudspace is already deleted' % cloudspace)
             return True
-
-

@@ -342,7 +342,6 @@ class Write(ACLMACHINE):
 
         self.lg('%s ENDED' % self._testID)
 
-    @unittest.skip("https://github.com/0-complexity/openvcloud/issues/354")
     def test005_machine_snapshot_create_rollback_delete(self):
         """ ACL-42
         *Test case for snapshot create/rollback/delete machine api with user has write access on machine level.*
