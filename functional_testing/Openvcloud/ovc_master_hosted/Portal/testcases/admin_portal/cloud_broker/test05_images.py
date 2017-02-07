@@ -151,11 +151,11 @@ class ImagesTests(Framework):
             #skip("bug #https://github.com/0-complexity/openvcloud/issues/696")
             if column == 0:
                 continue
-            self.set_text_columns("image_table_element_search" ,table_before[random_elemn][column], column+1 )
+            self.assertTrue(self.set_text_columns("image_table_element_search" ,table_before[random_elemn][column], column+1 ))
             time.sleep(1)
             table_after1=self.Tables.get_table_data('table cloudbroker image info')
             self.assertEqual(table_after1[0][column],table_before[random_elemn][column])
-            self.clear_text_columns("image_table_element_search",column+1)
+            self.assertTrue(self.clear_text_columns("image_table_element_search",column+1))
 
 
     def test05_stack_table_in_image_page_test(self):
@@ -391,11 +391,11 @@ class ImagesTests(Framework):
                 #skip("bug #https://github.com/0-complexity/openvcloud/issues/696")
                 if column == 4 :
                     continue
-                self.set_text_columns("stack_table_element_search" ,table_before[random_elemn][column], column+1 )
+                self.assertTrue(self.set_text_columns("stack_table_element_search" ,table_before[random_elemn][column], column+1 ))
                 table_after1=self.Tables.get_table_data('table cloudbroker stack info')
                 self.assertFalse( 'No data available in table' in table_after1[0] )
                 self.assertEqual(table_after1[0][column],table_before[random_elemn][column])
-                self.clear_text_columns("stack_table_element_search",column+1)
+                self.assertTrue(self.clear_text_columns("stack_table_element_search",column+1))
 
         self.lg('-try search boxes in VM table')
 

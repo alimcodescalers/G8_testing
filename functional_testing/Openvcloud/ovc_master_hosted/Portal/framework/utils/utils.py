@@ -258,9 +258,13 @@ class BaseTest(unittest.TestCase):
         value  = self.elements[element][1] % ID
         #self.wait_until_element_located(element)
         time.sleep(1)
-        element_value = self.driver.find_element(getattr(By, method), value)
-        element_value.send_keys(search_value)
-
+        try:
+            element_value = self.driver.find_element(getattr(By, method), value)
+            element_value.send_keys(search_value)
+            return True
+        except:
+            self.lg("can't locate element")
+            return False
 
 
     def clear_text(self,element):
@@ -274,10 +278,15 @@ class BaseTest(unittest.TestCase):
         value = self.elements[element][1] % ID
         #self.wait_until_element_located(element)
         time.sleep(1)
-        element_value = self.driver.find_element(getattr(By, method), value)
-        element_value.clear()
-        element_value.send_keys(Keys.ENTER)
-
+        try:
+            element_value = self.driver.find_element(getattr(By, method), value)
+            element_value.clear()
+            element_value.send_keys(Keys.ENTER)
+            return True
+        except:
+            self.lg("can't find element")
+            return False
+            
     def move_curser_to_element(self, element):
         element = self.elements[element]
         location = WebDriverWait(self.driver, 10).until(EC.visibility_of_element_located((By.XPATH, element)))
