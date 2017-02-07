@@ -188,6 +188,16 @@ class BaseTest(unittest.TestCase):
         else:
             return False
 
+    def wait_until_element_attribute_has_text(self, element, attribute, text):
+        for _ in range(10):
+            if element.get_attribute(attribute) == text:
+                return True
+            else:
+                time.sleep(2)
+        else:
+            return False
+
+
     def wait_unti_element_clickable(self, element):
         method = self.elements[element][0]
         value = self.elements[element][1]
