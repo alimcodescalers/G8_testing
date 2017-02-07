@@ -88,7 +88,7 @@ class level1_group(ACLACCOUNT):
         
         self.user1_api.cloudbroker.account.delete(accountId = accountId ,reason="test")
        
-    
+        
     def test002_level1_and_cloudspaces(self):
         """ ACL-62
         *test case for user with level1+admin groups dealing with cloudspaces.*
@@ -151,12 +151,14 @@ class level1_group(ACLACCOUNT):
         response= self.user1_api.cloudbroker.cloudspace.startVFW(cloudspaceId = cloudspaceId1)
         self.assertTrue(response)
         self.lg('- reset VFW')
-        try:
-            self.user1_api.cloudbroker.cloudspace.resetVFW(cloudspaceId = cloudspaceId1)
+    
+        #Skip https://github.com/0-complexity/openvcloud/issues/706
+        # try:
+        #    self.user1_api.cloudbroker.cloudspace.resetVFW(cloudspaceId = cloudspaceId1)
         
-        except ApiError as e :
-            self.lg('- expected error raised %s' % e.message)
-            self.assertEqual(e.message, '403 Forbbiden')
+        # except ApiError as e :
+        #    self.lg('- expected error raised %s' % e.message)
+        #   self.assertEqual(e.message, '403 Forbbiden')
         self.lg('- stop VFW')
         try:
             self.user1_api.cloudbroker.cloudspace.stopVFW(cloudspaceId = cloudspaceId1)
