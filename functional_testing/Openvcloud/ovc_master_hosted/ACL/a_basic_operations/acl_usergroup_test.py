@@ -153,7 +153,6 @@ class user_group(ACLACCOUNT):
         accounts_list = self.user1_api.cloudapi.accounts.list()
         self.assertEqual(len(accounts_list),1,'user have only one account')
         self.assertEqual(accounts_list[0]['id'],accountId)
-        
         self.lg(' 5- git list of cloudspaces ' )        
         cloudspaces_list = self.user1_api.cloudapi.cloudspaces.list()
         self.assertEqual(len(cloudspaces_list),1,'user have only one cloudspace')
