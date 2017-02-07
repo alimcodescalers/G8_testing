@@ -66,23 +66,45 @@ class Deployer(object):
             print('FAILURE: Could not find image.')
             sys.exit(1)
 
-        print('Creating template_space')
-        cloudspace_id = self.deploy_cloudspace('template_space')
+        print('Getting template_space')
+        cloudspace_id = next((space['id'] for space in self.ovc.api.cloudapi.cloudspaces.list() if space['name'] == 'template_space'), None)
+        if cloudspace_id is None:
+            print('Creating template_space')
+            cloudspace_id = self.deploy_cloudspace('template_space')
+
         size_id = self.get_size_id(cloudspace_id)
-        machine = self.safe_deploy_vm('template_vm', cloudspace_id, image_id, size_id=size_id)
-        cloudspace = self.ovc.api.cloudapi.cloudspaces.get(cloudspaceId=cloudspace_id)
-        print('Installing requirements')
-        self.install_req(machine, cloudspace)
-        print('Stopping template vm')
-        self.ovc.api.cloudapi.machines.stop(machineId=machine['id'])
-        print('Making template')
-        templateid = self.ovc.api.cloudapi.machines.createTemplate(machineId=machine['id'], templatename=TEMPLATE_NAME)
-        print('Remove portforwarding from templatevm')
-        self.ovc.api.cloudapi.portforwarding.deleteByPort(cloudspaceId=cloudspace_id,
-                                                          publicIp=cloudspace['externalnetworkip'],
-                                                          publicPort=machine['public_port'],
-                                                          proto='tcp')
-        return templateid
+
+        print('Getting template_vm')
+        machine_id = next((machine['id'] for machine in self.ovc.api.cloudapi.machines.list(cloudspaceId=cloudspace_id) if machine['name'] == 'template_vm'), None)
+        if machine_id is None:
+            print('Getting template_vm')
+            machine = self.safe_deploy_vm('template_vm', cloudspace_id, image_id, size_id=size_id)
+            machine_id = machine['id']
+            cloudspace = self.ovc.api.cloudapi.cloudspaces.get(cloudspaceId=cloudspace_id)
+            print('Installing requirements')
+            while True:
+                try:
+                    self.install_req(machine, cloudspace)
+                    break
+                except:
+                    print('Retrying ...')
+                    gevent.sleep(5)
+            print('Remove portforwarding from templatevm')
+            self.ovc.api.cloudapi.portforwarding.deleteByPort(cloudspaceId=cloudspace_id,
+                                                              publicIp=cloudspace['externalnetworkip'],
+                                                              publicPort=machine['public_port'],
+                                                              proto='tcp')
+            print('Stopping template vm')
+            self.ovc.api.cloudapi.machines.stop(machineId=machine_id)
+            print('Creating snapshot')
+            self.ovc.api.cloudapi.machines.snapshot(machineId=machine_id,
+                                                    name=TEMPLATE_NAME)
+        print('Getting snapshot')
+        snapshot_timestamp = next((snapshot['epoch'] for snapshot in self.ovc.api.cloudapi.machines.listSnapshots(machineId=machine_id) if snapshot['name'] == TEMPLATE_NAME), None)
+        if snapshot_timestamp is None:
+            print('FAILURE: Found template vm without template snapshot')
+            sys.exit(1)
+        return machine_id, snapshot_timestamp
 
     def get_size_id(self, cloudspace_id):
         sizes = self.ovc.api.cloudapi.sizes.list(cloudspaceId=cloudspace_id)
@@ -113,10 +135,10 @@ class Deployer(object):
                            account['login'], cloudspace['externalnetworkip'])
         run_cmd_via_gevent(cmd)
 
-    def safe_deploy_vm(self, name, cloudspace_id, image_id, datadisk=None, iops=None, size_id=None):
+    def safe_deploy_vm(self, name, cloudspace_id, template_details, datadisk=None, iops=None, size_id=None):
         while True:
             try:
-                return self.deploy_vm(name, cloudspace_id, image_id, datadisk, iops, size_id)
+                return self.deploy_vm(name, cloudspace_id, template_details, datadisk, iops, size_id)
             except Exception as e:
                 templ = "Failed creating machine {} in cloudspace {}, \nError: {}\nretrying ..."
                 logger.error(templ.format(name, cloudspace_id, str(e)))
@@ -134,7 +156,7 @@ class Deployer(object):
                         logger.error(templ.format(name, cloudspace_id, str(e)))
                         gevent.sleep(10)
 
-    def deploy_vm(self, name, cloudspace_id, image_id, datadisk=None, iops=None, size_id=None):
+    def deploy_vm(self, name, cloudspace_id, template_details, datadisk=None, iops=None, size_id=None):
         # Listing sizes
         if size_id is None:
             raise ValueError("No matching size for vm found.")
@@ -144,19 +166,39 @@ class Deployer(object):
 
         # Create vm
         with concurrency:
-            print("Creating {}".format(name))
             datadisks = [int(datadisk)] if datadisk else []
-            vm_id = self.ovc.api.cloudapi.machines.create(cloudspaceId=cloudspace_id,
-                                                          name=name,
-                                                          description=name,
-                                                          sizeId=size_id,
-                                                          imageId=image_id,
-                                                          disksize=options.bootdisk,
-                                                          datadisks=datadisks)
+            if not isinstance(template_details, tuple):
+                print("Creating {}".format(name))
+                vm_id = self.ovc.api.cloudapi.machines.create(cloudspaceId=cloudspace_id,
+                                                              name=name,
+                                                              description=name,
+                                                              sizeId=size_id,
+                                                              imageId=template_details,
+                                                              disksize=options.bootdisk,
+                                                              datadisks=datadisks)
+                limitIOdone = False
+            else:
+                print("Cloning {}".format(name))
+                machine_id, snapshot_timestamp = template_details
+                vm_id = self.ovc.api.cloudapi.machines.clone(machineId=machine_id,
+                                                             name=name,
+                                                             cloudspaceId=cloudspace_id,
+                                                             snapshotTimestamp=snapshot_timestamp)
+                print("Adding data disk to {}".format(name))
+                disk_id = self.ovc.api.cloudapi.machines.addDisk(machineId=vm_id,
+                                                                 diskName="data",
+                                                                 description="workhorse",
+                                                                 size=int(datadisk),
+                                                                 type="D")
+                if iops is not None:
+                    print("Set limit of iops to {} on disk {}({}) for machine {}"
+                                .format(options.iops, "data", disk_id, name))
+                    self.ovc.api.cloudapi.disks.limitIO(diskId=disk_id, iops=iops)
+                    limitIOdone = True
 
         # limit the IOPS on all the disks of the vm
         machine = safe_get_vm(self.ovc, concurrency, vm_id)
-        if iops is not None:
+        if iops is not None and not limitIOdone:
             for disk in machine['disks']:
                 if disk['type'] != 'D':
                     continue
@@ -228,7 +270,7 @@ def main(options):
 
     deployer = Deployer(options)
     # Can we find the image we need ?
-    templateimage_id = deployer.create_performance_test_image()
+    template_details = deployer.create_performance_test_image()
 
     jobs = list()
     print('Checking if we need more cloudspaces')
@@ -251,7 +293,9 @@ def main(options):
             if vm['name'] in expected_vms:
                 expected_vms.remove(vm['name'])
         size_id = deployer.get_size_id(cloudspace_id)
-        jobs.extend([gevent.spawn(deployer.safe_deploy_vm, vm_name, cloudspace_id, templateimage_id, options.datadisk, options.iops, size_id)
+        jobs.extend([gevent.spawn(deployer.safe_deploy_vm, vm_name, cloudspace_id,
+                                  template_details, options.datadisk, options.iops,
+                                  size_id)
                      for vm_name in expected_vms])
     gevent.joinall(jobs)
 
