@@ -497,6 +497,10 @@ class Client:
         uri = uri + build_query_string(query_params)
         return self.session.delete(uri)
 
+
+
+
+
     def CreateNewOrganization(self, data, query_params=None):
         """
         Create a new organization. 1 user should be in the owners list. Validation is performed to check if the securityScheme allows management on this user.
@@ -505,6 +509,24 @@ class Client:
         uri = self.url + "organizations"
         uri = uri + build_query_string(query_params)
         return self.session.post(uri, json=data)
+
+    def CreateNewSubOrganization(self, data, globalid, query_params=None):
+        """
+        Create a new suborganization.
+        It is method for POST /organizations/{globalid}
+        """
+        uri = self.url + "organizations/"+globalid
+        uri = uri + build_query_string(query_params)
+        return self.session.post(uri, json=data)
+
+    def UpdateOrganization(self, data, globalid, query_params=None):
+        """
+        Update organization info
+        It is method for PUT /organizations/{globalid}
+        """
+        uri = self.url + "organizations/"+globalid
+        uri = uri + build_query_string(query_params)
+        return self.session.put(uri, json=data)
 
     def DeleteOrganization(self, globalid, query_params=None):
         """
@@ -524,23 +546,14 @@ class Client:
         uri = uri + build_query_string(query_params)
         return self.session.get(uri)
 
-    def CreateNewSubOrganization(self, data, globalid, query_params=None):
+    def GetOrganizationUsers(self, globalid, query_params=None):
         """
-        Create a new suborganization.
-        It is method for POST /organizations/{globalid}
+        Get organization info
+        It is method for GET /organizations/{globalid}/users
         """
-        uri = self.url + "/organizations/"+globalid
+        uri = self.url + "organizations/"+globalid+"/users"
         uri = uri + build_query_string(query_params)
-        return self.session.post(uri, data)
-
-    def UpdateOrganization(self, data, globalid, query_params=None):
-        """
-        Update organization info
-        It is method for PUT /organizations/{globalid}
-        """
-        uri = self.url + "organizations/"+globalid
-        uri = uri + build_query_string(query_params)
-        return self.session.put(uri, json=data)
+        return self.session.get(uri)
 
     def GetOrganizationTree(self, globalid, query_params=None):
         """
@@ -558,6 +571,14 @@ class Client:
         uri = self.url + "organizations/"+globalid+"/members"
         uri = uri + build_query_string(query_params)
         return self.session.post(uri, json=data)
+
+    def UpdateOrganizationMemberShip(self, data, globalid, query_params=None):
+        """
+        Update an organization membership
+        It is method for PUT /organizations/{globalid}/members
+        """
+        uri = self.url + "organizations/"+globalid+"/members"
+        return self.session.put(uri, json=data)
 
     def RemoveOrganizationMember(self, username, globalid, query_params=None):
         """
@@ -595,7 +616,7 @@ class Client:
         uri = uri + build_query_string(query_params)
         return self.session.get(uri)
 
-    def CreateOrganizationContracty(self, data, globalid, query_params=None):
+    def CreateOrganizationContracts(self, data, globalid, query_params=None):
         """
         Create a new contract.
         It is method for POST /organizations/{globalid}/contracts
@@ -665,7 +686,6 @@ class Client:
         uri = self.url + "organizations/"+globalid+"/apikeys/"+label
         uri = uri + build_query_string(query_params)
         return self.session.delete(uri)
-
 
     def GetOrganizationRegistries(self, globalid, query_params=None):
         """
@@ -738,6 +758,74 @@ class Client:
         uri = self.url + "/companies"
         uri = uri + build_query_string(query_params)
         return self.session.get(uri)
+
+    def UpdateOrganizationOrgMemberShip(self, data, globalid, query_params=None):
+        """
+        Update the membership status of an organization
+        It is method for PUT /organizations/{globalid}/orgmembers
+        """
+        uri = self.url + "organizations/"+globalid+"/orgmembers"
+        return self.session.put(uri, json=data)
+
+    def SetOrgMember(self, data, globalid, query_params=None):
+        """
+        Add another organization as a member of this one
+        It is method for POST /organizations/{globalid}/orgmembers
+        """
+        uri = self.url + "organizations/"+globalid+"/orgmembers"
+        return self.session.post(uri, json=data)
+
+    def DeleteOrgMember(self, globalid2, globalid, query_params=None):
+        """
+        Remove an organization as a member
+        It is method for DELETE /organizations/{globalid}/orgmembers/{globalid2}
+        """
+        uri = self.url + "organizations/"+globalid+"/orgmembers/"+globalid2
+        return self.session.delete(uri)
+
+    def SetOrgOwner(self, data, globalid, query_params=None):
+        """
+        Add another organization as an owner of this one
+        It is method for POST /organizations/{globalid}/orgowners
+        """
+        uri = self.url + "organizations/"+globalid+"/orgowners"
+        return self.session.post(uri, json=data)
+
+    def DeleteOrgOwner(self, globalid2, globalid, query_params=None):
+        """
+        Remove an organization as an owner
+        It is method for DELETE /organizations/{globalid}/orgowners/{globalid2}
+        """
+        uri = self.url + "organizations/"+globalid+"/orgowners/"+globalid2
+        return self.session.delete(uri)
+
+
+    def GetOrganizationLogo(self, globalid):
+        """
+        Get the Logo from an organization
+        It is method for GET organizations/{globalid}/logo
+        """
+        uri = self.url + "organizations/"+globalid+"/logo"
+        return self.session.get(uri)
+
+
+    def SetOrganizationLogo(self, data, globalid):
+        """
+        Set the organization Logo for the organization
+        It is method for PUT organizations/{globalid}/logo
+        """
+        uri = self.url + "organizations/"+globalid+"/logo"
+        return self.session.put(uri, json=data)
+
+
+    def DeleteOrganizationLogo(self, globalid):
+        """
+        Removes the Logo from an organization
+        It is method for DELETE organizations/{globalid}/logo
+        """
+        uri = self.url + "organizations/"+globalid+"/logo"
+        return self.session.delete(uri)
+
 
     def CreateCompany(self, data, query_params=None):
         """
@@ -922,3 +1010,19 @@ class Client:
         uri = self.url + "organizations/"+globalid+"/description/"+langkey
         uri = uri + build_query_string(query_params)
         return self.session.delete(uri)
+
+    def GetTwoFA(self, globalid, query_params=None):
+        """
+        It is method for GET organizations/{globalid}/2fa/validity
+        """
+        uri = self.url + "organizations/"+globalid+"/2fa/validity"
+        uri = uri + build_query_string(query_params)
+        return self.session.get(uri)
+
+    def UpdateTwoFA(self, data, globalid, query_params=None):
+        """
+        It is method for PUT organizations/{globalid}/2fa/validity
+        """
+        uri = self.url + "organizations/"+globalid+"/2fa/validity"
+        uri = uri + build_query_string(query_params)
+        return self.session.put(uri, json=data)

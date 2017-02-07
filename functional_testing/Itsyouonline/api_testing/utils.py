@@ -48,7 +48,15 @@ class BaseTest(unittest.TestCase):
         self.client_2.oauth.login_via_client_credentials(client_id=self.user_2_applicationid,client_secret=self.user_2_secret)
 
     def random_value(self, size=10):
-        return str(str(uuid.uuid4())+str(uuid.uuid4())).replace('-', '')[0:size]
+        value = ''
+        n = (size/32) or 1
+        if (size % 32) > 0:
+            n+=1
+        for i in range(n):
+            value += str(uuid.uuid4()).replace('-', '')
+        return value[:size]
+
+        # return str(str(uuid.uuid4())+str(uuid.uuid4())).replace('-', '')[0:size]
 
     def get_totp_code(self, secret):
         totp = pyotp.TOTP(secret)

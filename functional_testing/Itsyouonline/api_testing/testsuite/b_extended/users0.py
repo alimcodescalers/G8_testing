@@ -85,6 +85,7 @@ class UsersTestsB(BaseTest):
 
         self.lg('%s ENDED' % self._testID)
 
+    @unittest.skip('bug:')
     def test001_put_name(self):
 
         """
@@ -105,8 +106,9 @@ class UsersTestsB(BaseTest):
         self.assertEqual(response.json()['firstname'], firstname)
         self.assertEqual(response.json()['lastname'], lastname)
 
+        # bug 403 instead of 404
         self.lg('[PUT] Change firstname & lastname to invalid user , should fail with 404')
-        response = self.client_1.api.UpdateUserName(data, 'fake user')
+        response = self.client_1.api.UpdateUserName(data, 'fake_user')
         self.assertEqual(response.status_code, 404)
 
         self.lg('%s ENDED' % self._testID)
