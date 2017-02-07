@@ -4,7 +4,7 @@ API Test Suites
 -------------------------
 
 
-ACL API Test suite
+ACL API Test Suite
 ******************
 
 Basic Tests
@@ -31,7 +31,7 @@ Basic Accounts Tests
     :undoc-members:
     :show-inheritance:
 
-Basic Cloud spaces Tests
+Basic Cloud Spaces Tests
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. automodule:: functional_testing.Openvcloud.ovc_master_hosted.ACL.a_basic_operations.acl_cloudspace_test
@@ -96,7 +96,7 @@ Extended Accounts Tests
     :undoc-members:
     :show-inheritance:
 
-Extended Cloud spaces Tests
+Extended Cloud Spaces Tests
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. automodule:: functional_testing.Openvcloud.ovc_master_hosted.ACL.b_try_operations.acl_cloudspace_test
@@ -137,8 +137,8 @@ Extended Virtual Machines Tests
     :show-inheritance:
 
 
-Other API Tests
-***************
+Other API Test Suite
+********************
 Used to test the basic cloud_api for the openvcloud component
 
 Basic Tests
