@@ -18,7 +18,7 @@ class Oauth:
             raise RuntimeError("Failed to login")
         token = data.json()['access_token']
         self.session.headers['Authorization'] = 'token {token}'.format(token=token)
-
+        self.session.headers['Content-Type'] = "application/json"
 
 class Client:
     def __init__(self, env_url):
