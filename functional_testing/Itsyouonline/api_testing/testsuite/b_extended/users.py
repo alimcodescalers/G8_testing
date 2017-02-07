@@ -60,7 +60,7 @@ class UsersTestsB(BaseTest):
     def test000_get_user_info(self):
 
         """
-            #test000_get_user_info
+            #Test 000_get_user_info
             - Get username information using /{username}, should succeed with 200
             - Get username information using /{username}/info, should succeed with 200
         """
@@ -89,7 +89,7 @@ class UsersTestsB(BaseTest):
     def test001_put_name(self):
 
         """
-            #test001_put_name
+            #Test 001_put_name
             - Change firstname & lastname with valid user, should succeed with 204
             - Change firstname & lastname with invalid user, should fail with 404
         """
@@ -115,7 +115,7 @@ class UsersTestsB(BaseTest):
 
     def test002_put_password(self):
         """
-            #test002_put_password
+            #Test 002_put_password
             - Change password with valid current password, should succeed with 204
             - Change password with valid current password again, should succeed with 204
             - Change password with wrong current password, should fail with 422
@@ -159,7 +159,7 @@ class UsersTestsB(BaseTest):
     def test003_get_post_put_delete_email_address(self):
 
         """
-            #test003_get_post_put_delete_email_address
+            #Test 003_get_post_put_delete_email_address
             - Create new email address, should succeed with 201
             - Get user\'s email addresses, should succeed with 200
             - Create new email address with label already exists, should fail with 409
@@ -270,7 +270,7 @@ class UsersTestsB(BaseTest):
 
     def test004_get_post_put_delete_phonenumber(self):
         """
-            #test004_get_post_put_delete_phonenumber
+            #Test 004_get_post_put_delete_phonenumber
             - Register a new phonenumber (1), should succeed with 201
             - Register a new phonenumber (2), should succeed with 201
             - Get user\'s phonenumbers, should succeed with 200
@@ -453,7 +453,7 @@ class UsersTestsB(BaseTest):
 
     def test005_get_post_put_delete_address(self):
         """
-        #test005_get_post_put_delete_address
+        #Test 005_get_post_put_delete_address
         - Register a new address (1), should succeed with 201
         - Register a new address (2), should succeed with 201
         - Get user\'s addresses, should succeed with 200
@@ -596,7 +596,7 @@ class UsersTestsB(BaseTest):
     @unittest.skip('bug #415')
     def test006_get_post_put_delete_banks(self):
         """
-            #test006_get_post_put_delete_banks
+            #Test 006_get_post_put_delete_banks
             - Register a new bank account (1), should succeed with 201
             - Register a new bank account (2), should succeed with 201
             - Get user\'s bank accounts, should succeed with 200
@@ -725,7 +725,7 @@ class UsersTestsB(BaseTest):
 
     def test007_get_post_put_delete_publickey(self):
         """
-            #test007_get_post_put_delete_publickey
+            #Test 007_get_post_put_delete_publickey
             - Register a new publickey (1), should succeed with 201
             - Register a new publickey (2), should succeed with 201
             - Get user\'s publickeys, should succeed with 200
@@ -844,7 +844,7 @@ class UsersTestsB(BaseTest):
     def test008_get_post_put_delete_apikeys(self):
 
         """
-        #test008_get_post_put_delete_apikeys
+        #Test 008_get_post_put_delete_apikeys
         - Register a new apikey (1), should succeed with 201
         - Register a new apikey (2), should succeed with 201
         - Get user\'s apikeys, should succeed with 200
@@ -953,7 +953,7 @@ class UsersTestsB(BaseTest):
     @unittest.skip('bug: #407 #424')
     def test009_get_post_put_delete_digitalwallet(self):
         """
-            #test009_get_post_put_delete_digitalwallet
+            #Test 009_get_post_put_delete_digitalwallet
             - Register a new digital wallet (1), should succeed with 201
             - Register a new digital wallet (2), should succeed with 201
             - Get user\'s digital wallets, should succeed with 200
@@ -1082,7 +1082,7 @@ class UsersTestsB(BaseTest):
     def test010_get_post_delete_organizations_auth(self):
 
         """
-            #test010_get_post_delete_organizations_auth
+            #Test 010_get_post_delete_organizations_auth
             * Same steps for owner and member roles
             - User_1 send invitation to user_2 to join org_1, should succeed with 201
             - User_2 reject the invitation, should succeed with 204
@@ -1208,7 +1208,7 @@ class UsersTestsB(BaseTest):
 
     def test011_get_post_delete_totp_twofamethods(self):
         """
-            #test011_get_post_delete_totp_twofamethods
+            #Test 011_get_post_delete_totp_twofamethods
             - Get totp secret, should succeed with 200
             - Set totp with invalid secret, should fail with 422
             - Set totp with valid secret and invalid code, should fail with 422
@@ -1307,7 +1307,7 @@ class UsersTestsB(BaseTest):
     def test012_delete_facebook_account(self):
 
         """
-            #test012_delete_facebook_account
+            #Test 012_delete_facebook_account
             - Check if facebook account exists or not, should succeed with 200
             - Delete facebook account if exists, should succeed with 204
             - Check if the facebook account is deleted, should succeed with 200
@@ -1337,7 +1337,7 @@ class UsersTestsB(BaseTest):
 
     def test013_delete_github_account(self):
         """
-            #test013_delete_github_account
+            #Test 013_delete_github_account
             - Check if github account exists or not, should succeed with 200
             - Delete github account if exists, should succeed with 204
             - Check if the github account is deleted, should succeed with 200
@@ -1370,7 +1370,7 @@ class UsersTestsB(BaseTest):
     @unittest.skip('bug 411')
     def test014_create_contract(self):
         """
-        #test014_create_contract
+        #Test 014_create_contract
         - Get user\'s contracts, should succeed with 200
         - Create a new contract, should succeed with 201
         - Create a new contract with unauthorized user, should fail with 401
@@ -1401,7 +1401,7 @@ class UsersTestsB(BaseTest):
     def test015_get_post_delete_registry(self):
 
         """
-            #test015_get_post_delete_registry
+            #Test 015_get_post_delete_registry
             - Register a new registry (1), should succeed with 201
             - Register a new registry (2), should succeed with 201.
             - Get user'\s registries, should succeed with 200
