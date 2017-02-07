@@ -77,7 +77,7 @@ Admin Portal
 ============
 used to test the Admin user portal (writen with wiki)
 
-APIs page
+APIs Page
 ^^^^^^^^^
 
 .. automodule:: functional_testing.Openvcloud.ovc_master_hosted.Portal.testcases.admin_portal.apis.test01_apis
