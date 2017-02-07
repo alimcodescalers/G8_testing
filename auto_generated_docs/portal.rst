@@ -86,7 +86,7 @@ APIs Page
     :undoc-members:
     :show-inheritance:
 
-Cloud Brocker Portal
+Cloud Broker Portal
 ^^^^^^^^^^^^^^^^^^^^
 
 .. automodule:: functional_testing.Openvcloud.ovc_master_hosted.Portal.testcases.admin_portal.cloud_broker.test01_accounts

@@ -64,7 +64,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'OpenVCloud Testsuite'
+project = u'OpenvCloud Test Suite'
 copyright = u'2016, CodeScalers'
 author = u'2016, CodeScalers'
 
@@ -287,8 +287,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'OpenVCloudTestsuite', u'OpenVCloud Testsuite Documentation',
-     author, 'OpenVCloudTestsuite', 'One line description of project.',
+    (master_doc, 'OpenvCloudTestSuite', u'OpenvCloud Test Suite Documentation',
+     author, 'OpenvCloudTestSuite', 'One line description of project.',
      'Miscellaneous'),
 ]
 
