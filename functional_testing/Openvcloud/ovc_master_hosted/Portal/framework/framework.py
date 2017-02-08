@@ -12,6 +12,7 @@ from functional_testing.Openvcloud.ovc_master_hosted.Portal.framework.utils.util
 from functional_testing.Openvcloud.ovc_master_hosted.Portal.framework.workflow.login import login
 from functional_testing.Openvcloud.ovc_master_hosted.Portal.framework.workflow.logout import logout
 from functional_testing.Openvcloud.ovc_master_hosted.Portal.framework.workflow.tables import tables
+from functional_testing.Openvcloud.ovc_master_hosted.Portal.framework.pages.admin_portal.cloud_broker.Images import images
 
 class Framework(BaseTest):
     def __init__(self, *args, **kwargs):
@@ -22,7 +23,7 @@ class Framework(BaseTest):
         self.Accounts = accounts(self)
         self.CloudSpaces = cloudspaces(self)
         self.VirtualMachines = virtualmachines(self)
-
+        self.Images = images(self)
         #Pages.AdminPortal.grid
         self.ErrorConditions = errorConditions(self)
         self.StatusOverview = statusOverview(self)
@@ -39,4 +40,3 @@ class Framework(BaseTest):
         self.Login = login(self)
         self.Logout = logout(self)
         self.Tables = tables(self)
-
