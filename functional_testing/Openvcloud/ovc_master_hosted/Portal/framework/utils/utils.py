@@ -75,12 +75,12 @@ class BaseTest(unittest.TestCase):
             if self.browser == 'chrome':
                 self.driver = webdriver.Chrome()
             elif self.browser == 'firefox':
-                fp = FirefoxProfile()
-                fp.set_preference("browser.download.folderList", 2)
-                fp.set_preference("browser.download.manager.showWhenStarting", False)
-                fp.set_preference("browser.download.dir", os.path.expanduser("~") + "/Downloads/")
-                fp.set_preference("browser.helperApps.neverAsk.saveToDisk", "application/zip, application/octet-stream")
-                self.driver = webdriver.Firefox(firefox_profile=fp)
+                #fp = FirefoxProfile()
+                #fp.set_preference("browser.download.folderList", 2)
+                #fp.set_preference("browser.download.manager.showWhenStarting", False)
+                #fp.set_preference("browser.download.dir", os.path.expanduser("~") + "/Downloads/")
+                #fp.set_preference("browser.helperApps.neverAsk.saveToDisk", "application/zip, application/octet-stream")
+                #self.driver = webdriver.Firefox(firefox_profile=fp)
                 self.driver = webdriver.Firefox()
             elif self.browser == 'ie':
                 self.driver = webdriver.Ie()
