@@ -67,7 +67,7 @@ docker run -d -p 4444:4444 --name selenium-hub selenium/hub:3.0.1-fermium
 docker run -d --name chrome-node --link selenium-hub:hub selenium/node-chrome:3.0.1-fermium
 docker run -d --name firefox-node --link selenium-hub:hub selenium/node-firefox:3.0.1-fermium
 ```
-Now you can access this remote server via http://localhost:4444 and you can execute test cases on firefox-node and chrome-node.
+Now you can access this remote server via **http://localhost:4444** and you can execute test cases on firefox-node and chrome-node. If you wanna connect this hub from your machine, You have to do a port forward from the cloudspace to the hub machine and then the remote webdriver will be **http://< clocud_space_ip>:4444**
 
 #### 3.2.2 Execution Guide:
 - After making sure your SSH private key is loaded by ssh-agent, clone the **G8_testing** repository:
