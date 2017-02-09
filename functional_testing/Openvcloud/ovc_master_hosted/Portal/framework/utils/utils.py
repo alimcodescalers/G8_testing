@@ -314,7 +314,7 @@ class BaseTest(unittest.TestCase):
         except:
             self.lg("can't find element")
             return False
-            
+
     def move_curser_to_element(self, element):
         element = self.elements[element]
         location = WebDriverWait(self.driver, 10).until(EC.visibility_of_element_located((By.XPATH, element)))
@@ -371,18 +371,11 @@ class BaseTest(unittest.TestCase):
             self.fail("this %s item isn't exist in this url: %s" % (text_item, self.get_url()))
 
     def get_storage_list(self):
-        item = ''
-        storage_menu = []
-        for _ in self.environment_storage:
-            if _ != "," and self.environment_storage.index(_) != len(self.environment_storage) - 1:
-                item += _
-            elif self.environment_storage.index(_) == len(self.environment_storage) - 1:
-                item += _
-                storage_menu.append(item)
-            else:
-                storage_menu.append(item)
-                item = ''
-        return storage_menu
+        locations = self.environment_storage.split(',')
+        if len(locations) < 2:
+            return []
+        else:
+            return locations
 
     def get_table_rows(self,element= None):
         'This method return all rows in the current page else return false'
