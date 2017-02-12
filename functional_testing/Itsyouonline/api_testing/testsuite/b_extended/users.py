@@ -11,29 +11,18 @@ class UsersTestsB(BaseTest):
         super(UsersTestsB, self).setUp()
         self.SetTotp(self.user_1)
 
-        org_1_data = {"dns":[],
-                      "globalid":self.organization_1,
-                      "members":[],
-                      "owners":[self.user_1],
-                      "publicKeys":[],
-                      "secondsvalidity":0,
-                      "orgowners":[],
-                      "orgmembers":[],
-                      "requiredscopes":[]}
-
-        org_2_data = {"dns":[],
-                      "globalid":self.organization_2,
-                      "members":[],
-                      "owners":[self.user_1, self.user_2],
-                      "publicKeys":[],
-                      "secondsvalidity":0,
-                      "orgowners":[],
-                      "orgmembers":[],
-                      "requiredscopes":[]}
-
+        org_1_data = {"globalid":self.organization_1}
         response = self.client_1.api.CreateNewOrganization(org_1_data)
         self.assertEqual(response.status_code, 201)
+        org_2_data = {"globalid":self.organization_2}
         response = self.client_2.api.CreateNewOrganization(org_2_data)
+        self.assertEqual(response.status_code, 201)
+        ## user_2 invite user_1 to be owner
+        data = {'searchstring': self.user_1}
+        response = self.client_2.api.AddOrganizationOwner(data, self.organization_2)
+        self.assertEqual(response.status_code, 201)
+        ## user_1 accept invitation
+        response = self.client_1.api.AcceptMembership(self.organization_2 , 'owner', self.user_1)
         self.assertEqual(response.status_code, 201)
 
     def tearDown(self):
@@ -1078,7 +1067,7 @@ class UsersTestsB(BaseTest):
         response = self.client_1.api.DeleteUserDigitalWallet('fake_digital_wallet', self.user_1)
         self.assertEqual(response.status_code, 404)
 
-    @unittest.skip('bug: #411 #414')
+    @unittest.skip('bug: #414')
     def test010_get_post_delete_organizations_auth(self):
 
         """
@@ -1146,8 +1135,7 @@ class UsersTestsB(BaseTest):
             self.assertIn(self.organization_1, response.json()[role])
 
             self.lg('[PUT] Modify certain information for user_2 to be granted to org_1, should succeed with 201')
-
-            response = self.client_2.api.GetEmailAddresses(self.user_1)
+            response = self.client_2.api.GetEmailAddresses(self.user_2)
             self.assertEqual(response.status_code, 200)
             label = response.json()[0]['label']
 
@@ -1192,10 +1180,9 @@ class UsersTestsB(BaseTest):
             response = self.client_2.api.GetUserOrganizations(self.user_2)
             self.assertNotIn(self.organization_1, response.json()[role])
 
-            #bug 411
             self.lg('[DELETE] Unothorized user (user_1) try to make user_2 leave org_2, should fail with 401')
             response = self.client_1.api.LeaveOrganization(self.organization_2, self.user_2)
-            self.assertEqual(response.status_code, 401)
+            self.assertEqual(response.status_code, 403)
 
             self.lg('[DELETE] User_2 leave fake organization, should fail with 404')
             response = self.client_2.api.LeaveOrganization('fake_organization', self.user_2)
@@ -1367,7 +1354,6 @@ class UsersTestsB(BaseTest):
 
         self.lg('%s ENDED' % self._testID)
 
-    @unittest.skip('bug 411')
     def test014_create_contract(self):
         """
         #Test 014_create_contract
@@ -1395,7 +1381,7 @@ class UsersTestsB(BaseTest):
                 'expires':expire, 'parties':[{'name':'', 'type':''}],
                 'signatures':[{'date':'2018-10-02T22:00:00Z', 'publicKey':'asdasd', 'signature':'asdasd', 'signedBy':'asdasd'}]}
         response = self.client_1.api.CreateUserContract(data, self.user_2)
-        self.assertEqual(response.status_code, 401)
+        self.assertEqual(response.status_code, 403)
 
     @unittest.skip('bug: #413')
     def test015_get_post_delete_registry(self):
