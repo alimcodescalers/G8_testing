@@ -621,9 +621,9 @@ class Client:
         Create a new contract.
         It is method for POST /organizations/{globalid}/contracts
         """
-        uri = self.url + "/organizations/"+globalid+"/contracts"
+        uri = self.url + "organizations/"+globalid+"/contracts"
         uri = uri + build_query_string(query_params)
-        return self.session.post(uri, data)
+        return self.session.post(uri, json=data)
 
     def GetPendingOrganizationInvitations(self, globalid, query_params=None):
         """
