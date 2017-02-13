@@ -1082,7 +1082,7 @@ class UsersTestsB(BaseTest):
             - Get the Authorizations of user_2 for specific organization (org_1), should succeed with 200
             - User_2 remove the authorization for the org_1, should succeed with 204
             - User_2 leave organization org_1, should succeed with 204
-            - Unothorized user (user_1) try to make user_2 leave org_2, should fail with 401
+            - Unothorized user (user_1) try to make user_2 leave org_2, should fail with 403
             - User_2 leave fake organization, should fail with 404
             - Fake user leave org_1, should fail with 404
         """
@@ -1137,12 +1137,12 @@ class UsersTestsB(BaseTest):
             self.lg('[PUT] Modify certain information for user_2 to be granted to org_1, should succeed with 201')
             response = self.client_2.api.GetEmailAddresses(self.user_2)
             self.assertEqual(response.status_code, 200)
-            label = response.json()[0]['label']
+            label = response.json()[-1]['label']
 
             grantedto = self.organization_1
             data = {"username":self.user_2,
                     "grantedTo":grantedto,
-                    "emailaddresses":[{"requestedlabel": self.random_value(), "reallabel": "main"}]}
+                    "emailaddresses":[{"requestedlabel": self.random_value(), "reallabel": label}]}
 
             response = self.client_2.api.UpdateAuthorization(data, grantedto, self.user_2)
             self.assertEqual(response.status_code, 201)
@@ -1180,7 +1180,7 @@ class UsersTestsB(BaseTest):
             response = self.client_2.api.GetUserOrganizations(self.user_2)
             self.assertNotIn(self.organization_1, response.json()[role])
 
-            self.lg('[DELETE] Unothorized user (user_1) try to make user_2 leave org_2, should fail with 401')
+            self.lg('[DELETE] Unothorized user (user_1) try to make user_2 leave org_2, should fail with 403')
             response = self.client_1.api.LeaveOrganization(self.organization_2, self.user_2)
             self.assertEqual(response.status_code, 403)
 
@@ -1188,7 +1188,7 @@ class UsersTestsB(BaseTest):
             response = self.client_2.api.LeaveOrganization('fake_organization', self.user_2)
             self.assertEqual(response.status_code, 404)
 
-            #bug 414
+            # #bug 414
             self.lg('[DELETE] Fake user leave org_1, should fail with 404')
             response = self.client_2.api.LeaveOrganization(self.organization_1, 'fake_user')
             self.assertEqual(response.status_code, 404)
@@ -1359,7 +1359,7 @@ class UsersTestsB(BaseTest):
         #Test 014_create_contract
         - Get user\'s contracts, should succeed with 200
         - Create a new contract, should succeed with 201
-        - Create a new contract with unauthorized user, should fail with 401
+        - Create a new contract with unauthorized user, should fail with 403
         """
         self.lg('[GET] Get user\'s contracts, should succeed with 200')
         response = self.client_1.api.GetUserContracts(self.user_1)
@@ -1374,7 +1374,7 @@ class UsersTestsB(BaseTest):
         response = self.client_1.api.CreateUserContract(data, self.user_1)
         self.assertEqual(response.status_code, 201)
 
-        self.lg('Create a new contract with unauthorized user, should fail with 401')
+        self.lg('Create a new contract with unauthorized user, should fail with 403')
         contractid = self.random_value()
         expire = '2019-10-02T22:00:00Z'
         data = {'content':'test', 'contractId':contractid, 'contractType':'partnership',
