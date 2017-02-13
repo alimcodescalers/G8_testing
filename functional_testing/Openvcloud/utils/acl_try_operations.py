@@ -367,6 +367,7 @@ def try_machine_read(self, operation='machine_get'):
         self.assertEqual(len(snapshots), 1)
         self.assertEqual(snapshots[0]['name'], name)
     elif operation == 'machine_getHistory':
+        time.sleep(2)
         histories = self.user_api.cloudapi.machines.getHistory(machineId=self.machine_id,
                                                                size=10)
         self.assertIn('Created', [history['message'] for history in histories])
