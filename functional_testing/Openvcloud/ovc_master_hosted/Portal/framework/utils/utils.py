@@ -39,7 +39,7 @@ class BaseTest(unittest.TestCase):
         self.lg('Testcase %s Started at %s' % (self._testID, self._startTime))
         self.set_browser()
 
-        self.driver.set_window_size(1200, 800)
+        self.driver.set_window_size(1800, 1000)
         self.wait = WebDriverWait(self.driver, 15)
 
         self.username = str(uuid.uuid4()).replace('-', '')[0:10]
@@ -145,8 +145,8 @@ class BaseTest(unittest.TestCase):
 
         screen_dimention = self.driver.get_window_size()
         screen_size = screen_dimention['width'] * screen_dimention['height']
-        if screen_size < 1200*800:
-            self.driver.set_window_size(1200, 800)
+        if screen_size < 1800*1000:
+            self.driver.set_window_size(1800, 1000)
 
     def element_is_enabled(self, element):
         return self.find_element(element).is_enabled()
@@ -303,7 +303,7 @@ class BaseTest(unittest.TestCase):
         except:
             self.lg("can't find element")
             return False
-            
+
     def move_curser_to_element(self, element):
         element = self.elements[element]
         location = WebDriverWait(self.driver, 10).until(EC.visibility_of_element_located((By.XPATH, element)))
