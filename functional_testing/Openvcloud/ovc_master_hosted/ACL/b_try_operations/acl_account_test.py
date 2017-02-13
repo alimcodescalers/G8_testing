@@ -362,6 +362,7 @@ class Write(ACLACCOUNT):
         self.add_user_to_account(account_id=self.account_id,
                                  user=self.user,
                                  accesstype=accesstype)
+        self.lg('-try %s read operation machine with user1'% operation)
         try_machine_read(self, operation)
 
         self.lg('%s ENDED' % self._testID)

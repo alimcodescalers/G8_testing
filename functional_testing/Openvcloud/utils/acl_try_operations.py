@@ -25,7 +25,7 @@ def try_account_read(self, operation='get'):
         self.assertEqual(user_account['CU_A'], 0)
         self.assertEqual(user_account['CU_C'], 0)
         self.assertEqual(user_account['CU_D'], 0)
-        self.assertEqual(user_account['CU_I'], 0)
+        self.assertEqual(user_account['CU_I'], 1)
         self.assertEqual(user_account['CU_NO'], 0)
         self.assertEqual(user_account['CU_NP'], 0)
         self.assertEqual(user_account['CU_S'], 0)
@@ -247,8 +247,9 @@ def try_cloudspace_write(self, operation='cloudspaceDeploy'):
                              'HALTED')
 
         self.lg('4- Resize the machine with new user [user], should succeed')
-        sizesAva = len(self.api.cloudapi.sizes.list(self.cloudspace_id)[1]['disks'])
+        sizesAva = len(self.api.cloudapi.sizes.list(self.cloudspace_id))
         resizeId = randint(1, sizesAva)
+        self.lg('-resize the machine with sizeId %s'%resizeId)
         self.account_owner_api.cloudapi.machines.resize(machineId=machine_id,
                                                sizeId=resizeId)
 
