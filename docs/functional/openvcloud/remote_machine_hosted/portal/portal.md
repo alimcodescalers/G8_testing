@@ -101,12 +101,16 @@ The run_portal_tests.sh script will update the operating systems and install pyt
 
 ### 3.3 Manual Execution:
 In manual execution, Tester will install all dependencies and run the execution command manually on his machine.
-
+- To install the requirements, run:
+```
+pip install -r requirement.txt
+```
 #### 3.3.1 Prepare The Machine:
 To execute this test suit, the machine should has chrome and firefox, so run the following commands to isnallt them in the right way.
 
 ```
 echo -e "${GREEN}** Installing xvfb ...${NC}"
+sudo apt-get update
 sudo apt-get install -y xvfb
 
 echo -e "${GREEN}** Installing chromium ...${NC}"
@@ -115,11 +119,15 @@ sudo ln -fs /usr/lib/chromium-browser/chromedriver /usr/bin/chromedriver
 sudo ln -fs /usr/lib/chromium-browser/chromedriver /usr/local/bin/chromedriver
 
 echo -e "${GREEN}** Installing firefox ...${NC}"
-sudo apt-get install -y firefox
-wget https://github.com/mozilla/geckodriver/releases/download/v0.13.0/geckodriver-v0.13.0-linux64.tar.gz -O /tmp/geckodriver.tar.gz
-tar -C /opt -xzf /tmp/geckodriver.tar.gz
-chmod 755 /opt/geckodriver
-ln -fs /opt/geckodriver /usr/bin/geckodriver
+which firefox && firefox_version=(firefox -v)
+if [[ $firefox_version != 'Mozilla Firefox 46.0' ]]; then
+	apt-get -y purge firefox
+	wget 'https://ftp.mozilla.org/pub/firefox/releases/46.0/linux-x86_64/en-US/firefox-46.0.tar.bz2' -O /tmp/firefox.tar.gz
+	tar -C /opt/ -xf /tmp/firefox.tar.gz
+	chmod 775 /opt/firefox/firefox
+	ln -fs /opt/firefox/firefox /usr/bin/firefox
+	ln -fs /opt/firefox/firefox /usr/local/bin/firefox
+fi
 
 ```
 #### 3.3.2 Execution Guide:
