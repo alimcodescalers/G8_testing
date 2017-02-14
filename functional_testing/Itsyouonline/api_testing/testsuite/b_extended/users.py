@@ -2,6 +2,7 @@ from functional_testing.Itsyouonline.api_testing.utils import BaseTest
 import types
 import unittest
 from random import randint
+
 import json
 import time
 
@@ -968,7 +969,6 @@ class UsersTestsB(BaseTest):
                 "expire":"2018-01-16T15:35:14.507Z",
                 "noexpiration":False}
         response = self.client_1.api.RegisterDigitalWallet(data, self.user_1)
-        print response.json()
         self.assertEqual(response.status_code, 201)
         self.assertEqual(response.json(), data)
 
@@ -1254,7 +1254,6 @@ class UsersTestsB(BaseTest):
 
         smscode = self.get_mobile_verification_code()
         self.assertTrue(smscode, 'error while getting sms code, verification message not received with virtual number %s' % phonenumber)
-        print smscode
         data = {"smscode":smscode, "validationkey":validationkey}
         response = self.client_1.api.VerifyPhoneNumber(data, label, self.user_1)
         self.assertEqual(response.status_code, 204)

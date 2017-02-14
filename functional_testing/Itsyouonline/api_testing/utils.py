@@ -18,23 +18,23 @@ class BaseTest(unittest.TestCase):
     def __init__(self, *args, **kwargs):
         super(BaseTest, self).__init__(*args, **kwargs)
 
-        self.env_url = config['main']['env_url']
+        self.env_url = config['main']['itsyouonline_url']
         self.validation_email = config['main']['validation_email']
         self.validation_email_password = config['main']['validation_email_password']
         self.organization_1 = self.random_value()
         self.organization_2 = self.random_value()
         #user_1 info
-        self.user_1  = config['main']['user_1_username']
-        self.user_1_password = config['main']['user_1_password']
-        self.user_1_applicationid = config['main']['user_1_applicationid']
-        self.user_1_secret = config['main']['user_1_secret']
+        self.user_1  = config['main']['user1_username']
+        self.user_1_password = config['main']['user1_password']
+        self.user_1_applicationid = config['main']['user1_applicationid']
+        self.user_1_secret = config['main']['user1_secret']
         # user_2 info
-        self.user_2  = config['main']['user_2_username']
-        self.user_2_password = config['main']['user_2_password']
-        self.user_2_applicationid = config['main']['user_2_applicationid']
-        self.user_2_secret = config['main']['user_2_secret']
+        self.user_2  = config['main']['user2_username']
+        self.user_2_password = config['main']['user2_password']
+        self.user_2_applicationid = config['main']['user2_applicationid']
+        self.user_2_secret = config['main']['user2_secret']
 
-        self.totp_secret = config['main']['totp_secret']
+        self.totp_secret = config['main']['user1_totp_secret']
 
 
     def setUp(self):
