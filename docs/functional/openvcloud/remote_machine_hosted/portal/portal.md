@@ -101,10 +101,7 @@ The run_portal_tests.sh script will update the operating systems and install pyt
 
 ### 3.3 Manual Execution:
 In manual execution, Tester will install all dependencies and run the execution command manually on his machine.
-- To install the requirements, run:
-```
-pip install -r requirement.txt
-```
+
 #### 3.3.1 Prepare The Machine:
 To execute this test suit, the machine should has chrome and firefox, so run the following commands to isnallt them in the right way.
 
@@ -128,15 +125,25 @@ ln -fs /opt/firefox/firefox /usr/bin/firefox
 ln -fs /opt/firefox/firefox /usr/local/bin/firefox
 
 ```
+
 #### 3.3.2 Execution Guide:
 - After making sure your SSH private key is loaded by ssh-agent, clone the **G8_testing** repository:
 
-  ```
+```
   ssh-add -l
   git clone git@github.com:0-complexity/G8_testing.git
-  ```
+```
+
+- To install the requirements, run:
+
+```
+cd /G8_testing/functional_testing/Openvcloud/ovc_master_hosted/Portal
+pip install -r requirement.txt
+```
+
 - Change the necessary parameters in **config.ini** according to your environment:
-  ```
+
+```
   [main]
   env = <environment_url>
   location = <locations>
@@ -146,7 +153,7 @@ ln -fs /opt/firefox/firefox /usr/local/bin/firefox
   browser = <browser>
   secret = <secret>
   remote_webdriver = <remote_webdriver>
-  ```
+```
   - Browser : firefox or chrome
   - username : itsyou.online username
   - password : itsyou.online password
