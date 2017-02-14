@@ -119,15 +119,13 @@ sudo ln -fs /usr/lib/chromium-browser/chromedriver /usr/bin/chromedriver
 sudo ln -fs /usr/lib/chromium-browser/chromedriver /usr/local/bin/chromedriver
 
 echo -e "${GREEN}** Installing firefox ...${NC}"
-which firefox && firefox_version=(firefox -v)
-if [[ $firefox_version != 'Mozilla Firefox 46.0' ]]; then
-	apt-get -y purge firefox
-	wget 'https://ftp.mozilla.org/pub/firefox/releases/46.0/linux-x86_64/en-US/firefox-46.0.tar.bz2' -O /tmp/firefox.tar.gz
-	tar -C /opt/ -xf /tmp/firefox.tar.gz
-	chmod 775 /opt/firefox/firefox
-	ln -fs /opt/firefox/firefox /usr/bin/firefox
-	ln -fs /opt/firefox/firefox /usr/local/bin/firefox
-fi
+sudo apt-get install -y libgtk-3-0
+apt-get -y purge firefox
+wget 'https://ftp.mozilla.org/pub/firefox/releases/46.0/linux-x86_64/en-US/firefox-46.0.tar.bz2' -O /tmp/firefox.tar.gz
+tar -C /opt/ -xf /tmp/firefox.tar.gz
+chmod 775 /opt/firefox/firefox
+ln -fs /opt/firefox/firefox /usr/bin/firefox
+ln -fs /opt/firefox/firefox /usr/local/bin/firefox
 
 ```
 #### 3.3.2 Execution Guide:
