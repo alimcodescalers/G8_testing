@@ -134,7 +134,7 @@ sudo apt-get install -y xvfb
 
 ```
 cd G8_testing/functional_testing/Openvcloud/ovc_master_hosted/Portal
-pip install -r requirement.txt
+pip install -r requirements.txt
 ```
 
 - Change the necessary parameters in **config.ini** according to your environment:
