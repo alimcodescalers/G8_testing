@@ -1,8 +1,6 @@
 from functional_testing.Itsyouonline.api_testing.utils import BaseTest
 import types
 import unittest
-from random import randint
-
 import json
 import time
 
@@ -47,10 +45,10 @@ class UsersTestsB(BaseTest):
         super(UsersTestsB, self).tearDown()
 
     @unittest.skip('bug: #412')
-    def test000_get_user_info(self):
+    def test001_get_user_info(self):
 
         """
-            #Test 000_get_user_info
+            #ITSYOU-024
             - Get username information using /{username}, should succeed with 200
             - Get username information using /{username}/info, should succeed with 200
         """
@@ -60,6 +58,7 @@ class UsersTestsB(BaseTest):
         response_1 = self.client_1.api.GetUser(self.user_1)
         self.assertEqual(response_1.status_code, 200)
         self.assertEqual(response_1.json()['username'], self.user_1)
+
         #bug 412
         self.lg('[GET] Get username information using /{username}/info, should succeed with 200')
         response_2 = self.client_1.api.GetUser(self.user_1)
@@ -76,10 +75,10 @@ class UsersTestsB(BaseTest):
         self.lg('%s ENDED' % self._testID)
 
     @unittest.skip('bug:')
-    def test001_put_name(self):
+    def test002_put_name(self):
 
         """
-            #Test 001_put_name
+            #ITSYOU-025
             - Change firstname & lastname with valid user, should succeed with 204
             - Change firstname & lastname with invalid user, should fail with 404
         """
@@ -103,9 +102,9 @@ class UsersTestsB(BaseTest):
 
         self.lg('%s ENDED' % self._testID)
 
-    def test002_put_password(self):
+    def test003_put_password(self):
         """
-            #Test 002_put_password
+            #ITSYOU-026
             - Change password with valid current password, should succeed with 204
             - Change password with valid current password again, should succeed with 204
             - Change password with wrong current password, should fail with 422
@@ -146,10 +145,10 @@ class UsersTestsB(BaseTest):
 
         self.lg('%s ENDED' % self._testID)
 
-    def test003_get_post_put_delete_email_address(self):
+    def test004_get_post_put_delete_email_address(self):
 
         """
-            #Test 003_get_post_put_delete_email_address
+            #ITSYOU-027
             - Create new email address, should succeed with 201
             - Get user\'s email addresses, should succeed with 200
             - Create new email address with label already exists, should fail with 409
@@ -258,9 +257,9 @@ class UsersTestsB(BaseTest):
 
         self.lg('%s ENDED' % self._testID)
 
-    def test004_get_post_put_delete_phonenumber(self):
+    def test005_get_post_put_delete_phonenumber(self):
         """
-            #Test 004_get_post_put_delete_phonenumber
+            #ITSYOU-028
             - Register a new phonenumber (1), should succeed with 201
             - Register a new phonenumber (2), should succeed with 201
             - Get user\'s phonenumbers, should succeed with 200
@@ -441,9 +440,9 @@ class UsersTestsB(BaseTest):
 
         self.lg('%s ENDED' % self._testID)
 
-    def test005_get_post_put_delete_address(self):
+    def test006_get_post_put_delete_address(self):
         """
-        #Test 005_get_post_put_delete_address
+        #ITSYOU-029
         - Register a new address (1), should succeed with 201
         - Register a new address (2), should succeed with 201
         - Get user\'s addresses, should succeed with 200
@@ -584,9 +583,9 @@ class UsersTestsB(BaseTest):
         self.lg('%s ENDED' % self._testID)
 
     @unittest.skip('bug #415')
-    def test006_get_post_put_delete_banks(self):
+    def test007_get_post_put_delete_banks(self):
         """
-            #Test 006_get_post_put_delete_banks
+            #ITSYOU-030
             - Register a new bank account (1), should succeed with 201
             - Register a new bank account (2), should succeed with 201
             - Get user\'s bank accounts, should succeed with 200
@@ -713,9 +712,9 @@ class UsersTestsB(BaseTest):
 
         self.lg('%s ENDED' % self._testID)
 
-    def test007_get_post_put_delete_publickey(self):
+    def test008_get_post_put_delete_publickey(self):
         """
-            #Test 007_get_post_put_delete_publickey
+            #ITSYOU-031
             - Register a new publickey (1), should succeed with 201
             - Register a new publickey (2), should succeed with 201
             - Get user\'s publickeys, should succeed with 200
@@ -831,10 +830,10 @@ class UsersTestsB(BaseTest):
         self.lg('%s ENDED' % self._testID)
 
     @unittest.skip('bug: #402 #403 #404 #405')
-    def test008_get_post_put_delete_apikeys(self):
+    def test009_get_post_put_delete_apikeys(self):
 
         """
-        #Test 008_get_post_put_delete_apikeys
+        #ITSYOU-032
         - Register a new apikey (1), should succeed with 201
         - Register a new apikey (2), should succeed with 201
         - Get user\'s apikeys, should succeed with 200
@@ -941,9 +940,9 @@ class UsersTestsB(BaseTest):
         self.lg('%s ENDED' % self._testID)
 
     @unittest.skip('bug: #407 #424')
-    def test009_get_post_put_delete_digitalwallet(self):
+    def test010_get_post_put_delete_digitalwallet(self):
         """
-            #Test 009_get_post_put_delete_digitalwallet
+            #ITSYOU-033
             - Register a new digital wallet (1), should succeed with 201
             - Register a new digital wallet (2), should succeed with 201
             - Get user\'s digital wallets, should succeed with 200
@@ -1067,12 +1066,16 @@ class UsersTestsB(BaseTest):
         response = self.client_1.api.DeleteUserDigitalWallet('fake_digital_wallet', self.user_1)
         self.assertEqual(response.status_code, 404)
 
+        self.lg('%s ENDED' % self._testID)
+
     @unittest.skip('bug: #414')
-    def test010_get_post_delete_organizations_auth(self):
+    def test011_get_post_delete_organizations_auth(self):
 
         """
-            #Test 010_get_post_delete_organizations_auth
+            #ITSYOU-034
             * Same steps for owner and member roles
+            - Create organization org_1 and make user_1 an owner
+            - Create organization org_2 and make user_1 and user_2 owners
             - User_1 send invitation to user_2 to join org_1, should succeed with 201
             - User_2 reject the invitation, should succeed with 204
             - User_1 send invitation to user_2 to join org_1 again, should succeed with 201
@@ -1193,9 +1196,11 @@ class UsersTestsB(BaseTest):
             response = self.client_2.api.LeaveOrganization(self.organization_1, 'fake_user')
             self.assertEqual(response.status_code, 404)
 
-    def test011_get_post_delete_totp_twofamethods(self):
+            self.lg('%s ENDED' % self._testID)
+
+    def test012_get_post_delete_totp_twofamethods(self):
         """
-            #Test 011_get_post_delete_totp_twofamethods
+            #ITSYOU-035
             - Get totp secret, should succeed with 200
             - Set totp with invalid secret, should fail with 422
             - Set totp with valid secret and invalid code, should fail with 422
@@ -1206,6 +1211,8 @@ class UsersTestsB(BaseTest):
             - Set totp code again, should succeed with 204
             - Force Delete the verified phonenumber, should succeed with 204
         """
+
+        self.lg('%s STARTED' % self._testID)
 
         self.lg('[GET] totp secret, should succeed with 200')
         response = self.client_1.api.GetTotp(self.user_1)
@@ -1290,10 +1297,12 @@ class UsersTestsB(BaseTest):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()['sms'], None)
 
-    def test012_delete_facebook_account(self):
+        self.lg('%s ENDED' % self._testID)
+
+    def test013_delete_facebook_account(self):
 
         """
-            #Test 012_delete_facebook_account
+            #ITSYOU-036
             - Check if facebook account exists or not, should succeed with 200
             - Delete facebook account if exists, should succeed with 204
             - Check if the facebook account is deleted, should succeed with 200
@@ -1321,9 +1330,9 @@ class UsersTestsB(BaseTest):
 
         self.lg('%s ENDED' % self._testID)
 
-    def test013_delete_github_account(self):
+    def test014_delete_github_account(self):
         """
-            #Test 013_delete_github_account
+            #ITSYOU-037
             - Check if github account exists or not, should succeed with 200
             - Delete github account if exists, should succeed with 204
             - Check if the github account is deleted, should succeed with 200
@@ -1353,40 +1362,76 @@ class UsersTestsB(BaseTest):
 
         self.lg('%s ENDED' % self._testID)
 
-    def test014_create_contract(self):
+    @unittest.skip("bug: #458")
+    def test015_get_post_contract(self):
         """
-        #Test 014_create_contract
-        - Get user\'s contracts, should succeed with 200
-        - Create a new contract, should succeed with 201
-        - Create a new contract with unauthorized user, should fail with 403
+            #ITSYOU-038
+            - Create a new contract (1), should succeed with 201
+            - Create a new contract (2), should succeed with 201
+            - Create a new expired contract (3), should succeed with 201
+            - Get user\'s contracts, should succeed with 200
+            - Get user\'s contracts & include the expired contracts, should succeed with 200
+            - Get user\'s contracts with page size 1, should succeed with 200
+            - Get user\'s contracts with start page 2, should succeed with 200
         """
-        self.lg('[GET] Get user\'s contracts, should succeed with 200')
-        response = self.client_1.api.GetUserContracts(self.user_1)
-        self.assertEqual(response.status_code, 200)
 
-        self.lg('Create a new contract, should succeed with 201')
-        contractid = self.random_value()
-        expire = '2019-10-02T22:00:00Z'
-        data = {'content':'test', 'contractId':contractid, 'contractType':'partnership',
-                'expires':expire, 'parties':[{'name':'', 'type':''}],
-                'signatures':[{'date':'2018-10-02T22:00:00Z', 'publicKey':'asdasd', 'signature':'asdasd', 'signedBy':'asdasd'}]}
+        self.lg('%s STARTED' % self._testID)
+
+        self.lg('Create a new contract (1), should succeed with 201')
+        contractid_1 = self.random_value()
+        expire = '2030-10-02T22:00:00Z'
+        data = {'content':'contract_1', 'contractId':contractid_1, 'contractType':'partnership','expires':expire}
         response = self.client_1.api.CreateUserContract(data, self.user_1)
         self.assertEqual(response.status_code, 201)
 
-        self.lg('Create a new contract with unauthorized user, should fail with 403')
-        contractid = self.random_value()
-        expire = '2019-10-02T22:00:00Z'
-        data = {'content':'test', 'contractId':contractid, 'contractType':'partnership',
-                'expires':expire, 'parties':[{'name':'', 'type':''}],
-                'signatures':[{'date':'2018-10-02T22:00:00Z', 'publicKey':'asdasd', 'signature':'asdasd', 'signedBy':'asdasd'}]}
-        response = self.client_1.api.CreateUserContract(data, self.user_2)
-        self.assertEqual(response.status_code, 403)
+        self.lg('Create a new contract (2), should succeed with 201')
+        contractid_2 = self.random_value()
+        expire = '2030-10-02T22:00:00Z'
+        data = {'content':'contract_2', 'contractId':contractid_2, 'contractType':'partnership','expires':expire}
+        response = self.client_1.api.CreateUserContract(data, self.user_1)
+        self.assertEqual(response.status_code, 201)
+        #bug #458
+        self.lg('Create a new expired contract (3), should succeed with 201')
+        contractid_3 = self.random_value()
+        expire = '2010-10-02T22:00:00Z'
+        data = {'content':'contract_3', 'contractId':contractid_3, 'contractType':'partnership','expires':expire}
+        response = self.client_1.api.CreateUserContract(data, self.user_1)
+        self.assertEqual(response.status_code, 201)
+
+        self.lg('[GET] Get user\'s contracts, should succeed with 200')
+        response = self.client_1.api.GetUserContracts(self.user_1)
+        self.assertEqual(response.status_code, 200)
+        self.assertNotEqual(contractid_3, response.json()[-1]['contractId'])
+        self.assertEqual(contractid_1, response.json()[-2]['contractId'])
+        self.assertEqual(contractid_2, response.json()[-1]['contractId'])
+
+        response = self.client_1.api.GetUserContracts(self.user_1, query_params={"max":1000,"includeExpired":True})
+        self.assertEqual(response.status_code, 200)
+        number_of_contracts = len(response.json())-1
+
+        self.lg('[GET] Get user\'s contracts & include the expired contracts, should succeed with 200')
+        response = self.client_1.api.GetUserContracts(self.user_1, query_params={"max":1000,"includeExpired":True})
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(contractid_3, response.json()[-1]['contractId'])
+
+        self.lg('[GET] Get user\'s contracts with page size 1, should succeed with 200')
+        response = self.client_1.api.GetUserContracts(self.user_1, query_params={"max":1, "start":number_of_contracts})
+        self.assertEqual(contractid_2, response.json()[0]['contractId'])
+        self.assertEqual(response.status_code, 200)
+
+        self.lg('[GET] Get user\'s contracts with page size 2, should succeed with 200')
+        response = self.client_1.api.GetUserContracts(self.user_1, query_params={"max":1, "start":number_of_contracts-1})
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(contractid_1, response.json()[0]['contractId'])
+
+
+        self.lg('%s ENDED' % self._testID)
 
     @unittest.skip('bug: #413')
-    def test015_get_post_delete_registry(self):
+    def test016_get_post_delete_registry(self):
 
         """
-            #Test 015_get_post_delete_registry
+            #ITSYOU-039
             - Register a new registry (1), should succeed with 201
             - Register a new registry (2), should succeed with 201.
             - Get user'\s registries, should succeed with 200

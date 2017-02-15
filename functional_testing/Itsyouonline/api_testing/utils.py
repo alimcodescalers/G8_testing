@@ -9,10 +9,9 @@ import imaplib
 import mailbox
 from bs4 import BeautifulSoup
 import requests
-
 from testconfig import config
 from testframework import base
-# from testframework.email_verification import email_verification
+import datetime
 
 class BaseTest(unittest.TestCase):
     def __init__(self, *args, **kwargs):
@@ -28,14 +27,12 @@ class BaseTest(unittest.TestCase):
         self.user_1_password = config['main']['user1_password']
         self.user_1_applicationid = config['main']['user1_applicationid']
         self.user_1_secret = config['main']['user1_secret']
+        self.totp_secret = config['main']['user1_totp_secret']
         # user_2 info
         self.user_2  = config['main']['user2_username']
         self.user_2_password = config['main']['user2_password']
         self.user_2_applicationid = config['main']['user2_applicationid']
         self.user_2_secret = config['main']['user2_secret']
-
-        self.totp_secret = config['main']['user1_totp_secret']
-
 
     def setUp(self):
         self._testID = self._testMethodName
@@ -55,8 +52,6 @@ class BaseTest(unittest.TestCase):
         for i in range(n):
             value += str(uuid.uuid4()).replace('-', '')
         return value[:size]
-
-        # return str(str(uuid.uuid4())+str(uuid.uuid4())).replace('-', '')[0:size]
 
     def get_totp_code(self, secret):
         totp = pyotp.TOTP(secret)
@@ -128,6 +123,11 @@ class BaseTest(unittest.TestCase):
     def lg(self, msg):
         self._logger.info(msg)
 
+    def time_rfc3339_format(self):
+        d = datetime.datetime.utcnow()
+        d = d.isoformat("T") + "Z"
+        return d
+
     def SetTotp(self, username):
         self.lg('Set totp code, should succeed with 204')
         totpcode = self.get_totp_code(self.totp_secret)
@@ -136,7 +136,7 @@ class BaseTest(unittest.TestCase):
         self.assertEqual(response.status_code, 204)
 
     def DeleteAllUserEmails(self, username):
-        self.lg('Delete all user\'s emails, should fail with 409')
+        self.lg('Delete all user\'s emails, should succeed with 204')
         response = self.client_1.api.GetEmailAddresses(username)
         self.assertEqual(response.status_code, 200)
         labels = [x['label'] for x in response.json()]
@@ -145,7 +145,7 @@ class BaseTest(unittest.TestCase):
             self.assertEqual(response.status_code, 204)
 
     def DeleteAllUserPhonenumbers(self, username):
-        self.lg('Delete all user\'s phonenumbers, should fail with 409')
+        self.lg('Delete all user\'s phonenumbers, should succeed with 204')
         response = self.client_1.api.GetUserPhoneNumbers(username)
         self.assertEqual(response.status_code, 200)
         labels = [x['label'] for x in response.json()]
@@ -155,7 +155,7 @@ class BaseTest(unittest.TestCase):
             self.assertEqual(response.status_code, 204)
 
     def DeleteAllUserAddresses(self, username):
-        self.lg('Delete all user\'s addresses, should fail with 409')
+        self.lg('Delete all user\'s addresses, should succeed with 204')
         response = self.client_1.api.GetUserAddresses(username)
         self.assertEqual(response.status_code, 200)
         labels = [x['label'] for x in response.json()]
@@ -164,7 +164,7 @@ class BaseTest(unittest.TestCase):
             self.assertEqual(response.status_code, 204)
 
     def DeleteAllUserBankAccounts(self, username):
-        self.lg('Delete all user\'s bank accounts , should fail with 409')
+        self.lg('Delete all user\'s bank accounts , should succeed with 204')
         response = self.client_1.api.GetUserBankAccounts(username)
         self.assertEqual(response.status_code, 200)
         labels = [x['label'] for x in response.json()]
@@ -173,7 +173,7 @@ class BaseTest(unittest.TestCase):
             self.assertEqual(response.status_code, 204)
 
     def DeleteAllUserPublicKeys(self, username):
-        self.lg('Delete all user\'s publickeys, should fail with 409')
+        self.lg('Delete all user\'s publickeys, should succeed with 204')
         response = self.client_1.api.GetUserPublicKeys(username)
         self.assertEqual(response.status_code, 200)
         labels = [x['label'] for x in response.json()]
@@ -182,7 +182,7 @@ class BaseTest(unittest.TestCase):
             self.assertEqual(response.status_code, 204)
 
     def DeleteAllUserDigitalWallet(self, username):
-        self.lg('Delete all user\'s digital wallet , should fail with 409')
+        self.lg('Delete all user\'s digital wallet , should succeed with 204')
         response = self.client_1.api.GetUserDigitalWallets(username)
         self.assertEqual(response.status_code, 200)
         labels = [x['label'] for x in response.json()]
@@ -191,7 +191,7 @@ class BaseTest(unittest.TestCase):
             self.assertEqual(response.status_code, 204)
 
     def DeleteAllUserRegistries(self, username):
-        self.lg('Delete all user\'s registries, should fail with 409')
+        self.lg('Delete all user\'s registries, should succeed with 204')
         response = self.client_1.api.GetRegistries(username)
         self.assertEqual(response.status_code, 200)
         keys = [x['Key'] for x in response.json()]
@@ -200,7 +200,7 @@ class BaseTest(unittest.TestCase):
             self.assertEqual(response.status_code, 204)
 
     def DeleteAllUserApiKeys(self, username):
-        self.lg('Delete all user\'s apikeys, should fail with 409')
+        self.lg('Delete all user\'s apikeys, should succeed with 204')
         response = self.client_1.api.ListAPIKeys(username)
         self.assertEqual(response.status_code, 200)
         labels = [x['label'] for x in response.json()[1:]]
