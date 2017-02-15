@@ -62,6 +62,9 @@ echo -e "${GREEN}**  directory $directory ...${NC}"
 echo -e "${GREEN}** System updateing ...${NC}"
 sudo apt-get update
 
+echo -e "${GREEN}** Install git ...${NC}"
+sudo apt-get install git
+
 cd functional_testing/Openvcloud/ovc_master_hosted/Portal
 which pip2 || sudo apt-get install -y python-pip python-dev build-essential
 sudo pip install --upgrade pip
@@ -87,17 +90,17 @@ if [[ -z "${remote_webdriver}" ]]; then
 	sudo ln -fs /usr/lib/chromium-browser/chromedriver /usr/local/bin/chromedriver
 
 	echo -e "${GREEN}** Installing firefox ...${NC}"
-	which firefox && firefox_version=(firefox -v)
-	if [[ $firefox_version != 'Mozilla Firefox 46.0' ]]; then
-		apt-get -y purge firefox
-		wget 'https://ftp.mozilla.org/pub/firefox/releases/46.0/linux-x86_64/en-US/firefox-46.0.tar.bz2' -O /tmp/firefox.tar.gz
-		tar -C /opt/ -xf /tmp/firefox.tar.gz
-		chmod 775 /opt/firefox/firefox
-		ln -fs /opt/firefox/firefox /usr/bin/firefox
-	 	ln -fs /opt/firefox/firefox /usr/local/bin/firefox
-	 fi
-	#sudo apt-get install -y firefox
-	#which geckodriver || (wget https://github.com/mozilla/geckodriver/releases/download/v0.14.0/geckodriver-v0.14.0-linux64.tar.gz -O /tmp/geckodriver.tar.gz; tar -C /opt -xzf /tmp/geckodriver.tar.gz;	chmod 755 /opt/geckodriver;	ln -fs /opt/geckodriver /usr/bin/geckodriver)
+#	which firefox && firefox_version=(firefox -v)
+#	if [[ $firefox_version != 'Mozilla Firefox 46.0' ]]; then
+#		apt-get -y purge firefox
+#		wget 'https://ftp.mozilla.org/pub/firefox/releases/46.0/linux-x86_64/en-US/firefox-46.0.tar.bz2' -O /tmp/firefox.tar.gz
+#		tar -C /opt/ -xf /tmp/firefox.tar.gz
+#		chmod 775 /opt/firefox/firefox
+#		ln -fs /opt/firefox/firefox /usr/bin/firefox
+#	 	ln -fs /opt/firefox/firefox /usr/local/bin/firefox
+#	 fi
+	sudo apt-get install -y firefox
+	which geckodriver || (wget https://github.com/mozilla/geckodriver/releases/download/v0.14.0/geckodriver-v0.14.0-linux64.tar.gz -O /tmp/geckodriver.tar.gz; tar -C /opt -xzf /tmp/geckodriver.tar.gz;	chmod 755 /opt/geckodriver;	ln -fs /opt/geckodriver /usr/bin/geckodriver)
 
 	echo -e "${GREEN}** Running tests ...${NC}"
 		xvfb-run -a nosetests -v -s  --logging-level=WARNING $directory --tc-file=config.ini --tc=main.passwd:$passwd --tc=main.secret:$secret --tc=main.env:$environment --tc=main.location:$location --tc=main.admin:$user_id --tc=main.browser:$browser --with-xunit --xunit-file='testresults.xml' --with-progressive
