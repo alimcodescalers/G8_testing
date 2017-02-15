@@ -107,34 +107,21 @@ The run_portal_tests.sh script will update the operating systems and install pyt
 In the Grid execution, The run_portal_tests.sh script will update the operating systems and install python, pip, virtualenv and all requirement package in requirement.txt then it will execute the test cases in through the remote server.
 
 
-### 4.3 Manual Execution:
-In manual execution, Tester will install all dependencies and run the execution command manually on his machine.
+### 4.2 Manual Execution:
+In manual execution, Tester will install all dependencies and run the execution command manually on his machine. As for the automated execution, The Manual execution can be excuted on a single machine or on a grid. 
 
-#### 4.3.1 Prepare The Machine:
-To execute this test suit, the machine should has chrome and firefox, so run the following commands to isnallt them in the right way.
+#### 4.2.1 Execution Guide:
+- The coming steps in this section are the same for single machine and grid execution.
+
+- Prepare The Machine:
 
 ```
 echo -e "${GREEN}** Installing xvfb ...${NC}"
 sudo apt-get update
 sudo apt-get install -y xvfb
 
-echo -e "${GREEN}** Installing chromium ...${NC}"
-sudo apt-get install -y chromium-chromedriver
-sudo ln -fs /usr/lib/chromium-browser/chromedriver /usr/bin/chromedriver
-sudo ln -fs /usr/lib/chromium-browser/chromedriver /usr/local/bin/chromedriver
-
-echo -e "${GREEN}** Installing firefox ...${NC}"
-sudo apt-get install -y libgtk-3-0
-apt-get -y purge firefox
-wget 'https://ftp.mozilla.org/pub/firefox/releases/46.0/linux-x86_64/en-US/firefox-46.0.tar.bz2' -O /tmp/firefox.tar.gz
-tar -C /opt/ -xf /tmp/firefox.tar.gz
-chmod 775 /opt/firefox/firefox
-ln -fs /opt/firefox/firefox /usr/bin/firefox
-ln -fs /opt/firefox/firefox /usr/local/bin/firefox
-
 ```
 
-#### 4.3.2 Execution Guide:
 - After making sure your SSH private key is loaded by ssh-agent, clone the **G8_testing** repository:
 
 ```
@@ -168,24 +155,53 @@ pip install -r requirement.txt
   - secret : itsyou.online secret key
   - environment_url : the environment url
   - location : the environment location
-  - remote_webdriver : remote server ip:port
+  - remote_webdriver : remote server ip:port (will be left empty in case of single machine execution)
+  
+  ##### 4.2.1.1 Single Machine Execution:
+  - The coming steps need to be added in case of single machine execution
+  - To execute this test suit, the machine should has chrome and firefox, so run the following commands to install them in the right way.
 
-- Desktop OS: Run the testcase using **nosetests**:
+```
+echo -e "${GREEN}** Installing chromium ...${NC}"
+sudo apt-get install -y chromium-chromedriver
+sudo ln -fs /usr/lib/chromium-browser/chromedriver /usr/bin/chromedriver
+sudo ln -fs /usr/lib/chromium-browser/chromedriver /usr/local/bin/chromedriver
 
+echo -e "${GREEN}** Installing firefox ...${NC}"
+sudo apt-get install -y libgtk-3-0
+apt-get -y purge firefox
+wget 'https://ftp.mozilla.org/pub/firefox/releases/46.0/linux-x86_64/en-US/firefox-46.0.tar.bz2' -O /tmp/firefox.tar.gz
+tar -C /opt/ -xf /tmp/firefox.tar.gz
+chmod 775 /opt/firefox/firefox
+ln -fs /opt/firefox/firefox /usr/bin/firefox
+ln -fs /opt/firefox/firefox /usr/local/bin/firefox
 ```
-nosetests -v -s  --logging-level=WARNING <testsuite_directory> --tc-file=config.ini  2>testresults.log
-```
+- Then if the machine has a Desktop OS, you can run using the following command: 
+  ```
+  nosetests -v -s  --logging-level=WARNING <testsuite_directory> --tc-file=config.ini  2>testresults.log
+  ```
+Note: if you don't want to visualize the browser during running the tests, you cann put "xvfb-run -a" before the previous command
 
-- Server OS : Use the **xfvb-run** package to run the testcases on Ubuntu Server:
-```
-xvfb-run -a nosetests -v -s  --logging-level=WARNING <testsuite_directory> --tc-file=config.ini  2>testresults.log
-```
+- Otherwise if the machine has a server OS, use the following command instead:
+   ```
+   xvfb-run -a nosetests -v -s  --logging-level=WARNING <testsuite_directory> --tc-file=config.ini  2>testresults.log
+   ```
+
+  
+  ##### 4.2.1.2 Grid Execution:
+  - Make sure to provide value for the remote_webdriver parameter in the **config.ini** file
+  - Assuming you already have a ready grid as explained before, run the following command using **nosetests**:
+   ```
+   xvfb-run -a nosetests -v -s  --logging-level=WARNING <testsuite_directory> --tc-file=config.ini  2>testresults.log
+   ```
+  
 
 You can also overwrite the **config.ini** parameters:
 
 ```
 nosetests -v testsuite --tc-file=config.ini --tc=main.url:http://be-conv-2.demo.greenitglobe.com/  --tc=main.admin:gig 2>testresults.log
 ```
+
 
 ## 5. Appendix:
 ### 5.1 How to get itsyouonline secret?
