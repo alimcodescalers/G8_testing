@@ -132,7 +132,7 @@ sudo apt-get install -y xvfb
 - To install the requirements, run:
 
 ```
-cd /G8_testing/functional_testing/Openvcloud/ovc_master_hosted/Portal
+cd G8_testing/functional_testing/Openvcloud/ovc_master_hosted/Portal
 pip install -r requirement.txt
 ```
 
