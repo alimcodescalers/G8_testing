@@ -22,6 +22,7 @@ Portal
 ```
 ## 3. Grid concept:
 - The test suite can be executed either on a single machine or Grid (multiple machines)
+
 ### 3.1 What is a grid?:
 - A Grid allows you to run your tests on different machines against different browsers. That is, running multiple tests at the same time against different machines running different browsers and operating systems. It allows for running your tests in a distributed test execution environment.
 
