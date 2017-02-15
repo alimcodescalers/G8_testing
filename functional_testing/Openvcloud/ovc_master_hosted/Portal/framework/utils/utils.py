@@ -137,11 +137,19 @@ class BaseTest(unittest.TestCase):
 
     def get_page(self, page_url):
         try:
-            self.driver.ignore_synchronization = False
             self.driver.get(page_url)
         except AngularNotFoundException:
-            self.driver.ignore_synchronization = True
-            self.driver.get(page_url)
+            if self.browser == 'firefox':
+                for _ in range(10):
+                    if not self.driver.title:
+                        time.sleep(1)
+                        try:
+                            self.driver.execute_script('angular.resumeBootstrap();')
+                            time.sleep(1)
+                        except:
+                            pass
+                    else:
+                        break
 
         screen_dimention = self.driver.get_window_size()
         screen_size = screen_dimention['width'] * screen_dimention['height']
