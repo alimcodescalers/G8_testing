@@ -26,7 +26,7 @@ Portal
 ### 3.1 What is a grid?:
 - A Grid allows you to run your tests on different machines against different browsers. That is, running multiple tests at the same time against different machines running different browsers and operating systems. It allows for running your tests in a distributed test execution environment.
 
-- In grid execution, Tester is using a selenium server as hub, chrome node, firefox node and any other browser node. In this documentation, we will intro how to prepare a testing environment which has hub, chrome node and firefox node as a docker containers. (Note: you can design your own grid as needed)
+- In grid execution, Tester is using a selenium server as hub, chrome node, firefox node and any other browser node. In this documentation, we will introduce how to prepare a testing environment which has hub, chrome node and firefox node as a docker containers. (Note: you can design your own grid as needed)
 
 ### 3.2 Prepare The Grid:
 After installing the docker service in any machine operating system, run the following commands:
@@ -36,7 +36,7 @@ docker run -d --name chrome-node --link selenium-hub:hub selenium/node-chrome
 docker run -d --name firefox-node --link selenium-hub:hub selenium/node-firefox
 ```
 - Now If you are running your tests from the machine which contains the dockers, you can access your selenium-hub which is your remote server via **http://localhost:4444** and you can execute test cases on firefox-node and chrome-node. 
-- However if you want to connect to the selenium-hub (remote-webdriver) from your local machine (your own pc), You have to do a port forward from the cloudspace to the seleinum-hub and then the remote webdriver will be **http://< cloud_space_ip>:4444** (Note: In this case the cloudspaceip should be reachable from your local machine)
+- However if you want to connect to the selenium-hub (remote-webdriver) from your local machine (your own pc), You have to do a port forward from the cloudspace to the seleinum-hub and in which the remote webdriver will be **http://< cloudspace_ip>:4444** (Note: In this case the cloudspace_ip should be reachable from your local machine)
 
 
 ## 4. Test Suite Execution:
@@ -74,7 +74,7 @@ In the automated execution mode, The tester will execute the portal test suite e
   sudo bash functional_testing/Openvcloud/ovc_master_hosted/Portal/run_portal_tests.sh -u chrome -i username -p username123 -s BMDHEDMMGFZG7RBMDHEDMMGFZG7R -d testcases/admin_portal/cloud_broker/test01_accounts.py http://du-conv-2.demo.greenitglobe.com du-conv-2
    ```
 
-The run_portal_tests.sh script will update the operating systems and install python, pip, virtualenv and all requirement package in requirement.txt. Then it will start a virtual environment. Then it install chrome and firefox and finally execute the test cases in headless mode. Note: This script will not install firefox and chrome in case of grid execution as it expects that there are firefox and chrome installed on ohter machines.
+The run_portal_tests.sh script will update the operating systems and install python, pip, virtualenv and all requirement package in requirement.txt. Then it will start a virtual environment. Then it will install chrome and firefox and finally execute the test cases in headless mode. Note: This script will not install firefox and chrome in case of grid execution as it expects that there are firefox and chrome installed on other machines.
 
 #### 4.1.2 Grid Execution Guide:
 
@@ -104,7 +104,7 @@ The run_portal_tests.sh script will update the operating systems and install pyt
   sudo bash functional_testing/Openvcloud/ovc_master_hosted/Portal/run_portal_tests.sh -r http://localhost:4444 -u chrome -i username -p username123 -s BMDHEDMMGFZG7RBMDHEDMMGFZG7R -d testcases/admin_portal/cloud_broker/test01_accounts.py http://du-conv-2.demo.greenitglobe.com du-conv-2
    ```
 
-In the Grid execution, The run_portal_tests.sh script will update the operating systems and install python, pip, virtualenv and all requirement package in requirement.txt then it will execute the test cases in through the remote server.
+In the Grid execution, The run_portal_tests.sh script will only update the operating systems and install python, pip, virtualenv and all requirement package in requirement.txt then it will execute the test cases through the remote server.
 
 
 ### 4.2 Manual Execution:
@@ -149,38 +149,38 @@ pip install -r requirement.txt
   secret = <secret>
   remote_webdriver = <remote_webdriver>
 ```
-  - Browser : firefox or chrome
-  - username : itsyou.online username
-  - password : itsyou.online password
-  - secret : itsyou.online secret key
-  - environment_url : the environment url
-  - location : the environment location
-  - remote_webdriver : remote server ip:port (will be left empty in case of single machine execution)
+   - Browser : firefox or chrome
+   - username : itsyou.online username
+   - password : itsyou.online password
+   - secret : itsyou.online secret key
+   - environment_url : the environment url
+   - location : the environment location
+   - remote_webdriver : remote server ip:port (will be left empty in case of single machine execution)
   
   ##### 4.2.1.1 Single Machine Execution:
-  - The coming steps need to be added in case of single machine execution
-  - To execute this test suit, the machine should has chrome and firefox, so run the following commands to install them in the right way.
+- The coming steps need to be added in case of single machine execution
+- To execute this test suit, the machine should has chrome and firefox, so run the following commands to install them in the right way.
 
-```
-echo -e "${GREEN}** Installing chromium ...${NC}"
-sudo apt-get install -y chromium-chromedriver
-sudo ln -fs /usr/lib/chromium-browser/chromedriver /usr/bin/chromedriver
-sudo ln -fs /usr/lib/chromium-browser/chromedriver /usr/local/bin/chromedriver
+    ```
+    echo -e "${GREEN}** Installing chromium ...${NC}"
+    sudo apt-get install -y chromium-chromedriver
+    sudo ln -fs /usr/lib/chromium-browser/chromedriver /usr/bin/chromedriver
+    sudo ln -fs /usr/lib/chromium-browser/chromedriver /usr/local/bin/chromedriver
 
-echo -e "${GREEN}** Installing firefox ...${NC}"
-sudo apt-get install -y libgtk-3-0
-apt-get -y purge firefox
-wget 'https://ftp.mozilla.org/pub/firefox/releases/46.0/linux-x86_64/en-US/firefox-46.0.tar.bz2' -O /tmp/firefox.tar.gz
-tar -C /opt/ -xf /tmp/firefox.tar.gz
-chmod 775 /opt/firefox/firefox
-ln -fs /opt/firefox/firefox /usr/bin/firefox
-ln -fs /opt/firefox/firefox /usr/local/bin/firefox
-```
-- Then if the machine has a Desktop OS, you can run using the following command: 
+    echo -e "${GREEN}** Installing firefox ...${NC}"
+    sudo apt-get install -y libgtk-3-0
+    apt-get -y purge firefox
+    wget 'https://ftp.mozilla.org/pub/firefox/releases/46.0/linux-x86_64/en-US/firefox-46.0.tar.bz2' -O /tmp/firefox.tar.gz
+    tar -C /opt/ -xf /tmp/firefox.tar.gz
+    chmod 775 /opt/firefox/firefox
+    ln -fs /opt/firefox/firefox /usr/bin/firefox
+    ln -fs /opt/firefox/firefox /usr/local/bin/firefox
+    ```
+- Then if the machine has a Desktop OS, you run the following command: 
   ```
   nosetests -v -s  --logging-level=WARNING <testsuite_directory> --tc-file=config.ini  2>testresults.log
   ```
-Note: if you don't want to visualize the browser during running the tests, you cann put "xvfb-run -a" before the previous command
+Note: if you don't want to visualize the browser during running the tests, you can put "xvfb-run -a" before the previous command
 
 - Otherwise if the machine has a server OS, use the following command instead:
    ```
