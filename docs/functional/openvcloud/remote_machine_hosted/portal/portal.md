@@ -118,6 +118,7 @@ In manual execution, Tester will install all dependencies and run the execution 
 ```
 echo -e "${GREEN}** Installing xvfb ...${NC}"
 sudo apt-get update
+sudo apt-get install -y python-pip
 sudo apt-get install -y xvfb
 
 ```
