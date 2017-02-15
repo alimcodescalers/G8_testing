@@ -84,3 +84,20 @@ def push_results_to_repo(res_dir, location):
     j.do.execute('git add *.csv ')
     j.do.execute("git commit -a -m 'Pushing new results' ")
     j.do.execute('git push')
+
+
+def execute_async_ovc(ovc, function, **kwargs):
+    kwargs['_async'] = True
+
+    def _run():
+        taskguid = function(**kwargs)
+        print(taskguid)
+        while True:
+            gevent.sleep(0.5)
+            result = ovc.api.system.task.get(taskguid=taskguid)
+            if result != b'':
+                success, result = result
+                if not success:
+                    raise RuntimeError(result)
+                return result
+    return gevent.spawn(_run)
