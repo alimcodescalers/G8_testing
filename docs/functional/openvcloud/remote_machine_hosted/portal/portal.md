@@ -47,6 +47,7 @@ This test suite can be executed from Ubuntu Desktop or Server operating systems.
 ### 4.1 Automated Execution:
 In the automated execution mode, The tester will execute the portal test suite either on a single machine or on a grid.
 #### 4.1.1 Single Machine Execution Guide:
+- The tests should be executed from inside this single machine.
 
 - After making sure your SSH private key is loaded by ssh-agent, clone the **G8_testing** repository:
 
@@ -73,9 +74,10 @@ In the automated execution mode, The tester will execute the portal test suite e
   sudo bash functional_testing/Openvcloud/ovc_master_hosted/Portal/run_portal_tests.sh -u chrome -i username -p username123 -s BMDHEDMMGFZG7RBMDHEDMMGFZG7R -d testcases/admin_portal/cloud_broker/test01_accounts.py http://du-conv-2.demo.greenitglobe.com du-conv-2
    ```
 
-The run_portal_tests.sh script will update the operating systems and install python, pip, virtualenv and all requirement package in requirement.txt. Then it will start a virtual environment. Then it install chrome and firefox and finally execute the test cases in headless mode. Note: This script will not install firefox and chrome in case of grid execution as it expects that there are firefon and chrome installed on ohter machines.
+The run_portal_tests.sh script will update the operating systems and install python, pip, virtualenv and all requirement package in requirement.txt. Then it will start a virtual environment. Then it install chrome and firefox and finally execute the test cases in headless mode. Note: This script will not install firefox and chrome in case of grid execution as it expects that there are firefox and chrome installed on ohter machines.
 
 #### 4.1.2 Grid Execution Guide:
+
 - After making sure your SSH private key is loaded by ssh-agent, clone the **G8_testing** repository:
 
   ```
@@ -102,7 +104,7 @@ The run_portal_tests.sh script will update the operating systems and install pyt
   sudo bash functional_testing/Openvcloud/ovc_master_hosted/Portal/run_portal_tests.sh -r http://localhost:4444 -u chrome -i username -p username123 -s BMDHEDMMGFZG7RBMDHEDMMGFZG7R -d testcases/admin_portal/cloud_broker/test01_accounts.py http://du-conv-2.demo.greenitglobe.com du-conv-2
    ```
 
-The run_portal_tests.sh script will update the operating systems and install python, pip, virtualenv and all requirement package in requirement.txt then it will execute the test cases in through the remote server.
+In the Grid execution, The run_portal_tests.sh script will update the operating systems and install python, pip, virtualenv and all requirement package in requirement.txt then it will execute the test cases in through the remote server.
 
 
 ### 4.3 Manual Execution:
