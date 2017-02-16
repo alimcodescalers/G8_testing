@@ -27,14 +27,22 @@ class UsersTestsB(BaseTest):
     def tearDown(self):
 
         self.SetTotp(self.user_1)
+        self.lg('Delete all user\'s email addresses, should succeed with 204')
         self.DeleteAllUserEmails(self.user_1)
+        self.lg('Delete all user\'s addresses, should succeed with 204')
         self.DeleteAllUserAddresses(self.user_1)
+        self.lg('Delete all user\'s publicKeys, should succeed with 204')
         self.DeleteAllUserPublicKeys(self.user_1)
+        self.lg('Delete all user\'s phonenumbers, should succeed with 204')
         self.DeleteAllUserPhonenumbers(self.user_1)
+        self.lg('Delete all user\'s registries, should succeed with 204')
         self.DeleteAllUserRegistries(self.user_1)
+        self.lg('Delete all user\'s bank accounts, should succeed with 204')
         self.DeleteAllUserBankAccounts(self.user_1)
+        self.lg('Delete all user\'s digital wallets, should succeed with 204')
         self.DeleteAllUserDigitalWallet(self.user_1)
         #bug 405
+        # self.lg('Delete all user\'s apikeys, should succeed with 204')
         #self.DeleteAllUserApiKeys(self.user_1)
 
         response = self.client_1.api.DeleteOrganization(self.organization_1)

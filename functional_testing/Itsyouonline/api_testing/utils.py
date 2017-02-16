@@ -129,14 +129,12 @@ class BaseTest(unittest.TestCase):
         return d
 
     def SetTotp(self, username):
-        self.lg('Set totp code, should succeed with 204')
         totpcode = self.get_totp_code(self.totp_secret)
         data = {"totpcode":totpcode, "totpsecret":self.totp_secret}
         response = self.client_1.api.EditTotp(data, username)
         self.assertEqual(response.status_code, 204)
 
     def DeleteAllUserEmails(self, username):
-        self.lg('Delete all user\'s emails, should succeed with 204')
         response = self.client_1.api.GetEmailAddresses(username)
         self.assertEqual(response.status_code, 200)
         labels = [x['label'] for x in response.json()]
@@ -145,7 +143,6 @@ class BaseTest(unittest.TestCase):
             self.assertEqual(response.status_code, 204)
 
     def DeleteAllUserPhonenumbers(self, username):
-        self.lg('Delete all user\'s phonenumbers, should succeed with 204')
         response = self.client_1.api.GetUserPhoneNumbers(username)
         self.assertEqual(response.status_code, 200)
         labels = [x['label'] for x in response.json()]
@@ -155,7 +152,6 @@ class BaseTest(unittest.TestCase):
             self.assertEqual(response.status_code, 204)
 
     def DeleteAllUserAddresses(self, username):
-        self.lg('Delete all user\'s addresses, should succeed with 204')
         response = self.client_1.api.GetUserAddresses(username)
         self.assertEqual(response.status_code, 200)
         labels = [x['label'] for x in response.json()]
@@ -164,7 +160,6 @@ class BaseTest(unittest.TestCase):
             self.assertEqual(response.status_code, 204)
 
     def DeleteAllUserBankAccounts(self, username):
-        self.lg('Delete all user\'s bank accounts , should succeed with 204')
         response = self.client_1.api.GetUserBankAccounts(username)
         self.assertEqual(response.status_code, 200)
         labels = [x['label'] for x in response.json()]
@@ -173,7 +168,6 @@ class BaseTest(unittest.TestCase):
             self.assertEqual(response.status_code, 204)
 
     def DeleteAllUserPublicKeys(self, username):
-        self.lg('Delete all user\'s publickeys, should succeed with 204')
         response = self.client_1.api.GetUserPublicKeys(username)
         self.assertEqual(response.status_code, 200)
         labels = [x['label'] for x in response.json()]
@@ -182,7 +176,6 @@ class BaseTest(unittest.TestCase):
             self.assertEqual(response.status_code, 204)
 
     def DeleteAllUserDigitalWallet(self, username):
-        self.lg('Delete all user\'s digital wallet , should succeed with 204')
         response = self.client_1.api.GetUserDigitalWallets(username)
         self.assertEqual(response.status_code, 200)
         labels = [x['label'] for x in response.json()]
@@ -191,7 +184,6 @@ class BaseTest(unittest.TestCase):
             self.assertEqual(response.status_code, 204)
 
     def DeleteAllUserRegistries(self, username):
-        self.lg('Delete all user\'s registries, should succeed with 204')
         response = self.client_1.api.GetRegistries(username)
         self.assertEqual(response.status_code, 200)
         keys = [x['Key'] for x in response.json()]
@@ -200,7 +192,6 @@ class BaseTest(unittest.TestCase):
             self.assertEqual(response.status_code, 204)
 
     def DeleteAllUserApiKeys(self, username):
-        self.lg('Delete all user\'s apikeys, should succeed with 204')
         response = self.client_1.api.ListAPIKeys(username)
         self.assertEqual(response.status_code, 200)
         labels = [x['label'] for x in response.json()[1:]]
