@@ -80,14 +80,16 @@ class OrganizationsTestsB(BaseTest):
         self.assertEqual(response.status_code, 201)
 
     def tearDown(self):
-        orgs = [self.org_11_globalid, self.org_12_globalid, self.org_13_globalid, self.org_21_globalid, self.org_22_globalid]
-        for org in orgs:
-            self.lg('Delete org %s' % org)
-            try:
-                response = self.client_1.api.DeleteOrganization(org)
-                self.assertEqual(response.status_code, 204)
-            except:
-                self.lg('Failed to delete org %s' % org)
+        # user_1 orgs
+        response = self.client_1.api.GetUserOrganizations(self.user_1)
+        self.assertEqual(response.status_code, 200)
+        for org in response.json()['owner']:
+            response = self.client_1.api.DeleteOrganization(org)
+        # user_2 orgs
+        response = self.client_2.api.GetUserOrganizations(self.user_2)
+        self.assertEqual(response.status_code, 200)
+        for org in response.json()['owner']:
+            response = self.client_2.api.DeleteOrganization(org)
         super(OrganizationsTestsB, self).tearDown()
 
     @unittest.skip('bug: #442')
