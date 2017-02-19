@@ -21,7 +21,6 @@ else
 	exit 0
 fi
 
-cd functional_testing/Itsyouonline/api_testing
 echo -e "${GREEN}** Checking python-pip ...${NC}";
 which pip2 || apt-get install -y python-pip
 echo -e "${GREEN}** Activating JumpScale virtual env ...${NC}"
