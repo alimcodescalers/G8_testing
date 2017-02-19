@@ -43,6 +43,16 @@ class Client:
         uri = uri + build_query_string(query_params)
         return self.session.post(uri, json={})
 
+    def AcceptOrgMembership(self, globalid, role, invitingorg,  query_params=None):
+        """
+        Accept membership in organization
+        It is method for POST /organizations/{globalid}/organizations/{invitingorg}/roles/{role}
+        """
+        uri = self.url + "organizations/"+globalid+"/organizations/"+invitingorg+"/roles/"+role
+        uri = uri + build_query_string(query_params)
+        return self.session.post(uri, json={})
+
+
     def RejectMembership(self, globalid, role, username,  query_params=None):
         """
         Reject membership invitation in an organization.
@@ -572,6 +582,24 @@ class Client:
         uri = uri + build_query_string(query_params)
         return self.session.post(uri, json=data)
 
+    def AddOrganizationOrgmember(self, data, globalid, query_params=None):
+        """
+        Assign a member to organization.
+        It is method for POST /organizations/{globalid}/orgmembers/invite
+        """
+        uri = self.url + "organizations/"+globalid+"/orgmembers/invite"
+        uri = uri + build_query_string(query_params)
+        return self.session.post(uri, json=data)
+
+    def AddOrganizationOrgowner(self, data, globalid, query_params=None):
+        """
+        Assign a member to organization.
+        It is method for POST /organizations/{globalid}/orgowners/invite
+        """
+        uri = self.url + "organizations/"+globalid+"/orgowners/invite"
+        uri = uri + build_query_string(query_params)
+        return self.session.post(uri, json=data)
+
     def UpdateOrganizationMemberShip(self, data, globalid, query_params=None):
         """
         Update an organization membership
@@ -621,9 +649,9 @@ class Client:
         Create a new contract.
         It is method for POST /organizations/{globalid}/contracts
         """
-        uri = self.url + "/organizations/"+globalid+"/contracts"
+        uri = self.url + "organizations/"+globalid+"/contracts"
         uri = uri + build_query_string(query_params)
-        return self.session.post(uri, data)
+        return self.session.post(uri, json=data)
 
     def GetPendingOrganizationInvitations(self, globalid, query_params=None):
         """
@@ -817,6 +845,21 @@ class Client:
         uri = self.url + "organizations/"+globalid+"/logo"
         return self.session.put(uri, json=data)
 
+    def IncludeSuborgsof(self, data, globalid):
+        """
+        Add an orgmember or orgowner organization to the includesuborgsof list
+        It is method for POST /organizations/{globalid}/orgmembers/includesuborgs
+        """
+        uri = self.url + "organizations/"+globalid+"/orgmembers/includesuborgs"
+        return self.session.post(uri, json=data)
+
+    def RemoveIncludeSuborgsof(self, globalid, orgmember):
+        """
+        Remove an orgmember or orgowner organization to the includesuborgsof list
+        It is method for DELETE /organizations/{globalid}/orgmembers/includesuborgs/{orgmember}
+        """
+        uri = self.url + "organizations/"+globalid+"/orgmembers/includesuborgs/"+orgmember
+        return self.session.delete(uri)
 
     def DeleteOrganizationLogo(self, globalid):
         """
