@@ -80,23 +80,14 @@ class OrganizationsTestsB(BaseTest):
         self.assertEqual(response.status_code, 201)
 
     def tearDown(self):
-
-        self.lg('Delete org %s' % self.org_11_globalid)
-        response = self.client_1.api.DeleteOrganization(self.org_11_globalid)
-        self.assertEqual(response.status_code, 204)
-        self.lg('Delete org %s' % self.org_12_globalid)
-        response = self.client_1.api.DeleteOrganization(self.org_12_globalid)
-        self.assertEqual(response.status_code, 204)
-        self.lg('Delete org %s' % self.org_13_globalid)
-        response = self.client_1.api.DeleteOrganization(self.org_13_globalid)
-        self.assertEqual(response.status_code, 204)
-        self.lg('Delete org %s' % self.org_21_globalid)
-        response = self.client_2.api.DeleteOrganization(self.org_21_globalid)
-        self.assertEqual(response.status_code, 204)
-        self.lg('Delete org %s' % self.org_22_globalid)
-        response = self.client_2.api.DeleteOrganization(self.org_22_globalid)
-        self.assertEqual(response.status_code, 204)
-
+        orgs = [self.org_11_globalid, self.org_12_globalid, self.org_13_globalid, self.org_21_globalid, self.org_22_globalid]
+        for org in orgs:
+            self.lg('Delete org %s' % org)
+            try:
+                response = self.client_1.api.DeleteOrganization(org)
+                self.assertEqual(response.status_code, 204)
+            except:
+                self.lg('Failed to delete org %s' % org)
         super(OrganizationsTestsB, self).tearDown()
 
     @unittest.skip('bug: #442')
@@ -577,7 +568,7 @@ class OrganizationsTestsB(BaseTest):
 
         for role in ['orgmember', 'orgowner']:
 
-            self.lg('org-11 invite nonexisting organization to join org_11 role %s , should succeed with 201' % role)
+            self.lg('org-11 invite nonexisting organization to join org_11 role %s , should fail with 404' % role)
             data = {'searchstring': 'fake_organization'}
             if role =="orgmember":
                 response = self.client_1.api.AddOrganizationOrgmember(data, globalid)
@@ -1201,7 +1192,7 @@ class OrganizationsTestsB(BaseTest):
         response = self.client_1.api.CreateOrganizationContracts(data, globalid)
         self.assertEqual(response.status_code, 201)
 
-        self.lg('[GET] Get user\'s contracts, should succeed with 200')
+        self.lg('[GET] Get organization\'s contracts, should succeed with 200')
         response = self.client_1.api.GetOrganizationContracts(globalid)
         self.assertEqual(response.status_code, 200)
         self.assertNotEqual(contractid_3, response.json()[-1]['contractId'])
@@ -1212,17 +1203,17 @@ class OrganizationsTestsB(BaseTest):
         self.assertEqual(response.status_code, 200)
         number_of_contracts = len(response.json())-1
 
-        self.lg('[GET] Get user\'s contracts & include the expired contracts, should succeed with 200')
+        self.lg('[GET] Get organization\'s contracts & include the expired contracts, should succeed with 200')
         response = self.client_1.api.GetOrganizationContracts(globalid, query_params={"max":1000,"includeExpired":True})
         self.assertEqual(response.status_code, 200)
         self.assertEqual(contractid_3, response.json()[-1]['contractId'])
 
-        self.lg('[GET] Get user\'s contracts with page size 1, should succeed with 200')
+        self.lg('[GET] Get organization\'s contracts with page size 1, should succeed with 200')
         response = self.client_1.api.GetOrganizationContracts(globalid, query_params={"max":1, "start":number_of_contracts})
         self.assertEqual(contractid_2, response.json()[0]['contractId'])
         self.assertEqual(response.status_code, 200)
 
-        self.lg('[GET] Get user\'s contracts with page size 2, should succeed with 200')
+        self.lg('[GET] Get organization\'s contracts with page size 2, should succeed with 200')
         response = self.client_1.api.GetOrganizationContracts(globalid, query_params={"max":1, "start":number_of_contracts-1})
         self.assertEqual(response.status_code, 200)
         self.assertEqual(contractid_1, response.json()[0]['contractId'])

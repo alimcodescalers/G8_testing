@@ -855,7 +855,7 @@ class Client:
 
     def RemoveIncludeSuborgsof(self, globalid, orgmember):
         """
-        Add an orgmember or orgowner organization to the includesuborgsof list
+        Remove an orgmember or orgowner organization to the includesuborgsof list
         It is method for DELETE /organizations/{globalid}/orgmembers/includesuborgs/{orgmember}
         """
         uri = self.url + "organizations/"+globalid+"/orgmembers/includesuborgs/"+orgmember
