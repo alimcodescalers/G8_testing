@@ -28,6 +28,7 @@ pip2 install virtualenv
 virtualenv venv
 source venv/bin/activate
 echo -e "${GREEN}** Installing G8_testing requirements ...${NC}"
+apt-get install build-essential libssl-dev libffi-dev python-dev
 pip2 install -r requirements.txt
 echo -e "${GREEN}** Running tests ...${NC}"
 nosetests -v --logging-level=WARNING $directory --tc-file config.ini --with-xunit --xunit-file='testresults.xml' --with-progressive

@@ -12,6 +12,7 @@ class UsersTestsA(BaseTest):
 
 
     #Currently fail due to issue https://github.com/itsyouonline/identityserver/issues/218
+    @unittest.skip("fail due to issue https://github.com/itsyouonline/identityserver/issues/467")
     def test001_get_user(self):
         """ ITSYOU-001
         *Test case for check get user /users/{username}.*
