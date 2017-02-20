@@ -125,7 +125,7 @@ class BaseTest(unittest.TestCase):
 
     def time_rfc3339_format(self):
         d = datetime.datetime.utcnow()
-        d = d.isoformat("T") + "Z"
+        d = d.isoformat("T")[:str(d).rfind('.')] + "Z"
         return d
 
     def SetTotp(self, username):
