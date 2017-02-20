@@ -12,7 +12,7 @@ import requests
 
 from testconfig import config
 from testframework import base
-# from testframework.email_verification import email_verification
+import datetime
 
 class BaseTest(unittest.TestCase):
     def __init__(self, *args, **kwargs):
@@ -127,6 +127,11 @@ class BaseTest(unittest.TestCase):
 
     def lg(self, msg):
         self._logger.info(msg)
+
+    def time_rfc3339_format(self):
+        d = datetime.datetime.utcnow()
+        d = d.isoformat("T")[:str(d).rfind('.')] + "Z"
+        return d
 
     def SetTotp(self, username):
         self.lg('Set totp code, should succeed with 204')

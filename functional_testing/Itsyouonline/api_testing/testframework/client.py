@@ -893,7 +893,7 @@ class Client:
         Get a contract
         It is method for GET /contracts/{contractId}
         """
-        uri = self.url + "/contracts/"+contractId
+        uri = self.url + "contracts/"+contractId
         uri = uri + build_query_string(query_params)
         return self.session.get(uri)
 
@@ -902,9 +902,9 @@ class Client:
         Sign a contract
         It is method for POST /contracts/{contractId}/signatures
         """
-        uri = self.url + "/contracts/"+contractId+"/signatures"
+        uri = self.url + "contracts/"+contractId+"/signatures"
         uri = uri + build_query_string(query_params)
-        return self.session.post(uri, data)
+        return self.session.post(uri, json=data)
 
     def GetRegistries(self, username, query_params=None):
         """
