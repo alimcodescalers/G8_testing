@@ -750,15 +750,6 @@ class Client:
         uri = uri + build_query_string(query_params)
         return self.session.delete(uri)
 
-    def GetCompanyList(self, query_params=None):
-        """
-        Get companies. Authorization limits are applied to requesting user.
-        It is method for GET /companies
-        """
-        uri = self.url + "/companies"
-        uri = uri + build_query_string(query_params)
-        return self.session.get(uri)
-
     def UpdateOrganizationOrgMemberShip(self, data, globalid, query_params=None):
         """
         Update the membership status of an organization
@@ -830,61 +821,70 @@ class Client:
     def CreateCompany(self, data, query_params=None):
         """
         Register a new company
-        It is method for POST /companies
+        It is method for POST companies
         """
-        uri = self.url + "/companies"
+        uri = self.url + "companies"
         uri = uri + build_query_string(query_params)
-        return self.session.post(uri, data)
+        return self.session.post(uri, json=data)
+
+    def GetCompanyList(self, query_params=None):
+        """
+        Get companies. Authorization limits are applied to requesting user.
+        It is method for GET companies
+        """
+        uri = self.url + "companies"
+        uri = uri + build_query_string(query_params)
+        return self.session.get(uri)
 
     def GetCompany(self, globalId, query_params=None):
         """
         Get organization info
-        It is method for GET /companies/{globalId}
+        It is method for GET companies/{globalId}
         """
-        uri = self.url + "/companies/"+globalId
+        uri = self.url + "companies/"+globalId
         uri = uri + build_query_string(query_params)
         return self.session.get(uri)
 
     def UpdateCompany(self, data, globalId, query_params=None):
         """
         Update existing company. Updating ``globalId`` is not allowed.
-        It is method for PUT /companies/{globalId}
+        It is method for PUT companies/{globalId}
         """
-        uri = self.url + "/companies/"+globalId
+        uri = self.url + "companies/"+globalId
         uri = uri + build_query_string(query_params)
-        return self.session.put(uri, data)
+        return self.session.put(uri, json=data)
 
     def GetCompanyContracts(self, globalId, query_params=None):
         """
         Get the contracts where the organization is 1 of the parties. Order descending by date.
-        It is method for GET /companies/{globalId}/contracts
+        It is method for GET companies/{globalId}/contracts
         """
-        uri = self.url + "/companies/"+globalId+"/contracts"
+        uri = self.url + "companies/"+globalId+"/contracts"
         uri = uri + build_query_string(query_params)
         return self.session.get(uri)
 
     def CreateCompanyContract(self, data, globalId, query_params=None):
         """
         Create a new contract.
-        It is method for POST /companies/{globalId}/contracts
+        It is method for POST companies/{globalId}/contracts
         """
-        uri = self.url + "/companies/"+globalId+"/contracts"
+        uri = self.url + "companies/"+globalId+"/contracts"
         uri = uri + build_query_string(query_params)
-        return self.session.post(uri, data)
+        return self.session.post(uri, json=data)
 
     def GetCompanyInfo(self, globalId, query_params=None):
         """
-        It is method for GET /companies/{globalId}/info
+        It is method for GET companies/{globalId}/info
         """
-        uri = self.url + "/companies/"+globalId+"/info"
+        uri = self.url + "companies/"+globalId+"/info"
         uri = uri + build_query_string(query_params)
         return self.session.get(uri)
 
     def companies_byGlobalId_validate_get(self, globalId, query_params=None):
         """
-        It is method for GET /companies/{globalId}/validate
+        It is method for GET companies/{globalId}/validate
         """
-        uri = self.url + "/companies/"+globalId+"/validate"
+        uri = self.url + "companies/"+globalId+"/validate"
         uri = uri + build_query_string(query_params)
         return self.session.get(uri)
 
