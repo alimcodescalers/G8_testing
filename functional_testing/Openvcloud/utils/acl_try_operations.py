@@ -366,10 +366,17 @@ def try_machine_read(self, operation='machine_get'):
         snapshots = self.user_api.cloudapi.machines.listSnapshots(machineId=self.machine_id)
         self.assertEqual(len(snapshots), 1)
         self.assertEqual(snapshots[0]['name'], name)
-    elif operation == 'machine_getHistory':
-        time.sleep(2)
-        histories = self.user_api.cloudapi.machines.getHistory(machineId=self.machine_id,
+    elif operation == 'machine_getHistory':    
+        for _  in range(10):
+            time.sleep(2)
+            histories = self.user_api.cloudapi.machines.getHistory(machineId=self.machine_id,
                                                                size=10)
+            
+            if histories != []:                                                   
+                break 
+        else:
+            raise AssertionError('there is no history for vm %s'%self.machine_id)
+                       
         self.assertIn('Created', [history['message'] for history in histories])
     else:
         raise AssertionError('Un-supported operation [%s]' % operation)
