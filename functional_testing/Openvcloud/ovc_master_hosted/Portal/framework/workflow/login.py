@@ -7,10 +7,17 @@ class login():
         self.framework = framework
 
     def GetIt(self):
-        self.framework.get_page(self.framework.environment_url)
-        time.sleep(5)
-        self.framework.click('landing_page_login')
-
+        for _ in range(5):
+            self.framework.get_page(self.framework.environment_url)
+            time.sleep(5)
+            try:
+                self.framework.click('landing_page_login')
+            except:
+                time.sleep(2)
+            else:
+                break
+        else:
+            self.framework.click('landing_page_login')
         if not self.IsAt():
             self.framework.fail("The login page isn't loading well.")
 

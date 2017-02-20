@@ -7,11 +7,11 @@ class ContractsTests(BaseTest):
 
     def setUp(self):
         super(ContractsTests, self).setUp()
-        response = self.client.api.GetUserOrganizations(self.user)
-        self.lg('GetUserOrganizations [%s] response [%s]' % (self.user, response.json()))
+        response = self.client_1.api.GetUserOrganizations(self.user_1)
+        self.lg('GetUserOrganizations [%s] response [%s]' % (self.user_1, response.json()))
         self.assertEqual(response.status_code, 200)
         organization_id = response.json()['owner'][0]
-        response = self.client.api.GetOrganizationContracts(organization_id)
+        response = self.client_1.api.GetOrganizationContracts(organization_id)
         self.assertEqual(response.status_code, 200)
         self.contractId = response.json()[0]
         self.lg('contractId %s' % self.contractId)
@@ -28,7 +28,7 @@ class ContractsTests(BaseTest):
         #. validate all expected keys in the returned response
         """
         self.lg('%s STARTED' % self._testID)
-        response = self.client.api.GetContract(self.contractId)
+        response = self.client_1.api.GetContract(self.contractId)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(type(response.json()), types.DictType)
         self.lg('%s ENDED' % self._testID)

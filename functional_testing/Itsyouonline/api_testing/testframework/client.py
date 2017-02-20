@@ -43,6 +43,16 @@ class Client:
         uri = uri + build_query_string(query_params)
         return self.session.post(uri, json={})
 
+    def AcceptOrgMembership(self, globalid, role, invitingorg,  query_params=None):
+        """
+        Accept membership in organization
+        It is method for POST /organizations/{globalid}/organizations/{invitingorg}/roles/{role}
+        """
+        uri = self.url + "organizations/"+globalid+"/organizations/"+invitingorg+"/roles/"+role
+        uri = uri + build_query_string(query_params)
+        return self.session.post(uri, json={})
+
+
     def RejectMembership(self, globalid, role, username,  query_params=None):
         """
         Reject membership invitation in an organization.
@@ -572,6 +582,24 @@ class Client:
         uri = uri + build_query_string(query_params)
         return self.session.post(uri, json=data)
 
+    def AddOrganizationOrgmember(self, data, globalid, query_params=None):
+        """
+        Assign a member to organization.
+        It is method for POST /organizations/{globalid}/orgmembers/invite
+        """
+        uri = self.url + "organizations/"+globalid+"/orgmembers/invite"
+        uri = uri + build_query_string(query_params)
+        return self.session.post(uri, json=data)
+
+    def AddOrganizationOrgowner(self, data, globalid, query_params=None):
+        """
+        Assign a member to organization.
+        It is method for POST /organizations/{globalid}/orgowners/invite
+        """
+        uri = self.url + "organizations/"+globalid+"/orgowners/invite"
+        uri = uri + build_query_string(query_params)
+        return self.session.post(uri, json=data)
+
     def UpdateOrganizationMemberShip(self, data, globalid, query_params=None):
         """
         Update an organization membership
@@ -621,9 +649,9 @@ class Client:
         Create a new contract.
         It is method for POST /organizations/{globalid}/contracts
         """
-        uri = self.url + "/organizations/"+globalid+"/contracts"
+        uri = self.url + "organizations/"+globalid+"/contracts"
         uri = uri + build_query_string(query_params)
-        return self.session.post(uri, data)
+        return self.session.post(uri, json=data)
 
     def GetPendingOrganizationInvitations(self, globalid, query_params=None):
         """
@@ -750,15 +778,6 @@ class Client:
         uri = uri + build_query_string(query_params)
         return self.session.delete(uri)
 
-    def GetCompanyList(self, query_params=None):
-        """
-        Get companies. Authorization limits are applied to requesting user.
-        It is method for GET /companies
-        """
-        uri = self.url + "/companies"
-        uri = uri + build_query_string(query_params)
-        return self.session.get(uri)
-
     def UpdateOrganizationOrgMemberShip(self, data, globalid, query_params=None):
         """
         Update the membership status of an organization
@@ -817,6 +836,21 @@ class Client:
         uri = self.url + "organizations/"+globalid+"/logo"
         return self.session.put(uri, json=data)
 
+    def IncludeSuborgsof(self, data, globalid):
+        """
+        Add an orgmember or orgowner organization to the includesuborgsof list
+        It is method for POST /organizations/{globalid}/orgmembers/includesuborgs
+        """
+        uri = self.url + "organizations/"+globalid+"/orgmembers/includesuborgs"
+        return self.session.post(uri, json=data)
+
+    def RemoveIncludeSuborgsof(self, globalid, orgmember):
+        """
+        Remove an orgmember or orgowner organization to the includesuborgsof list
+        It is method for DELETE /organizations/{globalid}/orgmembers/includesuborgs/{orgmember}
+        """
+        uri = self.url + "organizations/"+globalid+"/orgmembers/includesuborgs/"+orgmember
+        return self.session.delete(uri)
 
     def DeleteOrganizationLogo(self, globalid):
         """
@@ -830,61 +864,70 @@ class Client:
     def CreateCompany(self, data, query_params=None):
         """
         Register a new company
-        It is method for POST /companies
+        It is method for POST companies
         """
-        uri = self.url + "/companies"
+        uri = self.url + "companies"
         uri = uri + build_query_string(query_params)
-        return self.session.post(uri, data)
+        return self.session.post(uri, json=data)
+
+    def GetCompanyList(self, query_params=None):
+        """
+        Get companies. Authorization limits are applied to requesting user.
+        It is method for GET companies
+        """
+        uri = self.url + "companies"
+        uri = uri + build_query_string(query_params)
+        return self.session.get(uri)
 
     def GetCompany(self, globalId, query_params=None):
         """
         Get organization info
-        It is method for GET /companies/{globalId}
+        It is method for GET companies/{globalId}
         """
-        uri = self.url + "/companies/"+globalId
+        uri = self.url + "companies/"+globalId
         uri = uri + build_query_string(query_params)
         return self.session.get(uri)
 
     def UpdateCompany(self, data, globalId, query_params=None):
         """
         Update existing company. Updating ``globalId`` is not allowed.
-        It is method for PUT /companies/{globalId}
+        It is method for PUT companies/{globalId}
         """
-        uri = self.url + "/companies/"+globalId
+        uri = self.url + "companies/"+globalId
         uri = uri + build_query_string(query_params)
-        return self.session.put(uri, data)
+        return self.session.put(uri, json=data)
 
     def GetCompanyContracts(self, globalId, query_params=None):
         """
         Get the contracts where the organization is 1 of the parties. Order descending by date.
-        It is method for GET /companies/{globalId}/contracts
+        It is method for GET companies/{globalId}/contracts
         """
-        uri = self.url + "/companies/"+globalId+"/contracts"
+        uri = self.url + "companies/"+globalId+"/contracts"
         uri = uri + build_query_string(query_params)
         return self.session.get(uri)
 
     def CreateCompanyContract(self, data, globalId, query_params=None):
         """
         Create a new contract.
-        It is method for POST /companies/{globalId}/contracts
+        It is method for POST companies/{globalId}/contracts
         """
-        uri = self.url + "/companies/"+globalId+"/contracts"
+        uri = self.url + "companies/"+globalId+"/contracts"
         uri = uri + build_query_string(query_params)
-        return self.session.post(uri, data)
+        return self.session.post(uri, json=data)
 
     def GetCompanyInfo(self, globalId, query_params=None):
         """
-        It is method for GET /companies/{globalId}/info
+        It is method for GET companies/{globalId}/info
         """
-        uri = self.url + "/companies/"+globalId+"/info"
+        uri = self.url + "companies/"+globalId+"/info"
         uri = uri + build_query_string(query_params)
         return self.session.get(uri)
 
     def companies_byGlobalId_validate_get(self, globalId, query_params=None):
         """
-        It is method for GET /companies/{globalId}/validate
+        It is method for GET companies/{globalId}/validate
         """
-        uri = self.url + "/companies/"+globalId+"/validate"
+        uri = self.url + "companies/"+globalId+"/validate"
         uri = uri + build_query_string(query_params)
         return self.session.get(uri)
 

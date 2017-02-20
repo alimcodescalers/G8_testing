@@ -8,10 +8,10 @@ class OrganizationsTests(BaseTest):
 
     def setUp(self):
         super(OrganizationsTests, self).setUp()
-        response = self.client.api.GetUserOrganizations(self.user)
-        self.lg('GetUserOrganizations [%s] response [%s]' % (self.user, response.json()))
+        response = self.client_1.api.GetUserOrganizations(self.user_1)
+        self.lg('GetUserOrganizations [%s] response [%s]' % (self.user_1, response.json()))
         self.assertEqual(response.status_code, 200)
-        self.organization_id = response.json()['owner'][0]
+        self.organization_id = response.json()['owner'][-1]
         self.lg('organization_id %s' % self.organization_id)
 
     #Currently fail due to issue https://github.com/itsyouonline/identityserver/issues/233
@@ -26,7 +26,7 @@ class OrganizationsTests(BaseTest):
         #. validate all expected keys in the returned response
         """
         self.lg('%s STARTED' % self._testID)
-        response = self.client.api.GetOrganization(self.organization_id)
+        response = self.client_1.api.GetOrganization(self.organization_id)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(type(response.json()), types.DictType)
         self.lg('%s ENDED' % self._testID)
@@ -41,7 +41,7 @@ class OrganizationsTests(BaseTest):
         #. validate all expected keys in the returned response
         """
         self.lg('%s STARTED' % self._testID)
-        response = self.client.api.GetOrganizationTree(self.organization_id)
+        response = self.client_1.api.GetOrganizationTree(self.organization_id)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(type(response.json()), types.DictType)
         self.lg('%s ENDED' % self._testID)
@@ -58,7 +58,7 @@ class OrganizationsTests(BaseTest):
         #. validate all expected keys in the returned response
         """
         self.lg('%s STARTED' % self._testID)
-        response = self.client.api.GetOrganizationContracts(self.organization_id)
+        response = self.client_1.api.GetOrganizationContracts(self.organization_id)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(type(response.json()), types.ListType)
         self.lg('%s ENDED' % self._testID)
@@ -75,7 +75,7 @@ class OrganizationsTests(BaseTest):
         #. validate all expected keys in the returned response
         """
         self.lg('%s STARTED' % self._testID)
-        response = self.client.api.GetPendingOrganizationInvitations(self.organization_id)
+        response = self.client_1.api.GetPendingOrganizationInvitations(self.organization_id)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(type(response.json()), types.ListType)
         self.lg('%s ENDED' % self._testID)
@@ -92,12 +92,11 @@ class OrganizationsTests(BaseTest):
         #. validate all expected keys in the returned response
         """
         self.lg('%s STARTED' % self._testID)
-        response = self.client.api.GetOrganizationAPIKeyLabels(self.organization_id)
+        response = self.client_1.api.GetOrganizationAPIKeyLabels(self.organization_id)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(type(response.json()), types.ListType)
         label = response.json()[0]
-        response = self.client.api.GetOrganizationAPIKey(label, self.organization_id)
+        response = self.client_1.api.GetOrganizationAPIKey(label, self.organization_id)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(type(response.json()), types.DictType)
         self.lg('%s ENDED' % self._testID)
-
