@@ -30,7 +30,9 @@ Steps to install itsyouonline locally:
 # Pre-Requirements:
 
 1. Create two itsyouonline accounts using sign-up.
+
 > During signing up the first account scan the QR using any QR scanner and save the secret value, we will put it in config.ini file later.
+
 2. For each account create **APIKEY**.
 3. Fill the data required in ```config,ini``` file according to your environment as follow:
 
@@ -48,7 +50,9 @@ user2_password            : User (2) password
 user2_applicationid       : User (2) apikey applicationid
 user2_secret              : User (2) apikey secret
 ```
-<a href="vmail_config.md"><bSee how to configure verification email</a>
+
+<a href="vmail_config.md"><b> See how to configure verification email</b></a>
+
 
 
 # Requirements:
