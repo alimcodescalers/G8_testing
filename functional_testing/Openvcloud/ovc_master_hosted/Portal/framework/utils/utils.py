@@ -142,10 +142,10 @@ class BaseTest(unittest.TestCase):
             if self.browser == 'firefox':
                 for _ in range(10):
                     if not self.driver.title:
-                        time.sleep(1)
+                        time.sleep(2)
                         try:
                             self.driver.execute_script('angular.resumeBootstrap();')
-                            time.sleep(1)
+                            time.sleep(2)
                         except:
                             pass
                     else:

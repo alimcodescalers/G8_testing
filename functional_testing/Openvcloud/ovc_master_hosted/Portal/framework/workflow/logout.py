@@ -13,5 +13,6 @@ class logout():
 
     def End_User_Logout(self):
         self.framework.lg('Do logout')
+        self.framework.click('drop_down_menu')
         self.framework.click('logout_button')
         self.framework.lg('Logout done successfully')
