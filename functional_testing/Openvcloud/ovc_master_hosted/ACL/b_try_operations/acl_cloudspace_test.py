@@ -447,7 +447,8 @@ class Admin(ACLCLOUDSPACE):
                            'cloudspacePortforwardingUpdate',
                            'cloudspacePortforwardingDelete',
                            'cloudspaceMachineCreate',
-                           'cloudspaceMachineClone',
+                           #'cloudspaceMachineClone',
+                           #skip("https://github.com/0-complexity/openvcloud/issues/745")
                            'cloudspaceMachineDelete',
                            'cloudspaceMachineResize'])
     def test002a_try_cloudspace_write_operations(self, operation):

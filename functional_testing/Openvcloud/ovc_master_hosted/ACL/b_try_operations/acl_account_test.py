@@ -1,6 +1,6 @@
 # coding=utf-8
 from nose_parameterized import parameterized
-
+import unittest
 from ....utils.utils import BasicACLTest
 from ....utils.acl_try_operations import *
 from JumpScale.portal.portal.PortalClient2 import ApiError
@@ -235,7 +235,8 @@ class Write(ACLACCOUNT):
                            'cloudspacePortforwardingUpdate',
                            'cloudspacePortforwardingDelete',
                            'cloudspaceMachineCreate',
-                           'cloudspaceMachineClone',
+                           #'cloudspaceMachineClone',
+                           #skip("https://github.com/0-complexity/openvcloud/issues/745")
                            'cloudspaceMachineDelete',
                            'cloudspaceMachineResize'])
     def test000a_try_cloudspace_write_operations(self, operation):
@@ -598,7 +599,8 @@ class Admin(ACLACCOUNT):
                            'cloudspacePortforwardingUpdate',
                            'cloudspacePortforwardingDelete',
                            'cloudspaceMachineCreate',
-                           'cloudspaceMachineClone',
+                           #skip ("https://github.com/0-complexity/openvcloud/issues/745")
+                           #'cloudspaceMachineClone',
                            'cloudspaceMachineDelete',
                            'cloudspaceMachineResize'])
     def test002b_try_cloudspace_write_operations(self, operation):
@@ -610,8 +612,9 @@ class Admin(ACLACCOUNT):
         #. add user1 to the cloudspace created by user2 with admin access
         #. try write operation on user2 with user1, should succeed
         """
+ 
         self.lg('%s STARTED' % self._testID)
-
+        
         accesstype = 'ACDRUX'
         self.lg('- add user1 to the account owned by user2 with access type [%s]' % accesstype)
         self.add_user_to_account(account_id=self.account_id,
