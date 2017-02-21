@@ -196,6 +196,17 @@ class BaseTest(unittest.TestCase):
         else:
             return False
 
+    def wait_until_element_attribute_has_text(self, element, attribute, text):
+        for _ in range(10):
+            try:
+                if element.get_attribute(attribute) == text:
+                    return True
+            except:
+                time.sleep(1)
+        else:
+            return False
+
+
     def wait_unti_element_clickable(self, element):
         method = self.elements[element][0]
         value = self.elements[element][1]
@@ -368,18 +379,11 @@ class BaseTest(unittest.TestCase):
             self.fail("this %s item isn't exist in this url: %s" % (text_item, self.get_url()))
 
     def get_storage_list(self):
-        item = ''
-        storage_menu = []
-        for _ in self.environment_storage:
-            if _ != "," and self.environment_storage.index(_) != len(self.environment_storage) - 1:
-                item += _
-            elif self.environment_storage.index(_) == len(self.environment_storage) - 1:
-                item += _
-                storage_menu.append(item)
-            else:
-                storage_menu.append(item)
-                item = ''
-        return storage_menu
+        locations = self.environment_storage.split(',')
+        if len(locations) < 2:
+            return []
+        else:
+            return locations
 
     def get_table_rows(self,element= None):
         'This method return all rows in the current page else return false'
