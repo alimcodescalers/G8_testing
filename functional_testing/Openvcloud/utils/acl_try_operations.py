@@ -56,7 +56,7 @@ def try_account_write(self, operation='create_cloudspace'):
         stopped = self.user_api.cloudapi.machines.stop(machineId=machineId)
         self.assertTrue(stopped, 'machine2 %s did not stopped' % machine_id)
 
-        self.lg('- use created machine2 to create machineTemplate with user1')
+        self.lg('- use convert machine2 to template with user1')
         converted = self.user_api.cloudapi.machines.convertToTemplate(machineId=machineId,
                   templatename=str(uuid.uuid4()).replace('-', '')[0:10])
         self.assertTrue(converted, 'Create Template API returned False')
@@ -69,7 +69,7 @@ def try_account_write(self, operation='create_cloudspace'):
                 break
             counter-=1
             time.sleep(1)
-        self.assertEqual(status, 'CREATED', 'Template did not created and still %s' % status)
+        self.assertEqual(status, 'CREATED', 'machine did not converted to template')
     else:
         raise AssertionError('Un-supported operation [%s]' % operation)
 

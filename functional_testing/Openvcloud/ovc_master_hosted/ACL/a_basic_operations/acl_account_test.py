@@ -204,13 +204,13 @@ class Write(ACLACCOUNT):
         **Test Scenario:**
 
         #. create cloudspace and machine with user1
-        #. use convertToTemplate to convert machine1 to Template with user1, should fail with '409 Conflict' (machine should be stopped first)
+        #. use convertToTemplate to convert machine1 to template with user1, should fail with '409 Conflict' (machine should be stopped first)
         #. stop machine1
         #. use convertToTemplate to convert machine1 to Template with user1
-        #. try to use created machine1 to create machineTemplate with user2, should fail '403 Forbidden'
+        #. try to use convert machine1 to  template with user2, should fail '403 Forbidden'
         #. add user2 to the account created by user1 with write access.
-        #. use created machine1 to create machineTemplate with user2, should succeed
-        #. delete user1 account, create machineTemplate with user1, should fail '404 Not Found'
+        #. use convert machine1 to template with user2, should succeed
+        #. use convert machine1 to template with user1, should fail with 404'
         """
         self.lg('%s STARTED' % self._testID)
         self._cloudspaces = []
@@ -227,16 +227,18 @@ class Write(ACLACCOUNT):
                                                   image_id=selected_image['id'])
         self._machines.append(machine_id)
 
-        self.lg('2- use created machine1 to create machineTemplate with user1, should fail with 409 (machine should be stopped first)')
+        self.lg('use convertToTemplate to convert machine1 to Template with user1, should fail with '409 Conflict' (machine should be stopped first)')
         try:
             self.account_owner_api.cloudapi.machines.convertToTemplate(machineId=machine_id, templatename=str(uuid.uuid4()).replace('-', '')[0:10])
         except ApiError as e:
             self.lg('- expected error raised %s' % e.message)
             self.assertEqual(e.message, '409 Conflict')
 
+        self.lg('stop machine1')
         stopped = self.account_owner_api.cloudapi.machines.stop(machineId=machine_id)
         self.assertTrue(stopped, 'machine1 %s did not stopped' % machine_id)
 
+        self.lg('use convertToTemplate to convert machine1 to Template with user1)
         converted = self.account_owner_api.cloudapi.machines.convertToTemplate(machineId=machine_id, templatename=str(uuid.uuid4()).replace('-', '')[0:10])
         self.assertTrue(converted, 'machine1 did not converted to template')
 
@@ -250,7 +252,8 @@ class Write(ACLACCOUNT):
             counter-=1
             time.sleep(1)
         self.assertEqual(status, 'CREATED', 'Template did not created and still %s' % status)
-        self.lg('3- try to use created machine1 to create machineTemplate with user2')
+
+        self.lg('try to use convert machine1 to  template with user2, should fail 403 Forbidden')
         try:
             self.user_api.cloudapi.machines.convertToTemplate(machineId=machine_id,
             templatename=str(uuid.uuid4()).replace('-', '')[0:10])
@@ -263,7 +266,7 @@ class Write(ACLACCOUNT):
                                            userId=self.user,
                                            accesstype='RCX')
 
-        self.lg('5- use created machine1 to create machineTemplate with user2')
+        self.lg('5- use convert machine1 to create template with user2')
         created = self.user_api.cloudapi.machines.convertToTemplate(machineId=machine_id,
                   templatename=str(uuid.uuid4()).replace('-', '')[0:10])
         self.assertTrue(created, 'Create Template API returned False')
@@ -286,7 +289,7 @@ class Write(ACLACCOUNT):
                              accountId=self.account_id)
         self.CLEANUP['accountId'].remove(self.account_id)
 
-        self.lg('- use created machine1 to create machineTemplate with user1')
+        self.lg('use convert machine1 to template with user1, should fail with 404')
         try:
             self.user_api.cloudapi.machines.convertToTemplate(machineId=machine_id,
                                                            templatename=str(uuid.uuid4()).replace('-', '')[0:10])
