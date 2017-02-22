@@ -120,13 +120,15 @@ class BaseTest(unittest.TestCase):
         return element_value
 
     def check_side_list(self):
-        for temp in range(3):
+        self.wait_until_element_located('left_menu_button')
+        for temp in range(5):
             try:
                 if self.find_element("left_menu").location["x"] < 0:
                     self.click("left_menu_button")
                 break
-            except:
-                self.lg("can't locate the left menu")
+            except Exception as error:
+                self.lg(" * Can't locate the left menu. Error : %s" % error)
+                time.sleep(2)
 
     def open_base_page(self, menu_item='', sub_menu_item=''):
         self.get_page(self.base_page)
@@ -150,11 +152,13 @@ class BaseTest(unittest.TestCase):
                             pass
                     else:
                         break
+        except:
+            # WebDriverException 
+            time.sleep(1)
+            self.driver.get(page_url)
 
-        screen_dimention = self.driver.get_window_size()
-        screen_size = screen_dimention['width'] * screen_dimention['height']
-        if screen_size < 1800*1000:
-            self.driver.set_window_size(1800, 1000)
+        self.maximize_window()
+
 
     def element_is_enabled(self, element):
         return self.find_element(element).is_enabled()
@@ -424,3 +428,10 @@ class BaseTest(unittest.TestCase):
         else:
 
             return False
+
+    def maximize_window(self):
+        time.sleep(1)
+        screen_dimention = self.driver.get_window_size()
+        screen_size = screen_dimention['width'] * screen_dimention['height']
+        if screen_size < 1800*1000:
+            self.driver.set_window_size(1800, 1000)
