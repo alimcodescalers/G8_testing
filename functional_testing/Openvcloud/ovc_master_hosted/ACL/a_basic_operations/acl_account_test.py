@@ -196,6 +196,7 @@ class Write(ACLACCOUNT):
 
         self.lg('%s ENDED' % self._testID)
 
+    @unittest.skip('bug: https://github.com/0-complexity/openvcloud/issues/748')
     def test004_machine_convertToTemplate(self):
         """ ACL-10
         *Test case for machine_convertToTemplate api with user has write access.*
@@ -257,27 +258,27 @@ class Write(ACLACCOUNT):
             self.lg('- expected error raised %s' % e.message)
             self.assertEqual(e.message, '403 Forbidden')
 
-        # self.lg('4- add user2 to the account created by user1')
-        # self.api.cloudapi.accounts.addUser(accountId=self.account_id,
-        #                                    userId=self.user,
-        #                                    accesstype='RCX')
-        #
-        # self.lg('5- use created machine1 to create machineTemplate with user2')
-        # created = self.user_api.cloudapi.machines.convertToTemplate(machineId=machine_id,
-        #           templatename=str(uuid.uuid4()).replace('-', '')[0:10])
-        # self.assertTrue(created, 'Create Template API returned False')
-        # templates = len(self.account_owner_api.cloudapi.accounts.listTemplates(accountId=self.account_id))
-        # self.assertEqual(templates, 2, 'We should have only two template for this account not [%s]' % templates)
-        # counter = 120
-        # while(counter>0):
-        #     status1 = self.account_owner_api.cloudapi.accounts.listTemplates(accountId=self.account_id)[0]['status']
-        #     status2 = self.account_owner_api.cloudapi.accounts.listTemplates(accountId=self.account_id)[1]['status']
-        #     if status1 == 'CREATED' and status2 == 'CREATED':
-        #         break
-        #     counter-=1
-        #     time.sleep(1)
-        # self.assertEqual(status1, 'CREATED', 'Template did not created and still %s' % status1)
-        # self.assertEqual(status2, 'CREATED', 'Template did not created and still %s' % status2)
+        self.lg('4- add user2 to the account created by user1')
+        self.api.cloudapi.accounts.addUser(accountId=self.account_id,
+                                           userId=self.user,
+                                           accesstype='RCX')
+
+        self.lg('5- use created machine1 to create machineTemplate with user2')
+        created = self.user_api.cloudapi.machines.convertToTemplate(machineId=machine_id,
+                  templatename=str(uuid.uuid4()).replace('-', '')[0:10])
+        self.assertTrue(created, 'Create Template API returned False')
+        templates = len(self.account_owner_api.cloudapi.accounts.listTemplates(accountId=self.account_id))
+        self.assertEqual(templates, 2, 'We should have only two template for this account not [%s]' % templates)
+        counter = 120
+        while(counter>0):
+            status1 = self.account_owner_api.cloudapi.accounts.listTemplates(accountId=self.account_id)[0]['status']
+            status2 = self.account_owner_api.cloudapi.accounts.listTemplates(accountId=self.account_id)[1]['status']
+            if status1 == 'CREATED' and status2 == 'CREATED':
+                break
+            counter-=1
+            time.sleep(1)
+        self.assertEqual(status1, 'CREATED', 'Template did not created and still %s' % status1)
+        self.assertEqual(status2, 'CREATED', 'Template did not created and still %s' % status2)
 
         self.lg('6- delete user1 account: %s' % self.account_id)
         self.api.cloudbroker.account.delete(accountId=self.account_id, reason='testing')
