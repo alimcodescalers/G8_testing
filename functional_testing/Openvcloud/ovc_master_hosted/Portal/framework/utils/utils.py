@@ -152,11 +152,13 @@ class BaseTest(unittest.TestCase):
                             pass
                     else:
                         break
+        except:
+            # WebDriverException 
+            time.sleep(1)
+            self.driver.get(page_url)
 
-        screen_dimention = self.driver.get_window_size()
-        screen_size = screen_dimention['width'] * screen_dimention['height']
-        if screen_size < 1800*1000:
-            self.driver.set_window_size(1800, 1000)
+        self.maximize_window()
+
 
     def element_is_enabled(self, element):
         return self.find_element(element).is_enabled()
@@ -426,3 +428,10 @@ class BaseTest(unittest.TestCase):
         else:
 
             return False
+
+    def maximize_window(self):
+        time.sleep(1)
+        screen_dimention = self.driver.get_window_size()
+        screen_size = screen_dimention['width'] * screen_dimention['height']
+        if screen_size < 1800*1000:
+            self.driver.set_window_size(1800, 1000)

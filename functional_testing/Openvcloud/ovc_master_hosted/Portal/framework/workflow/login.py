@@ -68,6 +68,7 @@ class login():
                 time.sleep(1)
             else:
                 self.framework.assertEqual(self.framework.driver.title, 'OpenvCloud - Decks', "Can't Login")
+        self.framework.maximize_window()
 
     def LoginFail(self, username='', password=''):
         username = username
