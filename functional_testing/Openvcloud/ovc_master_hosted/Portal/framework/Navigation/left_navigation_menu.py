@@ -110,4 +110,6 @@ class leftNavigationMenu():
             time.sleep(10)
         self.framework.check_side_list()
         self.framework.click(clickable_item)
+        if self.framework.browser == 'firefox':
+            time.sleep(2)
         self.framework.assertTrue(self.framework.element_in_url(check_value))
