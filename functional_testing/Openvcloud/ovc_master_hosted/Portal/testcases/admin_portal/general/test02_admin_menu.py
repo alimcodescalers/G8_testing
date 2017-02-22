@@ -1,5 +1,3 @@
-import unittest
-
 from functional_testing.Openvcloud.ovc_master_hosted.Portal.framework.framework import Framework
 
 
@@ -9,7 +7,6 @@ class AdminMenu(Framework):
 
     def setUp(self):
         super(AdminMenu, self).setUp()
-        self.Login.GetIt()
         self.Login.Login()
         self.get_page(self.base_page)
 
@@ -28,7 +25,8 @@ class AdminMenu(Framework):
         compo_menu = ["At Your Service", "Cloud Broker", "Statistics", "Grid", "Storage", "System", "End User"]
         ays_menu = ['Services', 'Templates']
         cloud_broker_menu = ['Accounts', 'Cloud Spaces', 'Locations', 'Stacks', 'Images', 'External Networks',
-                             'Private Networks', 'Users', 'Groups', 'Virtual Machines', 'Software Versions', 'Storage Routers']
+                             'Private Networks', 'Users', 'Groups', 'Virtual Machines', 'Software Versions',
+                             'Storage Routers']
         grid_menu = ['Audits', 'Error Conditions', 'Jobs', 'Job Queues', 'JumpScripts', 'Logs', 'Grid Nodes',
                      'Status Overview', 'Virtual Machines']
 
@@ -40,13 +38,14 @@ class AdminMenu(Framework):
         self.lg("check left menu")
         self.LeftNavigationMenu.compare_original_list_with_exist_list("", "left_menu", compo_menu)
         self.lg("check ays menu")
-        self.LeftNavigationMenu.compare_original_list_with_exist_list("", "ays_menu",ays_menu)
+        self.LeftNavigationMenu.compare_original_list_with_exist_list("", "ays_menu", ays_menu)
         self.lg("check cloudbroker menu")
-        self.LeftNavigationMenu.compare_original_list_with_exist_list("cloudbroker_arrow", "cloudbroker_menu", cloud_broker_menu)
+        self.LeftNavigationMenu.compare_original_list_with_exist_list("cloudbroker_arrow", "cloudbroker_menu",
+                                                                      cloud_broker_menu)
         self.lg("check grid menu")
         self.LeftNavigationMenu.compare_original_list_with_exist_list("grid_arrow", "grid_menu", grid_menu)
         self.lg("check system menu")
-        self.LeftNavigationMenu.compare_original_list_with_exist_list("system_arrow","system_menu",system_menu)
+        self.LeftNavigationMenu.compare_original_list_with_exist_list("system_arrow", "system_menu", system_menu)
         self.lg("check storage menu")
         self.LeftNavigationMenu.compare_original_list_with_exist_list("storage_arrow", "storage_menu", storage_menu)
 
