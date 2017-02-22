@@ -154,8 +154,11 @@ class BaseTest(unittest.TestCase):
                         break
         except:
             # WebDriverException 
-            time.sleep(1)
-            self.driver.get(page_url)
+            time.sleep(2)
+            try:
+                self.driver.get(page_url)
+            except:
+                pass
 
         self.maximize_window()
 
