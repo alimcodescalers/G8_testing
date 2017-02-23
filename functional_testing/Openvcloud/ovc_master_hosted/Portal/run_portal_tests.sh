@@ -92,6 +92,7 @@ if [[ -z "${remote_webdriver}" ]]; then
 	echo -e "${GREEN}** Installing firefox ...${NC}"
 #	which firefox && firefox_version=(firefox -v)
 #	if [[ $firefox_version != 'Mozilla Firefox 46.0' ]]; then
+#       apt-get install -y libgtk-3-0
 #		apt-get -y purge firefox
 #		wget 'https://ftp.mozilla.org/pub/firefox/releases/46.0/linux-x86_64/en-US/firefox-46.0.tar.bz2' -O /tmp/firefox.tar.gz
 #		tar -C /opt/ -xf /tmp/firefox.tar.gz
