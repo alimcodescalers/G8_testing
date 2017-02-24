@@ -44,7 +44,7 @@ def wait_until_remote_is_listening(address, port, report_failure=False, machine_
             s.connect((address, port))
             s.close()
             break
-        except (OSError, ConnectionAbortedError, ConnectionRefusedError, TimeoutError):
+        except (OSError, ConnectionAbortedError, ConnectionRefusedError, TimeoutError):  # noqa: F821
             if report_failure:
                 print("Waiting for machine {} to accept connections on {}:{}".format(machine_name, address, port))
             gevent.sleep(1)
@@ -58,7 +58,7 @@ def safe_get_vm(ovc, concurrency, machine_id):
                 return ovc.api.cloudapi.machines.get(machineId=machine_id)
             with concurrency:
                 return ovc.api.cloudapi.machines.get(machineId=machine_id)
-        except Exception as e:
+        except Exception:
             print("Failed to get vm details for machine {}".format(machine_id))
             gevent.sleep(2)
 
@@ -81,7 +81,7 @@ def push_results_to_repo(res_dir, location):
     j.do.execute('mkdir -p %s' % repo_result_dir)
     j.do.execute('cp -rf %s %s' % (res_dir, repo_result_dir))
     j.do.chdir(repo_result_dir + res_folder_name)
-    j.do.execute('git add *.csv ')
+    j.do.execute('git add *.csv parameters.md')
     j.do.execute("git commit -a -m 'Pushing new results' ")
     j.do.execute('git push')
 
@@ -101,3 +101,29 @@ def execute_async_ovc(ovc, function, **kwargs):
                     raise RuntimeError(result)
                 return result
     return gevent.spawn(_run)
+
+
+def mount_disks(ovc, options, machine_id, publicip, publicport, mountpoint="/mnt/vdb"):
+    # only one data disk for this test
+    machine = safe_get_vm(ovc, options.concurrency, machine_id)
+    account = machine['accounts'][0]
+    templ = 'sshpass -p "{0}" ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p {1} {2}@{3} '
+    templ += ' bash mount_disks.sh {0} b {4} {5}'
+    cmd = templ.format(account['password'], publicport, account['login'], publicip,
+                       options.type, mountpoint)
+    print('mounting disks for machine:%s' % machine_id)
+    run_cmd_via_gevent(cmd)
+
+
+def prepare_test(ovc, concurrency, options, files, machine_id, publicip, publicport):
+    print("Preparing test on machine {}".format(machine_id))
+    machine = safe_get_vm(ovc, concurrency, machine_id)
+    account = machine['accounts'][0]
+
+    wait_until_remote_is_listening(publicip, int(publicport), True, machine_id)
+
+    templ = 'sshpass -p{} scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null '
+    templ1 = templ + '-P {} ' + ' '.join(files) + ' {}@{}:'
+    cmd = templ1.format(account['password'], publicport, account['login'], publicip)
+    run_cmd_via_gevent(cmd)
+    return machine_id, publicip, publicport, account

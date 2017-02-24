@@ -2,9 +2,10 @@
 password=$1
 disk=$2
 type=$3
+mountpoint=$4
 pids=()
-length=$(ps -ef | grep vdb | awk '{print $2}' | wc -l)
-for pid in $(ps -ef | grep vdb | awk '{print $2}'); do pids+=($pid); done
+length=$(ps -ef | grep vd$disk | awk '{print $2}' | wc -l)
+for pid in $(ps -ef | grep vd$disk | awk '{print $2}'); do pids+=($pid); done
 for ((i=0;i<$length;i++)); do echo $password | sudo -S  kill -9 ${pids[i]}; done
 sleep 1
 if [ $type == filesystem ]
