@@ -10,7 +10,7 @@ from gevent import monkey
 monkey.patch_all()
 from libtest import run_cmd_via_gevent  # noqa: E402
 from libtest import check_package, push_results_to_repo  # noqa: E402
-from libtest import mount_disks, prepare_test  # noqa: E402
+from libtest import prepare_test  # noqa: E402
 
 
 machines_running = set()
@@ -33,15 +33,6 @@ def pgbench(options, machine_id, publicip, publicport, account):
     print('Machine {} reports {} iops. Testing completed for {:.2f}%'.format(machine_id, iops, complete))
 
     return machine_id, iops
-
-
-def assemble_fio_test_results(results_dir, account, publicport, cloudspace_publicip, machine_id):
-    print('Collecting results from machine: {}'.format(machine_id))
-    templ = 'sshpass -p{} scp -r -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null '
-    templ += '-P {}  {}@{}:machine{}_iter{}_{}_results {}/'
-    cmd = templ.format(account['password'], publicport, account['login'], cloudspace_publicip,
-                       machine_id, 1, options.write_type, results_dir)
-    run_cmd_via_gevent(cmd)
 
 
 def main(options):

@@ -1,12 +1,12 @@
 #!/usr/bin/python3
 from gevent import monkey
 monkey.patch_all()
-from optparse import OptionParser
-import gevent
-import signal
-import time
-import os
-from gevent.lock import BoundedSemaphore
+from optparse import OptionParser  # noqa: E402
+import gevent  # noqa: E402
+import signal  # noqa: E402
+import time  # noqa: E402
+import os  # noqa: E402
+from gevent.lock import BoundedSemaphore  # noqa: E402
 
 
 def delete_vm(ovc, machine_id):
