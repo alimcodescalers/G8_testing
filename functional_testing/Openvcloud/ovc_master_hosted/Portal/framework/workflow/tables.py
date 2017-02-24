@@ -32,30 +32,40 @@ class tables():
         next_button = pagination[(len(pagination) - 1)].find_element_by_tag_name('a')
         return previous_button, next_button
 
-    def get_table_data(self, element,selector = 'account selector',table_element=None):
+    def get_table_data(self, element, selector = 'account selector',table_element=None):
         # This method will return a table data as a list
         self.framework.assertTrue(self.framework.check_element_is_exist(element))
         max_sort_value = 100
         account_max_number = self.get_table_max_number(element)
         self.framework.select( selector , max_sort_value)
         time.sleep(3)
-        min_page_numbers = (account_max_number / max_sort_value)
-        page_numbers = min_page_numbers
+
+        page_numbers = (account_max_number / max_sort_value)
 
         if (account_max_number % max_sort_value) > 0:
-            page_numbers = min_page_numbers+1
-
+            page_numbers += 1
 
         tableData = []
         for page in range(page_numbers):
+
             table_rows = self.framework.get_table_rows(table_element)
             self.framework.assertTrue(table_rows)
             for row in table_rows:
-                tableData.append([x.text for x in row.find_elements_by_tag_name('td')])
-
+                cells = row.find_elements_by_tag_name('td')
+                tableData.append([x.text for x in cells])
             if  page < (page_numbers-1):
                 previous_button, next_button = self.get_previous_next_button()
                 next_button.click()
-                time.sleep(2)
+
+                tb_max_number = self.get_table_max_number(element)
+                tb_start_number = 1+((page+1)*max_sort_value)
+                tb_end_number = (page+2)*max_sort_value
+
+                if tb_end_number > tb_max_number:
+                    tb_end_number = tb_max_number
+
+                text = "Showing %s to %s of %s entries" %("{:,}".format(tb_start_number), "{:,}".format(tb_end_number), "{:,}".format(tb_max_number))
+                if not self.framework.wait_until_element_located_and_has_text(element, text):
+                    return False
 
         return tableData

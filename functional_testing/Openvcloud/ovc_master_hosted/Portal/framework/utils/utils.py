@@ -39,7 +39,7 @@ class BaseTest(unittest.TestCase):
         self.lg('Testcase %s Started at %s' % (self._testID, self._startTime))
         self.set_browser()
 
-        self.driver.set_window_size(1200, 800)
+        self.driver.set_window_size(1800, 1000)
         self.wait = WebDriverWait(self.driver, 15)
 
         self.username = str(uuid.uuid4()).replace('-', '')[0:10]
@@ -120,13 +120,15 @@ class BaseTest(unittest.TestCase):
         return element_value
 
     def check_side_list(self):
-        for temp in range(3):
+        self.wait_until_element_located('left_menu_button')
+        for temp in range(5):
             try:
                 if self.find_element("left_menu").location["x"] < 0:
                     self.click("left_menu_button")
                 break
-            except:
-                self.lg("can't locate the left menu")
+            except Exception as error:
+                self.lg(" * Can't locate the left menu. Error : %s" % error)
+                time.sleep(2)
 
     def open_base_page(self, menu_item='', sub_menu_item=''):
         self.get_page(self.base_page)
@@ -137,16 +139,29 @@ class BaseTest(unittest.TestCase):
 
     def get_page(self, page_url):
         try:
-            self.driver.ignore_synchronization = False
             self.driver.get(page_url)
         except AngularNotFoundException:
-            self.driver.ignore_synchronization = True
-            self.driver.get(page_url)
+            if self.browser == 'firefox':
+                for _ in range(10):
+                    if not self.driver.title:
+                        time.sleep(2)
+                        try:
+                            self.driver.execute_script('angular.resumeBootstrap();')
+                            time.sleep(2)
+                        except:
+                            pass
+                    else:
+                        break
+        except:
+            # WebDriverException 
+            time.sleep(2)
+            try:
+                self.driver.get(page_url)
+            except:
+                pass
 
-        screen_dimention = self.driver.get_window_size()
-        screen_size = screen_dimention['width'] * screen_dimention['height']
-        if screen_size < 1200*800:
-            self.driver.set_window_size(1200, 800)
+        self.maximize_window()
+
 
     def element_is_enabled(self, element):
         return self.find_element(element).is_enabled()
@@ -187,6 +202,17 @@ class BaseTest(unittest.TestCase):
                 time.sleep(1)
         else:
             return False
+
+    def wait_until_element_attribute_has_text(self, element, attribute, text):
+        for _ in range(10):
+            try:
+                if element.get_attribute(attribute) == text:
+                    return True
+            except:
+                time.sleep(1)
+        else:
+            return False
+
 
     def wait_unti_element_clickable(self, element):
         method = self.elements[element][0]
@@ -303,7 +329,7 @@ class BaseTest(unittest.TestCase):
         except:
             self.lg("can't find element")
             return False
-            
+
     def move_curser_to_element(self, element):
         element = self.elements[element]
         location = WebDriverWait(self.driver, 10).until(EC.visibility_of_element_located((By.XPATH, element)))
@@ -360,18 +386,11 @@ class BaseTest(unittest.TestCase):
             self.fail("this %s item isn't exist in this url: %s" % (text_item, self.get_url()))
 
     def get_storage_list(self):
-        item = ''
-        storage_menu = []
-        for _ in self.environment_storage:
-            if _ != "," and self.environment_storage.index(_) != len(self.environment_storage) - 1:
-                item += _
-            elif self.environment_storage.index(_) == len(self.environment_storage) - 1:
-                item += _
-                storage_menu.append(item)
-            else:
-                storage_menu.append(item)
-                item = ''
-        return storage_menu
+        locations = self.environment_storage.split(',')
+        if len(locations) < 2:
+            return []
+        else:
+            return locations
 
     def get_table_rows(self,element= None):
         'This method return all rows in the current page else return false'
@@ -412,3 +431,10 @@ class BaseTest(unittest.TestCase):
         else:
 
             return False
+
+    def maximize_window(self):
+        time.sleep(1)
+        screen_dimention = self.driver.get_window_size()
+        screen_size = screen_dimention['width'] * screen_dimention['height']
+        if screen_size < 1800*1000:
+            self.driver.set_window_size(1800, 1000)

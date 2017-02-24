@@ -91,12 +91,14 @@ class VirtualMachinesTest(Framework):
             current_column = element.text
             self.driver.execute_script("window.scrollTo(0, 0)")
             element.click()
-            time.sleep(3)
+            self.wait_until_element_attribute_has_text(element, 'aria-sort', 'ascending')
             table_before = self.Tables.get_table_data('table cloudbroker vmachine info')
+            self.assertTrue(table_before, 'Error while getting table data before sorting')
             self.driver.execute_script("window.scrollTo(0, 0)")
             element.click()
-            time.sleep(3)
+            self.wait_until_element_attribute_has_text(element, 'aria-sort', 'descending')
             table_after = self.Tables.get_table_data('table cloudbroker vmachine info')
+            self.assertTrue(table_after, 'Error while getting table data after sorting')
             self.assertEqual(len(table_before), len(table_after),
                              'The length of vms table is changing according to sorting by %s' % current_column)
             for temp in range(len(table_before)):

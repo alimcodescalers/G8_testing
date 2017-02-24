@@ -7,10 +7,17 @@ class login():
         self.framework = framework
 
     def GetIt(self):
-        self.framework.get_page(self.framework.environment_url)
-        time.sleep(5)
-        self.framework.click('landing_page_login')
-
+        for _ in range(5):
+            self.framework.get_page(self.framework.environment_url)
+            time.sleep(5)
+            try:
+                self.framework.click('landing_page_login')
+            except:
+                time.sleep(2)
+            else:
+                break
+        else:
+            self.framework.click('landing_page_login')
         if not self.IsAt():
             self.framework.fail("The login page isn't loading well.")
 
@@ -38,19 +45,30 @@ class login():
         self.framework.set_text('username_textbox', username)
         self.framework.set_text('password_textbox', password)
         self.framework.click('login_button')
-        time.sleep(20)
+        for _ in range(20):
+            if 'itsyou.online' in self.framework.driver.current_url:
+                time.sleep(1)
+            else:
+                break
 
         if len(self.framework.find_elements('GAuth_textbox')) > 0:
             self.framework.set_text('GAuth_textbox', self.get_GAuth_code())
             self.framework.click('login_button')
-            time.sleep(20)
+            for _ in range(20):
+                if 'itsyou.online' in self.framework.driver.current_url:
+                    time.sleep(1)
+                else:
+                    break
 
         if len(self.framework.find_elements("authorize_button")) > 0:
             self.framework.click('authorize_button')
-            time.sleep(20)
 
-        self.framework.wait_until_element_located('logout_button')
-        self.framework.assertEqual(self.framework.driver.title, 'OpenvCloud - Decks', "Can't Login")
+        for _ in range(25):
+            if not self.framework.driver.title:
+                time.sleep(1)
+            else:
+                self.framework.assertEqual(self.framework.driver.title, 'OpenvCloud - Decks', "Can't Login")
+        self.framework.maximize_window()
 
     def LoginFail(self, username='', password=''):
         username = username

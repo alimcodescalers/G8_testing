@@ -1,5 +1,3 @@
-import unittest
-
 from functional_testing.Openvcloud.ovc_master_hosted.Portal.framework.framework import Framework
 
 
@@ -9,7 +7,6 @@ class AdminMenu(Framework):
 
     def setUp(self):
         super(AdminMenu, self).setUp()
-        self.Login.GetIt()
         self.Login.Login()
         self.get_page(self.base_page)
 
@@ -28,7 +25,8 @@ class AdminMenu(Framework):
         compo_menu = ["At Your Service", "Cloud Broker", "Statistics", "Grid", "Storage", "System", "End User"]
         ays_menu = ['Services', 'Templates']
         cloud_broker_menu = ['Accounts', 'Cloud Spaces', 'Locations', 'Stacks', 'Images', 'External Networks',
-                             'Private Networks', 'Users', 'Groups', 'Virtual Machines', 'Software Versions', 'Storage Routers']
+                             'Private Networks', 'Users', 'Groups', 'Virtual Machines', 'Software Versions',
+                             'Storage Routers']
         grid_menu = ['Audits', 'Error Conditions', 'Jobs', 'Job Queues', 'JumpScripts', 'Logs', 'Grid Nodes',
                      'Status Overview', 'Virtual Machines']
 
@@ -39,21 +37,17 @@ class AdminMenu(Framework):
 
         self.lg("check left menu")
         self.LeftNavigationMenu.compare_original_list_with_exist_list("", "left_menu", compo_menu)
-
         self.lg("check ays menu")
-        self.LeftNavigationMenu.compare_original_list_with_exist_list("", "ays_menu",ays_menu)
-
+        self.LeftNavigationMenu.compare_original_list_with_exist_list("", "ays_menu", ays_menu)
         self.lg("check cloudbroker menu")
-        self.LeftNavigationMenu.compare_original_list_with_exist_list("cloudbroker_arrow", "cloudbroker_menu", cloud_broker_menu)
-
+        self.LeftNavigationMenu.compare_original_list_with_exist_list("cloudbroker_arrow", "cloudbroker_menu",
+                                                                      cloud_broker_menu)
         self.lg("check grid menu")
         self.LeftNavigationMenu.compare_original_list_with_exist_list("grid_arrow", "grid_menu", grid_menu)
-
+        self.lg("check system menu")
+        self.LeftNavigationMenu.compare_original_list_with_exist_list("system_arrow", "system_menu", system_menu)
         self.lg("check storage menu")
         self.LeftNavigationMenu.compare_original_list_with_exist_list("storage_arrow", "storage_menu", storage_menu)
-
-        self.lg("check system menu")
-        self.LeftNavigationMenu.compare_original_list_with_exist_list("system_arrow","system_menu",system_menu)
 
         self.lg("check ays items redirect page")
         self.LeftNavigationMenu.check_redirect_page("ays_text", "AYS")
@@ -67,11 +61,12 @@ class AdminMenu(Framework):
         self.LeftNavigationMenu.check_redirect_page("cloudbroker_sub_locations", "locations")
         self.LeftNavigationMenu.check_redirect_page("cloudbroker_sub_stacks", "Stacks")
         self.LeftNavigationMenu.check_redirect_page("cloudbroker_sub_images", "images")
-        self.LeftNavigationMenu.check_redirect_page("cloudbroker_sub_public_nw", "public networks")
+        self.LeftNavigationMenu.check_redirect_page("cloudbroker_sub_public_nw", "External Networks")
         self.LeftNavigationMenu.check_redirect_page("cloudbroker_sub_private_nw", "private networks")
         self.LeftNavigationMenu.check_redirect_page("cloudbroker_sub_users", "users")
         self.LeftNavigationMenu.check_redirect_page("cloudbroker_sub_groups", "groups")
         self.LeftNavigationMenu.check_redirect_page("cloudbroker_sub_vm", "Virtual Machines")
+        self.LeftNavigationMenu.check_redirect_page("cloudbroker_sub_sr", "Storage Routers")
         self.LeftNavigationMenu.check_redirect_page("cloudbroker_sub_sv", "Version")
 
         self.lg("check statistics items redirect page")
@@ -103,8 +98,7 @@ class AdminMenu(Framework):
         self.LeftNavigationMenu.check_redirect_page("system_sub_ao", "overviewaccess")
 
         self.lg("check end user page")
-        self.LeftNavigationMenu.check_side_list()
-        self.driver.ignore_synchronization = False
+        self.check_side_list()
         self.click("end_user")
-        self.driver.get(self.get_url())
-        self.assertEqual(self.get_text("end_user_home"),"Home")
+        self.get_page(self.get_url())
+        self.assertTrue(self.element_in_url('home'))

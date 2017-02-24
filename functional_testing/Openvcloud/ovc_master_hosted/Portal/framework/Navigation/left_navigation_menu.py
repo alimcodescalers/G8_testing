@@ -1,9 +1,11 @@
+import time
+
 class AtYourService():
 
     def __init__(self, framework):
         self.framework = framework
 
-    
+
 
 class CloudBroker():
     def __init__(self, framework):
@@ -36,6 +38,9 @@ class CloudBroker():
     def VirtualMachines(self):
         self.framework.open_base_page("cloud_broker","cloudbroker_sub_vm")
 
+    def StorageRouters(self):
+        self.framework.open_base_page("cloud_broker","cloudbroker_sub_sr")
+
     def SoftwareVersions(self):
         self.framework.open_base_page("cloud_broker","cloudbroker_sub_sv")
 
@@ -44,7 +49,7 @@ class Statics():
     def __init__(self, framework):
         self.framework = framework
 
-    
+
 
 class Grid():
 
@@ -62,21 +67,21 @@ class Storage():
     def __init__(self, framework):
         self.framework = framework
 
-    
+
 
 class Systems():
 
     def __init__(self, framework):
         self.framework = framework
 
-    
+
 
 class EndUser():
 
     def __init__(self, framework):
         self.framework = framework
 
-    
+
 
 class leftNavigationMenu():
     def __init__(self, framework):
@@ -100,10 +105,11 @@ class leftNavigationMenu():
                 self.framework.fail("This %s list item isn't exist in %s" % (item, exist_menu))
 
     def check_redirect_page(self, clickable_item, check_value):
+
+        if clickable_item in ['system_sub_users','system_sub_sm', 'system_sub_api']:
+            time.sleep(10)
         self.framework.check_side_list()
         self.framework.click(clickable_item)
+        if self.framework.browser == 'firefox':
+            time.sleep(2)
         self.framework.assertTrue(self.framework.element_in_url(check_value))
-
-
-
-
