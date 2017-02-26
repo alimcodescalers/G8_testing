@@ -1,12 +1,12 @@
 #!/usr/bin/python3
 from gevent import monkey
 monkey.patch_all()
-from optparse import OptionParser
-import gevent
-import signal
-import time
-import os
-from gevent.lock import BoundedSemaphore
+from optparse import OptionParser  # noqa: E402
+import gevent  # noqa: E402
+import signal  # noqa: E402
+import time  # noqa: E402
+import os  # noqa: E402
+from gevent.lock import BoundedSemaphore  # noqa: E402
 
 
 def delete_vm(ovc, machine_id):
@@ -36,7 +36,7 @@ def main(options):
         for cloudspace in cloudspaces:
             cloudspace_id = cloudspace['id']
             vms = ovc.api.cloudapi.machines.list(cloudspaceId=cloudspace_id)
-            jobs.extend([gevent.spawn(delete_vm, ovc, vm['id']) for vm in vms if not vm['name'].endswith('000')])
+            jobs.extend([gevent.spawn(delete_vm, ovc, vm['id']) for vm in vms if vm['name'] != 'template_vm'])
         gevent.joinall(jobs)
         jobs = list()
         for cloudspace in cloudspaces:

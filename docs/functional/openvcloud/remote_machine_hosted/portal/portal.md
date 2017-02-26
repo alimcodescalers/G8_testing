@@ -35,7 +35,7 @@ docker run -d -p 4444:4444 --name selenium-hub selenium/hub
 docker run -d --name chrome-node --link selenium-hub:hub selenium/node-chrome
 docker run -d --name firefox-node --link selenium-hub:hub selenium/node-firefox
 ```
-- Now If you are running your tests from the machine which contains the dockers, you can access your selenium-hub which is your remote server via **http://localhost:4444** and you can execute test cases on firefox-node and chrome-node. 
+- Now If you are running your tests from the machine which contains the dockers, you can access your selenium-hub which is your remote server via **http://localhost:4444** and you can execute test cases on firefox-node and chrome-node.
 - However if you want to connect to the selenium-hub (remote-webdriver) from your local machine (your own pc), You have to do a port forward from the cloudspace to the seleinum-hub and in which the remote webdriver will be **http://< cloudspace_ip>:4444** (Note: In this case the cloudspace_ip should be reachable from your local machine)
 
 
@@ -108,7 +108,7 @@ In the Grid execution, The run_portal_tests.sh script will only update the opera
 
 
 ### 4.2 Manual Execution:
-In manual execution, Tester will install all dependencies and run the execution command manually on his machine. As for the automated execution, The Manual execution can be excuted on a single machine or on a grid. 
+In manual execution, Tester will install all dependencies and run the execution command manually on his machine. As for the automated execution, The Manual execution can be excuted on a single machine or on a grid.
 
 #### 4.2.1 Execution Guide:
 - The coming steps in this section are the same for single machine and grid execution.
@@ -120,6 +120,7 @@ echo -e "${GREEN}** Installing xvfb ...${NC}"
 sudo apt-get update
 sudo apt-get install -y python-pip
 sudo apt-get install -y xvfb
+sudo apt-get install git
 
 ```
 
@@ -157,7 +158,7 @@ pip install -r requirements.txt
    - environment_url : the environment url
    - location : the environment location
    - remote_webdriver : remote server ip:port (will be left empty in case of single machine execution)
-  
+
   ##### 4.2.1.1 Single Machine Execution:
 - The coming steps need to be added in case of single machine execution
 - To execute this test suit, the machine should has chrome and firefox, so run the following commands to install them in the right way.
@@ -169,15 +170,11 @@ pip install -r requirements.txt
     sudo ln -fs /usr/lib/chromium-browser/chromedriver /usr/local/bin/chromedriver
 
     echo -e "${GREEN}** Installing firefox ...${NC}"
-    sudo apt-get install -y libgtk-3-0
-    apt-get -y purge firefox
-    wget 'https://ftp.mozilla.org/pub/firefox/releases/46.0/linux-x86_64/en-US/firefox-46.0.tar.bz2' -O /tmp/firefox.tar.gz
-    tar -C /opt/ -xf /tmp/firefox.tar.gz
-    chmod 775 /opt/firefox/firefox
-    ln -fs /opt/firefox/firefox /usr/bin/firefox
-    ln -fs /opt/firefox/firefox /usr/local/bin/firefox
+    sudo apt-get install -y firefox
+    which geckodriver || (wget https://github.com/mozilla/geckodriver/releases/download/v0.14.0/geckodriver-v0.14.0-linux64.tar.gz -O /tmp/geckodriver.tar.gz; tar -C /opt -xzf /tmp/geckodriver.tar.gz;	chmod 755 /opt/geckodriver;	ln -fs /opt/geckodriver /usr/bin/geckodriver)
+
     ```
-- Then if the machine has a Desktop OS, you run the following command: 
+- Then if the machine has a Desktop OS, you run the following command:
   ```
   nosetests -v -s  --logging-level=WARNING <testsuite_directory> --tc-file=config.ini  2>testresults.log
   ```
@@ -188,14 +185,14 @@ Note: if you don't want to visualize the browser during running the tests, you c
    xvfb-run -a nosetests -v -s  --logging-level=WARNING <testsuite_directory> --tc-file=config.ini  2>testresults.log
    ```
 
-  
+
   ##### 4.2.1.2 Grid Execution:
   - Make sure to provide value for the remote_webdriver parameter in the **config.ini** file
   - Assuming you already have a ready grid as explained before, run the following command using **nosetests**:
    ```
    xvfb-run -a nosetests -v -s  --logging-level=WARNING <testsuite_directory> --tc-file=config.ini  2>testresults.log
    ```
-  
+
 
 You can also overwrite the **config.ini** parameters:
 

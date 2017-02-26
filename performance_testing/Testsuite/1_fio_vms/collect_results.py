@@ -262,7 +262,7 @@ def main():
     arr = []
     with open('%s/total_results' % Res_dir) as f:
         for key, group in itertools.groupby(f, group_separator):
-            row=[]
+            row = []
             if not key:
                 for item in list(group):
                     field, value = item.split(':')

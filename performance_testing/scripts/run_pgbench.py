@@ -4,47 +4,35 @@ from argparse import ArgumentParser
 import os
 import datetime
 import gevent
+import csv
 from gevent.lock import BoundedSemaphore
 from gevent import monkey
 monkey.patch_all()
 from libtest import run_cmd_via_gevent  # noqa: E402
 from libtest import check_package, push_results_to_repo  # noqa: E402
-from libtest import mount_disks, prepare_test  # noqa: E402
+from libtest import prepare_test  # noqa: E402
 
 
 machines_running = set()
 machines_complete = set()
 
 
-def fio_test(options, machine_id, publicip, publicport, account):
+def pgbench(options, machine_id, publicip, publicport, account):
     machines_running.add(machine_id)
     # only one data disk for this test
-    disks_num = 1
     templ = 'sshpass -p "{}" ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p {} {}@{} '
-    templ += ' python Machine_script.py {} {} {} {} {} {} {} {} {} {} {} {} {} {}'
+    templ += ' bash run_pgbench.sh {} {} {} {} {} {}'
     cmd = templ.format(account['password'], publicport, account['login'], publicip,
-                       options.testrun_time, machine_id, account['password'], 1, disks_num,
-                       options.data_size, options.write_type, options.block_size, options.iodepth,
-                       options.direct_io, options.rwmixwrite, options.rate_iops, options.numjobs, options.type)
-    print('FIO testing has been started on machine: {}'.format(machine_id))
-    run_cmd_via_gevent(cmd)
+                       account['password'], 'vdb', options.scalefactor, options.testrun_time,
+                       options.threadcount, options.clientcount)
+    print('Postgress benchmarking testing has been started on machine: {}'.format(machine_id))
+    iops = int(run_cmd_via_gevent(cmd).splitlines()[-1])
     machines_complete.add(machine_id)
     running = machines_running.difference(machines_complete)
     complete = (len(machines_running) - len(running)) / len(machines_running) * 100.0
-    print('Testing completed for {:.2f}%'.format(complete))
-    if complete >= 90.0:
-        print('Waiting for machines {} to complete their test ...'.format(' '.join(str(x) for x in running)))
+    print('Machine {} reports {} iops. Testing completed for {:.2f}%'.format(machine_id, iops, complete))
 
-    return account, publicport, publicip, machine_id
-
-
-def assemble_fio_test_results(results_dir, account, publicport, cloudspace_publicip, machine_id):
-    print('Collecting results from machine: {}'.format(machine_id))
-    templ = 'sshpass -p{} scp -r -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null '
-    templ += '-P {}  {}@{}:machine{}_iter{}_{}_results {}/'
-    cmd = templ.format(account['password'], publicport, account['login'], cloudspace_publicip,
-                       machine_id, 1, options.write_type, results_dir)
-    run_cmd_via_gevent(cmd)
+    return machine_id, iops
 
 
 def main(options):
@@ -62,7 +50,7 @@ def main(options):
     hostname = run_cmd_via_gevent('hostname').replace("\n", "")
     test_num = len(os.listdir('{}'.format(options.results_dir))) + 1
     test_dir = "/" + datetime.datetime.today().strftime('%Y-%m-%d')
-    test_dir += "_" + hostname + "_fio_testresults_{}".format(test_num)
+    test_dir += "_" + hostname + "_pgbench_testresults_{}".format(test_num)
     results_dir = options.results_dir + test_dir
     run_cmd_via_gevent('mkdir -p {}'.format(results_dir))
 
@@ -87,36 +75,34 @@ def main(options):
     vms = vms[:options.required_vms]
 
     # prepare test
-    files = ['{}/1_fio_vms/Machine_script.py'.format(options.testsuite),
-             '{}/1_fio_vms/mount_disks.sh'.format(options.testsuite)]
+    files = ['{}/4_pgbench/run_pgbench.sh'.format(options.testsuite)]
     pjobs = [gevent.spawn(prepare_test, ovc, concurrency, options, files, *vm) for vm in vms]
     gevent.joinall(pjobs)
 
-    # mount disks if the filesystem will be used
-    if options.type == "filesytem":
-        gevent.joinall([gevent.spawn(mount_disks, ovc, options, *vm) for vm in vms])
-
-    # run fio tests
-    rjobs = [gevent.spawn(fio_test, options, *job.value) for job in pjobs if job.value is not None]
+    # run pgbench tests
+    rjobs = [gevent.spawn(pgbench, options, *job.value) for job in pjobs if job.value is not None]
     gevent.joinall(rjobs)
 
-    # collect results from machines
-    rjobs = [gevent.spawn(assemble_fio_test_results, results_dir, *job.value) for job in rjobs if job.value is not None]
-    gevent.joinall(rjobs)
-
-    # collecting results in csv file
+    # report results
     with open(os.path.join(results_dir, 'parameters.md'), 'w') as params:
         params.write("# Parameters\n\n")
         for key, value in options.dict.itervalues():
             params.write("- **{}**: {}\n".format(key, value))
-    cwd = os.getcwd()
-    j.do.copyFile('{}/1_fio_vms/collect_results.py'.format(options.testsuite), results_dir)
-    os.chdir(results_dir)
-    j.do.execute('python3 collect_results.py {} {} {} {}'.format(results_dir, options.environment,
-                                                                 options.username, options.password))
+    total_iops = 0
+    with open(os.path.join(results_dir, 'results.csv'), 'w') as csvfile:
+        fieldnames = ['machine_id', 'iops']
+        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+        writer.writeheader()
+        for job in rjobs:
+            machine_id, iops = job.value
+            writer.writerow({'machine_id': machine_id, 'iops': iops})
+            total_iops += iops
+        writer.writerow({'machine_id': 'total iops', 'iops': total_iops})
+    print("==========================")
+    print("Total iops: {}".format(total_iops))
+    print("==========================")
 
     # pushing results to env_repo
-    os.chdir(cwd)
     location = options.environment.split('.')[0]
     push_results_to_repo(results_dir, location)
 
@@ -129,34 +115,22 @@ if __name__ == "__main__":
                         help="password to login on the OVC api")
     parser.add_argument("-e", "--env", dest="environment", required=True,
                         help="environment to login on the OVC api")
-    parser.add_argument("-d", "--ds", dest="data_size", type=int,
-                        default=1000, help="Amount of data to be written per each data disk per VM (in MB)")
     parser.add_argument("-t", "--run_time", dest="testrun_time", type=int,
                         default=300, help=" Test-rum time per virtual machine  (in seconds)")
-    parser.add_argument("-w", "--IO_type", dest="write_type",
-                        default="randrw", help="Type of I/O pattern")
-    parser.add_argument("-m", "--mixwrite", dest="rwmixwrite", type=int,
-                        default=20, help=" Percentage of a mixed workload that should be writes")
-    parser.add_argument("-b", "--bs", dest="block_size", default='4k', help="Block size")
-    parser.add_argument("-i", "--iodp", dest="iodepth", type=int,
-                        default=128, help="number of I/O units to keep in flight against the file")
-    parser.add_argument("-o", "--dio", dest="direct_io", type=int,
-                        default=1, help="If direct_io = 1, use non-buffered I/O.")
-    parser.add_argument("-x", "--max_iops", dest="rate_iops", type=int,
-                        default=8000, help="Cap the bandwidth to this number of IOPS")
-    parser.add_argument("-j", "--numjobs", dest="numjobs", type=int, default=1,
-                        help=" Number of clones (processes/threads performing the same workload) of this job")
-    parser.add_argument("-f", "--fs", dest="type", choices=['filesystem', 'blkdevice'], required=True,
-                        help="Use disk as a block device or make it use the filesystem, "
-                        + "choice are 'filesystem' or 'blkdevice'")
     parser.add_argument("-v", "--vms", dest="required_vms", type=int,
                         default=2, help=" selected number of virtual machines to run fio on")
-    parser.add_argument("-r", "--rdir", dest="results_dir", default="/root/G8_testing/tests_results/FIO_test",
+    parser.add_argument("-r", "--rdir", dest="results_dir", default="/root/G8_testing/tests_results/pgbench",
                         help="absolute path fot results directory")
     parser.add_argument("-n", "--con", dest="concurrency", default=2, type=int,
                         help="amount of concurrency to execute the job")
     parser.add_argument("-s", "--ts", dest="testsuite", default="../Testsuite",
                         help="location to find Testsuite directory")
+    parser.add_argument("-f", "--sf", dest="scalefactor", default="100",
+                        help="100 create 10mio records in test db")
+    parser.add_argument("-c", "--tc", dest="threadcount", default="2",
+                        help="number of threads that run the test simultaniously")
+    parser.add_argument("-l", "--cc", dest="clientcount", default="10",
+                        help="number of client connections to the database")
 
     options = parser.parse_args()
     gevent.signal(signal.SIGQUIT, gevent.kill)
