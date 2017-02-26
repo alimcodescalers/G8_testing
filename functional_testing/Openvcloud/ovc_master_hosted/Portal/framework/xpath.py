@@ -670,11 +670,14 @@ elements = {'snapshot_ok_button': ['XPATH', 'html/body/div[3]/form/div[3]/button
             'table cloudbroker cloudspace':['ID', 'table_cloudbroker_cloudspace'],
             'table cloudbroker cloudspace info':['ID', 'table_cloudbroker_cloudspace_info'],
             'table cloudbroker image':['ID', 'table_libvirt_image'],
-            'table cloudbroker image info':['ID', 'table_libvirt_image_info'],
+            'table cloudbroker image info':['ID', 'table_cloudbroker_image_info'],
             'table cloudbroker stack info':['ID', 'table_cloudbroker_stack_info'],
             'table cloudbroker stack':['ID', 'table_cloudbroker_stack'],
             'table system user info':['ID', 'table_system_user_info'],
             'table system user':['ID', 'table_system_user'],
+            'table storagerouter':['ID', 'DataTables_Table_0'],
+            'table storagerouter info':['ID', 'DataTables_Table_0_info'],
+            'table storagerouter length':['NAME', 'DataTables_Table_0_length', 0],
             'table cloudbroker vmachine info':['ID', 'table_cloudbroker_vmachine_info'],
             'table cloudbroker vmachine':['ID', 'table_cloudbroker_vmachine'],
             'account_edit_Name':['NAME', 'name'],
@@ -683,5 +686,9 @@ elements = {'snapshot_ok_button': ['XPATH', 'html/body/div[3]/form/div[3]/button
             'account_edit_Max Number of CPU Cores':['NAME', 'maxCPUCapacity'],
             'account_edit_Max External Network Transfer':['NAME', 'maxNetworkPeerTransfer'],
             'account_edit_Max Number of Public IP Addresses':['NAME', 'maxNumPublicIP'],
-            'refresh_button':['LINK_TEXT', 'Refresh']
+            'refresh_button':['LINK_TEXT', 'Refresh'],
+            'page title':["CLASS_NAME", "title", 0],
+            'navigation bar':['CLASS_NAME', 'breadcrumb', 0],
+            'storagerouter search':['XPATH', '//*[@id="DataTables_Table_0_filter"]/label/input'],
+            'vmachine paginate':['ID','table_cloudbroker_vmachine_paginate']
             }
