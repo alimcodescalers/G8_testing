@@ -128,14 +128,14 @@ class tables():
     def check_sorting_table(self, data_table, info_table, selector, pagination=None):
 
         self.framework.select(selector , 100)
-        x = self.framework.find_element(data_table).location
+        table_location = self.framework.find_element(data_table).location
         table_head_elements = self.framework.get_table_head_elements(data_table)
         for column, element in enumerate(table_head_elements):
             if 'sorting_disabled' in element.get_attribute('class'):
                 continue
 
             current_column = element.text
-            self.framework.driver.execute_script("window.scrollTo(%d,%d)" %(x['x']-50,x['y']-50))
+            self.framework.driver.execute_script("window.scrollTo(0,%d)" % (table_location['y']-50))
             element.click()
             self.framework.wait_until_element_attribute_has_text(element, 'aria-sort', 'ascending')
             table_before = self.get_table_data(info_table, table_element=data_table, pagination=pagination)
@@ -143,7 +143,7 @@ class tables():
             if not table_before:
                 return False
 
-            self.framework.driver.execute_script("window.scrollTo(%d,%d)" %(x['x']-50,x['y']-50))
+            self.framework.driver.execute_script("window.scrollTo(0,%d)" % (table_location['y']-50))
             element.click()
             self.framework.wait_until_element_attribute_has_text(element, 'aria-sort', 'descending')
             table_after = self.get_table_data(info_table, table_element=data_table, pagination=pagination)
