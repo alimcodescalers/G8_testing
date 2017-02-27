@@ -218,14 +218,21 @@ class UsersTestsB(BaseTest):
 
         self.lg('[POST] Create new email address & validate it, should succeed with 201')
         label = "validation email"
+        #check if validation email already exist then modify it
+        response = self.client_1.api.GetEmailAddresses(self.user_1)
+        self.assertEqual(response.status_code, 200)
+        if label in [x['label'] for x in response.json()]:
+            data = {'emailaddress':self.random_value()+"@gig.com", 'label':self.random_value()}
+            response = self.client_1.api.UpdateEmailAddress(data,label, self.user_1)
+
         new_email_address = self.validation_email
         data = {"emailaddress":new_email_address, "label":label}
         response = self.client_1.api.RegisterNewEmailAddress(data, self.user_1)
         self.assertEqual(response.status_code, 201)
-        time.sleep(10)
+        time.sleep(20)
         response = self.client_1.api.ValidateEmailAddress(label, self.user_1)
         self.assertEqual(response.status_code, 204)
-        time.sleep(10)
+        time.sleep(20)
         self.lg('Check the validation message & validate, should succeed with 200')
         response = self.UserValidateEmail()
         self.assertEqual(response.status_code, 200)

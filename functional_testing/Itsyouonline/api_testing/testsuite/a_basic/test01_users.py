@@ -11,7 +11,7 @@ class UsersTestsA(BaseTest):
         self.lg('GetUser [%s] response [%s]' % (self.user_1, self.response.json()))
 
 
-    #Currently fail due to issue https://github.com/itsyouonline/identityserver/issues/218
+    @unittest.skip("bug: #467")
     def test001_get_user(self):
         """ ITSYOU-001
         *Test case for check get user /users/{username}.*
@@ -188,8 +188,6 @@ class UsersTestsB(BaseTest):
         self.assertEqual(type(response.json()), types.ListType)
         self.lg('%s ENDED' % self._testID)
 
-    #Currently fail due to issue https://github.com/itsyouonline/identityserver/issues/218
-    @unittest.skip("fail due to issue https://github.com/itsyouonline/identityserver/issues/218")
     def test010_get_user_info(self):
         """ ITSYOU-010
         *Test case for check get user info /users/{username}/info.*
@@ -240,8 +238,6 @@ class UsersTestsB(BaseTest):
         self.assertEqual(type(response.json()), types.ListType)
         self.lg('%s ENDED' % self._testID)
 
-    #Currently fail due to issue https://github.com/itsyouonline/identityserver/issues/218
-    @unittest.skip("fail due to issue https://github.com/itsyouonline/identityserver/issues/218")
     def test012_get_user_authorizations(self):
         """ ITSYOU-012
         *Test case for check get user authorizations /users/{username}/authorizations.*

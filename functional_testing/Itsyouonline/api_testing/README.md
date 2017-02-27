@@ -28,12 +28,32 @@ Steps to install itsyouonline locally:
 
 
 # Pre-Requirements:
-Create user on the target environment using sign-up and create api key under this user and use this info in the config file [config.ini]
-steps:
-1. Register with valid authenticator application  
-2. Sign-in with valid authenticator application  
-3. Fill the user data company/organization etc.  
-4. Generate api-key and use it in the config file [config.ini]  
+
+1. Create two itsyouonline accounts using sign-up.
+
+> During signing up the first account scan the QR using any QR scanner and save the secret value, we will put it in config.ini file later.
+
+2. For each account create **APIKEY**.  [See how to create apikey](create_apikey.md)
+3. Fill the data required in ```config.ini``` file according to your environment as follow:
+
+```
+itsyouonline_url          : Environment url
+validation_email          : Validation Email
+validation_email_password : Validation email password
+user1_totp_secret         : Authentication secret of the user (1) (from step 1)
+user1_username            : User (1) username
+user1_password            : User (1) password
+user1_applicationid       : User (1) apikey applicationid
+user1_secret              : User (1) apikey secret
+user2_username            : User (2) username
+user2_password            : User (2) password
+user2_applicationid       : User (2) apikey applicationid
+user2_secret              : User (2) apikey secret
+```
+
+<a href="vmail_config.md"><b> See how to configure verification email</b></a>
+
+
 
 # Requirements:
 
@@ -67,4 +87,10 @@ change the necessary parameters in config.ini according to your environment
 or overwrite it using the following command
 ```
 (venv)$> nosetests -xv testsuite --tc-file config.ini --tc=main.url:https://itsyou.online/  --tc=main.user:alim 2>testresults.log
+```
+
+or run **run_api_tests.sh** script as follow:
+```
+cd G8_testing/functional_testing/Itsyouonline/api_testing
+bash run_api_tests.sh -d testsuite/
 ```

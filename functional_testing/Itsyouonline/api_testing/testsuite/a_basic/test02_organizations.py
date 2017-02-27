@@ -8,14 +8,16 @@ class OrganizationsTests(BaseTest):
 
     def setUp(self):
         super(OrganizationsTests, self).setUp()
-        response = self.client_1.api.GetUserOrganizations(self.user_1)
-        self.lg('GetUserOrganizations [%s] response [%s]' % (self.user_1, response.json()))
-        self.assertEqual(response.status_code, 200)
-        self.organization_id = response.json()['owner'][-1]
-        self.lg('organization_id %s' % self.organization_id)
+        org_1_data = {"globalid":self.organization_1}
+        response = self.client_1.api.CreateNewOrganization(org_1_data)
+        self.assertEqual(response.status_code, 201)
 
-    #Currently fail due to issue https://github.com/itsyouonline/identityserver/issues/233
-    @unittest.skip("fail due to issue https://github.com/itsyouonline/identityserver/issues/233")
+    def tearDown(self):
+        response = self.client_1.api.GetUserOrganizations(self.user_1)
+        self.assertEqual(response.status_code, 200)
+        for org in response.json()['owner']:
+            response = self.client_1.api.DeleteOrganization(org)
+
     def test001_get_organization(self):
         """ ITSYOU-013
         *Test case for check get organization GET /organizations/{globalid}.*
@@ -26,7 +28,7 @@ class OrganizationsTests(BaseTest):
         #. validate all expected keys in the returned response
         """
         self.lg('%s STARTED' % self._testID)
-        response = self.client_1.api.GetOrganization(self.organization_id)
+        response = self.client_1.api.GetOrganization(self.organization_1)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(type(response.json()), types.DictType)
         self.lg('%s ENDED' % self._testID)
@@ -41,13 +43,12 @@ class OrganizationsTests(BaseTest):
         #. validate all expected keys in the returned response
         """
         self.lg('%s STARTED' % self._testID)
-        response = self.client_1.api.GetOrganizationTree(self.organization_id)
+        response = self.client_1.api.GetOrganizationTree(self.organization_1)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(type(response.json()), types.DictType)
         self.lg('%s ENDED' % self._testID)
 
-    #Currently fail due to issue https://github.com/itsyouonline/identityserver/issues/233
-    @unittest.skip("fail due to issue https://github.com/itsyouonline/identityserver/issues/233")
+
     def test003_get_organization_contracts(self):
         """ ITSYOU-015
         *Test case for check get organization contracts GET /organizations/{globalid}/contracts.*
@@ -58,13 +59,11 @@ class OrganizationsTests(BaseTest):
         #. validate all expected keys in the returned response
         """
         self.lg('%s STARTED' % self._testID)
-        response = self.client_1.api.GetOrganizationContracts(self.organization_id)
+        response = self.client_1.api.GetOrganizationContracts(self.organization_1)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(type(response.json()), types.ListType)
         self.lg('%s ENDED' % self._testID)
 
-    #Currently fail due to issue https://github.com/itsyouonline/identityserver/issues/233
-    @unittest.skip("fail due to issue https://github.com/itsyouonline/identityserver/issues/233")
     def test004_get_organization_invitations(self):
         """ ITSYOU-016
         *Test case for check get organization invitations GET /organizations/{globalid}/invitations.*
@@ -75,13 +74,11 @@ class OrganizationsTests(BaseTest):
         #. validate all expected keys in the returned response
         """
         self.lg('%s STARTED' % self._testID)
-        response = self.client_1.api.GetPendingOrganizationInvitations(self.organization_id)
+        response = self.client_1.api.GetPendingOrganizationInvitations(self.organization_1)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(type(response.json()), types.ListType)
         self.lg('%s ENDED' % self._testID)
 
-    #Currently fail due to issue https://github.com/itsyouonline/identityserver/issues/233
-    @unittest.skip("fail due to issue https://github.com/itsyouonline/identityserver/issues/233")
     def test005_get_organization_apikeys(self):
         """ ITSYOU-017
         *Test case for check get organization apikeys GET /organizations/{globalid}/apikeys.*
@@ -92,11 +89,7 @@ class OrganizationsTests(BaseTest):
         #. validate all expected keys in the returned response
         """
         self.lg('%s STARTED' % self._testID)
-        response = self.client_1.api.GetOrganizationAPIKeyLabels(self.organization_id)
+        response = self.client_1.api.GetOrganizationAPIKeyLabels(self.organization_1)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(type(response.json()), types.ListType)
-        label = response.json()[0]
-        response = self.client_1.api.GetOrganizationAPIKey(label, self.organization_id)
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(type(response.json()), types.DictType)
         self.lg('%s ENDED' % self._testID)
