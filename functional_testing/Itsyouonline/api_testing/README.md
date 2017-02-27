@@ -33,8 +33,8 @@ Steps to install itsyouonline locally:
 
 > During signing up the first account scan the QR using any QR scanner and save the secret value, we will put it in config.ini file later.
 
-2. For each account create **APIKEY**.
-3. Fill the data required in ```config,ini``` file according to your environment as follow:
+2. For each account create **APIKEY**.  [See how to create apikey](create_apikey.md)
+3. Fill the data required in ```config.ini``` file according to your environment as follow:
 
 ```
 itsyouonline_url          : Environment url
