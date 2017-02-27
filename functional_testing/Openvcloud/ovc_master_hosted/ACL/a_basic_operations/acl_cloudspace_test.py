@@ -789,7 +789,7 @@ class Write(ACLCLOUDSPACE):
         #. Check that the machine is updated
         """
 
-        self.lg('1- Creating machine to the account_owner\' default cloud space')
+        self.lg('1- Creating machine to the account_owner default cloud space')
         machine_id = self.cloudapi_create_machine(self.cloudspace_id,
                                                   self.account_owner_api)
 
@@ -801,6 +801,7 @@ class Write(ACLCLOUDSPACE):
         self.user_api.cloudapi.machines.stop(machineId=machine_id)
         self.assertEqual(self.api.cloudapi.machines.get(machineId=machine_id)['status'],
                              'HALTED')
+        sleep(2)
 
         self.lg('4- Resize the machine with new user [user], should succeed')
         sizesAva = len(self.api.cloudapi.sizes.list(self.cloudspace_id)[1]['disks'])
