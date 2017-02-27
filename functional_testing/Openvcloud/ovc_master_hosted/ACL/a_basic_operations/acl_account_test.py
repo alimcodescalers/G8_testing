@@ -196,18 +196,21 @@ class Write(ACLACCOUNT):
 
         self.lg('%s ENDED' % self._testID)
 
-    def test004_machine_createTemplate(self):
+    @unittest.skip('bug: https://github.com/0-complexity/openvcloud/issues/748')
+    def test004_machine_convertToTemplate(self):
         """ ACL-10
-        *Test case for machine_createTemplate api with user has write access.*
+        *Test case for machine_convertToTemplate api with user has write access.*
 
         **Test Scenario:**
 
         #. create cloudspace and machine with user1
-        #. use created machine1 to create machineTemplate with user1
-        #. try to use created machine1 to create machineTemplate with user2, should fail '403 Forbidden'
+        #. use convertToTemplate to convert machine1 to template with user1, should fail with '409 Conflict' (machine should be stopped first)
+        #. stop machine1
+        #. use convertToTemplate to convert machine1 to Template with user1
+        #. try to use convert machine1 to  template with user2, should fail '403 Forbidden'
         #. add user2 to the account created by user1 with write access.
-        #. use created machine1 to create machineTemplate with user2, should succeed
-        #. delete user1 account, create machineTemplate with user1, should fail '404 Not Found'
+        #. use convert machine1 to template with user2, should succeed
+        #. use convert machine1 to template with user1, should fail with 404'
         """
         self.lg('%s STARTED' % self._testID)
         self._cloudspaces = []
@@ -224,10 +227,21 @@ class Write(ACLACCOUNT):
                                                   image_id=selected_image['id'])
         self._machines.append(machine_id)
 
-        self.lg('2- use created machine1 to create machineTemplate with user1')
-        created = self.account_owner_api.cloudapi.machines.createTemplate(machineId=machine_id,
-                  templatename=str(uuid.uuid4()).replace('-', '')[0:10], basename=selected_image['name'])
-        self.assertTrue(created, 'Create Template API returned False')
+        self.lg('use convertToTemplate to convert machine1 to Template with user1, should fail with "409 Conflict" (machine should be stopped first)')
+        try:
+            self.account_owner_api.cloudapi.machines.convertToTemplate(machineId=machine_id, templatename=str(uuid.uuid4()).replace('-', '')[0:10])
+        except ApiError as e:
+            self.lg('- expected error raised %s' % e.message)
+            self.assertEqual(e.message, '409 Conflict')
+
+        self.lg('stop machine1')
+        stopped = self.account_owner_api.cloudapi.machines.stop(machineId=machine_id)
+        self.assertTrue(stopped, 'machine1 %s did not stopped' % machine_id)
+
+        self.lg('use convertToTemplate to convert machine1 to Template with user1)
+        converted = self.account_owner_api.cloudapi.machines.convertToTemplate(machineId=machine_id, templatename=str(uuid.uuid4()).replace('-', '')[0:10])
+        self.assertTrue(converted, 'machine1 did not converted to template')
+
         templates = len(self.account_owner_api.cloudapi.accounts.listTemplates(accountId=self.account_id))
         self.assertEqual(templates, 1, 'We should have only one template for this account not [%s]' % templates)
         counter = 120
@@ -238,10 +252,11 @@ class Write(ACLACCOUNT):
             counter-=1
             time.sleep(1)
         self.assertEqual(status, 'CREATED', 'Template did not created and still %s' % status)
-        self.lg('3- try to use created machine1 to create machineTemplate with user2')
+
+        self.lg('try to use convert machine1 to  template with user2, should fail 403 Forbidden')
         try:
-            self.user_api.cloudapi.machines.createTemplate(machineId=machine_id,
-            templatename=str(uuid.uuid4()).replace('-', '')[0:10], basename=selected_image['name'])
+            self.user_api.cloudapi.machines.convertToTemplate(machineId=machine_id,
+            templatename=str(uuid.uuid4()).replace('-', '')[0:10])
         except ApiError as e:
             self.lg('- expected error raised %s' % e.message)
             self.assertEqual(e.message, '403 Forbidden')
@@ -251,9 +266,9 @@ class Write(ACLACCOUNT):
                                            userId=self.user,
                                            accesstype='RCX')
 
-        self.lg('5- use created machine1 to create machineTemplate with user2')
-        created = self.user_api.cloudapi.machines.createTemplate(machineId=machine_id,
-                  templatename=str(uuid.uuid4()).replace('-', '')[0:10], basename=selected_image['name'])
+        self.lg('5- use convert machine1 to create template with user2')
+        created = self.user_api.cloudapi.machines.convertToTemplate(machineId=machine_id,
+                  templatename=str(uuid.uuid4()).replace('-', '')[0:10])
         self.assertTrue(created, 'Create Template API returned False')
         templates = len(self.account_owner_api.cloudapi.accounts.listTemplates(accountId=self.account_id))
         self.assertEqual(templates, 2, 'We should have only two template for this account not [%s]' % templates)
@@ -274,11 +289,10 @@ class Write(ACLACCOUNT):
                              accountId=self.account_id)
         self.CLEANUP['accountId'].remove(self.account_id)
 
-        self.lg('- use created machine1 to create machineTemplate with user1')
+        self.lg('use convert machine1 to template with user1, should fail with 404')
         try:
-            self.user_api.cloudapi.machines.createTemplate(machineId=machine_id,
-                                                           templatename=str(uuid.uuid4()).replace('-', '')[0:10],
-                                                           basename=selected_image['name'])
+            self.user_api.cloudapi.machines.convertToTemplate(machineId=machine_id,
+                                                           templatename=str(uuid.uuid4()).replace('-', '')[0:10])
         except ApiError as e:
             self.lg('- expected error raised %s' % e.message)
             self.assertEqual(e.message, '404 Not Found')

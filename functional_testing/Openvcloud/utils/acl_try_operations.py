@@ -51,10 +51,15 @@ def try_account_write(self, operation='create_cloudspace'):
                                                  api=self.account_owner_api,
                                                  image_id=selected_image['id'])
         self._machines = [machineId]
-        self.lg('- use created machine2 to create machineTemplate with user1')
-        created = self.user_api.cloudapi.machines.createTemplate(machineId=machineId,
-                  templatename=str(uuid.uuid4()).replace('-', '')[0:10], basename=selected_image['name'])
-        self.assertTrue(created, 'Create Template API returned False')
+
+        self.lg('- stop machine2')
+        stopped = self.user_api.cloudapi.machines.stop(machineId=machineId)
+        self.assertTrue(stopped, 'machine2 %s did not stopped' % machine_id)
+
+        self.lg('- use convert machine2 to template with user1')
+        converted = self.user_api.cloudapi.machines.convertToTemplate(machineId=machineId,
+                  templatename=str(uuid.uuid4()).replace('-', '')[0:10])
+        self.assertTrue(converted, 'Create Template API returned False')
         templates = len(self.account_owner_api.cloudapi.accounts.listTemplates(accountId=self.account_id))
         self.assertEqual(templates, 1, 'We should have only one template for this account not [%s]' % templates)
         counter = 120
@@ -64,7 +69,7 @@ def try_account_write(self, operation='create_cloudspace'):
                 break
             counter-=1
             time.sleep(1)
-        self.assertEqual(status, 'CREATED', 'Template did not created and still %s' % status)
+        self.assertEqual(status, 'CREATED', 'machine did not converted to template')
     else:
         raise AssertionError('Un-supported operation [%s]' % operation)
 
@@ -366,17 +371,17 @@ def try_machine_read(self, operation='machine_get'):
         snapshots = self.user_api.cloudapi.machines.listSnapshots(machineId=self.machine_id)
         self.assertEqual(len(snapshots), 1)
         self.assertEqual(snapshots[0]['name'], name)
-    elif operation == 'machine_getHistory':    
+    elif operation == 'machine_getHistory':
         for _  in range(10):
             time.sleep(2)
             histories = self.user_api.cloudapi.machines.getHistory(machineId=self.machine_id,
                                                                size=10)
-            
-            if histories != []:                                                   
-                break 
+
+            if histories != []:
+                break
         else:
             raise AssertionError('there is no history for vm %s'%self.machine_id)
-                       
+
         self.assertIn('Created', [history['message'] for history in histories])
     else:
         raise AssertionError('Un-supported operation [%s]' % operation)
@@ -484,4 +489,3 @@ def try_machine_admin(self, operation='machine_adduser'):
         self.assertNotIn(user3, [acl['userGroupId'] for acl in machine['acl']])
     else:
         raise AssertionError('Un-supported operation [%s]' % operation)
-
