@@ -227,7 +227,7 @@ class Write(ACLACCOUNT):
                                                   image_id=selected_image['id'])
         self._machines.append(machine_id)
 
-        self.lg('use convertToTemplate to convert machine1 to Template with user1, should fail with '409 Conflict' (machine should be stopped first)')
+        self.lg('use convertToTemplate to convert machine1 to Template with user1, should fail with "409 Conflict" (machine should be stopped first)')
         try:
             self.account_owner_api.cloudapi.machines.convertToTemplate(machineId=machine_id, templatename=str(uuid.uuid4()).replace('-', '')[0:10])
         except ApiError as e:
