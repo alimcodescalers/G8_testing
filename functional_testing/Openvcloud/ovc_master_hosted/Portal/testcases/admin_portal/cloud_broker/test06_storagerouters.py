@@ -79,7 +79,7 @@ class StorageRoutersTests(Framework):
         self.assertTrue(self.StorageRouters.is_at())
 
         self.lg('try paging from start/previous/next/last and verify it should succeed')
-        self.assertTrue(self.Tables.check_next_prevsious_buttons(self.table_info))
+        self.assertTrue(self.Tables.check_next_previous_buttons(self.table_info))
 
         self.lg('%s ENDED' % self._testID)
 

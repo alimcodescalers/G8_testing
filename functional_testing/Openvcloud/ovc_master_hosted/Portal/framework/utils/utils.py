@@ -153,7 +153,7 @@ class BaseTest(unittest.TestCase):
                     else:
                         break
         except:
-            # WebDriverException 
+            # WebDriverException
             time.sleep(2)
             try:
                 self.driver.get(page_url)
@@ -443,6 +443,5 @@ class BaseTest(unittest.TestCase):
 
 
     def get_navigation_bar(self, element):
-        bar = self.find_element(element)
-        items = bar.find_elements_by_tag_name('li')
-        return [x.text for x in items]
+        elements = self.get_list_items(element)
+        return [x.text for x in elements]

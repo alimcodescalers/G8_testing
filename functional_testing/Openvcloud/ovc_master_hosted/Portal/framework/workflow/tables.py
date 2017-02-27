@@ -27,8 +27,7 @@ class tables():
         account_info = self.get_table_info(table_info_element)
         return int(account_info[(account_info.index('f') + 2):(account_info.index('entries') - 1)].replace(',',''))
 
-    def get_previous_next_button(self, element):
-
+    def get_previous_next_button(self, element=None):
         if element == None:
             pagination = self.framework.get_list_items('pagination')
         else:
@@ -45,6 +44,7 @@ class tables():
         self.framework.assertTrue(self.framework.check_element_is_exist(element))
         max_sort_value = 100
         account_max_number = self.get_table_max_number(element)
+        self.framework.select( selector , max_sort_value)
         time.sleep(3)
 
         page_numbers = (account_max_number / max_sort_value)
@@ -78,7 +78,6 @@ class tables():
         return tableData
 
     def check_show_list(self, info_table, selector):
-
         paging_options = [25, 50, 100, 10]
         rows_max_number = self.get_table_max_number(info_table)
 
@@ -97,36 +96,52 @@ class tables():
             else:
                 if not rows_end_number_ < option:
                     return False
-        else:
-            return True
 
-    def check_next_prevsious_buttons(self, info_table, pagination=None):
+        return True
 
+    def check_next_previous_buttons(self, info_table, pagination=None):
         rows_max_number = self.get_table_max_number(info_table)
-        pagination = self.framework.get_list_items('pagination')
+        if pagination == None:
+            pagination_items = self.framework.get_list_items('pagination')
+        else:
+            table = self.framework.find_element(element)
+            pagination_items = table.find_element_by_tag_name('ul')
+            pagination_items = pagination.find_elements_by_tag_name('li')
 
-        for _ in range((len(pagination) - 3)):
+        for _ in range((len(pagination_items) - 3)):
             page_start_number = self.get_table_start_number(info_table)
             page_end_number = self.get_table_end_number(info_table)
             previous_button, next_button = self.get_previous_next_button(pagination)
             next_button.click()
-            time.sleep(3)
+            time.sleep(4)
             page_start_number_ = self.get_table_start_number(info_table)
             page_end_number_ = self.get_table_end_number(info_table)
+
             if page_start_number_ != page_start_number+10:
                 return False
-
             if page_end_number_ < rows_max_number:
                 if page_end_number_ != page_end_number+10:
                     return False
             else:
-                if page_end_number_ != account_max_number:
+                if page_end_number_ != rows_max_number:
                     return False
-        else:
-            return True
+
+            previous_button, next_button = self.get_previous_next_button(pagination)
+            previous_button.click()
+            time.sleep(4)
+            page_start_number__ = self.get_table_start_number(info_table)
+            page_end_number__ = self.get_table_end_number(info_table)
+
+            if page_start_number__ != page_start_number_-10:
+                return False
+
+            previous_button, next_button = self.get_previous_next_button(pagination)
+            next_button.click()
+            time.sleep(4)
+
+        return True
 
     def check_sorting_table(self, data_table, info_table, selector, pagination=None):
-
         self.framework.select(selector , 100)
         table_location = self.framework.find_element(data_table).location
         table_head_elements = self.framework.get_table_head_elements(data_table)
@@ -155,11 +170,11 @@ class tables():
                 if not table_before[temp][column] == table_after[(len(table_after)-temp-1)][column]:
                     return False
 
-        else:
-            return True
+            self.framework.lg('coulmn %s passed' % current_column)
+
+        return True
 
     def check_search_box(self, data_table, info_table, search_box):
-
         table_head_elements = self.framework.get_table_head_elements(data_table)
         table_before = self.get_table_data(info_table)
         columns = len(table_head_elements)
@@ -172,12 +187,11 @@ class tables():
 
             if not any(table_before[random_element][column] in s for s in table_after[0]):
                 return False
-        else:
-            self.framework.clear_text(search_box)
-            return True
+
+        self.framework.clear_text(search_box)
+        return True
 
     def check_data_filters(self, data_table, info_table):
-
         table_before = self.get_table_data(info_table)
         table_head_elements = self.framework.get_table_head_elements(data_table)
         columns = len(table_head_elements)
@@ -202,5 +216,5 @@ class tables():
                 return False
 
             self.framework.clear_element_text(current_filter)
-        else:
-            return True
+
+        return True
