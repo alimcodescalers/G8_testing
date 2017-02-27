@@ -504,7 +504,7 @@ class Write(ACLCLOUDSPACE):
             self.assertEqual(e.message, '404 Not Found')
 
         self.lg('%s ENDED' % self._testID)
-
+    @unittest.skip('https://github.com/0-complexity/openvcloud/issues/745')
     def test005_cloudspace_create_clone_delete_machine(self):
         """ ACL-33
         *Test case for create/clone/delete machine api with user has write access on cloud space level.*
