@@ -238,7 +238,7 @@ class Write(ACLACCOUNT):
         stopped = self.account_owner_api.cloudapi.machines.stop(machineId=machine_id)
         self.assertTrue(stopped, 'machine1 %s did not stopped' % machine_id)
 
-        self.lg('use convertToTemplate to convert machine1 to Template with user1)
+        self.lg('use convertToTemplate to convert machine1 to Template with user1')
         converted = self.account_owner_api.cloudapi.machines.convertToTemplate(machineId=machine_id, templatename=str(uuid.uuid4()).replace('-', '')[0:10])
         self.assertTrue(converted, 'machine1 did not converted to template')
 
