@@ -54,7 +54,7 @@ def try_account_write(self, operation='create_cloudspace'):
 
         self.lg('- stop machine2')
         stopped = self.user_api.cloudapi.machines.stop(machineId=machineId)
-        self.assertTrue(stopped, 'machine2 %s did not stopped' % machine_id)
+        self.assertTrue(stopped, 'machine2 %s did not stopped' % machineId)
 
         self.lg('- use convert machine2 to template with user1')
         converted = self.user_api.cloudapi.machines.convertToTemplate(machineId=machineId,
