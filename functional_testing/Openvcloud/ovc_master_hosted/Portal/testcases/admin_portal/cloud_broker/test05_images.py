@@ -33,7 +33,7 @@ class ImagesTests(Framework):
 
         for image_paging_option in image_paging_options:
             self.select('account selector', image_paging_option)
-            time.sleep(1)
+            time.sleep(2)
             image_info_ = self.Tables.get_table_info('table cloudbroker image info')
             image_number_max_number_ = int(image_info_[image_info_.index('f') + 2:image_info_.index('en') - 1].replace(',', ''))
             image_avaliable_ = int(image_info_[(image_info_.index('to') + 3):(image_info_.index('of') - 1)].replace(',', ''))
@@ -66,14 +66,14 @@ class ImagesTests(Framework):
             current_column = element.text
             self.driver.execute_script("window.scrollTo(0, 0)")
             element.click()
-            time.sleep(3)
+            self.wait_until_element_attribute_has_text(element, 'aria-sort', 'ascending')
             table_before = self.Tables.get_table_data('table cloudbroker image info')
+            self.assertTrue(table_before, 'Error while getting table data before sorting')
             self.driver.execute_script("window.scrollTo(0, 0)")
             element.click()
-            time.sleep(3)
-
+            self.wait_until_element_attribute_has_text(element, 'aria-sort', 'descending')
             table_after = self.Tables.get_table_data('table cloudbroker image info')
-
+            self.assertTrue(table_after, 'Error while getting table data after sorting')
             self.assertEqual(len(table_before), len(table_after),
                              'The length of account table is changing according to sorting by ID')
             for temp in range(len(table_before)):
@@ -102,7 +102,7 @@ class ImagesTests(Framework):
             image_end_number = self.Tables.get_table_end_number('table cloudbroker image info')
             previous_button, next_button = self.Tables.get_previous_next_button()
             next_button.click()
-            time.sleep(1)
+            time.sleep(3)
 
             image_start_number_ = self.Tables.get_table_start_number('table cloudbroker image info')
             image_end_number_ = self.Tables.get_table_end_number('table cloudbroker image info')
@@ -131,27 +131,27 @@ class ImagesTests(Framework):
         rows= len(table_before)
         random_elemn= randint(0,rows-1)
         self.lg('2-try search of all elements by main search box')
-        skip_column =[0, 3]
+        skip_column =[1, 4]
         for column in range(columns) :
             #skip("bug #https://github.com/0-complexity/openvcloud/issues/696")
             if column in skip_column:
                 continue
             self.set_text("image_search", table_before[random_elemn][column])
-            time.sleep(1)
+            time.sleep(2)
             table_after = self.Tables.get_table_data('table cloudbroker image info')
             self.assertTrue(any(table_before[random_elemn][column] in s for s in table_after[0] ))
 
         self.clear_text("image_search")
-        time.sleep(1)
+        time.sleep(2)
 
 
         self.lg('3-try search of all elements by search box in every column')
 
         for column in range(columns) :
             #skip("bug #https://github.com/0-complexity/openvcloud/issues/696")
-            if column == 0:
+            if column in [1,4]:
                 continue
-            self.assertTrue(self.set_text_columns("image_table_element_search" ,table_before[random_elemn][column], column+1 ))
+            self.assertTrue(self.set_text_columns("image_table_element_search" ,table_before[random_elemn][column], column+1))
             time.sleep(1)
             table_after1=self.Tables.get_table_data('table cloudbroker image info')
             self.assertEqual(table_after1[0][column],table_before[random_elemn][column])
@@ -180,7 +180,7 @@ class ImagesTests(Framework):
         table_elements=self.Tables.get_table_data('table cloudbroker image info')
         rows= len(table_elements)
         random_elemn= randint(0,rows-1)
-        image_element=table_elements[random_elemn][1]
+        image_element=table_elements[random_elemn][0]
         self.Images.open_image_page(image_element)
         time.sleep(2)
         self.lg('stacks which have this Image table ')
@@ -214,12 +214,12 @@ class ImagesTests(Framework):
             current_column = element.text
             self.driver.execute_script("window.scrollTo(0, 0)")
             element.click()
-            time.sleep(3)
-            table_before = self.Tables.get_table_data('table cloudbroker stack info')
+            self.wait_until_element_attribute_has_text(element, 'aria-sort', 'ascending')
+            table_before = self.Tables.get_table_data('table cloudbroker stack info', pagination='stack_table_pagination')
             self.driver.execute_script("window.scrollTo(0, 0)")
             element.click()
-            time.sleep(3)
-            table_after = self.Tables.get_table_data('table cloudbroker stack info')
+            self.wait_until_element_attribute_has_text(element, 'aria-sort', 'descending')
+            table_after = self.Tables.get_table_data('table cloudbroker stack info', pagination='stack_table_pagination')
             self.assertEqual(len(table_before), len(table_after),
                              'The length of image table is changing according to sorting by %s'%current_column)
             for temp in range(len(table_before)):
@@ -236,7 +236,7 @@ class ImagesTests(Framework):
             stack_end_number = self.Tables.get_table_end_number('table cloudbroker stack info')
             previous_button, next_button = self.Tables.get_previous_next_button()
             next_button.click()
-            time.sleep(1)
+            time.sleep(3)
             stack_end_number_ = self.Tables.get_table_end_number('table cloudbroker stack info')
             stack_start_number_ = self.Tables.get_table_start_number('table cloudbroker image info')
 
@@ -263,13 +263,13 @@ class ImagesTests(Framework):
 
         self.Images.get_it()
         self.assertTrue(self.Images.is_at())
-        table_elements=self.Tables.get_table_data('table cloudbroker image info')
+        table_elements=self.Tables.get_table_data('table cloudbroker image info', pagination='VM_table_pagination')
 
         self.lg('2- open random Image page')
 
         rows= len(table_elements)
         random_elemn= randint(0,rows-1)
-        image_element=table_elements[random_elemn][1]
+        image_element=table_elements[random_elemn][0]
         self.Images.open_image_page(image_element)
         time.sleep(2)
         self.lg(' which have this Image table ')
@@ -286,7 +286,7 @@ class ImagesTests(Framework):
         for paging_option in paging_options:
 
             self.select('VM_table selector', paging_option)
-            time.sleep(1)
+            time.sleep(3)
             VM_info_ = self.Tables.get_table_info('table cloudbroker vmachine info')
             VM_number_max_number_ = int(VM_info_[VM_info_.index('f') + 2:VM_info_.index('en') - 1].replace(',', ''))
             VM_avaliable_ = int(VM_info_[(VM_info_.index('to') + 3):(VM_info_.index('of') - 1)].replace(',', ''))
@@ -306,12 +306,14 @@ class ImagesTests(Framework):
             current_column = element.text
             self.driver.execute_script("window.scrollTo(0, 0)")
             element.click()
-            time.sleep(3)
+            self.wait_until_element_attribute_has_text(element, 'aria-sort', 'ascending')
             table_before = self.Tables.get_table_data('table cloudbroker vmachine info','VM_table selector','table cloudbroker vmachine')
+            self.assertTrue(table_before, 'Error while getting table data before sorting')
             self.driver.execute_script("window.scrollTo(0, 0)")
             element.click()
-            time.sleep(3)
+            self.wait_until_element_attribute_has_text(element, 'aria-sort', 'descending')
             table_after = self.Tables.get_table_data('table cloudbroker vmachine info','VM_table selector','table cloudbroker vmachine')
+            self.assertTrue(table_after, 'Error while getting table data after sorting')
             self.assertEqual(len(table_before), len(table_after),
                              'The length of image table is changing according to sorting by %s'%current_column)
             for temp in range(len(table_before)):
@@ -327,7 +329,7 @@ class ImagesTests(Framework):
             VM_end_number = self.Tables.get_table_end_number('table cloudbroker vmachine info')
             previous_button, next_button = self.Tables.get_previous_next_button()
             next_button.click()
-            time.sleep(1)
+            time.sleep(3)
             VM_end_number_ = self.Tables.get_table_end_number('table cloudbroker vmachine info')
             VM_start_number_ = self.Tables.get_table_start_number('table cloudbroker vmachine info')
             self.assertEqual(VM_start_number_, VM_start_number + 10)
@@ -358,13 +360,13 @@ class ImagesTests(Framework):
         table_elements=self.Tables.get_table_data('table cloudbroker image info')
         rows= len(table_elements)
         random_elemn= randint(0,rows-1)
-        image_element=table_elements[random_elemn][1]
+        image_element=table_elements[random_elemn][0]
 
         self.Images.open_image_page(image_element)
         self.lg('-try search boxes in stack table')
 
         table_head_elements = self.get_table_head_elements('table cloudbroker stack')
-        table_before = self.Tables.get_table_data('table cloudbroker stack info')
+        table_before = self.Tables.get_table_data('table cloudbroker stack info', pagination='stack_table_pagination')
         columns = len(table_head_elements)
         rows= len(table_before)
 
@@ -377,13 +379,13 @@ class ImagesTests(Framework):
                         continue
 
                 self.set_text("stack_search", table_before[random_elemn][column])
-                time.sleep(1)
-                table_after = self.Tables.get_table_data('table cloudbroker stack info')
+                time.sleep(2)
+                table_after = self.Tables.get_table_data('table cloudbroker stack info', pagination='stack_table_pagination')
                 self.assertTrue(any(table_before[random_elemn][column] in s for s in table_after[0] ))
 
             self.clear_text("stack_search")
 
-            time.sleep(1)
+            time.sleep(2)
 
             self.lg('4- try search of all elements by search box in every column')
 
@@ -392,7 +394,7 @@ class ImagesTests(Framework):
                 if column == 4 :
                     continue
                 self.assertTrue(self.set_text_columns("stack_table_element_search" ,table_before[random_elemn][column], column+1 ))
-                table_after1=self.Tables.get_table_data('table cloudbroker stack info')
+                table_after1=self.Tables.get_table_data('table cloudbroker stack info', pagination='stack_table_pagination')
                 self.assertFalse( 'No data available in table' in table_after1[0] )
                 self.assertEqual(table_after1[0][column],table_before[random_elemn][column])
                 self.assertTrue(self.clear_text_columns("stack_table_element_search",column+1))
@@ -401,8 +403,9 @@ class ImagesTests(Framework):
 
         table_head_elements_VM = self.get_table_head_elements('table cloudbroker vmachine')
         self.assertNotEqual(table_head_elements_VM, False)
-        table_before_VM = self.Tables.get_table_data('table cloudbroker vmachine info','VM_table selector','table cloudbroker vmachine')
-        time.sleep(1)
+        table_before_VM = self.Tables.get_table_data('table cloudbroker vmachine info','VM_table selector','table cloudbroker vmachine', pagination='VM_table_pagination')
+        self.assertTrue(table_before_VM, 'Error while getting table data before searching')
+        time.sleep(2)
 
         self.lg('5- try search of all elements in vm table by main search box')
 
@@ -416,17 +419,18 @@ class ImagesTests(Framework):
                 if column == 3 :
                     continue
                 self.set_text("VM_search", table_before_VM[random_elemn][column])
-                time.sleep(1)
-                table_after = self.Tables.get_table_data('table cloudbroker vmachine info','VM_table selector','table cloudbroker vmachine')
+                time.sleep(2)
+                table_after = self.Tables.get_table_data('table cloudbroker vmachine info','VM_table selector','table cloudbroker vmachine', pagination='VM_table_pagination')
+                self.assertTrue(table_after, 'Error while getting table data after searching')
                 self.assertTrue(any(table_before_VM[random_elemn][column] in s for s in table_after[0] ))
             self.clear_text("VM_search")
 
-            time.sleep(1)
+            time.sleep(2)
 
             self.lg('4- try search of all elements by search box in every column')
 
             for column in range(columns) :
                 self.set_text_columns("VM_table_element_search" ,table_before_VM[random_elemn][column], column+1 )
-                table_after1=self.Tables.get_table_data('table cloudbroker vmachine info','VM_table selector','table cloudbroker vmachine')
+                table_after1=self.Tables.get_table_data('table cloudbroker vmachine info','VM_table selector','table cloudbroker vmachine', pagination='VM_table_pagination')
                 self.assertEqual(table_after1[0][column],table_before_VM[random_elemn][column])
                 self.clear_text_columns("VM_table_element_search",column+1)

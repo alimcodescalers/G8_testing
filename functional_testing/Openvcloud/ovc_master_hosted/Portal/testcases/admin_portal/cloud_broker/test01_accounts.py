@@ -158,7 +158,7 @@ class AccountsTests(Framework):
         table_head_elements = self.get_table_head_elements('table cloudbroker account')
         self.assertNotEqual(table_head_elements, False)
 
-        for element in table_head_elements:
+        for column, element in enumerate(table_head_elements):
 
             current_column = element.text
             if element.text == "Access Controler List":
@@ -177,6 +177,6 @@ class AccountsTests(Framework):
             self.assertEqual(len(table_before), len(table_after),
                              'The length of account table is changing according to sorting by ID')
             for temp in range(len(table_before)):
-                self.assertEqual(table_before[temp], table_after[(len(table_after) - temp - 1)])
+                self.assertEqual(table_before[temp][column], table_after[(len(table_after) - temp - 1)][column])
             self.lg('pass %s column' % current_column)
             time.sleep(2)

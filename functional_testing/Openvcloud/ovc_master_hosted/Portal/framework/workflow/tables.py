@@ -26,13 +26,20 @@ class tables():
         account_info = self.get_table_info(table_info_element)
         return int(account_info[(account_info.index('f') + 2):(account_info.index('entries') - 1)].replace(',',''))
 
-    def get_previous_next_button(self):
-        pagination = self.framework.get_list_items('pagination')
+    def get_previous_next_button(self , pagination=None):
+        if pagination == None:
+            pagination = self.framework.get_list_items('pagination')
+        else:
+            table = self.framework.find_element(pagination)
+            pagination = table.find_element_by_tag_name('ul')
+            pagination = pagination.find_elements_by_tag_name('li')
+
         previous_button = pagination[0].find_element_by_tag_name('a')
         next_button = pagination[(len(pagination) - 1)].find_element_by_tag_name('a')
+
         return previous_button, next_button
 
-    def get_table_data(self, element, selector = 'account selector',table_element=None):
+    def get_table_data(self, element, selector = 'account selector',table_element=None, pagination=None):
         # This method will return a table data as a list
         self.framework.assertTrue(self.framework.check_element_is_exist(element))
         max_sort_value = 100
@@ -54,7 +61,7 @@ class tables():
                 cells = row.find_elements_by_tag_name('td')
                 tableData.append([x.text for x in cells])
             if  page < (page_numbers-1):
-                previous_button, next_button = self.get_previous_next_button()
+                previous_button, next_button = self.get_previous_next_button(pagination)
                 next_button.click()
 
                 tb_max_number = self.get_table_max_number(element)
