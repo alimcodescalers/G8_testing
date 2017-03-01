@@ -275,18 +275,18 @@ class ImagesTests(Framework):
         self.lg(' which have this Image table ')
         paging_options = [25, 50, 100, 10]
 
-        self.lg('2- get number of vms')
+        self.lg('3- get number of vms')
 
         VM_info = self.Tables.get_table_info('table cloudbroker vmachine info')
         VM_number_max_number = int(VM_info[(VM_info.index('f') + 2):(VM_info.index('entries') - 1)].replace(',', ''))
         self.lg('number of vms %s'% VM_number_max_number)
 
-        self.lg('3- try paging from the available page numbers and verify it should succeed ')
+        self.lg('4- try paging from the available page numbers and verify it should succeed ')
 
         for paging_option in paging_options:
 
             self.select('VM_table selector', paging_option)
-            time.sleep(3)
+            time.sleep(4)
             VM_info_ = self.Tables.get_table_info('table cloudbroker vmachine info')
             VM_number_max_number_ = int(VM_info_[VM_info_.index('f') + 2:VM_info_.index('en') - 1].replace(',', ''))
             VM_avaliable_ = int(VM_info_[(VM_info_.index('to') + 3):(VM_info_.index('of') - 1)].replace(',', ''))
@@ -299,7 +299,7 @@ class ImagesTests(Framework):
         self.lg('- get all table head elements')
         table_head_elements = self.get_table_head_elements('table cloudbroker vmachine')
         self.assertNotEqual(table_head_elements, False)
-        self.lg('4- sorting of all fields of virtual machine table, should be working as expected')
+        self.lg('5- sorting of all fields of virtual machine table, should be working as expected')
 
         column_value =0
         for element in table_head_elements:
@@ -321,7 +321,7 @@ class ImagesTests(Framework):
             column_value = column_value + 1
             self.lg('pass %s column' % current_column)
 
-        self.lg('5- try paging from start/previous/next/last and verify it should succeed')
+        self.lg('6- try paging from start/previous/next/last and verify it should succeed')
         VM_max_number = self.Tables.get_table_max_number('table cloudbroker vmachine info')
         pagination = self.get_list_items('pagination')
         for _ in range((len(pagination) - 3)):
@@ -361,7 +361,6 @@ class ImagesTests(Framework):
         rows= len(table_elements)
         random_elemn= randint(0,rows-1)
         image_element=table_elements[random_elemn][0]
-
         self.Images.open_image_page(image_element)
         self.lg('-try search boxes in stack table')
 
@@ -404,14 +403,12 @@ class ImagesTests(Framework):
         table_head_elements_VM = self.get_table_head_elements('table cloudbroker vmachine')
         self.assertNotEqual(table_head_elements_VM, False)
         table_before_VM = self.Tables.get_table_data('table cloudbroker vmachine info','VM_table selector','table cloudbroker vmachine', pagination='VM_table_pagination')
-        self.assertTrue(table_before_VM, 'Error while getting table data before searching')
         time.sleep(2)
-
         self.lg('5- try search of all elements in vm table by main search box')
-
-        columns = len(table_head_elements_VM)
-        rows= len(table_before_VM)
         if table_before_VM != [] :
+            self.assertTrue(table_before_VM , 'Error while getting table data before searching')
+            columns = len(table_head_elements_VM)
+            rows= len(table_before_VM)
             random_elemn= randint(0,rows-1)
 
             for column in range(columns) :
