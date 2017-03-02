@@ -1,6 +1,7 @@
 import os
 import shutil
 import time
+import unittest
 
 from functional_testing.Openvcloud.ovc_master_hosted.Portal.framework.framework import Framework
 
@@ -22,6 +23,7 @@ class DefenseShield(Framework):
         self.Logout.Admin_Logout()
         super(DefenseShield, self).tearDown()
 
+    @unittest.skip('bug: #778')
     def test001_defense_shield_page(self):
         """ PRTL-006
         *Test case for checking defense shield page*

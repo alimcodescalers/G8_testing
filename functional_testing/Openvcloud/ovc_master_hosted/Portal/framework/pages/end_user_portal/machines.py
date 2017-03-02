@@ -166,7 +166,7 @@ class machines():
 
     def end_user_delete_virtual_machine(self, virtual_machine):
         self.framework.lg('Open end user home page')
-        self.framework.get_page(self.framework.environment_url)
+        self.framework.RightNavigationMenu.Machines.home()
 
         if self.framework.check_element_is_exist("machines_button"):
             self.framework.lg(' Start creation of machine')
