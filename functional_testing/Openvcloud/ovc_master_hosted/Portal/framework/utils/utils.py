@@ -153,7 +153,7 @@ class BaseTest(unittest.TestCase):
                     else:
                         break
         except:
-            # WebDriverException 
+            # WebDriverException
             time.sleep(2)
             try:
                 self.driver.get(page_url)
@@ -309,17 +309,19 @@ class BaseTest(unittest.TestCase):
             self.lg("can't locate element")
             return False
 
-
     def clear_text(self,element):
         self.wait_until_element_located(element)
         self.find_element(element).clear()
         self.find_element(element).send_keys(Keys.ENTER)
 
+    def clear_element_text(self,element):
+        element.clear()
+        element.send_keys(Keys.ENTER)
+
 
     def clear_text_columns(self,element,ID):
         method = self.elements[element][0]
         value = self.elements[element][1] % ID
-        #self.wait_until_element_located(element)
         time.sleep(1)
         try:
             element_value = self.driver.find_element(getattr(By, method), value)
@@ -438,3 +440,8 @@ class BaseTest(unittest.TestCase):
         screen_size = screen_dimention['width'] * screen_dimention['height']
         if screen_size < 1800*1000:
             self.driver.set_window_size(1800, 1000)
+
+
+    def get_navigation_bar(self, element):
+        elements = self.get_list_items(element)
+        return [x.text for x in elements]
