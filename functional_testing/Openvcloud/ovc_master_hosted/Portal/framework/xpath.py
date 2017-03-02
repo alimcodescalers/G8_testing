@@ -677,6 +677,9 @@ elements = {'snapshot_ok_button': ['XPATH', 'html/body/div[3]/form/div[3]/button
             'table cloudbroker stack':['ID', 'table_cloudbroker_stack'],
             'table system user info':['ID', 'table_system_user_info'],
             'table system user':['ID', 'table_system_user'],
+            'table storagerouter':['ID', 'DataTables_Table_0'],
+            'table storagerouter info':['ID', 'DataTables_Table_0_info'],
+            'table storagerouter length':['NAME', 'DataTables_Table_0_length', 0],
             'table cloudbroker vmachine info':['ID', 'table_cloudbroker_vmachine_info'],
             'table cloudbroker vmachine':['ID', 'table_cloudbroker_vmachine'],
             'account_edit_Name':['NAME', 'name'],
@@ -687,5 +690,9 @@ elements = {'snapshot_ok_button': ['XPATH', 'html/body/div[3]/form/div[3]/button
             'account_edit_Max Number of Public IP Addresses':['NAME', 'maxNumPublicIP'],
             'refresh_button':['LINK_TEXT', 'Refresh'],
             'VM_table_pagination':['ID', 'table_cloudbroker_vmachine_paginate'],
-            'stack_table_pagination':['ID', 'table_cloudbroker_stack_paginate']
+            'stack_table_pagination':['ID', 'table_cloudbroker_stack_paginate'],
+            'page title':["CLASS_NAME", "title", 0],
+            'navigation bar':['CLASS_NAME', 'breadcrumb', 0],
+            'storagerouter search':['XPATH', '//*[@id="DataTables_Table_0_filter"]/label/input'],
+            'vmachine paginate':['ID','table_cloudbroker_vmachine_paginate']
             }
