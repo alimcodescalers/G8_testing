@@ -60,7 +60,7 @@ class VirtualMachinesTest(Framework):
             previous_button, next_button = self.Tables.get_previous_next_button()
 
             next_button.click()
-            time.sleep(1)
+            time.sleep(3)
 
             vms_start_number_ = self.Tables.get_table_start_number('table cloudbroker vmachine info')
             vms_end_number_ = self.Tables.get_table_end_number('table cloudbroker vmachine info')
@@ -87,7 +87,7 @@ class VirtualMachinesTest(Framework):
         table_head_elements = self.get_table_head_elements('table cloudbroker vmachine')
         self.assertNotEqual(table_head_elements, False)
 
-        for element in table_head_elements:
+        for column, element in enumerate(table_head_elements):
             current_column = element.text
             self.driver.execute_script("window.scrollTo(0, 0)")
             element.click()
@@ -102,5 +102,5 @@ class VirtualMachinesTest(Framework):
             self.assertEqual(len(table_before), len(table_after),
                              'The length of vms table is changing according to sorting by %s' % current_column)
             for temp in range(len(table_before)):
-                self.assertEqual(table_before[temp], table_after[(len(table_after) - temp - 1)])
+                self.assertEqual(table_before[temp][column], table_after[(len(table_after) - temp - 1)][column])
             self.lg('pass %s column' % current_column)

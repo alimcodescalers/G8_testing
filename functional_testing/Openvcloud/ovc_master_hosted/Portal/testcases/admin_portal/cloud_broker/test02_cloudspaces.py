@@ -27,7 +27,7 @@ class CloudspacesTests(Framework):
         account_number_max_number = int(account_info[(account_info.index('f') + 2):(account_info.index('entries') - 1)].replace(',', ''))
 
         for account_paging_option in account_paging_options:
-            self.select('account selector', account_paging_option)
+            self.select('cloudspace selector', account_paging_option)
             time.sleep(5)
             account_info_ = self.Tables.get_table_info('table cloudbroker cloudspace info')
             account_number_max_number_ = int(account_info_[account_info_.index('f') + 2:account_info_.index('en') - 1].replace(',', ''))
@@ -89,20 +89,20 @@ class CloudspacesTests(Framework):
         table_head_elements = self.get_table_head_elements('table cloudbroker cloudspace')
         self.assertNotEqual(table_head_elements, False)
 
-        for element in table_head_elements:
+        for column, element in enumerate(table_head_elements):
             current_column = element.text
             self.driver.execute_script("window.scrollTo(0, 0)")
             element.click()
             self.wait_until_element_attribute_has_text(element, 'aria-sort', 'ascending')
-            table_before = self.Tables.get_table_data('table cloudbroker cloudspace info')
+            table_before = self.Tables.get_table_data('table cloudbroker cloudspace info', selector='cloudspace selector')
             self.assertTrue(table_before, 'Error while getting table data before sorting')
             self.driver.execute_script("window.scrollTo(0, 0)")
             element.click()
             self.wait_until_element_attribute_has_text(element, 'aria-sort', 'descending')
-            table_after = self.Tables.get_table_data('table cloudbroker cloudspace info')
+            table_after = self.Tables.get_table_data('table cloudbroker cloudspace info', selector='cloudspace selector')
             self.assertTrue(table_after, 'Error while getting table data after sorting')
             self.assertEqual(len(table_before), len(table_after),
                              'The length of account table is changing according to sorting by ID')
             for temp in range(len(table_before)):
-                self.assertEqual(table_before[temp], table_after[(len(table_after) - temp - 1)])
+                self.assertEqual(table_before[temp][column], table_after[(len(table_after) - temp - 1)][column])
             self.lg('pass %s column' % current_column)

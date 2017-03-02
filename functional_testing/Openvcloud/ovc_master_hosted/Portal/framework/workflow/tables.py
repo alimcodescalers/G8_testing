@@ -37,6 +37,7 @@ class tables():
 
         previous_button = pagination[0].find_element_by_tag_name('a')
         next_button = pagination[(len(pagination) - 1)].find_element_by_tag_name('a')
+
         return previous_button, next_button
 
     def get_table_data(self, element, selector = 'account selector',table_element=None, pagination=None):
@@ -46,12 +47,9 @@ class tables():
         account_max_number = self.get_table_max_number(element)
         self.framework.select( selector , max_sort_value)
         time.sleep(3)
-
         page_numbers = (account_max_number / max_sort_value)
-
         if (account_max_number % max_sort_value) > 0:
             page_numbers += 1
-
         tableData = []
         for page in range(page_numbers):
 
@@ -74,7 +72,6 @@ class tables():
                 text = "Showing %s to %s of %s entries" %("{:,}".format(tb_start_number), "{:,}".format(tb_end_number), "{:,}".format(tb_max_number))
                 if not self.framework.wait_until_element_located_and_has_text(element, text):
                     return False
-
         return tableData
 
     def check_show_list(self, info_table, selector):

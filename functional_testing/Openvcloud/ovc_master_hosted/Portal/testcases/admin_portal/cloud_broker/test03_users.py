@@ -28,7 +28,7 @@ class UsersTests(Framework):
         users_number_max_number = int(users_info[(users_info.index('f') + 2):(users_info.index('entries') - 1)].replace(',',''))
 
         for users_paging_option in users_paging_options:
-            self.select('account selector', users_paging_option)
+            self.select('user selector', users_paging_option)
             time.sleep(5)
             users_info_ = self.Tables.get_table_info('table system user info')
             users_number_max_number_ = int(users_info_[users_info_.index('f') + 2:users_info_.index('en') - 1].replace(',',''))
@@ -91,7 +91,7 @@ class UsersTests(Framework):
         table_head_elements = self.get_table_head_elements('table system user')
         self.assertNotEqual(table_head_elements, False)
 
-        for element in table_head_elements:
+        for column, element in enumerate(table_head_elements):
             current_column = element.text
             if current_column == 'Groups':
                 continue
@@ -99,15 +99,15 @@ class UsersTests(Framework):
             self.driver.execute_script("window.scrollTo(0, 0)")
             element.click()
             self.wait_until_element_attribute_has_text(element, 'aria-sort', 'ascending')
-            table_before = self.Tables.get_table_data('table system user info')
+            table_before = self.Tables.get_table_data('table system user info', selector='user selector')
             self.assertTrue(table_before, 'Error while getting table data before sorting')
             self.driver.execute_script("window.scrollTo(0, 0)");
             element.click()
             self.wait_until_element_attribute_has_text(element, 'aria-sort', 'descending')
-            table_after = self.Tables.get_table_data('table system user info')
+            table_after = self.Tables.get_table_data('table system user info', selector='user selector')
             self.assertTrue(table_after, 'Error while getting table data after sorting')
             self.assertEqual(len(table_before), len(table_after),
                              'The length of users table is changing according to sorting by %s' % current_column)
             for temp in range(len(table_before)):
-                self.assertEqual(table_before[temp], table_after[(len(table_after) - temp - 1)])
+                self.assertEqual(table_before[temp][column], table_after[(len(table_after) - temp - 1)][column])
             self.lg('pass %s column' % current_column)
