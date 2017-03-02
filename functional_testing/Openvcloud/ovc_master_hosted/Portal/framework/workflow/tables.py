@@ -101,7 +101,7 @@ class tables():
         if pagination == None:
             pagination_items = self.framework.get_list_items('pagination')
         else:
-            table = self.framework.find_element(element)
+            table = self.framework.find_element(pagination)
             pagination_items = table.find_element_by_tag_name('ul')
             pagination_items = pagination.find_elements_by_tag_name('li')
 
