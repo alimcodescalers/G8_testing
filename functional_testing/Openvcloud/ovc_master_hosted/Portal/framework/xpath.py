@@ -694,5 +694,7 @@ elements = {'snapshot_ok_button': ['XPATH', 'html/body/div[3]/form/div[3]/button
             'page title':["CLASS_NAME", "title", 0],
             'navigation bar':['CLASS_NAME', 'breadcrumb', 0],
             'storagerouter search':['XPATH', '//*[@id="DataTables_Table_0_filter"]/label/input'],
-            'vmachine paginate':['ID','table_cloudbroker_vmachine_paginate']
+            'vmachine paginate':['ID','table_cloudbroker_vmachine_paginate'],
+            'stack_table_pagination':['ID', 'table_cloudbroker_stack_paginate'],
+            'machine_operations_loading':['ID', 'overlay-loader']
             }
