@@ -86,7 +86,7 @@ def main(options):
     # report results
     with open(os.path.join(results_dir, 'parameters.md'), 'w') as params:
         params.write("# Parameters\n\n")
-        for key, value in options.dict.itervalues():
+        for key, value in vars(options).items():
             params.write("- **{}**: {}\n".format(key, value))
     total_iops = 0
     with open(os.path.join(results_dir, 'results.csv'), 'w') as csvfile:
@@ -95,6 +95,8 @@ def main(options):
         writer.writeheader()
         for job in rjobs:
             machine_id, iops = job.value
+            if iops == 0:
+                continue  # skip machines whith errors
             writer.writerow({'machine_id': machine_id, 'iops': iops})
             total_iops += iops
         writer.writerow({'machine_id': 'total iops', 'iops': total_iops})
