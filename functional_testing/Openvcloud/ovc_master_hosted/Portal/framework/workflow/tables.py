@@ -68,9 +68,9 @@ class tables():
 
                 if tb_end_number > tb_max_number:
                     tb_end_number = tb_max_number
-
                 text = "Showing %s to %s of %s entries" %("{:,}".format(tb_start_number), "{:,}".format(tb_end_number), "{:,}".format(tb_max_number))
                 if not self.framework.wait_until_element_located_and_has_text(element, text):
+                    self.framework.lg('table max number changed %s -> %s ' % (account_max_number ,tb_max_number))
                     return False
         return tableData
 
