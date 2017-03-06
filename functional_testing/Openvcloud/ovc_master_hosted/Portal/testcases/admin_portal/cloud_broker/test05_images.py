@@ -79,9 +79,9 @@ class ImagesTests(Framework):
         #. try use the search box in every column and  verfiy it return the right value
         """
 
-        if (opertaion == 'Location' ) or  (opertaion == 'Size'):
+        if (column == 'Location' ) or  (column == 'Size'):
             self.skipTest('https://github.com/0-complexity/openvcloud/issues/696')
-        if opertaion == 'Size':
+        if column == 'Size':
            self.skipTest('https://github.com/0-complexity/openvcloud/issues/696')
         self.lg('1- go to Images page')
         self.Images.get_it()

@@ -29,4 +29,5 @@ class images():
         image_herf = self.framework.element_link("image_table_first_element")
         image_id = image_herf[image_herf.find('?id=')+len('?id='):]
         self.framework.click("image_table_first_element")
+        self.framework.click_link(image_herf)
         self.framework.element_in_url(image_id )
