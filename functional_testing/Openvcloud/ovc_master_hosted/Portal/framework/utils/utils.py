@@ -17,6 +17,7 @@ from functional_testing.Openvcloud.ovc_master_hosted.Portal.framework import xpa
 import os
 from selenium.webdriver.common.keys import Keys
 
+
 class BaseTest(unittest.TestCase):
     def __init__(self, *args, **kwargs):
         super(BaseTest, self).__init__(*args, **kwargs)
@@ -63,24 +64,24 @@ class BaseTest(unittest.TestCase):
             executionTime = time.time() - self._startTime
         self.lg('Testcase %s ExecutionTime is %s sec.' % (self._testID, executionTime))
 
-
     def set_browser(self):
         if self.remote_webdriver:
             if self.browser == 'chrome':
                 desired_capabilities = DesiredCapabilities.CHROME
             else:
                 desired_capabilities = DesiredCapabilities.FIREFOX
-            self.driver = webdriver.Remote(command_executor=self.remote_webdriver + '/wd/hub', desired_capabilities=desired_capabilities)
+            self.driver = webdriver.Remote(command_executor=self.remote_webdriver + '/wd/hub',
+                                           desired_capabilities=desired_capabilities)
         else:
             if self.browser == 'chrome':
                 self.driver = webdriver.Chrome()
             elif self.browser == 'firefox':
-                #fp = FirefoxProfile()
-                #fp.set_preference("browser.download.folderList", 2)
-                #fp.set_preference("browser.download.manager.showWhenStarting", False)
-                #fp.set_preference("browser.download.dir", os.path.expanduser("~") + "/Downloads/")
-                #fp.set_preference("browser.helperApps.neverAsk.saveToDisk", "application/zip, application/octet-stream")
-                #self.driver = webdriver.Firefox(firefox_profile=fp)
+                # fp = FirefoxProfile()
+                # fp.set_preference("browser.download.folderList", 2)
+                # fp.set_preference("browser.download.manager.showWhenStarting", False)
+                # fp.set_preference("browser.download.dir", os.path.expanduser("~") + "/Downloads/")
+                # fp.set_preference("browser.helperApps.neverAsk.saveToDisk", "application/zip, application/octet-stream")
+                # self.driver = webdriver.Firefox(firefox_profile=fp)
                 self.driver = webdriver.Firefox()
             elif self.browser == 'ie':
                 self.driver = webdriver.Ie()
@@ -140,28 +141,11 @@ class BaseTest(unittest.TestCase):
     def get_page(self, page_url):
         try:
             self.driver.get(page_url)
-        except AngularNotFoundException:
-            if self.browser == 'firefox':
-                for _ in range(10):
-                    if not self.driver.title:
-                        time.sleep(2)
-                        try:
-                            self.driver.execute_script('angular.resumeBootstrap();')
-                            time.sleep(2)
-                        except:
-                            pass
-                    else:
-                        break
-        except:
-            # WebDriverException
-            time.sleep(2)
-            try:
-                self.driver.get(page_url)
-            except:
-                pass
-
-        self.maximize_window()
-
+        except Exception as e:
+            self.lg(' * %s Exception at get_page(%s) ' % (str(e), page_url))
+        else:
+            self.execute_angular_script()
+            self.maximize_window()
 
     def element_is_enabled(self, element):
         return self.find_element(element).is_enabled()
@@ -213,7 +197,6 @@ class BaseTest(unittest.TestCase):
         else:
             return False
 
-
     def wait_unti_element_clickable(self, element):
         method = self.elements[element][0]
         value = self.elements[element][1]
@@ -237,7 +220,6 @@ class BaseTest(unittest.TestCase):
         else:
             self.fail("can't find %s element" % element)
         time.sleep(1)
-
 
     def click_item(self, element, ID):
         for temp in range(10):
@@ -296,10 +278,10 @@ class BaseTest(unittest.TestCase):
         self.find_element(element).clear()
         self.find_element(element).send_keys(value)
 
-    def set_text_columns(self, element, search_value ,ID):
+    def set_text_columns(self, element, search_value, ID):
         method = self.elements[element][0]
-        value  = self.elements[element][1] % ID
-        #self.wait_until_element_located(element)
+        value = self.elements[element][1] % ID
+        # self.wait_until_element_located(element)
         time.sleep(1)
         try:
             element_value = self.driver.find_element(getattr(By, method), value)
@@ -309,17 +291,16 @@ class BaseTest(unittest.TestCase):
             self.lg("can't locate element")
             return False
 
-    def clear_text(self,element):
+    def clear_text(self, element):
         self.wait_until_element_located(element)
         self.find_element(element).clear()
         self.find_element(element).send_keys(Keys.ENTER)
 
-    def clear_element_text(self,element):
+    def clear_element_text(self, element):
         element.clear()
         element.send_keys(Keys.ENTER)
 
-
-    def clear_text_columns(self,element,ID):
+    def clear_text_columns(self, element, ID):
         method = self.elements[element][0]
         value = self.elements[element][1] % ID
         time.sleep(1)
@@ -394,21 +375,27 @@ class BaseTest(unittest.TestCase):
         else:
             return locations
 
-    def get_table_rows(self,element= None):
+    def get_table_rows(self, element=None):
         'This method return all rows in the current page else return false'
         try:
             if element == None:
-                tbody =  self.driver.find_element_by_tag_name('tbody')
+                tbody = self.driver.find_element_by_tag_name('tbody')
             else:
 
                 element = self.find_element(element)
-                tbody =  element.find_element_by_tag_name('tbody')
+                tbody = element.find_element_by_tag_name('tbody')
 
             rows = tbody.find_elements_by_tag_name('tr')
             return rows
         except:
             self.lg("Can't get the tbody elements")
             return False
+
+    def get_table_row(self, table, i):
+        table_row = self.get_table_rows(table['data'])[i]
+        row_cells = self.get_row_cells(table_row)
+        self.assertTrue(row_cells)
+        return [x.text for x in row_cells]
 
     def get_row_cells(self, row):
         'This method take a row and return its cells elements else return false'
@@ -438,10 +425,22 @@ class BaseTest(unittest.TestCase):
         time.sleep(1)
         screen_dimention = self.driver.get_window_size()
         screen_size = screen_dimention['width'] * screen_dimention['height']
-        if screen_size < 1800*1000:
+        if screen_size < 1800 * 1000:
             self.driver.set_window_size(1800, 1000)
-
 
     def get_navigation_bar(self, element):
         elements = self.get_list_items(element)
         return [x.text for x in elements]
+
+    def execute_angular_script(self):
+        # This method is trying to load angular elements.
+        for _ in range(30):
+            if self.driver.title:
+                return True
+            else:
+                time.sleep(2)
+                try:
+                    self.driver.execute_script('angular.resumeBootstrap();')
+                    time.sleep(2)
+                except Exception as e:
+                    self.lg(' * Exception : %s ' % str(e))

@@ -42,6 +42,7 @@ class tables():
         pagination = pagination.find_elements_by_tag_name('li')
         previous_button = pagination[0].find_element_by_tag_name('a')
         next_button = pagination[(len(pagination) - 1)].find_element_by_tag_name('a')
+
         return previous_button, next_button
 
     def get_table_data(self, table):
@@ -50,12 +51,9 @@ class tables():
         account_max_number = self.get_table_max_number(table['info'])
         self.framework.select(table['selector'] , max_sort_value)
         time.sleep(3)
-
         page_numbers = (account_max_number / max_sort_value)
-
         if (account_max_number % max_sort_value) > 0:
             page_numbers += 1
-
         tableData = []
         for page in range(page_numbers):
 
@@ -77,8 +75,8 @@ class tables():
 
                 text = "Showing %s to %s of %s entries" %("{:,}".format(tb_start_number), "{:,}".format(tb_end_number), "{:,}".format(tb_max_number))
                 if not self.framework.wait_until_element_located_and_has_text(table['info'], text):
+                    self.framework.lg('table max number changed %s -> %s ' % (account_max_number ,tb_max_number))
                     return False
-
         return tableData
 
     def check_show_list(self, table):
@@ -87,7 +85,7 @@ class tables():
         rows_max_number = self.get_table_max_number(table['info'])
         for option in paging_options:
             self.framework.select(table['selector'], option)
-            time.sleep(3)
+            time.sleep(5)
             rows_max_number_ = self.get_table_max_number(table['info'])
             rows_end_number_ = self.get_table_end_number(table['info'])
             if rows_max_number != rows_max_number_:
@@ -156,7 +154,7 @@ class tables():
             self.framework.wait_until_element_attribute_has_text(element, 'aria-sort', 'ascending')
             table_before = self.get_table_data(table)
 
-            if not table_before:
+            if table_before == False:
                 return False
 
             self.framework.driver.execute_script("window.scrollTo(0,%d)" % (table_location['y']-50))
@@ -164,7 +162,7 @@ class tables():
             self.framework.wait_until_element_attribute_has_text(element, 'aria-sort', 'descending')
             table_after = self.get_table_data(table)
 
-            if not table_after:
+            if table_after == False:
                 return False
 
             for temp in range(len(table_before)):
@@ -172,52 +170,69 @@ class tables():
                     return False
 
             self.framework.lg('coulmn %s passed' % current_column)
-
         return True
 
-    def check_search_box(self, table):
+    def get_random_row_from_table(self,table):
+        self.framework.assertTrue(self.framework.check_element_is_exist(table['info']))
+        max_sort_value = 100
+        self.framework.select(table['selector'] , max_sort_value)
+        time.sleep(3)
+        tableData = []
+        table_rows = self.framework.get_table_rows(table['data'])
+        self.framework.assertTrue(table_rows)
+        for row in table_rows:
+            cells = row.find_elements_by_tag_name('td')
+            tableData.append([x.text for x in cells])
+        rows=len(tableData)
+        random_elemn= randint(0,rows-1)
+        random_row=tableData[random_elemn]
+        return random_row
+
+    def check_search_box(self, table, column_name):
         table = self.generate_table_elements(table)
         table_head_elements = self.framework.get_table_head_elements(table['data'])
-        table_before = self.get_table_data(table)
-        columns = len(table_head_elements)
-        rows = len(table_before)
-        random_element = randint(0,rows-1)
-        for column in range(columns):
-            self.framework.set_text(table['search_box'], table_before[random_element][column])
-            time.sleep(2)
-            table_after = self.get_table_data(table)
-
-            if not any(table_before[random_element][column] in s for s in table_after[0]):
-                return False
-
+        table_columns=[ x.text for x in  table_head_elements ]
+        try:
+            column_index = table_columns.index(column_name)
+        except:
+            self.framework.lg('table has not column %s' % column_name)
+            return False
+        random_row=self.get_random_row_from_table(table)
+        if str(random_row[0]) == 'No data available in table':
+            self.framework.lg('table is empty ')
+            return True
+        self.framework.set_text(table['search_box'],random_row[column_index])
+        time.sleep(5)
+        first_row_after = self.framework.get_table_row(table,0)
+        if not any(random_row[column_index] in s for s in first_row_after):
+            return False
         self.framework.clear_text(table['search_box'])
         return True
 
-    def check_data_filters(self, table):
+    def check_data_filters(self, table,column_name):
         table = self.generate_table_elements(table)
-        table_before = self.get_table_data(table)
+        #table_before = self.get_table_data(table)
         table_head_elements = self.framework.get_table_head_elements(table['data'])
-        columns = len(table_head_elements)
-        rows = len(table_before)
-        random_element = randint(0,rows-1)
+        table_columns=[ x.text for x in  table_head_elements ]
 
+        try:
+            column_index = table_columns.index(column_name)
+        except:
+            self.framework.lg('table has not column %s' % column_name)
+            return False
+        random_row=self.get_random_row_from_table(table)
+        if str(random_row[0]) == 'No data available in table':
+            self.framework.lg('no data available in table ')
+            return True
         table_data = self.framework.find_element(table['data'])
         footer = table_data.find_element_by_tag_name('tfoot')
         items = footer.find_elements_by_tag_name('td')
-        filters = [x.find_elements_by_tag_name('input')[0] for x in items]
-
-        for column in range(columns):
-            if 'nofilter' in table_head_elements[column].get_attribute('class'):
-                continue
-
-            current_filter = filters[column]
-            current_filter.send_keys(table_before[random_element][column])
-            time.sleep(1)
-            table_after = self.get_table_data(table)
-
-            if not table_after[0][column] == table_before[random_element][column]:
-                return False
-
-            self.framework.clear_element_text(current_filter)
-
+        if 'nofilter' in table_head_elements[column_index].get_attribute('class'):
+            return True
+        current_filter = items[column_index].find_elements_by_tag_name('input')[0]
+        current_filter.send_keys(random_row[column_index])
+        time.sleep(5)
+        first_row_after = self.framework.get_table_row(table,0)
+        if not (random_row[column_index] in first_row_after[column_index]):
+            return False
         return True

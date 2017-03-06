@@ -47,6 +47,7 @@ class CloudspacesTests(Framework):
         self.assertTrue(self.Tables.check_show_list('cloudspaces'))
         self.lg('%s ENDED' % self._testID)
 
+
     def test03_cloudspace_page_table_paging_buttons(self):
         """ PRTL-035
         *Test case to make sure that paging and sorting of cloudspaces page are working as expected*

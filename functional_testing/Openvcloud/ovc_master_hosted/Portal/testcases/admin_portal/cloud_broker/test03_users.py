@@ -73,3 +73,4 @@ class UsersTests(Framework):
         self.lg('sorting of all fields of users table, should be working as expected')
         self.assertTrue(self.Tables.check_sorting_table('users'))
         self.lg('%s ENDED' % self._testID)
+        
