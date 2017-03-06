@@ -68,7 +68,7 @@ class ImagesTests(Framework):
                            'Type',
                            'Status',
                           'Size'])
-    def test04_image_page_searchbox(self,opertaion):
+    def test04_image_page_searchbox(self,column):
         """ PRTL-044
         *Test case to make sure that search boxes of images page are working as expected*
 
@@ -87,9 +87,9 @@ class ImagesTests(Framework):
         self.Images.get_it()
         self.assertTrue(self.Images.is_at())
         self.lg('try general search box to search for values in all columns and verfiy it return the right value')
-        self.assertTrue(self.Tables.check_search_box('images',opertaion ))
+        self.assertTrue(self.Tables.check_search_box('images',column ))
         self.lg('try the search box in every column and verfiy it return the right value')
-        self.assertTrue(self.Tables.check_data_filters('images',opertaion ))
+        self.assertTrue(self.Tables.check_data_filters('images',column ))
 
 
     def test05_stack_table_in_image_page_test(self):
