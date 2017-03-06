@@ -1,6 +1,6 @@
 import unittest
+from nose_parameterized import parameterized
 from functional_testing.Openvcloud.ovc_master_hosted.Portal.framework.framework import Framework
-
 
 class StorageRoutersTests(Framework):
 
@@ -77,19 +77,23 @@ class StorageRoutersTests(Framework):
         self.assertTrue(self.Tables.check_sorting_table('storge_routers'))
         self.lg('%s ENDED' % self._testID)
 
-    def test05_storagerrouters_table_search(self):
-        """
-        PRTL-005
-        *Test case to make sure that searching in storage routers table is working as expected*
-
-        **Test Scenario:**
-        #. go to storage routers page.
-        #. try general search box to search for values in all columns and verfiy it return the right value
-        #. try the search box in every column and  verfiy it return the right value
-        """
-        self.lg('%s STARTED' % self._testID)
-        self.lg('try general search box to search for values in all columns and verfiy it return the right value')
-        self.assertTrue(self.Tables.check_search_box('storge_routers'))
-        self.lg('try the search box in every column and verfiy it return the right value')
-        self.assertTrue(self.Tables.check_data_filters('storge_routers'))
-        self.lg('%s ENDED' % self._testID)
+    # @parameterized.expand(['Grid ID',
+    #                        'Name',
+    #                        'Grid Node ID',
+    #                        'IP Address'])
+    # def test05_storagerrouters_table_search(self, column):
+    #     """
+    #     PRTL-005
+    #     *Test case to make sure that searching in storage routers table is working as expected*
+    #
+    #     **Test Scenario:**
+    #     #. go to storage routers page.
+    #     #. try general search box to search for values in all columns and verfiy it return the right value
+    #     #. try the search box in every column and  verfiy it return the right value
+    #     """
+    #     self.lg('%s STARTED' % self._testID)
+    #     self.lg('try general search box to search for values in all columns and verfiy it return the right value')
+    #     self.assertTrue(self.Tables.check_search_box('storge_routers', column))
+    #     self.lg('try the search box in every column and verfiy it return the right value')
+    #     self.assertTrue(self.Tables.check_data_filters('storge_routers', column))
+    #     self.lg('%s ENDED' % self._testID)

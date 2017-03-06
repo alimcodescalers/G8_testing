@@ -60,10 +60,10 @@ elements = {
             'table_storge_routers_search_box':['XPATH','//*[@id="DataTables_Table_0_filter"]/label/input'],
 
             'table_groups_data':['ID','DataTables_Table_0'],
-            'table_groups_info':['ID','DataTables_Table_info'],
-            'table_groups_selector':['NAME','DataTables_Table_length', 0],
-            'table_groups_pagination':['ID','DataTables_Table_length'],
-            'table_groups_search_box':['XPATH','//*[@id="DataTables_Table_filter"]/label/input'],
+            'table_groups_info':['ID','DataTables_Table_0_info'],
+            'table_groups_selector':['NAME','DataTables_Table_0_length', 0],
+            'table_groups_pagination':['ID','DataTables_Table_0_paginate'],
+            'table_groups_search_box':['XPATH','//*[@id="DataTables_Table_0_filter"]/label/input'],
 
             'snapshot_ok_button': ['XPATH', 'html/body/div[3]/form/div[3]/button[1]'],
             'storage_arrow': ['XPATH', 'html/body/div[1]/div/div[1]/div/nav/div/ul/li[5]/ul[1]/a[1]'],
@@ -757,5 +757,27 @@ elements = {
             'page title':["CLASS_NAME", "title", 0],
             'navigation bar':['CLASS_NAME', 'breadcrumb', 0],
             'storagerouter search':['XPATH', '//*[@id="DataTables_Table_0_filter"]/label/input'],
-            'vmachine paginate':['ID','table_cloudbroker_vmachine_paginate']
+            'vmachine paginate':['ID','table_cloudbroker_vmachine_paginate'],
+
+            'groups_action': ['XPATH', 'html/body/div[2]/div/div/div[1]/button'],
+            'groups_action_add_group':['XPATH','/html/body/div[2]/div/div/div[1]/ul/li/a'],
+            'groups_action_name': ['NAME', 'name', 0],
+            'groups_action_domain': ['NAME', 'domain', 0],
+            'groups_action_description': ['NAME', 'description', 0],
+            'groups_acrion_add_group_label':['ID', 'action-add_group_label'],
+            'groups_acrion_add_group_confirm':['XPATH', '//*[@id="action-AddGroup"]/div/div[3]/button[2]'],
+            'groups_table_first_element_name': ['XPATH', '//*[@id="DataTables_Table_0"]/tbody/tr[1]/td[1]/a'],
+            'group_action': ['XPATH', '/html/body/div[2]/div/div/div[1]/button'],
+            'group_action_edit_group':['XPATH','/html/body/div[2]/div/div/div[1]/ul/li[1]/a'],
+            'group_action_delete_group':['XPATH','/html/body/div[2]/div/div/div[1]/ul/li[2]/a'],
+            'group_acrion_delete_group_confirm':['XPATH', '//*[@id="action-Delete"]/div/div[3]/button[2]'],
+
+            'group_acrion_edit_domain':['NAME', 'domain', 0],
+            'group_acrion_edit_description':['NAME', 'description', 0],
+            'groups_acrion_edit_group_confirm':['XPATH', '//*[@id="group_edit"]/div/div[3]/button[2]'],
+
+            'group_page_name':['XPATH', '/html/body/div[2]/div/div/ul[2]/li[1]'],
+            'group_page_domain':['XPATH', '/html/body/div[2]/div/div/ul[2]/li[2]'],
+            'group_page_description':['XPATH', '/html/body/div[2]/div/div/ul[2]/li[3]']
+
             }

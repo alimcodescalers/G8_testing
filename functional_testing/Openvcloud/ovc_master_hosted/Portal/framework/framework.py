@@ -14,6 +14,8 @@ from functional_testing.Openvcloud.ovc_master_hosted.Portal.framework.workflow.l
 from functional_testing.Openvcloud.ovc_master_hosted.Portal.framework.workflow.tables import tables
 from functional_testing.Openvcloud.ovc_master_hosted.Portal.framework.pages.admin_portal.cloud_broker.Images import images
 from functional_testing.Openvcloud.ovc_master_hosted.Portal.framework.pages.admin_portal.cloud_broker.storagerouters import storagerouters
+from functional_testing.Openvcloud.ovc_master_hosted.Portal.framework.pages.admin_portal.cloud_broker.groups import groups
+
 
 class Framework(BaseTest):
     def __init__(self, *args, **kwargs):
@@ -26,6 +28,7 @@ class Framework(BaseTest):
         self.VirtualMachines = virtualmachines(self)
         self.Images = images(self)
         self.StorageRouters = storagerouters(self)
+        self.Groups = groups(self)
         #Pages.AdminPortal.grid
         self.ErrorConditions = errorConditions(self)
         self.StatusOverview = statusOverview(self)

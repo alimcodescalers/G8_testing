@@ -31,7 +31,7 @@ class BaseTest(unittest.TestCase):
         self.elements = xpath.elements.copy()
 
     def setUp(self):
-        self.CLEANUP = {"users": [], "accounts": []}
+        self.CLEANUP = {"users":[], "accounts":[], "groups":[]}
         self._testID = self._testMethodName
         self._startTime = time.time()
         self._logger = logging.LoggerAdapter(logging.getLogger('portal_testsuite'),
