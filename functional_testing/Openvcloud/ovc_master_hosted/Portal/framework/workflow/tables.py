@@ -55,13 +55,15 @@ class tables():
         if (account_max_number % max_sort_value) > 0:
             page_numbers += 1
         tableData = []
+        i=0
         for page in range(page_numbers):
-
             table_rows = self.framework.get_table_rows(table['data'])
             self.framework.assertTrue(table_rows)
             for row in table_rows:
+
                 cells = row.find_elements_by_tag_name('td')
                 tableData.append([x.text for x in cells])
+
             if  page < (page_numbers-1):
                 previous_button, next_button = self.get_previous_next_button(table['pagination'])
                 next_button.click()

@@ -3,6 +3,7 @@ from functional_testing.Openvcloud.ovc_master_hosted.Portal.framework.pages.admi
 from functional_testing.Openvcloud.ovc_master_hosted.Portal.framework.pages.admin_portal.cloud_broker.virtualmachines import virtualmachines
 from functional_testing.Openvcloud.ovc_master_hosted.Portal.framework.pages.admin_portal.grid.error_conditions import errorConditions
 from functional_testing.Openvcloud.ovc_master_hosted.Portal.framework.pages.admin_portal.grid.status_overview import statusOverview
+from functional_testing.Openvcloud.ovc_master_hosted.Portal.framework.pages.admin_portal.grid.grid import grid
 from functional_testing.Openvcloud.ovc_master_hosted.Portal.framework.Navigation.left_navigation_menu import leftNavigationMenu
 from functional_testing.Openvcloud.ovc_master_hosted.Portal.framework.Navigation.right_navigation_menu import rightNavigationMenu
 from functional_testing.Openvcloud.ovc_master_hosted.Portal.framework.pages.admin_portal.cloud_broker.users import users
@@ -32,7 +33,7 @@ class Framework(BaseTest):
         #Pages.AdminPortal.grid
         self.ErrorConditions = errorConditions(self)
         self.StatusOverview = statusOverview(self)
-
+        self.Grid = grid(self)
         #pages.end_user
         self.EUHome = home(self)
         self.EUMachines = machines(self)

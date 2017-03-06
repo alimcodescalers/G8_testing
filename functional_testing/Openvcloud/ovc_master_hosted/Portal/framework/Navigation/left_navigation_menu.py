@@ -55,12 +55,18 @@ class Grid():
 
     def __init__(self, framework):
         self.framework = framework
-
+    def grid_page(self):
+        self.framework.open_base_page("grid_page")
     def error_conditions(self):
         self.framework.open_base_page("grid_arrow","error_conditions")
 
     def status_overview(self):
         self.framework.open_base_page("grid_arrow","status_overview")
+
+    def vmachin_grid(self):
+        self.framework.open_base_page("grid_arrow","vmachine_grid")
+
+
 
 class Storage():
 

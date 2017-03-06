@@ -2,6 +2,8 @@ import time
 import uuid
 from functional_testing.Openvcloud.ovc_master_hosted.Portal.framework.Navigation.left_navigation_menu import \
     leftNavigationMenu
+from random import randint
+
 
 
 class images():
