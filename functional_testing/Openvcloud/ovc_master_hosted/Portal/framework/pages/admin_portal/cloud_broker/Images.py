@@ -24,9 +24,9 @@ class images():
     def open_image_page(self, image=''):
         self.LeftNavigationMenu.CloudBroker.Images()
         self.framework.set_text("image_search", image)
-        self.framework.wait_until_element_located_and_has_text("image_table_first_element_2",
+        self.framework.wait_until_element_located_and_has_text("image_table_first_element",
                                                                image)
-        image_herf = self.framework.element_link("image_table_first_element_2")
+        image_herf = self.framework.element_link("image_table_first_element")
         image_id = image_herf[image_herf.find('?id=')+len('?id='):]
-        self.framework.click("image_table_first_element_2")
+        self.framework.click("image_table_first_element")
         self.framework.element_in_url(image_id )

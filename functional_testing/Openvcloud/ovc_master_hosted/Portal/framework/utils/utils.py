@@ -391,6 +391,12 @@ class BaseTest(unittest.TestCase):
             self.lg("Can't get the tbody elements")
             return False
 
+    def get_table_row(self, table, i):
+        table_row = self.get_table_rows(table['data'])[i]
+        row_cells = self.get_row_cells(table_row)
+        self.assertTrue(row_cells)
+        return [x.text for x in row_cells]
+
     def get_row_cells(self, row):
         'This method take a row and return its cells elements else return false'
         try:

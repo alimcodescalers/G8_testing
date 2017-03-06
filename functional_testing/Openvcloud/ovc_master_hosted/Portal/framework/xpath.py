@@ -30,8 +30,8 @@ elements = {
             'table_images_search_box':['XPATH','//*[@id="table_cloudbroker_image_filter"]/label/input'],
 
             'table_stacks_data':['ID','table_cloudbroker_stack'],
-            'table_stacks_info':['ID','table_cloudbroker_stack'],
-            'table_stacks_selector':['NAME','table_cloudbroker_stack', 0],
+            'table_stacks_info':['ID','table_cloudbroker_stack_info'],
+            'table_stacks_selector':['NAME','table_cloudbroker_stack_length', 0],
             'table_stacks_pagination':['ID','table_cloudbroker_stack_paginate'],
             'table_stacks_search_box':['XPATH','//*[@id="table_cloudbroker_stack_filter"]/label/input'],
 
@@ -380,7 +380,7 @@ elements = {
             'knowledge_base_line3_tab_line5': ['XPATH',
                                                ".//*[@id='wrap']/div/tour/div[3]/div[2]/div/div/div/div[2]/p[11]"],
             'cloud_space_table_first_element_2': ['XPATH', ".//*[@id='table_cloudbroker_cloudspace']/tbody/tr/td[2]"],
-            'image_table_first_element_2': ['XPATH', ".//*[@id='table_cloudbroker_image']/tbody/tr/td[1]/a"],
+            'image_table_first_element': ['XPATH', ".//*[@id='table_cloudbroker_image']/tbody/tr/td[1]/a"],
             'virtual_machine_table_first_element': ['XPATH', ".//*[@id='table_cloudbroker_vmachine']/tbody/tr/td[1]/a"],
             'grid_sub_jq': ['XPATH', ".//*[@id='collapse-4']/li[4]/a"],
             'cloudspace_line1_label': ['XPATH', ".//*[@id='CloudSpace']/div[2]/ol/li[1]"],
