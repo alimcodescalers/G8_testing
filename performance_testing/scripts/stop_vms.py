@@ -27,10 +27,12 @@ def main(options):
         return _run
 
     def shutdown_vms(job):
-        for machine in job.get():
-            if machine['status'] != 'RUNNING':
-                continue
+        machines = job.get()
+        for machine in machines:
             machine_id = machine['id']
+            if machine['status'] != 'RUNNING':
+                print("Skipping machine {} with status {}".format(machine_id, machine['status']))
+                continue
             job = execute_async_ovc(ovc, ovc.api.cloudapi.machines.stop, machineId=machine_id)
             job.link_value(print_message("Succesfully shutdown vm %s" % machine_id))
             job.link_exception(hardshutdown_vm(machine_id))
@@ -38,8 +40,10 @@ def main(options):
     def shutdown_cloudspaces(job):
         for cloudspace in job.get():
             cloudspace_id = cloudspace['id']
+            print("Listing machines in cloudspace {} (id={}, status={})".format(cloudspace['name'], cloudspace_id, cloudspace['status']))
             job = execute_async_ovc(ovc, ovc.api.cloudapi.machines.list, cloudspaceId=cloudspace_id)
             job.link(shutdown_vms)
+            job.link_exception(print_message)
 
     job = execute_async_ovc(ovc, ovc.api.cloudapi.cloudspaces.list)
     job.link(shutdown_cloudspaces)
