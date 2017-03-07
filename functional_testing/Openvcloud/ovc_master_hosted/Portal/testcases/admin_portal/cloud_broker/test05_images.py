@@ -307,13 +307,13 @@ class ImagesTests(Framework):
             self.driver.execute_script("window.scrollTo(0, 0)")
             element.click()
             self.wait_until_element_attribute_has_text(element, 'aria-sort', 'ascending')
-            table_before = self.Tables.get_table_data('table cloudbroker vmachine info','VM_table selector','table cloudbroker vmachine')
-            self.assertTrue(table_before, 'Error while getting table data before sorting')
+            table_before = self.Tables.get_table_data('table cloudbroker vmachine info','VM_table selector','table cloudbroker vmachine','VM_table_pagination')
+            self.assertNotEqual(table_before,False,'Error while getting table data befor sorting')
             self.driver.execute_script("window.scrollTo(0, 0)")
             element.click()
             self.wait_until_element_attribute_has_text(element, 'aria-sort', 'descending')
-            table_after = self.Tables.get_table_data('table cloudbroker vmachine info','VM_table selector','table cloudbroker vmachine')
-            self.assertTrue(table_after, 'Error while getting table data after sorting')
+            table_after = self.Tables.get_table_data('table cloudbroker vmachine info','VM_table selector','table cloudbroker vmachine','VM_table_pagination')
+            self.assertNotEqual(table_after,False, 'Error while getting table data after sorting')
             self.assertEqual(len(table_before), len(table_after),
                              'The length of image table is changing according to sorting by %s'%current_column)
             for temp in range(len(table_before)):
