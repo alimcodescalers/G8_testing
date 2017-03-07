@@ -37,7 +37,8 @@ class accounts():
             self.framework.set_text("account_maxmemory", max_memory)
 
         self.framework.click("account_confirm")
-        time.sleep(5)
+        self.framework.wait_until_element_attribute_has_text('create_account_dialog', 'style', 'display: none;')
+        self.framework.get_page(self.framework.driver.current_url)
         self.framework.set_text("account_search", account)
         self.framework.wait_until_element_located_and_has_text("account_table_first_element", account)
 
@@ -187,6 +188,8 @@ class accounts():
             self.framework.click('account_delete')
             self.framework.set_text('account_delete_reason', "Test")
             self.framework.click("account_delete_confirm")
+            self.framework.wait_until_element_attribute_has_text('delete_account_dialog', 'style', 'display: none;')
+            self.framework.get_page(self.framework.driver.current_url)
             self.framework.wait_until_element_located_and_has_text("account_page_status",
                                                                    "DESTROYED")
             self.framework.CLEANUP['accounts'].remove(account)
