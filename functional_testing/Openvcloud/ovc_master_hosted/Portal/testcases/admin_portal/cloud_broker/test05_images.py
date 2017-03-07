@@ -8,11 +8,7 @@ from random import randint
 class ImagesTests(Framework):
     def setUp(self):
         super(ImagesTests, self).setUp()
-        #self.Login.Login(username=self.admin_username, password=self.admin_password)
-        cookies = {"name":"beaker.session.id", "value":"46def9bf87574cb2bce7511404fb5595"}
-        self.get_page(self.environment_url)
-        self.driver.add_cookie(cookies)
-        self.driver.refresh()
+        self.Login.Login(username=self.admin_username, password=self.admin_password)
 
 
     def test01_image_page_paging_table(self):
@@ -67,7 +63,7 @@ class ImagesTests(Framework):
                            'Location',
                            'Type',
                            'Status',
-                          'Size'])
+                           'Size'])
     def test04_image_page_searchbox(self,column):
         """ PRTL-044
         *Test case to make sure that search boxes of images page are working as expected*
@@ -81,8 +77,7 @@ class ImagesTests(Framework):
 
         if (column == 'Location' ) or  (column == 'Size'):
             self.skipTest('https://github.com/0-complexity/openvcloud/issues/696')
-        if column == 'Size':
-           self.skipTest('https://github.com/0-complexity/openvcloud/issues/696')
+
         self.lg('1- go to Images page')
         self.Images.get_it()
         self.assertTrue(self.Images.is_at())
@@ -107,14 +102,7 @@ class ImagesTests(Framework):
         self.lg('- go to Images page')
         self.Images.get_it()
         self.assertTrue(self.Images.is_at())
-        self.lg('- open random image page')
-        table = self.Tables.generate_table_elements('images')
-        table_elements=self.Tables.get_table_data(table)
-        rows= len(table_elements)
-        random_elemn= randint(0,rows-1)
-        image_element=table_elements[random_elemn][0]
-        self.Images.open_image_page(image_element)
-        time.sleep(2)
+        self.Images.open_image_page()
         self.lg('-  try paging from the available page numbers and verify it should succeed ')
         self.assertTrue(self.Tables.check_show_list('stacks'))
         self.lg('- sorting of all fields of stack table, should be working as expected')
@@ -138,14 +126,7 @@ class ImagesTests(Framework):
         self.lg('1- go to Images page')
         self.Images.get_it()
         self.assertTrue(self.Images.is_at())
-        table = self.Tables.generate_table_elements('images')
-        table_elements=self.Tables.get_table_data(table)
-        self.lg('2- open random Image page')
-        rows= len(table_elements)
-        random_elemn= randint(0,rows-1)
-        image_element=table_elements[random_elemn][0]
-        self.Images.open_image_page(image_element)
-        time.sleep(2)
+        self.Images.open_image_page()
         self.lg('-  try paging from the available page numbers and verify it should succeed ')
         self.assertTrue(self.Tables.check_show_list('machines'))
         self.lg('- sorting of all fields of stack table, should be working as expected')
@@ -157,9 +138,9 @@ class ImagesTests(Framework):
                            'GridID',
                            'Name',
                            'Status',
-                          'Reference ID',
-                          'Type',
-                          'Description'])
+                           'Reference ID',
+                           'Type',
+                           'Description'])
     def test07_search_boxes_in_stack_in_image_page_test(self,column):
         """ PRTL-047
         *Test case to make sure that search boxes of stack table  image page are working as expected*
@@ -177,12 +158,7 @@ class ImagesTests(Framework):
             self.skipTest('https://github.com/0-complexity/openvcloud/issues/696')
         self.lg('1- go to Images page')
         self.Images.get_it()
-        self.assertTrue(self.Images.is_at())
-        self.lg('2-open one random image page')
-        table = self.Tables.generate_table_elements('images')
-        random_row=self.Tables.get_random_row_from_table(table)
-        image_element=random_row[0]
-        self.Images.open_image_page(image_element)
+        self.Images.open_image_page()
         self.lg('-try search boxes in stack table')
         self.assertTrue(self.Tables.check_search_box('stacks',column))
         self.lg('try the search box in every column and verfiy it return the right value')
@@ -192,7 +168,7 @@ class ImagesTests(Framework):
                            'Hostname',
                            'Status',
                            'Cloud Space',
-                          'Stack ID']
+                           'Stack ID']
                           )
     def test08_search_boxes_in_VM_in_image_page_test(self,column):
         """ PRTL-048
@@ -210,11 +186,7 @@ class ImagesTests(Framework):
         self.lg('1- go to Images page')
         self.Images.get_it()
         self.assertTrue(self.Images.is_at())
-        self.lg('2-open one random image page')
-        table = self.Tables.generate_table_elements('images')
-        random_row=self.Tables.get_random_row_from_table(table)
-        image_element=random_row[0]
-        self.Images.open_image_page(image_element)
+        self.Images.open_image_page()
         self.lg('-try search boxes in VM table')
         self.assertTrue(self.Tables.check_search_box('machines',column))
         self.lg('try the search box in every column and verfiy it return the right value')
