@@ -44,7 +44,8 @@ class users():
             user_group.click()
 
         self.framework.click("confirm_add_user")
-        time.sleep(1)
+        self.framework.wait_until_element_attribute_has_text('create_user_dialog', 'style', 'display: none;')
+        self.framework.get_page(self.framework.driver.current_url)
         self.framework.set_text("username_search", username)
         self.framework.wait_until_element_located_and_has_text("username_table_first", username)
         self.framework.CLEANUP["users"].append(username)
