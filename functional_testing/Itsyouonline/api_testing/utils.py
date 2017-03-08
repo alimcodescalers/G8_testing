@@ -69,7 +69,7 @@ class BaseTest(unittest.TestCase):
         self.assertGreater(numbers, 0, 'cannot find any virtual number')
         self.assertGreater(numbers, 0, 'cannot find any virtual number link')
         for i, number in enumerate(numbers):
-            if number[1] == '3':
+            if number[1:3] in ['49', '32', '37']:
                 self.validation_number = number
                 self.validation_number_link = links[i]
                 break
