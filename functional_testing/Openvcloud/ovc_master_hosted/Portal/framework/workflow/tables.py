@@ -46,7 +46,7 @@ class tables():
         max_sort_value = 100
         account_max_number = self.get_table_max_number(element)
         self.framework.select( selector , max_sort_value)
-        time.sleep(3)
+        time.sleep(6)
         page_numbers = (account_max_number / max_sort_value)
         if (account_max_number % max_sort_value) > 0:
             page_numbers += 1

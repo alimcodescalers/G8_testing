@@ -368,7 +368,7 @@ class ImagesTests(Framework):
         table_before = self.Tables.get_table_data('table cloudbroker stack info', pagination='stack_table_pagination')
         columns = len(table_head_elements)
         rows= len(table_before)
-
+        info_table_befor=self.get_text('table cloudbroker stack info')
         self.lg('3- try search of all elements by main search box')
         if table_before!=[]:
             random_elemn= randint(0,rows-1)
@@ -383,9 +383,7 @@ class ImagesTests(Framework):
                 self.assertTrue(any(table_before[random_elemn][column] in s for s in table_after[0] ))
 
             self.clear_text("stack_search")
-
-            time.sleep(2)
-
+            self.assertTrue(self.wait_until_element_located_and_has_text('table cloudbroker stack info', info_table_befor))
             self.lg('4- try search of all elements by search box in every column')
 
             for column in range(columns) :
@@ -410,7 +408,7 @@ class ImagesTests(Framework):
             columns = len(table_head_elements_VM)
             rows= len(table_before_VM)
             random_elemn= randint(0,rows-1)
-
+            info_table_befor=self.get_text('table cloudbroker vmachine info')
             for column in range(columns) :
                 #skip("bug #https://github.com/0-complexity/openvcloud/issues/696")
                 if column == 3 :
@@ -421,9 +419,7 @@ class ImagesTests(Framework):
                 self.assertTrue(table_after, 'Error while getting table data after searching')
                 self.assertTrue(any(table_before_VM[random_elemn][column] in s for s in table_after[0] ))
             self.clear_text("VM_search")
-
-            time.sleep(2)
-
+            self.assertTrue(self.wait_until_element_located_and_has_text('table cloudbroker vmachine info', info_table_befor))
             self.lg('4- try search of all elements by search box in every column')
 
             for column in range(columns) :
