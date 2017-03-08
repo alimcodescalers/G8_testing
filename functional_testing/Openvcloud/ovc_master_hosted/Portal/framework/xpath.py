@@ -705,5 +705,6 @@ elements = {'snapshot_ok_button': ['XPATH', 'html/body/div[3]/form/div[3]/button
             'delete_user_dialog':['ID','action-Delete'],
             'delete_account_dialog':['ID','action-Delete'],
             'delete_cloudspace_dialog':['ID','action-DeleteCloudSpace'],
-            'delete_vm_dialog':['ID','action-Delete']
+            'delete_vm_dialog':['ID','action-Delete'],
+            'edit_account_dialog':['ID','action-Edit']
             }
