@@ -16,6 +16,7 @@ from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from functional_testing.Openvcloud.ovc_master_hosted.Portal.framework import xpath
 import os
 from selenium.webdriver.common.keys import Keys
+import requests
 
 
 class BaseTest(unittest.TestCase):
@@ -30,6 +31,8 @@ class BaseTest(unittest.TestCase):
         self.remote_webdriver = config['main']['remote_webdriver']
         self.base_page = self.environment_url + '/ays'
         self.elements = xpath.elements.copy()
+        self.api_url = self.environment_url.replace('http://', 'https://') + '/restmachine'
+        self.session = requests.Session()
 
     def setUp(self):
         self.CLEANUP = {"users": [], "accounts": []}
@@ -51,18 +54,65 @@ class BaseTest(unittest.TestCase):
         self.email = str(uuid.uuid4()).replace('-', '')[0:10] + "@g.com"
         self.group = 'user'
 
+
+    def AuthorizeApi(self):
+        login_url = '%s/system/usermanager/authenticate' % self.api_url
+        credential = {'name': '%s@itsyouonline' % self.admin_username, 'secret': self.admin_password}
+        r = self.session.post(url=login_url, data=credential)
+
+        if r.status_code == 200:
+            self.lg('user is authorized')
+        else:
+            self.lg('Error when authorizing user %s - status code: %d' % (self.admin_username ,r.status_code))
+
+
+    def deleteUserApi(self, username):
+        url = '%s/cloudbroker/user/delete' % self.api_url
+        r = self.session.post(url, data={'username':username})
+
+        if r.status_code == 200:
+            self.lg('user %s is deleted' % username)
+        else:
+            self.lg('cannot delete user %s status code: %d' % (username,r.status_code))
+
+    def deleteAccountApi(self, account_name):
+        url = '%s/cloudapi/accounts/list' % self.api_url
+        r = self.session.post(url)
+        for account in r.json():
+            if account['name'] == account_name:
+                account_id = account['id']
+                break
+        else:
+            self.fail('Can\'t find account %s' % account_name)
+            return False
+
+        url = '%s/cloudbroker/account/delete' % self.api_url
+        r = self.session.post(url, data={'accountId':account_id, 'reason':'tearDown'})
+
+        if r.status_code == 200:
+            self.lg('account %s is deleted' % account_name)
+        else:
+            self.lg('cannot delete account %s status code: %d' % (account_name,r.status_code))
+
+
+
     def tearDown(self):
         """
         Environment cleanup and logs collection.
         """
-        '''
-        We have to use API to tear down all accounts and users
-        '''
-
         self.driver.quit()
+
         if hasattr(self, '_startTime'):
             executionTime = time.time() - self._startTime
         self.lg('Testcase %s ExecutionTime is %s sec.' % (self._testID, executionTime))
+
+        self.AuthorizeApi()
+
+        for account in self.CLEANUP['accounts']:
+            self.deleteAccountApi(account)
+
+        for user in self.CLEANUP['users']:
+            self.deleteUserApi(user)
 
     def set_browser(self):
         if self.remote_webdriver:

@@ -19,13 +19,12 @@ class AccountsTests(Framework):
         #. search for it and verify it should succeed
         #. edit account parameters and verify it should succeed
         """
-        #self.lg('Create new username, user:%s password:%s' % (self.username, self.password))
-        #self.Users.create_new_user(self.username, self.password, self.email, self.group)
+        self.lg('Create new username, user:%s password:%s' % (self.username, self.password))
+        self.Users.create_new_user(self.username, self.password, self.email, self.group)
         self.lg('create new account %s' % self.account)
         self.Accounts.create_new_account(self.account, self.admin_username+"@itsyouonline")
         self.Accounts.open_account_page(self.account)
         self.assertTrue(self.Accounts.account_edit_all_items(self.account))
-        self.Accounts.delete_account(self.account)
 
 
     #@unittest.skip("bug# 431 and 496")
@@ -50,7 +49,6 @@ class AccountsTests(Framework):
         self.assertTrue(self.Accounts.account_edit_all_items(self.account))
         self.assertTrue(self.Accounts.account_enable(self.account))
         self.assertTrue(self.Accounts.account_edit_all_items(self.account))
-        self.Accounts.delete_account(self.account)
 
     def test03_add_account_with_decimal_limitations(self):
         """ PRTL-026
@@ -74,7 +72,6 @@ class AccountsTests(Framework):
                                                                   " and expected is [%s]" % (
                         account_maxmemory, max_memory))
 
-        self.Accounts.delete_account(self.account)
         self.lg('%s ENDED' % self._testID)
 
     def test04_account_page_paging_table(self):
