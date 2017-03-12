@@ -194,8 +194,8 @@ class tables():
         except:
             self.framework.lg('table has not column %s' % column_name)
             return False
-
         random_row=self.get_random_row_from_table(table)
+        info_table_befor=self.framework.get_text(table['info'])
         if str(random_row[0]) == 'No data available in table':
             self.framework.lg('table is empty ')
             return True
@@ -205,6 +205,10 @@ class tables():
         if not any(random_row[column_index] in s for s in first_row_after):
             return False
         self.framework.clear_text(table['search_box'])
+        if not self.framework.wait_until_element_located_and_has_text(table['info'], info_table_befor):
+            self.framework.lg("table doesn't update table befor search %s and after %s"%(self.framework.get_text(table['info']),info_table_befor))
+            return False
+
         return True
 
     def check_data_filters(self, table,column_name):
