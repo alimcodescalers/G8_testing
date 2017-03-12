@@ -195,7 +195,6 @@ class BaseTest(unittest.TestCase):
         value = self.elements[element][1]
         for temp in range(10):
             try:
-
                 self.wait.until(EC.text_to_be_present_in_element((getattr(By, method), value), text))
                 return True
             except:

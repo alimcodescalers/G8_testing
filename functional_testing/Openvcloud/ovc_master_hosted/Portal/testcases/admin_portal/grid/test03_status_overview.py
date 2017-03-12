@@ -36,27 +36,49 @@ class StatusTests(Framework):
         health_check = self.StatusOverview.run_health_check()
         self.assertEqual(health_check, 'Scheduled healthcheck', 'Health check message: %s' % health_check)
 
-    #def test03_status_overview_page(self):
-    #   """ PRTL-054
-    #    *Test case to make sure that health check page is working as expected*
-    #    **Test Scenario:**
-    #   #. check that "process Status" in header of page
-    #   #. check that last check in header
-    #   #. check that you can get grid node page
-    #   #. check that you can get Detail of status  page
-    #   """
+    def test03_status_overview_page_basic_elements(self):
+        """ PRTL-054
+
+        *Test case to make sure that health check page is working as expected*
+
+        **Test Scenario:**
+
+        #. check that "process Status" in header of page
+        #. check that last check in header
+        #. check that you can get grid node page
+        #. check that you can get Detail of status  page
+
+        """
+        self.lg('check page url & title')
+        self.assertEqual(self.driver.title, 'Grid Status Overview')
+        self.assertIn('grid/Status%20Overview', self.driver.current_url)
+        self.lg('check navigation bar')
+        self.assertEqual(self.get_navigation_bar('navigation bar'), ['Grid Portal','Status Overview'])
+        self.lg('check page title')
+        self.assertEqual(self.get_text('page title'), 'Process Status')
+        self.lg('check "show records per page" list')
+        self.assertTrue(self.element_is_enabled('table_storge_routers_selector'))
 
 
-    #def test04_status_overview_page_table_sorting(self):
-    #   """ PRTL-055
-    #    *Test case to make sure that sorting of health check  page are working as expected*
-    #    **Test Scenario:**
-    #    #. go to Health check page.
-    #    #. get all table head elements
-    #    #. sorting of all fields of health_check page table, should be working as expected
-    #    """
 
+    def test04_status_overview_page_table_sorting(self):
+        """ PRTL-055
 
+        *Test case to make sure that sorting of status_overview  page are working as expected*
+
+        **Test Scenario:**
+
+        #. go to Health check page.
+        #. get all table head elements
+        #. sorting of all fields of status_overview page table, should be working as expected
+
+        """
+
+        self.lg('%s STARTED' % self._testID)
+        self.lg('sorting of all fields of status_overview table, should be working as expected')
+        self.assertTrue(self.Tables.check_sorting_table('status_overview'))
+        self.lg('%s ENDED' % self._testID)
+        
     #def test05_status_overview_page_table_paging_buttons(self)
     #""" PRTL-056
     #*Test case to make sure that paging of healthcheck page are working as expected*

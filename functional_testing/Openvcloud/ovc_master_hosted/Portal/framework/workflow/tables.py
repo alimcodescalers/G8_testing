@@ -59,24 +59,23 @@ class tables():
         random_row=tableData[random_elemn]
         return random_row
 
-    def get_table_data(self, table, column):
+    def get_table_data(self, table):
         self.framework.assertTrue(self.framework.check_element_is_exist(table['info']))
         max_sort_value = 100
         account_max_number = self.get_table_max_number(table['info'])
         self.framework.select(table['selector'] , max_sort_value)
-        time.sleep(6)
+        time.sleep(3)
         page_numbers = (account_max_number / max_sort_value)
         if (account_max_number % max_sort_value) > 0:
             page_numbers += 1
         tableData = []
-        i=0
         for page in range(page_numbers):
+
             table_rows = self.framework.get_table_rows(table['data'])
             self.framework.assertTrue(table_rows)
             for row in table_rows:
-
                 cells = row.find_elements_by_tag_name('td')
-                tableData.append(cells[column].text)
+                tableData.append([x.text for x in cells])
             if  page < (page_numbers-1):
                 previous_button, next_button = self.get_previous_next_button(table['pagination'])
                 next_button.click()
@@ -90,9 +89,8 @@ class tables():
 
                 text = "Showing %s to %s of %s entries" %("{:,}".format(tb_start_number), "{:,}".format(tb_end_number), "{:,}".format(tb_max_number))
                 if not self.framework.wait_until_element_located_and_has_text(table['info'], text):
-                    self.framework.lg('table info changed %s -> %s ' % (text, self.framework.get_table_info(table['info'])))
+                    self.framework.lg('table max number changed %s -> %s ' % (account_max_number ,tb_max_number))
                     return False
-
         return tableData
 
     def check_show_list(self, table):
@@ -167,7 +165,7 @@ class tables():
             self.framework.driver.execute_script("window.scrollTo(0,%d)" % (table_location['y']-50))
             element.click()
             self.framework.wait_until_element_attribute_has_text(element, 'aria-sort', 'ascending')
-            table_before = self.get_table_data(table, column)
+            table_before = self.get_table_data(table)
 
             if table_before == False:
                 return False
@@ -175,7 +173,7 @@ class tables():
             self.framework.driver.execute_script("window.scrollTo(0,%d)" % (table_location['y']-50))
             element.click()
             self.framework.wait_until_element_attribute_has_text(element, 'aria-sort', 'descending')
-            table_after = self.get_table_data(table, column)
+            table_after = self.get_table_data(table)
 
             if table_after == False:
                 return False

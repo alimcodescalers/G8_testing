@@ -65,6 +65,22 @@ elements = {
             'table_groups_pagination':['ID','DataTables_Table_0_paginate'],
             'table_groups_search_box':['XPATH','//*[@id="DataTables_Table_0_filter"]/label/input'],
 
+            'table_ECs_data':['ID','table_system_eco'],
+            'table_ECs_info':['ID','table_system_eco_info'],
+            'table_ECs_selector':['NAME','table_system_eco_length', 0],
+            'table_ECs_pagination':['ID','table_system_eco_paginate'],
+            'table_ECs_search_box':['XPATH','//*[@id="table_system_eco_filter"]/label/input'],
+
+            'table_Status_overview_data':['ID','DataTables_Table_0'],
+            'table_Status_overview_info':['ID','DataTables_Table_0_info'],
+            'table_Status_overview_selector':['NAME','DataTables_Table_0_length',0],
+            'table_Status_overview_pagination':['ID','DataTables_Table_0_paginate'],
+            'table_Status_overview_search_box':['XPATH','//*[@id="DataTables_Table_0_filter"]/label/input'],
+
+
+            'EC_table_first_element_1':['XPATH','//*[@id="table_system_eco"]/tbody/tr[1]/td[1]/a'],
+            'EC_table_first_element_2':['XPATH','//*[@id="table_system_eco"]/tbody/tr[1]/td[2]'],
+            'error_condition_headers':['CLASS_NAME','breadcrumb',0],
             'snapshot_ok_button': ['XPATH', 'html/body/div[3]/form/div[3]/button[1]'],
             'storage_arrow': ['XPATH', 'html/body/div[1]/div/div[1]/div/nav/div/ul/li[5]/ul[1]/a[1]'],
             'user_delete_confirm': ['XPATH', ".//*[@id='action-Delete']/div/div[3]/button[2]"],

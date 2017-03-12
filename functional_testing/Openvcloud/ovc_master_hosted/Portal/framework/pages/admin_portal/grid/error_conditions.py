@@ -1,4 +1,6 @@
 from random import randint
+from functional_testing.Openvcloud.ovc_master_hosted.Portal.framework.Navigation.left_navigation_menu import \
+    leftNavigationMenu
 import time
 class errorConditions():
     def __init__(self, framework):
@@ -10,30 +12,29 @@ class errorConditions():
         self.framework.assertTrue(self.framework.check_element_is_exist("error_conditions_page"))
 
 
-    def open_EC_page(self, EC='',Ec_date=''):
-        self.LeftNavigationMenu.Grid.error_conditions()
+    def open_EC_page(self, EC='',table=''):
+        self.framework.LeftNavigationMenu.Grid.error_conditions()
 
-        self.framework.set_text("error_conditions_search", EC)
+        self.framework.set_text("table_ECs_search_box", EC)
 
-        out=self.framework.wait_until_element_located_and_has_text("EC_table_first_element_2",
-                                                               EC)
-        EC_herf = self.framework.element_link("EC_table_first_element_1")
-        self.table_elements_aftersearch=self.framework.Tables.get_table_data('table_ECs_info')
-        EC_id = EC_herf[EC_herf.find('?id=')+len('?id='):]
-        self.framework.click_link(EC_herf)
-        return self.framework.element_in_url(EC_id )
+        if self.framework.wait_until_element_located_and_has_text("EC_table_first_element_2", EC):
+            EC_herf = self.framework.element_link("EC_table_first_element_1")
+            self.table_elements_aftersearch=self.framework.get_table_row(table,0)
+            EC_id = EC_herf[EC_herf.find('?id=')+len('?id='):]
+            self.framework.click_link(EC_herf)
+            return self.framework.element_in_url(EC_id )
 
-    def random_element(self,table):
-        rows= len(table)
-        random_elemn= randint(0,rows-1)
-        EC_element=table[random_elemn][1]
-        skip_characters=['.',':','\'']
+        else:
+            self.framework.lg('can\'t find image %s' % image)
+            return False
+
+    def random_element(self,random_elemn_row):
+        EC_element=random_elemn_row[1]
+        skip_characters=['.',':','\'','&']
         if EC_element[0]== '<':
             EC_element=EC_element[(EC_element.index('>')+2) :]
-        #skip 'https://github.com/0-complexity/openvcloud/issues/771'
-        EC_element=EC_element[ :(EC_element.find('.'))]
-        EC_element=EC_element[ :(EC_element.find(':'))]
-        EC_element=EC_element[ :(EC_element.find('\''))]
+        for i in skip_characters:
+            EC_element=EC_element[ :(EC_element.find(i))]
         return EC_element
 
     def get_headers(self,header_element):
@@ -60,7 +61,6 @@ class errorConditions():
             job_Id = job_link.text
             if job_Id == 'N/A':
                 return False
-            #print job_link.get_attribute("href")
             self.framework.click_link(self.framework.element_link('job_Ec_link'))
             time.sleep(1)
             return self.framework.element_in_url(job_Id)
@@ -81,10 +81,10 @@ class errorConditions():
         self.accurrence=self.tableData[7][1]
         self.cpu_node=self.tableData[12][1]
         self.grid_Id=self.tableData[13][1]
-        self.framework.assertEqual(str(self.application_name),self.table_elements_aftersearch[0][2])
-        self.framework.assertEqual(str(self.accurrence),self.table_elements_aftersearch[0][3])
-        self.framework.assertTrue(self.table_elements_aftersearch[0][4] in str(self.cpu_node))
-        self.framework.assertEqual(str(self.grid_Id),self.table_elements_aftersearch[0][5])
+        self.framework.assertEqual(str(self.application_name),self.table_elements_aftersearch[2])
+        self.framework.assertEqual(str(self.accurrence),self.table_elements_aftersearch[3])
+        self.framework.assertTrue(self.table_elements_aftersearch[4] in str(self.cpu_node))
+        self.framework.assertTrue(self.table_elements_aftersearch[5] in str(self.grid_Id) )
 
     def check_exist_of_EC_elements(self):
         self.tableData=self.Error_Condition_details_table()
@@ -108,17 +108,7 @@ class errorConditions():
     def get_cpu_node_page(self):
         self.framework.click_link(self.framework.element_link('EC_node_page'))
         for _ in range(10):
-            if 'grid node?id=%s'%self.cpu_node in self.framework.driver.title:
-                return True
-            else:
-                time.sleep(1)
-        else:
-            return False
-
-    def get_Grid_page(self):
-        self.framework.click_link(self.framework.element_link('EC_Grid_page'))
-        for _ in range(10):
-            if 'grid?id=%s'%self.grid_Id in self.framework.driver.title:
+            if 'grid%20node?id=' in self.framework.driver.current_url:
                 return True
             else:
                 time.sleep(1)
