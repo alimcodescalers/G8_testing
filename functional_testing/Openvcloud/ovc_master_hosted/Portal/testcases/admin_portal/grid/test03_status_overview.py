@@ -78,15 +78,18 @@ class StatusTests(Framework):
         self.lg('sorting of all fields of status_overview table, should be working as expected')
         self.assertTrue(self.Tables.check_sorting_table('status_overview'))
         self.lg('%s ENDED' % self._testID)
-        
-    #def test05_status_overview_page_table_paging_buttons(self)
-    #""" PRTL-056
-    #*Test case to make sure that paging of healthcheck page are working as expected*
-    #**Test Scenario:**
-    #  #. go to healthcheck page.
-    #  #. try paging from the available page numbers and verify it should succeed
-    #  #. try paging from start/previous/next/last and verify it should succeed
-    # """
+
+    def test05_status_overview_page_table_paging_buttons(self):
+        """ PRTL-056
+
+        *Test case to make sure that paging of healthcheck page are working as expected*
+
+        **Test Scenario:**
+
+        #. go to healthcheck page.
+        #. try paging from the available page numbers and verify it should succeed
+        #. try paging from start/previous/next/last and verify it should succeed
+        """
 
     #def test06_status_overview_page_searchbox(self):
     #    """ PRTL-057

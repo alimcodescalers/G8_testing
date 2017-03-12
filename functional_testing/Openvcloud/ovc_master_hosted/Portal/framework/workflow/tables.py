@@ -168,6 +168,7 @@ class tables():
             table_before = self.get_table_data(table)
 
             if table_before == False:
+                self.framework.lg("can't get table data before sort ")
                 return False
 
             self.framework.driver.execute_script("window.scrollTo(0,%d)" % (table_location['y']-50))
@@ -176,10 +177,12 @@ class tables():
             table_after = self.get_table_data(table)
 
             if table_after == False:
+                self.framework.lg("can't get table data after sort ")
                 return False
 
             for temp in range(len(table_before)):
                 if not table_before[temp] == table_after[(len(table_after)-temp-1)]:
+                    self.framework.lg("data after and befor sorting doesn't equal ")
                     return False
 
             self.framework.lg('coulmn %s passed' % current_column)
