@@ -90,15 +90,34 @@ class StatusTests(Framework):
         #. try paging from the available page numbers and verify it should succeed
         #. try paging from start/previous/next/last and verify it should succeed
         """
+        self.lg('%s STARTED' % self._testID)
+        self.lg('try paging from the available page numbers and verify it should succeed')
+        self.assertTrue(self.Tables.check_show_list('status_overview'))
+        self.lg('%s ENDED' % self._testID)
 
-    #def test06_status_overview_page_searchbox(self):
-    #    """ PRTL-057
-    #    *Test case to make sure that search boxes of healthcheck page are working as expected*
-    #        **Test Scenario:**
-    #        #. go to healthchecks page.
-    #        #. try use general search box  to search for values in  all columns and verfiy it return the right value
-    #        #. try use the search box in every column and  verfiy it return the right value
-    #        """
+
+    @parameterized.expand(['Grid ID',
+                           'Node ID',
+                           'Node Name',
+                           'Node Status',
+                          'Details',
+                           ])
+    def test004_status_overview_page_searchbox(self,column):
+        """ PRTL-052
+
+        *Test case to make sure that search boxes of EC page are working as expected*
+
+        **Test Scenario:**
+
+        #. go to ECs page.
+        #. try use general search box  to search for values in  all columns and verfiy it return the right value
+        #. try use the search box in every column and  verfiy it return the right value
+
+        """
+        self.lg('try general search box to search for values in all columns and verfiy it return the right value')
+        self.assertTrue(self.Tables.check_search_box('status_overview',column ))
+        self.lg('try the search box in every column and verfiy it return the right value')
+        self.assertTrue(self.Tables.check_data_filters('status_overview',column ))
 
 
     #def test07_status_overview_details_page(self):

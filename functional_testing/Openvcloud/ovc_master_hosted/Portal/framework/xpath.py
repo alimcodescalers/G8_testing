@@ -838,6 +838,9 @@ elements = {
 
             'group_page_name':['XPATH', '/html/body/div[2]/div/div/ul[2]/li[1]'],
             'group_page_domain':['XPATH', '/html/body/div[2]/div/div/ul[2]/li[2]'],
-            'group_page_description':['XPATH', '/html/body/div[2]/div/div/ul[2]/li[3]']
+            'group_page_description':['XPATH', '/html/body/div[2]/div/div/ul[2]/li[3]'],
+            'stacks_table_first_element_id': ['XPATH', '//*[@id="table_cloudbroker_stack"]/tbody/tr[1]/td[1]/a'],
+            'stacks_table_first_element_name': ['XPATH', '//*[@id="table_cloudbroker_stack"]/tbody/tr/td[3]'],
+            'current_table_page':['CLASS_NAME', 'paginate_button active']
 
             }
