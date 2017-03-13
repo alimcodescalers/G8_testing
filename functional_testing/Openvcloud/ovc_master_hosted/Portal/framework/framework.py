@@ -15,8 +15,6 @@ from functional_testing.Openvcloud.ovc_master_hosted.Portal.framework.workflow.t
 from functional_testing.Openvcloud.ovc_master_hosted.Portal.framework.pages.admin_portal.cloud_broker.Images import images
 from functional_testing.Openvcloud.ovc_master_hosted.Portal.framework.pages.admin_portal.cloud_broker.storagerouters import storagerouters
 
-
-
 class Framework(BaseTest):
     def __init__(self, *args, **kwargs):
         super(Framework, self).__init__(*args, **kwargs)
