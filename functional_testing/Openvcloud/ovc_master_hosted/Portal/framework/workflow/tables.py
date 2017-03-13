@@ -75,12 +75,10 @@ class tables():
         random_row=tableData[random_elemn]
         return random_row
 
-    def get_table_data(self, table):
+
+    def get_table_data(self, table, column, max_sort_value = 100):
         self.framework.assertTrue(self.framework.check_element_is_exist(table['info']))
-        max_sort_value = 100
         rows_max_number = self.get_table_max_number(table['info'])
-        self.framework.select(table['selector'] , max_sort_value)
-        self.wait_until_table_reload(table, 0, max_sort_value)
         pages_number = math.ceil(rows_max_number/float(max_sort_value))
         tableData = []
         for page in range(int(pages_number)):
@@ -93,7 +91,8 @@ class tables():
                 previous_button, next_button = self.get_previous_next_button(table['pagination'])
                 next_button.click()
                 if not self.wait_until_table_reload(table, page+1, max_sort_value):
-	            return False                 
+	            return False
+                self.wait_until_table_reload(table, page+1, max_sort_value)
         return tableData
 
     def check_show_list(self, table):
@@ -130,7 +129,10 @@ class tables():
 
     def check_sorting_table(self, table):
         table = self.generate_table_elements(table)
-        self.framework.select(table['selector'] , 100)
+        max_sort_value = 100
+        self.framework.select(table['selector'] , max_sort_value)
+        if not self.wait_until_table_reload(table, 0, max_sort_value):
+            return False
         table_location = self.framework.find_element(table['data']).location
         table_head_elements = self.framework.get_table_head_elements(table['data'])
         for column, element in enumerate(table_head_elements):

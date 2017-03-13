@@ -207,8 +207,10 @@ class BaseTest(unittest.TestCase):
             try:
                 if element.get_attribute(attribute) == text:
                     return True
+                else:
+                    time.sleep(2)
             except:
-                time.sleep(1)
+                time.sleep(3)
         else:
             return False
 
