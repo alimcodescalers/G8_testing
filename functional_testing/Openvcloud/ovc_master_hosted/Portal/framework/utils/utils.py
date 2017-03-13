@@ -104,6 +104,13 @@ class BaseTest(unittest.TestCase):
             self.fail("This %s method isn't defined" % method)
         return elements_value
 
+    def get_page_titles(self):
+        titles=[]
+        elements_value = self.driver.find_elements(getattr(By, 'CLASS_NAME'), 'title')
+        for element_value in elements_value:
+            titles.append(str(element_value.text))
+        return titles
+
     def find_element(self, element):
         method = self.elements[element][0]
         value = self.elements[element][1]
@@ -198,6 +205,7 @@ class BaseTest(unittest.TestCase):
                 self.wait.until(EC.text_to_be_present_in_element((getattr(By, method), value), text))
                 return True
             except:
+                print self.get_text('action-RunHealthcheckLabel')
                 time.sleep(1)
         else:
             return False
@@ -207,10 +215,8 @@ class BaseTest(unittest.TestCase):
             try:
                 if element.get_attribute(attribute) == text:
                     return True
-                else:
-                    time.sleep(2)
             except:
-                time.sleep(3)
+                time.sleep(1)
         else:
             return False
 
@@ -447,7 +453,7 @@ class BaseTest(unittest.TestCase):
 
     def get_navigation_bar(self, element):
         elements = self.get_list_items(element)
-        return [x.text for x in elements]
+        return [str(x.text) for x in elements]
 
     def execute_angular_script(self):
         # This method is trying to load angular elements.

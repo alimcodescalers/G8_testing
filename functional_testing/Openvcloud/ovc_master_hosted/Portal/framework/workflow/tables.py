@@ -127,6 +127,26 @@ class tables():
 
         return True
 
+    def search_table(self,table,column_name,value):
+        table = self.generate_table_elements(table)
+        table_head_elements = self.framework.get_table_head_elements(table['data'])
+        table_columns = [ x.text for x in  table_head_elements ]
+        try:
+            column_index = table_columns.index(column_name)
+        except ValueError:
+            self.framework.lg('table has not column %s' % column_name)
+            return False
+        table_data = self.framework.find_element(table['data'])
+        footer = table_data.find_element_by_tag_name('tfoot')
+        items = footer.find_elements_by_tag_name('td')
+        current_filter = items[column_index].find_elements_by_tag_name('input')[0]
+        current_filter.send_keys(value)
+        time.sleep(5)
+        first_row_after = self.framework.get_table_row(table,0)
+        if not value in first_row_after[column_index]:
+            return False
+        return first_row_after
+
     def check_sorting_table(self, table):
         table = self.generate_table_elements(table)
         max_sort_value = 100
@@ -143,7 +163,7 @@ class tables():
             self.framework.driver.execute_script("window.scrollTo(0,%d)" % (table_location['y']-50))
             element.click()
             self.framework.wait_until_element_attribute_has_text(element, 'aria-sort', 'ascending')
-            table_before = self.get_table_data(table)
+            table_before = self.get_table_data(table,column)
 
             if table_before == False:
                 self.framework.lg("can't get table data before sort ")
@@ -152,7 +172,7 @@ class tables():
             self.framework.driver.execute_script("window.scrollTo(0,%d)" % (table_location['y']-50))
             element.click()
             self.framework.wait_until_element_attribute_has_text(element, 'aria-sort', 'descending')
-            table_after = self.get_table_data(table)
+            table_after = self.get_table_data(table,column)
 
             if table_after == False:
                 self.framework.lg("can't get table data after sort ")

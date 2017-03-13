@@ -77,7 +77,8 @@ elements = {
             'table_Status_overview_pagination':['ID','DataTables_Table_0_paginate'],
             'table_Status_overview_search_box':['XPATH','//*[@id="DataTables_Table_0_filter"]/label/input'],
 
-
+            'table_Status_overview_node_name':['XPATH','//*[@id="DataTables_Table_0"]/tbody/tr[1]/td[3]'],
+            'table_Status_overview_details':['XPATH','//*[@id="DataTables_Table_0"]/tbody/tr[1]/td[5]/a'],
             'EC_table_first_element_1':['XPATH','//*[@id="table_system_eco"]/tbody/tr[1]/td[1]/a'],
             'EC_table_first_element_2':['XPATH','//*[@id="table_system_eco"]/tbody/tr[1]/td[2]'],
             'error_condition_headers':['CLASS_NAME','breadcrumb',0],
@@ -544,6 +545,7 @@ elements = {
             'account_maxmemory': ['XPATH', ".//*[@id='createaccount']/div/div[2]/div[3]/div[4]/input"],
             'username_table_first': ['XPATH', ".//*[@id='table_system_user']/tbody/tr[1]/td[1]/a"],
             'action_purge_confirm_button': ['XPATH', ".//*[@id='action-Purge']/div/div[3]/button[2]"],
+            'select_purge_options':['TAG_NAME',"select",0],
             'knowledge_base_line5_tab_line3_sub1': ['XPATH',
                                                     ".//*[@id='wrap']/div/tour/div[3]/div[2]/div/div/div/div[2]/ul/li[1]"],
             'knowledge_base_line1_tab_line8': ['XPATH',
@@ -557,7 +559,7 @@ elements = {
             'machines_spport_link': ['XPATH', ".//*[@id='wrap']/div/tour/div[3]/div[2]/div/div/div/div[2]/p/a"],
             'end_user_machine_name': ['XPATH', ".//*[@id='wrap']/div/tour/div[3]/div[2]/div/div/div/div[2]/div[2]/h1"],
             'actions_tab': ['XPATH', ".//*[@id='actions']/a"],
-            'ec_action_button': ['XPATH', 'html/body/div[2]/div/div/div[1]/button'],
+            'ec_action_button': ['CLASS_NAME','dropdown-toggle',1],
             'knowledge_base_line1_tab_line2': ['XPATH',
                                                ".//*[@id='wrap']/div/tour/div[3]/div[2]/div/div/div/div[2]/ol/li[2]"],
             'system_arrow': ['XPATH', 'html/body/div[1]/div/div[1]/div/nav/div/ul/li[6]/ul[1]/a[1]'],
@@ -695,7 +697,7 @@ elements = {
             'cloudbroker': ['XPATH', 'html/body/div[1]/div/div[1]/div/nav/div/ul/li[2]/ul[1]/a[1]'],
             'system_sub_sm': ['XPATH', ".//*[@id='collapse-6']/li[3]/a"],
             'login_button': ['XPATH', "//button[@type='submit']"],
-            'purge_button': ['XPATH', 'html/body/div[2]/div/div/div[1]/ul/li/a'],
+            'purge_button': ['XPATH', '//*[@id="actions_table_system_eco"]/ul/li/a'],
             'intro_subheader_label': ['XPATH', ".//*[@id='wrap']/div/tour/div[3]/div[2]/div/div/div/div[2]/h2"],
             'virtual_machine_action': ['XPATH', 'html/body/div[2]/div/div/div[1]/button'],
             'users_page': ['XPATH', 'html/body/div[2]/div/div/h2'],
@@ -776,9 +778,12 @@ elements = {
             'knowledge_base_line4_tab_text3': ['XPATH',
                                                ".//*[@id='wrap']/div/tour/div[2]/div[2]/div/div/div/div[4]/div[1]/textarea"],
             'confirm_alert':['CLASS_NAME', 'btn-primary', 0],
+
             'landing_page_login':['CLASS_NAME', 'sm-font',1],
             'Run Healthcheck':['XPATH','/html/body/div[2]/div/div/a'],
             'action-RunHealthcheckLabel':['ID','action-RunHealthCheckLabel'],
+            'action-RunHealthchecknodeLabel':['ID','action-RunHealthCheckonNodeLabel'],
+
             'confirm healthcheck':['XPATH', ".//*[@id='action-RunHealthCheck']/div/div[3]/button[2]"],
             'alert healthcheck':['CLASS_NAME', 'alert', 1],
             'table cloudbroker account':['ID','table_cloudbroker_account'],
@@ -818,7 +823,6 @@ elements = {
             'navigation bar':['CLASS_NAME', 'breadcrumb', 0],
             'storagerouter search':['XPATH', '//*[@id="DataTables_Table_0_filter"]/label/input'],
             'vmachine paginate':['ID','table_cloudbroker_vmachine_paginate'],
-
             'groups_action': ['XPATH', 'html/body/div[2]/div/div/div[1]/button'],
             'groups_action_add_group':['XPATH','/html/body/div[2]/div/div/div[1]/ul/li/a'],
             'groups_action_name': ['NAME', 'name', 0],
