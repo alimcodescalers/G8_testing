@@ -35,7 +35,7 @@ class BaseTest(unittest.TestCase):
         self.session = requests.Session()
 
     def setUp(self):
-        self.CLEANUP = {"users": [], "accounts": []}
+        self.CLEANUP = {"users":[], "accounts":[], "groups":[]}
         self._testID = self._testMethodName
         self._startTime = time.time()
         self._logger = logging.LoggerAdapter(logging.getLogger('portal_testsuite'),
@@ -242,8 +242,10 @@ class BaseTest(unittest.TestCase):
             try:
                 if element.get_attribute(attribute) == text:
                     return True
+                else:
+                    time.sleep(2)
             except:
-                time.sleep(1)
+                time.sleep(3)
         else:
             return False
 
@@ -440,6 +442,12 @@ class BaseTest(unittest.TestCase):
         except:
             self.lg("Can't get the tbody elements")
             return False
+
+    def get_table_row(self, table, i):
+        table_row = self.get_table_rows(table['data'])[i]
+        row_cells = self.get_row_cells(table_row)
+        self.assertTrue(row_cells)
+        return [x.text for x in row_cells]
 
     def get_row_cells(self, row):
         'This method take a row and return its cells elements else return false'

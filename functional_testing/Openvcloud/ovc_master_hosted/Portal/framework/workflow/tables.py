@@ -1,9 +1,18 @@
 import time
+import math
 from random import randint
 
 class tables():
     def __init__(self, framework):
         self.framework = framework
+
+    def generate_table_elements(self, table):
+        table_dict = {'data':'table_%s_data' % table,
+                     'info':'table_%s_info' % table,
+                     'selector':'table_%s_selector' % table,
+                     'pagination':'table_%s_pagination' % table,
+                     'search_box':'table_%s_search_box' % table}
+        return table_dict
 
     def get_table_info(self, element):
         for _ in range(10):
@@ -13,136 +22,130 @@ class tables():
             else:
                 time.sleep(1)
         else:
-            self.framework.fail("Can't get the table info")
+            self.framework.fail("Can't get table info")
 
-    def get_table_start_number(self, table_info_element):
-        account_info = self.get_table_info(table_info_element)
+    def wait_until_table_reload(self, table, page, list_size = 100):
+        max_number = self.get_table_max_number(table['info'])
+        expected_start_number = min(1+(page*list_size), max_number)
+        expected_end_number = min((page+1)*list_size, max_number)
+        for _ in range(10):
+            start_number = self.get_table_start_number(table['info'])
+            end_number = self.get_table_end_number(table['info'])
+            if end_number == expected_end_number and start_number == expected_start_number:
+                return True
+            else:
+                time.sleep(1)
+        else:
+            self.framework.lg('Error expected start & end numbers : %s , actual : %s' %
+            (str([expected_start_number, expected_end_number]), str([start_number, end_number])))
+            return False
+
+    def get_table_start_number(self, table_info):
+        account_info = self.get_table_info(table_info)
         return int(account_info[(account_info.index('g') + 2):(account_info.index('to') - 1)])
 
-    def get_table_end_number(self, table_info_element):
-        account_info = self.get_table_info(table_info_element)
+    def get_table_end_number(self, table_info):
+        account_info = self.get_table_info(table_info)
         return int(account_info[(account_info.index('to') + 3):(account_info.index('of') - 1)])
 
-    def get_table_max_number(self, table_info_element):
-        account_info = self.get_table_info(table_info_element)
+    def get_table_max_number(self, table_info):
+        account_info = self.get_table_info(table_info)
         return int(account_info[(account_info.index('f') + 2):(account_info.index('entries') - 1)].replace(',',''))
 
-    def get_previous_next_button(self, element=None):
-        if element == None:
-            pagination = self.framework.get_list_items('pagination')
-        else:
-            table = self.framework.find_element(element)
-            pagination = table.find_element_by_tag_name('ul')
-            pagination = pagination.find_elements_by_tag_name('li')
-
+    def get_previous_next_button(self, pagination):
+        pagination = self.framework.find_element(pagination)
+        pagination = pagination.find_element_by_tag_name('ul')
+        pagination = pagination.find_elements_by_tag_name('li')
         previous_button = pagination[0].find_element_by_tag_name('a')
-        next_button = pagination[(len(pagination) - 1)].find_element_by_tag_name('a')
-
+        next_button = pagination[(len(pagination)-1)].find_element_by_tag_name('a')
         return previous_button, next_button
 
-    def get_table_data(self, element, selector = 'account selector',table_element=None, pagination=None):
-        # This method will return a table data as a list
-        self.framework.assertTrue(self.framework.check_element_is_exist(element))
+    def get_random_row_from_table(self, table):
+        self.framework.assertTrue(self.framework.check_element_is_exist(table['info']))
         max_sort_value = 100
-        account_max_number = self.get_table_max_number(element)
-        self.framework.select( selector , max_sort_value)
-        time.sleep(6)
-        page_numbers = (account_max_number / max_sort_value)
-        if (account_max_number % max_sort_value) > 0:
-            page_numbers += 1
+        self.framework.select(table['selector'] , max_sort_value)
+        self.wait_until_table_reload(table, 0, max_sort_value)
         tableData = []
-        for page in range(page_numbers):
+        table_rows = self.framework.get_table_rows(table['data'])
+        self.framework.assertTrue(table_rows)
+        for row in table_rows:
+            cells = row.find_elements_by_tag_name('td')
+            tableData.append([x.text for x in cells])
+        rows=len(tableData)
+        random_elemn= randint(0,rows-1)
+        random_row=tableData[random_elemn]
+        return random_row
 
-            table_rows = self.framework.get_table_rows(table_element)
+    def get_table_data(self, table, column, max_sort_value = 100):
+        self.framework.assertTrue(self.framework.check_element_is_exist(table['info']))
+        rows_max_number = self.get_table_max_number(table['info'])
+        pages_number = math.ceil(rows_max_number/float(max_sort_value))
+        tableData = []
+        for page in range(int(pages_number)):
+            table_rows = self.framework.get_table_rows(table['data'])
             self.framework.assertTrue(table_rows)
             for row in table_rows:
                 cells = row.find_elements_by_tag_name('td')
-                tableData.append([x.text for x in cells])
-            if  page < (page_numbers-1):
-                previous_button, next_button = self.get_previous_next_button(pagination)
+                tableData.append(cells[column].text)
+            if  page < (pages_number-1):
+                previous_button, next_button = self.get_previous_next_button(table['pagination'])
                 next_button.click()
-
-                tb_max_number = self.get_table_max_number(element)
-                tb_start_number = 1+((page+1)*max_sort_value)
-                tb_end_number = (page+2)*max_sort_value
-
-                if tb_end_number > tb_max_number:
-                    tb_end_number = tb_max_number
-                text = "Showing %s to %s of %s entries" %("{:,}".format(tb_start_number), "{:,}".format(tb_end_number), "{:,}".format(tb_max_number))
-                if not self.framework.wait_until_element_located_and_has_text(element, text):
-                    self.framework.lg('table max number changed %s -> %s ' % (account_max_number ,tb_max_number))
+                if not self.wait_until_table_reload(table, page+1, max_sort_value):
+                    self.framework.lg('Error while waiting table to reload')
                     return False
+
         return tableData
 
-    def check_show_list(self, info_table, selector):
-        paging_options = [25, 50, 100, 10]
-        rows_max_number = self.get_table_max_number(info_table)
-
+    def check_show_list(self, table):
+        table = self.generate_table_elements(table)
+        paging_options = [10, 25, 50, 100, 10]
+        rows_max_number = self.get_table_max_number(table['info'])
         for option in paging_options:
-            self.framework.select(selector, option)
-            time.sleep(3)
-            rows_max_number_ = self.get_table_max_number(info_table)
-            rows_end_number_ = self.get_table_end_number(info_table)
-
-            if rows_max_number != rows_max_number_:
+            self.framework.select(table['selector'], option)
+            if not self.wait_until_table_reload(table, 0, option):
+                self.framework.lg('option %d does\'nt work as expected' % option)
                 return False
-
-            if rows_max_number > option:
-                if rows_end_number_ != option:
-                    return False
-            else:
-                if not rows_end_number_ < option:
-                    return False
+            self.framework.lg('option %d passed' % option)
 
         return True
 
-    def check_next_previous_buttons(self, info_table, pagination=None):
-        rows_max_number = self.get_table_max_number(info_table)
-        if pagination == None:
-            pagination_items = self.framework.get_list_items('pagination')
-        else:
-            table = self.framework.find_element(pagination)
-            pagination_items = table.find_element_by_tag_name('ul')
-            pagination_items = pagination.find_elements_by_tag_name('li')
-
-        for _ in range((len(pagination_items) - 3)):
-            page_start_number = self.get_table_start_number(info_table)
-            page_end_number = self.get_table_end_number(info_table)
-            previous_button, next_button = self.get_previous_next_button(pagination)
+    def check_next_previous_buttons(self, table):
+        table = self.generate_table_elements(table)
+        rows_max_number = self.get_table_max_number(table['info'])
+        pages_number = math.ceil(rows_max_number/10.0)
+        for page in range(int(pages_number)-1):
+            page_start_number = self.get_table_start_number(table['info'])
+            page_end_number = self.get_table_end_number(table['info'])
+            previous_button, next_button = self.get_previous_next_button(table['pagination'])
             next_button.click()
-            time.sleep(4)
-            page_start_number_ = self.get_table_start_number(info_table)
-            page_end_number_ = self.get_table_end_number(info_table)
-
-            if page_start_number_ != page_start_number+10:
+            if not self.wait_until_table_reload(table, page+1, 10):
+                self.framework.lg('Error while waiting table to reload after next_1')
                 return False
-            if page_end_number_ < rows_max_number:
-                if page_end_number_ != page_end_number+10:
-                    return False
-            else:
-                if page_end_number_ != rows_max_number:
-                    return False
-
-            previous_button, next_button = self.get_previous_next_button(pagination)
+            previous_button, next_button = self.get_previous_next_button(table['pagination'])
             previous_button.click()
-            time.sleep(4)
-            page_start_number__ = self.get_table_start_number(info_table)
-            page_end_number__ = self.get_table_end_number(info_table)
-
-            if page_start_number__ != page_start_number_-10:
+            if not self.wait_until_table_reload(table, page, 10):
+                self.framework.lg('Error while waiting table to reload after previous')
                 return False
-
-            previous_button, next_button = self.get_previous_next_button(pagination)
+            previous_button, next_button = self.get_previous_next_button(table['pagination'])
             next_button.click()
-            time.sleep(4)
+            if not self.wait_until_table_reload(table, page+1, 10):
+                self.framework.lg('Error while waiting table to reload after next_2')
+                return False
 
         return True
 
-    def check_sorting_table(self, data_table, info_table, selector, pagination=None):
-        self.framework.select(selector , 100)
-        table_location = self.framework.find_element(data_table).location
-        table_head_elements = self.framework.get_table_head_elements(data_table)
+    def check_sorting_table(self, table):
+        table = self.generate_table_elements(table)
+        max_sort_value = 100
+        self.framework.select(table['selector'] , max_sort_value)
+        if not self.wait_until_table_reload(table, 0, max_sort_value):
+            self.framework.lg('Error while waiting table to reload')
+            return False
+
+        table_location = self.framework.find_element(table['data']).location
+        table_head_elements = self.framework.get_table_head_elements(table['data'])
         for column, element in enumerate(table_head_elements):
+
             if 'sorting_disabled' in element.get_attribute('class'):
                 continue
 
@@ -150,68 +153,88 @@ class tables():
             self.framework.driver.execute_script("window.scrollTo(0,%d)" % (table_location['y']-50))
             element.click()
             self.framework.wait_until_element_attribute_has_text(element, 'aria-sort', 'ascending')
-            table_before = self.get_table_data(info_table, table_element=data_table, pagination=pagination)
+            table_before = self.get_table_data(table, column)
 
-            if not table_before:
+            if table_before == False:
+                self.framework.lg('Error while collecting data from column %s after sorting ' % current_column)
                 return False
+            elif table_before == []:
+                self.framework.lg('table is empty')
+                return True
 
             self.framework.driver.execute_script("window.scrollTo(0,%d)" % (table_location['y']-50))
             element.click()
             self.framework.wait_until_element_attribute_has_text(element, 'aria-sort', 'descending')
-            table_after = self.get_table_data(info_table, table_element=data_table, pagination=pagination)
+            table_after = self.get_table_data(table, column)
 
-            if not table_after:
+            if table_after == False:
+                self.framework.lg('Error while collecting data from column %s after sorting ' % current_column)
                 return False
 
-            for temp in range(len(table_before)):
-                if not table_before[temp][column] == table_after[(len(table_after)-temp-1)][column]:
-                    return False
+            if len(table_before) != len(table_after):
+                self.framework.lg(('Length of collected data before sorting not equal to the '\
+                'length of the collected data after sorting, maybe new item was created during the test'))
+                return False
+
+            if table_before != list(reversed(table_after)):
+                self.framework.lg('Sorting data in column %s does\'t work as expected' % current_column)
+                return False
 
             self.framework.lg('coulmn %s passed' % current_column)
-
         return True
 
-    def check_search_box(self, data_table, info_table, search_box):
-        table_head_elements = self.framework.get_table_head_elements(data_table)
-        table_before = self.get_table_data(info_table)
-        columns = len(table_head_elements)
-        rows = len(table_before)
-        random_element = randint(0,rows-1)
-        for column in range(columns):
-            self.framework.set_text(search_box, table_before[random_element][column])
-            time.sleep(2)
-            table_after = self.get_table_data(info_table)
+    def check_search_box(self, table, column_name):
+        table = self.generate_table_elements(table)
+        table_head_elements = self.framework.get_table_head_elements(table['data'])
+        table_columns = [x.text for x in table_head_elements]
+        try:
+            column_index = table_columns.index(column_name)
+        except ValueError:
+            self.framework.lg('table has not column %s' % column_name)
+            return False
 
-            if not any(table_before[random_element][column] in s for s in table_after[0]):
-                return False
-
-        self.framework.clear_text(search_box)
+        random_row = self.get_random_row_from_table(table)
+        info_table_before = self.framework.get_text(table['info'])
+        if str(random_row[0]) == 'No data available in table':
+            self.framework.lg('table is empty')
+            return True
+        self.framework.set_text(table['search_box'],random_row[column_index])
+        time.sleep(5)
+        first_row_after = self.framework.get_table_row(table,0)
+        if not any(random_row[column_index] in s for s in first_row_after):
+            self.framework.lg('searching for value in calumn %s doesn\'t work as expected' % column_name)
+            return False
+        self.framework.clear_text(table['search_box'])
+        if not self.framework.wait_until_element_located_and_has_text(table['info'], info_table_before):
+            self.framework.lg("table doesn't update table before search %s and after %s"%(self.framework.get_text(table['info']),info_table_before))
+            return False
         return True
 
-    def check_data_filters(self, data_table, info_table):
-        table_before = self.get_table_data(info_table)
-        table_head_elements = self.framework.get_table_head_elements(data_table)
-        columns = len(table_head_elements)
-        rows = len(table_before)
-        random_element = randint(0,rows-1)
+    def check_data_filters(self, table, column_name):
+        table = self.generate_table_elements(table)
+        table_head_elements = self.framework.get_table_head_elements(table['data'])
+        table_columns = [x.text for x in  table_head_elements]
+        try:
+            column_index = table_columns.index(column_name)
+        except ValueError:
+            self.framework.lg('table has not column %s' % column_name)
+            return False
 
-        table = self.framework.find_element(data_table)
-        footer = table.find_element_by_tag_name('tfoot')
+        random_row = self.get_random_row_from_table(table)
+        if str(random_row[0]) == 'No data available in table':
+            self.framework.lg('table is empty')
+            return True
+
+        table_data = self.framework.find_element(table['data'])
+        footer = table_data.find_element_by_tag_name('tfoot')
         items = footer.find_elements_by_tag_name('td')
-        filters = [x.find_elements_by_tag_name('input')[0] for x in items]
-
-        for column in range(columns):
-            if 'nofilter' in table_head_elements[column].get_attribute('class'):
-                continue
-
-            current_filter = filters[column]
-            current_filter.send_keys(table_before[random_element][column])
-            time.sleep(1)
-            table_after = self.get_table_data(info_table)
-
-            if not table_after[0][column] == table_before[random_element][column]:
-                return False
-
-            self.framework.clear_element_text(current_filter)
-
+        if 'nofilter' in table_head_elements[column_index].get_attribute('class'):
+            return True
+        current_filter = items[column_index].find_elements_by_tag_name('input')[0]
+        current_filter.send_keys(random_row[column_index])
+        time.sleep(5)
+        first_row_after = self.framework.get_table_row(table,0)
+        if not (random_row[column_index] in first_row_after[column_index]):
+            return False
+        current_filter.clear()
         return True

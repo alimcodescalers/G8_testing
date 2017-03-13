@@ -1,4 +1,71 @@
-elements = {'snapshot_ok_button': ['XPATH', 'html/body/div[3]/form/div[3]/button[1]'],
+elements = {
+            'table_users_data':['ID','table_system_user'],
+            'table_users_info':['ID','table_system_user_info'],
+            'table_users_selector':['NAME','table_system_user_length', 0],
+            'table_users_pagination':['ID','table_system_user_paginate'],
+            'table_users_search_box':['XPATH','//*[@id="table_system_user_filter"]/label/input'],
+
+            'table_accounts_data':['ID','table_cloudbroker_account'],
+            'table_accounts_info':['ID','table_cloudbroker_account_info'],
+            'table_accounts_selector':['NAME','table_cloudbroker_account_length', 0],
+            'table_accounts_pagination':['ID','table_cloudbroker_account_paginate'],
+            'table_accounts_search_box':['XPATH','//*[@id="table_cloudbroker_account_filter"]/label/input'],
+
+            'table_cloudspaces_data':['ID','table_cloudbroker_cloudspace'],
+            'table_cloudspaces_info':['ID','table_cloudbroker_cloudspace_info'],
+            'table_cloudspaces_selector':['NAME','table_cloudbroker_cloudspace_length', 0],
+            'table_cloudspaces_pagination':['ID','table_cloudbroker_cloudspace_paginate'],
+            'table_cloudspaces_search_box':['XPATH','//*[@id="table_cloudbroker_cloudspace_filter"]/label/input'],
+
+            'table_machines_data':['ID','table_cloudbroker_vmachine'],
+            'table_machines_info':['ID','table_cloudbroker_vmachine_info'],
+            'table_machines_selector':['NAME','table_cloudbroker_vmachine_length', 0],
+            'table_machines_pagination':['ID','table_cloudbroker_vmachine_paginate'],
+            'table_machines_search_box':['XPATH','//*[@id="table_cloudbroker_vmachine_filter"]/label/input'],
+
+            'table_images_data':['ID','table_cloudbroker_image'],
+            'table_images_info':['ID','table_cloudbroker_image_info'],
+            'table_images_selector':['NAME','table_cloudbroker_image_length', 0],
+            'table_images_pagination':['ID','table_cloudbroker_image_paginate'],
+            'table_images_search_box':['XPATH','//*[@id="table_cloudbroker_image_filter"]/label/input'],
+
+            'table_stacks_data':['ID','table_cloudbroker_stack'],
+            'table_stacks_info':['ID','table_cloudbroker_stack_info'],
+            'table_stacks_selector':['NAME','table_cloudbroker_stack_length', 0],
+            'table_stacks_pagination':['ID','table_cloudbroker_stack_paginate'],
+            'table_stacks_search_box':['XPATH','//*[@id="table_cloudbroker_stack_filter"]/label/input'],
+
+            'table_locations_data':['ID','table_cloudbroker_location'],
+            'table_locations_info':['ID','table_cloudbroker_location_info'],
+            'table_locations_selector':['NAME','table_cloudbroker_location_length', 0],
+            'table_locations_pagination':['ID','table_cloudbroker_location_paginate'],
+            'table_locations_search_box':['XPATH','//*[@id="table_cloudbroker_location_filter"]/label/input'],
+
+            'table_private_network_data':['ID','table_vfw_virtualfirewall'],
+            'table_private_network_info':['ID','table_vfw_virtualfirewall_info'],
+            'table_private_network_selector':['NAME','table_vfw_virtualfirewall_length', 0],
+            'table_private_network_pagination':['ID','table_vfw_virtualfirewall_paginate'],
+            'table_private_network_search_box':['XPATH','//*[@id="table_vfw_virtualfirewall_filter"]/label/input'],
+
+            'table_external_network_data':['ID','table_cloudbroker_externalnetwork'],
+            'table_external_network_info':['ID','table_cloudbroker_externalnetwork_info'],
+            'table_external_network_selector':['NAME','table_cloudbroker_externalnetwork_length', 0],
+            'table_external_network_pagination':['ID','table_cloudbroker_externalnetwork_paginate'],
+            'table_external_network_search_box':['XPATH','//*[@id="table_cloudbroker_externalnetwork_filter"]/label/input'],
+
+            'table_storge_routers_data':['ID','DataTables_Table_0'],
+            'table_storge_routers_info':['ID','DataTables_Table_0_info'],
+            'table_storge_routers_selector':['NAME','DataTables_Table_0_length', 0],
+            'table_storge_routers_pagination':['ID','DataTables_Table_0_paginate'],
+            'table_storge_routers_search_box':['XPATH','//*[@id="DataTables_Table_0_filter"]/label/input'],
+
+            'table_groups_data':['ID','DataTables_Table_0'],
+            'table_groups_info':['ID','DataTables_Table_0_info'],
+            'table_groups_selector':['NAME','DataTables_Table_0_length', 0],
+            'table_groups_pagination':['ID','DataTables_Table_0_paginate'],
+            'table_groups_search_box':['XPATH','//*[@id="DataTables_Table_0_filter"]/label/input'],
+
+            'snapshot_ok_button': ['XPATH', 'html/body/div[3]/form/div[3]/button[1]'],
             'storage_arrow': ['XPATH', 'html/body/div[1]/div/div[1]/div/nav/div/ul/li[5]/ul[1]/a[1]'],
             'user_delete_confirm': ['XPATH', ".//*[@id='action-Delete']/div/div[3]/button[2]"],
             'knowledge_base_header_label': ['XPATH',
@@ -313,7 +380,7 @@ elements = {'snapshot_ok_button': ['XPATH', 'html/body/div[3]/form/div[3]/button
             'knowledge_base_line3_tab_line5': ['XPATH',
                                                ".//*[@id='wrap']/div/tour/div[3]/div[2]/div/div/div/div[2]/p[11]"],
             'cloud_space_table_first_element_2': ['XPATH', ".//*[@id='table_cloudbroker_cloudspace']/tbody/tr/td[2]"],
-            'image_table_first_element_2': ['XPATH', ".//*[@id='table_cloudbroker_image']/tbody/tr/td[1]/a"],
+            'image_table_first_element': ['XPATH', ".//*[@id='table_cloudbroker_image']/tbody/tr/td[1]/a"],
             'virtual_machine_table_first_element': ['XPATH', ".//*[@id='table_cloudbroker_vmachine']/tbody/tr/td[1]/a"],
             'grid_sub_jq': ['XPATH', ".//*[@id='collapse-4']/li[4]/a"],
             'cloudspace_line1_label': ['XPATH', ".//*[@id='CloudSpace']/div[2]/ol/li[1]"],
@@ -695,6 +762,31 @@ elements = {'snapshot_ok_button': ['XPATH', 'html/body/div[3]/form/div[3]/button
             'navigation bar':['CLASS_NAME', 'breadcrumb', 0],
             'storagerouter search':['XPATH', '//*[@id="DataTables_Table_0_filter"]/label/input'],
             'vmachine paginate':['ID','table_cloudbroker_vmachine_paginate'],
+
+            'groups_action': ['XPATH', 'html/body/div[2]/div/div/div[1]/button'],
+            'groups_action_add_group':['XPATH','/html/body/div[2]/div/div/div[1]/ul/li/a'],
+            'groups_action_name': ['NAME', 'name', 0],
+            'groups_action_domain': ['NAME', 'domain', 0],
+            'groups_action_description': ['NAME', 'description', 0],
+            'groups_acrion_add_group_label':['ID', 'action-add_group_label'],
+            'groups_acrion_add_group_confirm':['XPATH', '//*[@id="action-AddGroup"]/div/div[3]/button[2]'],
+            'groups_table_first_element_name': ['XPATH', '//*[@id="DataTables_Table_0"]/tbody/tr[1]/td[1]/a'],
+            'group_action': ['XPATH', '/html/body/div[2]/div/div/div[1]/button'],
+            'group_action_edit_group':['XPATH','/html/body/div[2]/div/div/div[1]/ul/li[1]/a'],
+            'group_action_delete_group':['XPATH','/html/body/div[2]/div/div/div[1]/ul/li[2]/a'],
+            'group_acrion_delete_group_confirm':['XPATH', '//*[@id="action-Delete"]/div/div[3]/button[2]'],
+
+            'group_acrion_edit_domain':['NAME', 'domain', 0],
+            'group_acrion_edit_description':['NAME', 'description', 0],
+            'groups_acrion_edit_group_confirm':['XPATH', '//*[@id="group_edit"]/div/div[3]/button[2]'],
+
+            'group_page_name':['XPATH', '/html/body/div[2]/div/div/ul[2]/li[1]'],
+            'group_page_domain':['XPATH', '/html/body/div[2]/div/div/ul[2]/li[2]'],
+            'group_page_description':['XPATH', '/html/body/div[2]/div/div/ul[2]/li[3]'],
+            'stacks_table_first_element_id': ['XPATH', '//*[@id="table_cloudbroker_stack"]/tbody/tr[1]/td[1]/a'],
+            'stacks_table_first_element_name': ['XPATH', '//*[@id="table_cloudbroker_stack"]/tbody/tr/td[3]'],
+            'current_table_page':['CLASS_NAME', 'paginate_button active']
+
             'stack_table_pagination':['ID', 'table_cloudbroker_stack_paginate'],
             'machine_operations_loading':['ID', 'overlay-loader'],
             'create_user_dialog':['ID','createuser'],
@@ -707,4 +799,5 @@ elements = {'snapshot_ok_button': ['XPATH', 'html/body/div[3]/form/div[3]/button
             'delete_cloudspace_dialog':['ID','action-DeleteCloudSpace'],
             'delete_vm_dialog':['ID','action-Delete'],
             'edit_account_dialog':['ID','action-Edit']
+
             }

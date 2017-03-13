@@ -21,12 +21,18 @@ class images():
         else:
             return False
 
-    def open_image_page(self, image=''):
+    def open_image_page(self, image = None):
         self.LeftNavigationMenu.CloudBroker.Images()
+
+        if image == None:
+            table = self.framework.Tables.generate_table_elements('images')
+            random_image = self.framework.Tables.get_random_row_from_table(table)
+            image = random_image[0]
+
         self.framework.set_text("image_search", image)
-        self.framework.wait_until_element_located_and_has_text("image_table_first_element_2",
-                                                               image)
-        image_herf = self.framework.element_link("image_table_first_element_2")
-        image_id = image_herf[image_herf.find('?id=')+len('?id='):]
-        self.framework.click("image_table_first_element_2")
-        self.framework.element_in_url(image_id )
+        if self.framework.wait_until_element_located_and_has_text("image_table_first_element", image):
+            self.framework.click('image_table_first_element')
+            return True
+        else:
+            self.framework.lg('can\'t find image %s' % image)
+            return False
