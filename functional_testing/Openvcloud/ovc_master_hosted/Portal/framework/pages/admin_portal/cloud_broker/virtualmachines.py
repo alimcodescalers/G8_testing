@@ -54,6 +54,8 @@ class virtualmachines():
 
         self.framework.assertTrue(self.framework.check_element_is_exist('virtual machine search'),
                                   "FAIL: Can't create virtual machine")
+        self.framework.wait_until_element_attribute_has_text('create_vm_dialog', 'style', 'display: none;')
+        self.framework.get_page(self.framework.driver.current_url)
         self.framework.set_text('virtual machine search', machine_name)
         self.framework.wait_until_element_located_and_has_text("virtual_machine_table_first_element",
                                                                machine_name)
@@ -85,5 +87,13 @@ class virtualmachines():
         self.framework.click('virtual_machine_delete')
         self.framework.set_text('virtual_machine_delete_reason', "Test")
         self.framework.click("virtual_machine_delete_confirm")
-        self.framework.wait_until_element_located_and_has_text("virtual_machine_page_status",
-                                                               "DESTROYED")
+        self.framework.wait_until_element_attribute_has_text('delete_vm_dialog', 'style', 'display: none;')
+        self.framework.get_page(self.framework.driver.current_url)
+
+        for temp in range(10):
+            if self.framework.wait_until_element_located_and_has_text("virtual_machine_page_status", "DESTROYED"):
+                return True
+            else:
+                self.framework.get_page(self.framework.driver.current_url)
+        else:
+            self.framework.fail("Can't delete this '%s' vm")

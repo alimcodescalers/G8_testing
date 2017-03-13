@@ -663,7 +663,7 @@ elements = {
             'knowledge_base_line6_tab_image10': ['XPATH',
                                                  ".//*[@id='wrap']/div/tour/div[3]/div[2]/div/div/div/div[2]/p[20]/img"],
             'cloud_space_confirm': ['XPATH', ".//*[@id='create_space']/div/div[3]/button[2]"],
-            'virtual_machine_page_status': ['XPATH', 'html/body/div[2]/div/div/table[1]/tbody/tr[12]/td[2]'],
+            'virtual_machine_page_status': ['XPATH', 'html/body/div[2]/div/div/table[1]/tbody/tr[13]/td[2]'],
             'knowledge_base_line6_tab_image13': ['XPATH',
                                                  ".//*[@id='wrap']/div/tour/div[3]/div[2]/div/div/div/div[2]/p[26]/img"],
             'disk_size': ['XPATH', ".//*[@id='wrap']/div/tour/div[3]/div[2]/div/div/div/div[2]/div/div/div/div[6]/div/ul/li[%d]/button"],
@@ -845,6 +845,18 @@ elements = {
             'group_page_description':['XPATH', '/html/body/div[2]/div/div/ul[2]/li[3]'],
             'stacks_table_first_element_id': ['XPATH', '//*[@id="table_cloudbroker_stack"]/tbody/tr[1]/td[1]/a'],
             'stacks_table_first_element_name': ['XPATH', '//*[@id="table_cloudbroker_stack"]/tbody/tr/td[3]'],
-            'current_table_page':['CLASS_NAME', 'paginate_button active']
+            'current_table_page':['CLASS_NAME', 'paginate_button active'],
+            'stack_table_pagination':['ID', 'table_cloudbroker_stack_paginate'],
+            'machine_operations_loading':['ID', 'overlay-loader'],
+            'create_user_dialog':['ID','createuser'],
+            'create_account_dialog':['ID','createaccount'],
+            'create_cloudspace_dialog':['ID','create_space'],
+            'create_vm_dialog':['ID','createmachine'],
+
+            'delete_user_dialog':['ID','action-Delete'],
+            'delete_account_dialog':['ID','action-Delete'],
+            'delete_cloudspace_dialog':['ID','action-DeleteCloudSpace'],
+            'delete_vm_dialog':['ID','action-Delete'],
+            'edit_account_dialog':['ID','action-Edit']
 
             }

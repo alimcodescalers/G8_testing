@@ -32,8 +32,21 @@ def delete_accounts(accounts, options):
                         break
                     account = ccl.account.search({'name': '%s' % account['name'], 'id': account['id']})[1]
                     time.sleep(1)
+
+def clean_destroyed_resources(resource):
+    destroyed_res = resource.search({'status': 'DESTROYED'})
+    for res in destroyed_res:
+       if type(res) == int:
+          continue
+       else:
+          resource.delete(res['id'])
+
 users_list=[]
 if options.clean:
+    clean_destroyed_resources(ccl.account)
+    clean_destroyed_resources(ccl.cloudspace)
+    clean_destroyed_resources(ccl.vmachine)
+
     # if accounts with no users have been found make sure to delete them
     Nouser_accounts = ccl.account.search({'status': 'CONFIRMED', 'acl.userGroupId': ''})[1:]
     if Nouser_accounts:

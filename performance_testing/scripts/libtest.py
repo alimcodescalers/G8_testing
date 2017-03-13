@@ -91,7 +91,6 @@ def execute_async_ovc(ovc, function, **kwargs):
 
     def _run():
         taskguid = function(**kwargs)
-        print(taskguid)
         while True:
             gevent.sleep(0.5)
             result = ovc.api.system.task.get(taskguid=taskguid)

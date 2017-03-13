@@ -107,7 +107,7 @@ def main(options):
     # collecting results in csv file
     with open(os.path.join(results_dir, 'parameters.md'), 'w') as params:
         params.write("# Parameters\n\n")
-        for key, value in options.dict.itervalues():
+        for key, value in vars(options).items():
             params.write("- **{}**: {}\n".format(key, value))
     cwd = os.getcwd()
     j.do.copyFile('{}/1_fio_vms/collect_results.py'.format(options.testsuite), results_dir)
