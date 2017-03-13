@@ -1,6 +1,7 @@
 from random import randint
 from functional_testing.Openvcloud.ovc_master_hosted.Portal.framework.Navigation.left_navigation_menu import \
     leftNavigationMenu
+from datetime import datetime, timedelta,date
 import time
 class errorConditions():
     def __init__(self, framework):
@@ -11,6 +12,17 @@ class errorConditions():
         self.framework.LeftNavigationMenu.Grid.error_conditions()
         self.framework.assertTrue(self.framework.check_element_is_exist("error_conditions_page"))
 
+    def check_EC_table_headers(self,table):
+        table = self.framework.Tables.generate_table_elements(table)
+        heads=self.framework.get_table_head_elements(table['data'])
+        EC_heads=['Last Occurrence','Error Message','App name','Occurrences','Node ID','Grid ID']
+        elements=[]
+        for head in heads:
+            elements.append(head.text)
+        if elements != EC_heads:
+            self.framework.lg("error condition table heads %s not true "%elements)
+            return False
+        return True
 
     def open_EC_page(self, EC='',table=''):
         self.framework.LeftNavigationMenu.Grid.error_conditions()
@@ -104,6 +116,18 @@ class errorConditions():
         self.framework.assertEqual(str(self.tableData[12][0]),'Node')
         self.framework.assertEqual(str(self.tableData[13][0]),'Grid')
         self.framework.assertEqual(str(self.tableData[14][0]),'Tags')
+
+    def ECs_in_tables_after_purge(self,num_days):
+        date_days_ago = datetime.now() - timedelta(days=num_days)
+        date_days_ago = "{:%m/%d/%Y %H:%M }".format(date_days_ago)
+        print date_days_ago
+        self.framework.set_text("EC_table_date_end_search" ,date_days_ago)
+        self.framework.assertTrue(self.framework.wait_until_element_located('EC_table_date_click_button'))
+        self.framework.click("EC_table_date_click_button")
+        self.framework.assertTrue(self.framework.wait_until_element_located('table_ECs_info'))
+        ECs_info = self.framework.Tables.get_table_info('table_ECs_info')
+        ECs= int(ECs_info[ECs_info.index('f') + 2:ECs_info.index('en') - 1].replace(',', ''))
+        return ECs
 
     def get_cpu_node_page(self):
         self.framework.click_link(self.framework.element_link('EC_node_page'))
