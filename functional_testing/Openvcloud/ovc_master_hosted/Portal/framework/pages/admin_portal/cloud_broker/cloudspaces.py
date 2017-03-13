@@ -36,7 +36,8 @@ class cloudspaces():
         self.framework.set_text("cloud_space_user_name", account_username)
 
         self.framework.click("cloud_space_confirm")
-        time.sleep(3)
+        self.framework.wait_until_element_attribute_has_text('create_cloudspace_dialog', 'style', 'display: none;')
+        self.framework.get_page(self.framework.driver.current_url)
         self.framework.set_text("cloud_space_search", self.framework.cloud_space_name)
         self.framework.wait_until_element_located_and_has_text("cloud_space_table_first_element_2",
                                                                self.framework.cloud_space_name)
@@ -79,7 +80,7 @@ class cloudspaces():
 
             self.framework.set_text('cloudspace_delete_reason', "Test")
             self.framework.click("cloudspace_delete_confirm")
-            time.sleep(5)
+            self.framework.wait_until_element_attribute_has_text('delete_cloudspace_dialog', 'style', 'display: none;')
             self.framework.get_page(self.framework.driver.current_url)
             for temp in range(10):
                 if self.framework.wait_until_element_located_and_has_text("cloudspace_page_status", "DESTROYED"):

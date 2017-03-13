@@ -229,10 +229,10 @@ class UsersTestsB(BaseTest):
         data = {"emailaddress":new_email_address, "label":label}
         response = self.client_1.api.RegisterNewEmailAddress(data, self.user_1)
         self.assertEqual(response.status_code, 201)
-        time.sleep(20)
+        time.sleep(30)
         response = self.client_1.api.ValidateEmailAddress(label, self.user_1)
         self.assertEqual(response.status_code, 204)
-        time.sleep(20)
+        time.sleep(30)
         self.lg('Check the validation message & validate, should succeed with 200')
         response = self.UserValidateEmail()
         self.assertEqual(response.status_code, 200)

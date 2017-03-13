@@ -157,6 +157,12 @@ def main(options):
             results.append(['{} (id={})'.format(machines.get(machine_id, machine_id), machine_id), timestamp, score])
     collect_results(titles, results, results_dir, 'all-results')
 
+    # report results
+    with open(os.path.join(results_dir, 'parameters.md'), 'w') as params:
+        params.write("# Parameters\n\n")
+        for key, value in vars(options).items():
+            params.write("- **{}**: {}\n".format(key, value))
+
     # pushing results to env_repo
     location = options.environment.split('.')[0]
     push_results_to_repo(results_dir, location)
@@ -190,4 +196,3 @@ if __name__ == "__main__":
         gevent.signal(signal.SIGQUIT, gevent.kill)
         concurrency = BoundedSemaphore(options.concurrency)
         main(options)
-

@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 from gevent import monkey
 monkey.patch_all()
+from gevent.lock import BoundedSemaphore
 from optparse import OptionParser
 from libtest import execute_async_ovc
 import gevent

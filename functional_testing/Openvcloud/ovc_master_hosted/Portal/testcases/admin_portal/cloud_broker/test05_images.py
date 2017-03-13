@@ -173,7 +173,7 @@ class ImagesTests(Framework):
     def test08_search_boxes_in_VM_in_image_page_test(self,column):
         """ PRTL-048
         *Test case to make sure that search boxes of VM table in image page  are working as expected*
-
+        
         **Test Scenario:**
 
         #. go to images page.
@@ -191,3 +191,4 @@ class ImagesTests(Framework):
         self.assertTrue(self.Tables.check_search_box('machines',column))
         self.lg('try the search box in every column and verfiy it return the right value')
         self.assertTrue(self.Tables.check_data_filters('machines',column))
+

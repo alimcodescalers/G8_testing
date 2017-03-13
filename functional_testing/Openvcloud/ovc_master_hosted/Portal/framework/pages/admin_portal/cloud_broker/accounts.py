@@ -37,7 +37,8 @@ class accounts():
             self.framework.set_text("account_maxmemory", max_memory)
 
         self.framework.click("account_confirm")
-        time.sleep(5)
+        self.framework.wait_until_element_attribute_has_text('create_account_dialog', 'style', 'display: none;')
+        self.framework.get_page(self.framework.driver.current_url)
         self.framework.set_text("account_search", account)
         self.framework.wait_until_element_located_and_has_text("account_table_first_element", account)
 
@@ -80,8 +81,9 @@ class accounts():
 
         self.framework.driver.find_element_by_name(name).clear()
         self.framework.driver.find_element_by_name(name).send_keys(edit_value)
-
         self.framework.click('account_action_edit_page_confirm')
+        self.framework.wait_until_element_attribute_has_text('edit_account_dialog', 'style', 'display: none;')
+        self.framework.get_page(self.framework.driver.current_url)
 
     def account_edit_all_items(self, account):
         edit_items = ['account_edit_Name', 'account_edit_Max Memory Capacity', 'account_edit_Max VDisk Capacity', 'account_edit_Max Number of CPU Cores',
@@ -102,7 +104,7 @@ class accounts():
                 else:
                     return False
             else:
-                value = randint(1, 100)
+                value = randint(10, 100)
                 self.account_edit(self.framework.account, item, value)
                 xpath = self.framework.elements['account_action_page_items'][1] % edit_items.index(item)
                 try:
@@ -187,6 +189,8 @@ class accounts():
             self.framework.click('account_delete')
             self.framework.set_text('account_delete_reason', "Test")
             self.framework.click("account_delete_confirm")
+            self.framework.wait_until_element_attribute_has_text('delete_account_dialog', 'style', 'display: none;')
+            self.framework.get_page(self.framework.driver.current_url)
             self.framework.wait_until_element_located_and_has_text("account_page_status",
                                                                    "DESTROYED")
             self.framework.CLEANUP['accounts'].remove(account)

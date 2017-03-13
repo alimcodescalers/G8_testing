@@ -51,4 +51,9 @@ endtime=`date +%s`
 # Calculate results
 read -r -a start <<< "$start"
 read -r -a end <<< "$end"
-echo $(((${end[2]} - ${start[2]} + ${end[6]} - ${start[6]})/($endtime - $starttime)))
+seconds=$(($endtime - $starttime))
+if [ "0" != "$seconds" ]; then
+   echo $(((${end[2]} - ${start[2]} + ${end[6]} - ${start[6]})/($seconds)))
+else
+   echo 0
+fi
