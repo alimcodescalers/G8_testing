@@ -327,7 +327,6 @@ elements = {
             'grid_sub_ec': ['XPATH', ".//*[@id='collapse-4']/li[2]/a"],
             'table_ECs_info': ['ID', 'table_system_eco_info'],
             'table_EC_data':['ID','table_system_eco'],
-            'table_users_selector':['NAME','table_system_eco_length',0],
             'end_user_accounts_list': ['XPATH', ".//*[@id='accordion']/div[%d]/div[1]/h4/a"],
             'knowledge_base_line6_tab_image12': ['XPATH',
                                                  ".//*[@id='wrap']/div/tour/div[3]/div[2]/div/div/div/div[2]/p[24]/img"],
