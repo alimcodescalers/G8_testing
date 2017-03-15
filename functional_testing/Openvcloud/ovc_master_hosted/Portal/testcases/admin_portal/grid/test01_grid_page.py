@@ -52,10 +52,7 @@ class GridTests(Framework):
         self.assertTrue(self.Grid.is_at())
         self.assertTrue(self.Grid.open_grid_status_Overview())
         self.lg("check that all nodes running well from alert element in grid page")
-        #skip " Issue in env "
-        #self.assertEqual(self.get_text("grid_alert","Every thing is Ok")
 
-    #@unittest.skip("https://github.com/0-complexity/openvcloud/issues/759")
     def test002_Running_VM_gauge(self):
         """
         Prtl-000

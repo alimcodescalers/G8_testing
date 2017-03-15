@@ -181,12 +181,14 @@ class BaseTest(unittest.TestCase):
                 self.lg(" * Can't locate the left menu. Error : %s" % error)
                 time.sleep(2)
 
+
     def open_base_page(self, menu_item='', sub_menu_item=''):
         self.get_page(self.base_page)
         self.check_side_list()
         self.click(menu_item)
-        self.check_side_list()
-        self.click(sub_menu_item)
+        if sub_menu_item != '':
+            self.check_side_list()
+            self.click(sub_menu_item)
 
     def get_page(self, page_url):
         try:
@@ -223,6 +225,18 @@ class BaseTest(unittest.TestCase):
                 return True
             except:
                 time.sleep(1)
+        else:
+            return False
+
+    def wait_until_table_element_has_text(self, element,row,column,text):
+        for temp in range(10):
+            table = self.find_element(element)
+            tbody = table.find_elements_by_tag_name('tbody')
+            table_elements = tbody[0].find_elements_by_tag_name('tr')
+            Row=table_elements[row].find_elements_by_tag_name('td')
+            if Row[column].text == text :
+                return True
+            time.sleep(2)
         else:
             return False
 
