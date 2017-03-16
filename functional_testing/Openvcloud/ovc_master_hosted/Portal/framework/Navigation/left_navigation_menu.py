@@ -66,6 +66,9 @@ class Grid():
     def vmachin_grid(self):
         self.framework.open_base_page("grid_arrow","vmachine_grid")
 
+    def Jobs(self):
+        self.framework.open_base_page("grid_arrow","job_page")
+
 
 
 class Storage():
