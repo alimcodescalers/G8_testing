@@ -42,11 +42,11 @@ class tables():
 
     def get_table_start_number(self, table_info):
         account_info = self.get_table_info(table_info)
-        return int(account_info[(account_info.index('g') + 2):(account_info.index('to') - 1)])
+        return int(account_info[(account_info.index('g') + 2):(account_info.index('to') - 1)].replace(',',''))
 
     def get_table_end_number(self, table_info):
         account_info = self.get_table_info(table_info)
-        return int(account_info[(account_info.index('to') + 3):(account_info.index('of') - 1)])
+        return int(account_info[(account_info.index('to') + 3):(account_info.index('of') - 1)].replace(',',''))
 
     def get_table_max_number(self, table_info):
         account_info = self.get_table_info(table_info)
@@ -111,24 +111,29 @@ class tables():
 
     def check_next_previous_buttons(self, table):
         table = self.generate_table_elements(table)
+        max_sort_value = 100
+        self.framework.select(table['selector'] , max_sort_value)
+        if not self.wait_until_table_reload(table, 0, max_sort_value):
+            self.framework.lg('Error while waiting table to reload')
+            return False
         rows_max_number = self.get_table_max_number(table['info'])
-        pages_number = math.ceil(rows_max_number/10.0)
+        pages_number = math.ceil(rows_max_number/100.0)
         for page in range(int(pages_number)-1):
             page_start_number = self.get_table_start_number(table['info'])
             page_end_number = self.get_table_end_number(table['info'])
             previous_button, next_button = self.get_previous_next_button(table['pagination'])
             next_button.click()
-            if not self.wait_until_table_reload(table, page+1, 10):
+            if not self.wait_until_table_reload(table, page+1, max_sort_value):
                 self.framework.lg('Error while waiting table to reload after next_1')
                 return False
             previous_button, next_button = self.get_previous_next_button(table['pagination'])
             previous_button.click()
-            if not self.wait_until_table_reload(table, page, 10):
+            if not self.wait_until_table_reload(table, page, max_sort_value):
                 self.framework.lg('Error while waiting table to reload after previous')
                 return False
             previous_button, next_button = self.get_previous_next_button(table['pagination'])
             next_button.click()
-            if not self.wait_until_table_reload(table, page+1, 10):
+            if not self.wait_until_table_reload(table, page+1, max_sort_value):
                 self.framework.lg('Error while waiting table to reload after next_2')
                 return False
 
@@ -183,34 +188,41 @@ class tables():
             self.framework.lg('coulmn %s passed' % current_column)
         return True
 
-    def check_search_box(self, table, column_name):
+    def check_search_box(self, table, column_name,random_element=None):
         table = self.generate_table_elements(table)
         table_head_elements = self.framework.get_table_head_elements(table['data'])
+        if table_head_elements == False:
+            self.framework.lg("can't get table head elements ")
+            return False
+
         table_columns = [x.text for x in table_head_elements]
         try:
             column_index = table_columns.index(column_name)
         except ValueError:
             self.framework.lg('table has not column %s' % column_name)
             return False
+        if random_element ==None:
 
-        random_row = self.get_random_row_from_table(table)
+            random_row = self.get_random_row_from_table(table)
+            if str(random_row[0]) == 'No data available in table':
+                self.framework.lg('table is empty')
+                return True
+            random_element=random_row[column_index]
+
         info_table_before = self.framework.get_text(table['info'])
-        if str(random_row[0]) == 'No data available in table':
-            self.framework.lg('table is empty')
-            return True
-        self.framework.set_text(table['search_box'],random_row[column_index])
+        self.framework.set_text(table['search_box'],random_element)
         time.sleep(5)
         first_row_after = self.framework.get_table_row(table,0)
-        if not any(random_row[column_index] in s for s in first_row_after):
+        if not any(random_element in s for s in first_row_after):
             self.framework.lg('searching for value in calumn %s doesn\'t work as expected' % column_name)
             return False
         self.framework.clear_text(table['search_box'])
         if not self.framework.wait_until_element_located_and_has_text(table['info'], info_table_before):
-            self.framework.lg("table doesn't update table before search %s and after %s"%(self.framework.get_text(table['info']),info_table_before))
+            self.framework.lg("table doesn't update table after search %s and before %s"%(self.framework.get_text(table['info']),info_table_before))
             return False
         return True
 
-    def check_data_filters(self, table, column_name):
+    def check_data_filters(self, table, column_name,random_element=None):
         table = self.generate_table_elements(table)
         table_head_elements = self.framework.get_table_head_elements(table['data'])
         table_columns = [x.text for x in  table_head_elements]
@@ -220,21 +232,22 @@ class tables():
             self.framework.lg('table has not column %s' % column_name)
             return False
 
-        random_row = self.get_random_row_from_table(table)
-        if str(random_row[0]) == 'No data available in table':
-            self.framework.lg('table is empty')
-            return True
-
+        if random_element==None:
+            random_row = self.get_random_row_from_table(table)
+            if str(random_row[0]) == 'No data available in table':
+                self.framework.lg('table is empty')
+                return True
+            random_element=random_row[column_index]
         table_data = self.framework.find_element(table['data'])
         footer = table_data.find_element_by_tag_name('tfoot')
         items = footer.find_elements_by_tag_name('td')
         if 'nofilter' in table_head_elements[column_index].get_attribute('class'):
             return True
         current_filter = items[column_index].find_elements_by_tag_name('input')[0]
-        current_filter.send_keys(random_row[column_index])
+        current_filter.send_keys(random_element)
         time.sleep(5)
         first_row_after = self.framework.get_table_row(table,0)
-        if not (random_row[column_index] in first_row_after[column_index]):
+        if not (random_element in first_row_after[column_index]):
             return False
         current_filter.clear()
         return True
