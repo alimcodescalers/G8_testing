@@ -74,7 +74,7 @@ class StatusTests(Framework):
 
         self.lg('%s STARTED' % self._testID)
         self.lg('try paging from the available page numbers and verify it should succeed')
-        self.assertTrue(self.Tables.check_show_list('Status_overview'))
+        self.assertTrue(self.Tables.check_next_previous_buttons('Status_overview'))
         self.lg('%s ENDED' % self._testID)
 
 
