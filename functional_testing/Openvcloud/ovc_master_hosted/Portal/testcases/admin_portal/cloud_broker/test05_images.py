@@ -154,7 +154,7 @@ class ImagesTests(Framework):
             self.assertTrue(self.set_text_columns("image_table_element_search" ,table_before[random_elemn][column], column+1))
             time.sleep(1)
             table_after1=self.Tables.get_table_data('table cloudbroker image info')
-            self.assertEqual(table_after1[0][column],table_before[random_elemn][column])
+            self.assertTrue(table_before[random_elemn][column] in table_after1[0][column])
             self.assertTrue(self.clear_text_columns("image_table_element_search",column+1))
 
 
@@ -393,7 +393,7 @@ class ImagesTests(Framework):
                 self.assertTrue(self.set_text_columns("stack_table_element_search" ,table_before[random_elemn][column], column+1 ))
                 table_after1=self.Tables.get_table_data('table cloudbroker stack info', pagination='stack_table_pagination')
                 self.assertFalse( 'No data available in table' in table_after1[0] )
-                self.assertEqual(table_after1[0][column],table_before[random_elemn][column])
+                self.assertTrue(table_before[random_elemn][column] in table_after1[0][column])
                 self.assertTrue(self.clear_text_columns("stack_table_element_search",column+1))
 
         self.lg('-try search boxes in VM table')
@@ -425,5 +425,5 @@ class ImagesTests(Framework):
             for column in range(columns) :
                 self.set_text_columns("VM_table_element_search" ,table_before_VM[random_elemn][column], column+1 )
                 table_after1=self.Tables.get_table_data('table cloudbroker vmachine info','VM_table selector','table cloudbroker vmachine', pagination='VM_table_pagination')
-                self.assertEqual(table_after1[0][column],table_before_VM[random_elemn][column])
+                self.assertTrue(table_before_VM[random_elemn][column] in table_after1[0][column])
                 self.clear_text_columns("VM_table_element_search",column+1)
