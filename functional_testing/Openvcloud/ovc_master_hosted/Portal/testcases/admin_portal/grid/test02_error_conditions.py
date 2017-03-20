@@ -13,7 +13,6 @@ class GridTests(Framework):
 
 
     def test001_error_condition_page(self):
-
         """ PRTL-021
         *Test case for checking error condition page in the admin portal*
 
@@ -33,7 +32,7 @@ class GridTests(Framework):
         self.assertEqual(self.get_navigation_bar('navigation bar'),EC_headers)
         self.lg('check page title')
         self.assertEqual(self.get_page_titles(),EC_titles)
-        self.assertTrue(self.ErrorConditions.check_EC_table_headers('ECs'))
+        self.assertTrue(self.ErrorConditions.check_EC_table_heads('ECs'))
         self.lg('click action button then click on purge')
         self.click('ec_action_button')
         self.click('purge_button')
@@ -103,7 +102,7 @@ class GridTests(Framework):
         self.lg('try the search box in every column and verfiy it return the right value')
         self.assertTrue(self.Tables.check_data_filters('ECs',column ))
 
-    def test01_specific_Ec_page(self):
+    def test005_specific_Ec_page(self):
         """ PRTL-053
         *Test case to make sure that element on EC page are working as expected*
 
@@ -147,7 +146,7 @@ class GridTests(Framework):
         self.assertTrue(self.ErrorConditions.get_cpu_node_page())
 
     @unittest.skip('https://github.com/0-complexity/openvcloud/issues/774')
-    def test02_get_job_from_Ec_page(self):
+    def test006_get_job_from_Ec_page(self):
         """ PRTL-054
         *Test case to make sure that element on EC page are working as expected*
 

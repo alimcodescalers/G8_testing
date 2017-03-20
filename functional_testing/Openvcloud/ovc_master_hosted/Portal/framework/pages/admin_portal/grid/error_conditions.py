@@ -12,7 +12,7 @@ class errorConditions():
         self.framework.LeftNavigationMenu.Grid.error_conditions()
         self.framework.assertTrue(self.framework.check_element_is_exist("error_conditions_page"))
 
-    def check_EC_table_headers(self,table):
+    def check_EC_table_heads(self,table):
         table = self.framework.Tables.generate_table_elements(table)
         heads=self.framework.get_table_head_elements(table['data'])
         EC_heads=['Last Occurrence','Error Message','App name','Occurrences','Node ID','Grid ID']
@@ -81,7 +81,8 @@ class errorConditions():
     def Error_Condition_details_table(self):
         self.table=[]
         table_rows= self.framework.get_table_rows('EC_detail_table')
-        self.framework.assertEqual(len(table_rows),15)
+        if len(table_rows)!=15:
+            return False
         for row in table_rows:
             cells = row.find_elements_by_tag_name('td')
             self.table.append([x.text for x in cells])
@@ -100,27 +101,21 @@ class errorConditions():
 
     def check_exist_of_EC_elements(self):
         self.tableData=self.Error_Condition_details_table()
-        self.framework.assertEqual(str(self.tableData[0][0]),'Application Name')
-        self.framework.assertEqual(str(self.tableData[1][0]),'Category')
-        self.framework.assertEqual(str(self.tableData[2][0]),'Job')
-        self.framework.assertEqual(str(self.tableData[3][0]),'Type')
-        self.framework.assertEqual(str(self.tableData[4][0]),'Level')
-        self.framework.assertEqual(str(self.tableData[5][0]),'Creation Time')
-        self.framework.assertEqual(str(self.tableData[6][0]),'Last Time')
-        self.framework.assertEqual(str(self.tableData[7][0]),'Occurrences')
-        self.framework.assertEqual(str(self.tableData[8][0]),'Error Message Pub')
-        self.framework.assertEqual(str(self.tableData[9][0]),'Function Name')
-        self.framework.assertEqual(str(self.tableData[10][0]),'Function Line Number')
-        self.framework.assertEqual(str(self.tableData[11][0]),'Function File Name')
-        self.framework.assertEqual(str(self.tableData[11][0]),'Function File Name')
-        self.framework.assertEqual(str(self.tableData[12][0]),'Node')
-        self.framework.assertEqual(str(self.tableData[13][0]),'Grid')
-        self.framework.assertEqual(str(self.tableData[14][0]),'Tags')
+        if self.tableData == False:
+            self.framework.lg('can\'t get table details of job page')
+            return False
+        EC_elements=['Application Name','Category','Job','Type','Level','Creation Time','Last Time','Occurrences','Error Message Pub','Function Name','Function Line Number','Function File Name','Node','Grid','Tags']
+        for i,element in enumerate(EC_elements):
+            if str(self.tableData[i][0])==element:
+                return True
+            else:
+                self.framework.lg("wrong EC table page elements ")
+                return False
+
 
     def ECs_in_tables_after_purge(self,num_days):
         date_days_ago = datetime.now() - timedelta(days=num_days)
         date_days_ago = "{:%m/%d/%Y %H:%M }".format(date_days_ago)
-        print date_days_ago
         self.framework.set_text("EC_table_date_end_search" ,date_days_ago)
         self.framework.assertTrue(self.framework.wait_until_element_located('EC_table_date_click_button'))
         self.framework.click("EC_table_date_click_button")
