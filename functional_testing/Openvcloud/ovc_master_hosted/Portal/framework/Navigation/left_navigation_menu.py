@@ -69,7 +69,20 @@ class Grid():
     def Jobs(self):
         self.framework.open_base_page("grid_arrow","job_page")
 
+    def Audits(self):
+        self.framework.open_base_page("grid_arrow","Audits_page")
 
+    def Grid_nodes(self):
+        self.framework.open_base_page("grid_arrow","grid_nodes_page")
+
+    def Logs(self):
+        self.framework.open_base_page("grid_arrow","Logs_page")
+
+    def Jumpscripts(self):
+        self.framework.open_base_page("grid_arrow","JumpScripts_page")
+
+    def JobQueues(self):
+        self.framework.open_base_page("grid_arrow","Job Queues")
 
 class Storage():
 

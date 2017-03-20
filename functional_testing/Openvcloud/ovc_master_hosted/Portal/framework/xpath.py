@@ -89,6 +89,24 @@ elements = {
             'table_jobs_pagination':['ID','table_system_job_paginate'],
             'table_jobs_search_box':['XPATH','//*[@id="table_system_job_filter"]/label/input'],
 
+            'table_joblogs_data':['ID','table_system_log'],
+            'table_joblogs_info':['ID','table_system_log_info'],
+            'table_joblogs_selector':['NAME','table_system_log_length',0],
+            'table_joblogs_pagination':['ID','table_system_log_paginate'],
+            'table_joblogs_search_box':['XPATH','//*[@id="table_system_log_filter"]/label/input'],
+
+            'table_Audits_data':['ID','table_system_audit'],
+            'table_Audits_info':['ID','table_system_audit_info'],
+            'table_Audits_selector':['NAME','table_system_audit_length',0],
+            'table_Audits_pagination':['ID','table_system_audit_paginate'],
+            'table_Audits_search_box':['XPATH','//*[@id="table_system_audit_filter"]/label/input'],
+
+            'table_logs_data':['ID','table_system_log'],
+            'table_logs_info':['ID','table_system_log_info'],
+            'table_logs_selector':['NAME','table_system_log_length',0],
+            'table_logs_pagination':['ID','table_system_log_paginate'],
+            'table_logs_search_box':['XPATH','//*[@id="table_system_log_filter"]/label/input'],
+
             'table_Status_overview_node_name':['XPATH','//*[@id="DataTables_Table_0"]/tbody/tr[1]/td[3]'],
             'table_Status_overview_details':['XPATH','//*[@id="DataTables_Table_0"]/tbody/tr[1]/td[5]/a'],
             'EC_table_first_element_1':['XPATH','//*[@id="table_system_eco"]/tbody/tr[1]/td[1]/a'],
@@ -163,6 +181,11 @@ elements = {
             'error_conditions': ['XPATH', ".//*[@id='collapse-4']/li[2]/a"],
             'grid_page':['LINK_TEXT','Grid'],
             'job_page':['LINK_TEXT','Jobs'],
+            'Audits_page':['LINK_TEXT','Audits'],
+            'Logs_page':['LINK_TEXT','Logs'],
+            'grid_nodes_page':['LINK_TEXT','Grid Nodes'],
+            'JumpScripts_page':['LINK_TEXT','JumpScripts'],
+            'jobQueues_page':['LINK_TEXT','Job Queues'],
             'status_overview':['XPATH', ".//*[@id='collapse-4']/li[8]/a"],
             'vmachine_grid':['LINK_TEXT','Virtual Machines'],
             'Vmachine_grid_table':['ID','table_system_machine'],
@@ -445,10 +468,31 @@ elements = {
             'stack_table_element_search':['XPATH', ".//*[@id='table_cloudbroker_stack']/tfoot/td[%d]/input"],
             'VM_table_element_search':['XPATH', ".//*[@id='table_cloudbroker_vmachine']/tfoot/td[%d]/input"],
             'VM_grid_table_element_search':['XPATH', '//*[@id="table_system_machine"]/tfoot/td[%d]/input'],
+
+            'table_date_click_button':['CLASS_NAME','ui-datepicker-close',0],
+            'table_date_click_button':['CLASS_NAME','ui-datepicker-close',0],
+
+
             'EC_table_date_start_search':['CLASS_NAME','datatables_filter',0],
             'EC_table_date_end_search':['CLASS_NAME','datatables_filter',1],
             'EC_table_date_click_button':['CLASS_NAME','ui-datepicker-close',0],
+
+            'job_table_date_end_search':['CLASS_NAME','datatables_filter',1],
+            'job_table_date_click_button':['CLASS_NAME','ui-datepicker-close',0],
+            'job_first_element_command_column':['XPATH','//*[@id="table_system_job"]/tbody/tr[1]/td[4]'],
+            'job_first_element_createtime_column':['XPATH','//*[@id="table_system_job"]/tbody/tr[1]/td[1]/a'],
+            'job_details_table':['CLASS_NAME','table-condensed',0],
+            'job_addition_table':['CLASS_NAME','table-condensed',1],
+            'job_node_page':['XPATH','/html/body/div[2]/div/div/table[1]/tbody/tr[2]/td[2]/a'],
+            'job_jumpscript_page':['XPATH','/html/body/div[2]/div/div/table[1]/tbody/tr[4]/td[2]/a'],
             'action_purge_select': ['XPATH', ".//*[@id='action-Purge']/div/div[2]/div[3]/div/select"],
+
+            'Audit_first_element_call_column':['XPATH','//*[@id="table_system_audit"]/tbody/tr[1]/td[3]'],
+            'Audit_first_element_time_column':['XPATH','//*[@id="table_system_audit"]/tbody/tr[1]/td[1]/a'],
+            'Audit_details_table':['CLASS_NAME','table-condensed',0],
+
+            'logs_table_date_end_search':['CLASS_NAME','datatables_filter',1],
+
             'knowledge_base_line2_tab_line8_sub2': ['XPATH',
                                                     ".//*[@id='wrap']/div/tour/div[3]/div[2]/div/div/div/div[2]/ol/ol[2]/li[2]"],
             'knowledge_base_line3_tab_header': ['XPATH',
@@ -573,7 +617,7 @@ elements = {
             'end_user_machine_name': ['XPATH', ".//*[@id='wrap']/div/tour/div[3]/div[2]/div/div/div/div[2]/div[2]/h1"],
             'actions_tab': ['XPATH', ".//*[@id='actions']/a"],
             'ec_action_button': ['CLASS_NAME','dropdown-toggle',1],
-            'job_action_button': ['CLASS_NAME','dropdown-toggle',1],
+            'action_button': ['CLASS_NAME','dropdown-toggle',1],
             'knowledge_base_line1_tab_line2': ['XPATH',
                                                ".//*[@id='wrap']/div/tour/div[3]/div[2]/div/div/div/div[2]/ol/li[2]"],
             'system_arrow': ['XPATH', 'html/body/div[1]/div/div[1]/div/nav/div/ul/li[6]/ul[1]/a[1]'],
@@ -711,6 +755,9 @@ elements = {
             'cloudbroker': ['XPATH', 'html/body/div[1]/div/div[1]/div/nav/div/ul/li[2]/ul[1]/a[1]'],
             'system_sub_sm': ['XPATH', ".//*[@id='collapse-6']/li[3]/a"],
             'login_button': ['XPATH', "//button[@type='submit']"],
+
+            'job_purge_button':['XPATH','//*[@id="actions_table_system_job"]/ul/li/a'],
+            'log_purge_button':['XPATH','//*[@id="actions_table_system_log"]/ul/li/a'],
             'purge_button': ['XPATH', '//*[@id="actions_table_system_eco"]/ul/li/a'],
             'intro_subheader_label': ['XPATH', ".//*[@id='wrap']/div/tour/div[3]/div[2]/div/div/div/div[2]/h2"],
             'virtual_machine_action': ['XPATH', 'html/body/div[2]/div/div/div[1]/button'],

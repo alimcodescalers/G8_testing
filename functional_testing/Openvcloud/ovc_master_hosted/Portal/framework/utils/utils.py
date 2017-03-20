@@ -483,7 +483,6 @@ class BaseTest(unittest.TestCase):
         # This method return a table head elements.
         for _ in range(10):
             try:
-
                 table = self.find_element(element)
                 thead = table.find_elements_by_tag_name('thead')
                 thead_row = thead[0].find_elements_by_tag_name('tr')
@@ -491,7 +490,6 @@ class BaseTest(unittest.TestCase):
             except:
                 time.sleep(0.5)
         else:
-
             return False
 
     def maximize_window(self):
