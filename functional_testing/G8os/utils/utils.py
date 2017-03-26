@@ -1,27 +1,31 @@
 import g8core
 import unittest
-
-
-#cl = g8core.Client('172.17.0.2')
-
-
-class Client:
-    def __init__(self, ip):
-        self.client = g8core.Client(ip)
+import time
+import uuid
+import logging 
+from testconfig import config
+import configparser 
 
 
 class BaseTest(unittest.TestCase):
     def __init__(self, *args, **kwargs):
-        ip = '172.17.0.2'
-        self.client = Client(ip)
-        import ipdb; ipdb.set_trace()
+        config = configparser.ConfigParser()
+        config.read('config.ini')
+        self.target_ip = config['main']['target_ip']
+        self.client  = g8core.Client(self.target_ip)
         super(BaseTest, self).__init__(*args, **kwargs)
 
-    def setup(self):
+    def setUp(self):
         self._testID = self._testMethodName
         self._startTime = time.time()
-        self._logger = logging.LoggerAdapter(logging.getLogger('openvcloud_testsuite'),
+        self._logger = logging.LoggerAdapter(logging.getLogger('g8os_testsuite'),
                                              {'testid': self.shortDescription() or self._testID})
 
     def teardown(self):
         pass
+
+    def lg(self, msg):
+        self._logger.info(msg)
+
+    def rand_str(self):
+        return str(uuid.uuid4()).replace('-','')[1:10]
