@@ -29,3 +29,25 @@ class BaseTest(unittest.TestCase):
 
     def rand_str(self):
         return str(uuid.uuid4()).replace('-','')[1:10]
+
+    def get_process_id(self, cmd, match):
+        """
+        Get the id of certain process
+        :param cmd: command used by the client (same as the command in process.list) ex: 'core.system'
+        :param match: string to match intended command. ex: 'sleep 300'
+        """
+        time.sleep(3)
+        processes = self.client.process.list()
+        for p in processes:
+           if p['cmd']['command'] == cmd:
+              if cmd == 'core.system':
+                 if p['cmd']['arguments']['name'] == match:
+                    return p['cmd']['id']
+              if cmd == 'bash':
+                 if p['cmd']['arguments']['script'] == match:
+                    return p['cmd']['id']
+        return
+
+    def stdout(self, resource):
+        return resource.get().stdout.replace('\n', '').lower()
+
