@@ -82,10 +82,10 @@ class BasicTests(BaseTest):
 
             self.lg('{} ENDED'.format(self._testID))
 
-    def test003_os_mem_info(self):
+    def test003_os_info(self):
 
         """ g8os-003
-        *Test case for checking on the memory and os information*
+        *Test case for checking on the system os information*
 
         **Test Scenario:**
         #. Get the os information using g8os client
@@ -110,4 +110,43 @@ class BasicTests(BaseTest):
         
         self.lg('{} ENDED'.format(self._testID))
 
-        
+    def test004_mem_info(self):
+
+        """ g8os-004
+        *Test case for checking on the system memory information*
+
+        **Test Scenario:**
+        #. Get the memory information using g8os client
+        #. Get the info using bash and compare it to that of g8os client(write detailed scenario here)
+        """
+
+    def test005_cpu_info(self):
+
+        """ g8os-005
+        *Test case for checking on the system CPU information*
+
+        **Test Scenario:**
+        #. Get the CPU information using g8os client
+        #. Get the info using bash and compare it to that of g8os client(write detailed scenario here)
+        """
+
+    def test006_disk_info(self):
+
+        """ g8os-006
+        *Test case for checking on the disks information*
+
+        **Test Scenario:**
+        #. Get the disks information using g8os client
+        #. Get the info using bash and compare it to that of g8os client(write detailed scenario here)
+        """
+
+    def test007_nic_info(self):
+
+        """ g8os-007
+        *Test case for checking on the system nic information*
+
+        **Test Scenario:**
+        #. Get the nic information using g8os client
+        #. Get the info using bash and compare it to that of g8os client(write detailed scenario here)
+        """
+
