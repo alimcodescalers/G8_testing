@@ -150,3 +150,30 @@ class BasicTests(BaseTest):
         #. Get the info using bash and compare it to that of g8os client(write detailed scenario here)
         """
 
+    def test008_create_destroy_list_kvm(self):
+        """ g8os-008
+        *Test case for testing creating, listing and destroying VMs*
+
+        **Test Scenario:**
+        #. Create virtual machine (VM1), should succeed
+        #. List all virtual machines and check that VM1 is there
+        #. Create another virtual machine with the same kvm domain, should fail
+        #. Destroy VM1, should succeed
+        #. List the virtual machines, VM1 should be gone
+        #. Destroy VM1 again, should fail
+        """
+
+    def test009_create_list_delete_containers(self):
+        """ g8os-009
+        *Test case for testing creating, listing and deleting containers*
+
+        **Test Scenario:**
+        #. Create a new container (C1), should succeed
+        #. List all containers and check that C1 is there
+        #. Get client, execute command and check on the result (write more details)
+        #. Destroy C1, should succeed
+        #. List the containers, C1 should be gone
+        #. Destroy C1 again, should fail
+        """ 
+
+
