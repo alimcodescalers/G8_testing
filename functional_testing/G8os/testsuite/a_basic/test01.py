@@ -176,4 +176,32 @@ class BasicTests(BaseTest):
         #. Destroy C1 again, should fail
         """ 
 
+    def test010_join_leave_list_zerotier(self):
+        """ g8os-010
+        *Test case for testing joining, listing, leaving zerotier networks*
+
+        **Test Scenario:**
+        #. Join zerotier network (N1), should succeed
+        #. List zerotier network
+        #. Leave zerotier network (N1),should succeed
+        #. List zerotier networks, N1 should be gone 
+        #. Leave zerotier network (N1), should fail
+        #. ref: https://www.zerotier.com/manual.shtml .. please all possible missing steps .. also add extended scenario to test zerotier functionality
+        """
+
+    def test011_create_delete_list_bridges(self):
+        """ g8os-011
+        *Test case for testing creating, listing, deleting bridges*
+
+        **Test Scenario:**
+        #. Create bridge (B1), should succeed 
+        #. List  bridges, B1 should be listed 
+        #. Delete bridge B1, should succeed
+        #. List bridges, B1 should be gone
+        #. Delete bridge B1, should fail
+        .... please add extended scenario to test bridges functionality 
+        """
+
+
+ 
 
