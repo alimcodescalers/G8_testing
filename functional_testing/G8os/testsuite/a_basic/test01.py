@@ -167,6 +167,14 @@ class BasicTests(BaseTest):
         #. Get the nic information using g8os client
         #. Get the info using bash and compare it to that of g8os client(write detailed scenario here)
         """
+        self.lg('get nic info using linux bash command ip a')
+        expected_nic_info = self.getNicInfo()
+        self.lg('get nic info using g8os client')
+        g8os_nic_info = self.client.info.nic()
+        params_to_check = ['name', 'addrs','mtu', 'hardwareaddr']
+        for i in range(len(expected_nic_info)-1):
+                for param in params_to_check:
+                        self.assertEqual(expected_nic_info[i][param], g8os_nic_info[i][param])
 
     def test008_create_destroy_list_kvm(self):
         """ g8os-008

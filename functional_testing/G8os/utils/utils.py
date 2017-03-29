@@ -93,5 +93,25 @@ class BaseTest(unittest.TestCase):
                  diskInfo['opts'].append(line[5][1:-1])
 
         return diskInfo
-                
+ 
+    def getNicInfo(self):
+         r = self.client.bash('ip -br a').get().stdout
+         nics = [x.split()[0] for x in r.splitlines()]
+         nicInfo = []
+         for nic in nics:
+                 if '@' in nic:
+                       nic = nic[:nic.index('@')]
+                 addrs = self.client.bash('ip -br a | grep -E "{}"'.format(nic)).get().stdout.splitlines()[0].split()[2:]
+                 mtu = int(self.stdout(self.client.bash('cat /sys/class/net/{}/mtu'.format(nic))))
+                 hardwareaddr = self.stdout(self.client.bash('cat /sys/class/net/{}/address'.format(nic)))
+                 if hardwareaddr == '00:00:00:00:00:00':
+                        hardwareaddr = ''
+                 tmp = {"name":nic, "hardwareaddr":hardwareaddr, "mtu":mtu, "addrs":[{"addr":x} for x in addrs]}
+                 nicInfo.append(tmp)
+         return nicInfo
+
+ 
+   
+
+
 
