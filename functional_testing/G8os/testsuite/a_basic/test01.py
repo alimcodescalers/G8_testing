@@ -9,6 +9,82 @@ class BasicTests(BaseTest):
     def setUp(self):
         super(BasicTests, self).setUp()
 
+    def getNicInfo(self):
+        r = self.client.bash('ip -br a').get().stdout
+        nics = [x.split()[0] for x in r.splitlines()]
+        nicInfo = []
+        for nic in nics:
+            if '@' in nic:
+                nic = nic[:nic.index('@')]
+            addrs = self.client.bash('ip -br a | grep -E "{}"'.format(nic)).get().stdout.splitlines()[0].split()[2:]
+            mtu = int(self.stdout(self.client.bash('cat /sys/class/net/{}/mtu'.format(nic))))
+            hardwareaddr = self.stdout(self.client.bash('cat /sys/class/net/{}/address'.format(nic)))
+            if hardwareaddr == '00:00:00:00:00:00':
+                    hardwareaddr = ''
+            tmp = {"name":nic, "hardwareaddr":hardwareaddr, "mtu":mtu, "addrs":[{"addr":x} for x in addrs]}
+            nicInfo.append(tmp)
+
+        return nicInfo
+
+    def getCpuInfo(self):
+        lines = self.client.bash('cat /proc/cpuinfo').get().stdout.splitlines()
+        cpuInfo = { 'vendorId':[], 'family':[], 'stepping':[], 'cpu':[], 'coreId':[],'model':[],
+                    'cacheSize':[], 'mhz':[], 'cores':[], 'flags':[], 'modelName':[], 'physicalId':[]}
+
+        mapping = { "vendor_id":"vendorId", "cpu family":"family", "processor":"cpu", "core id":"coreId",
+                    "cache size":"cacheSize", "cpu MHz":"mhz", "cpu cores":"cores", "model name":"modelName",
+                    "physical id":"physicalId", "stepping":"stepping", "flags":"flags", "model": "model"}
+
+        keys = mapping.keys()
+        for line in lines:
+            line = line.replace('\t', '')
+            for key in keys:
+                if key == line[:line.find(':')]:
+                    item = line[line.index(':')+1:].strip()
+                    if key in ['processor', 'stepping', 'cpu cores']:
+                        item = int(item)
+                    if key == "cpu MHz":
+                        item = float(item)
+                    if key == 'cache size':
+                        item = int(item[:item.index(' KB')])
+                    if key == 'flags':
+                        item = item.split(' ')
+                    cpuInfo[mapping[key]].append(item)
+
+        return cpuInfo
+
+    def getDiskInfo(self):
+        diskInfo = {'mountpoint':[], 'fstype':[], 'device':[], 'opts':[]}
+        response = self.client.bash('mount').get().stdout
+        lines = response.splitlines()
+        for line in lines:
+            line = line.split()
+            diskInfo['mountpoint'].append(line[2])
+            diskInfo['fstype'].append(line[4])
+            diskInfo['device'].append(line[0])
+            diskInfo['opts'].append(line[5][1:-1])
+
+        return diskInfo
+
+    def getMemInfo(self):
+
+        lines = self.client.bash('cat /proc/meminfo').get().stdout.splitlines()
+        memInfo = { 'active':0, 'available':0, 'buffers':0, 'cached':0,
+                    'free':0,'inactive': 0, 'total':0}
+
+        mapping = { 'Active':'active', 'MemAvailable':'available', 'Buffers':'buffers',
+                    'Cached':'cached', 'MemFree':'free','Inactive':'inactive', 'MemTotal':'total'}
+
+        keys = mapping.keys()
+        for line in lines:
+            line = line.replace('\t', '')
+            for key in keys:
+                if key == line[:line.find(':')]:
+                    item = int(line[line.index(':')+1:line.index(' kB')].strip())
+                    item = item *1024
+                    memInfo[mapping[key]] = item
+
+        return memInfo
 
     def test001_execute_commands(self):
 
@@ -113,15 +189,33 @@ class BasicTests(BaseTest):
 
         self.lg('{} ENDED'.format(self._testID))
 
-    # def test004_mem_info(self):
-    #
-    #     """ g8os-004
-    #     *Test case for checking on the system memory information*
-    #
-    #     **Test Scenario:**
-    #     #. Get the memory information using g8os client
-    #     #. Get the info using bash and compare it to that of g8os client(write detailed scenario here)
-    #     """
+    def test004_mem_info(self):
+
+        """ g8os-004
+        *Test case for checking on the system memory information*
+
+        **Test Scenario:**
+        #. Get the memory information using g8os client
+        #. Get the info using bash and compare it to that of g8os client(write detailed scenario here)
+        """
+        self.lg('{} STARTED'.format(self._testID))
+
+        self.lg('get memory info using bash')
+        expected_mem_info = self.getMemInfo()
+
+        self.lg('get memory info using g8os')
+        g8os_mem_info = self.client.info.mem()
+
+        self.lg('compare g8os results to bash results')
+        self.assertEqual(expected_mem_info['total'], g8os_mem_info['total'])
+        params_to_check = ['active', 'available', 'buffers', 'cached', 'free', 'inactive']
+        for key in params_to_check:
+            threshold = 1024*200 # acceptable threshold (200 MB)
+            g8os_value = g8os_mem_info[key]
+            expected_value = expected_mem_info[key]
+            self.assertTrue(expected_value-threshold <= g8os_value <= expected_value+threshold, key)
+
+        self.lg('{} ENDED'.format(self._testID))
 
     @unittest.skip('bug# https://github.com/g8os/core0/issues/109')
     def test005_cpu_info(self):
@@ -132,14 +226,22 @@ class BasicTests(BaseTest):
         **Test Scenario:**
         #. Get the CPU information using g8os client
         #. Get the info using bash and compare it to that of g8os client
+
         """
+        self.lg('{} STARTED'.format(self._testID))
+
         self.lg('get cpu info using bash')
         expected_cpu_info = self.getCpuInfo()
+
         self.lg('get cpu info using g8os')
         g8os_cpu_info = self.client.info.cpu()
+
+        self.lg('compare g8os results to bash results')
         for key in expected_cpu_info.keys():
-                items_list = [x[key] for x in g8os_cpu_info]
-                self.assertEqual(expected_cpu_info[key], items_list, "error in parameter %s : %s != %s" % (key,str(items_list),str(expected_cpu_info[key])))
+            g8os_param_list = [x[key] for x in g8os_cpu_info]
+            self.assertEqual(expected_cpu_info[key], g8os_param_list)
+
+        self.lg('{} ENDED'.format(self._testID))
 
     def test006_disk_info(self):
 
@@ -150,15 +252,20 @@ class BasicTests(BaseTest):
         #. Get the disks information using g8os client
         #. Get the info using bash and compare it to that of g8os client
         """
+        self.lg('{} STARTED'.format(self._testID))
+
         self.lg('get disks info using linux bash command (mount)')
         expected_disk_info = self.getDiskInfo()
+
         self.lg('get cpu info using g8os')
         g8os_disk_info = self.client.info.disk()
+
+        self.lg('compare g8os results to bash results')
         for key in expected_disk_info.keys():
-                items_list = [x[key] for x in g8os_disk_info]
-                self.assertEqual(expected_disk_info[key], items_list, "error in parameter %s : %s != %s" % (key,str(items_list),str(expected_disk_info[key])))
+            g8os_param_list = [x[key] for x in g8os_disk_info]
+            self.assertEqual(expected_disk_info[key], g8os_param_list)
 
-
+        self.lg('{} ENDED'.format(self._testID))
 
     def test007_nic_info(self):
 
@@ -169,14 +276,21 @@ class BasicTests(BaseTest):
         #. Get the nic information using g8os client
         #. Get the info using bash and compare it to that of g8os client(write detailed scenario here)
         """
-        self.lg('get nic info using linux bash command ip a')
+        self.lg('{} STARTED'.format(self._testID))
+
+        self.lg('get nic info using linux bash command (ip a)')
         expected_nic_info = self.getNicInfo()
+
         self.lg('get nic info using g8os client')
         g8os_nic_info = self.client.info.nic()
-        params_to_check = ['name', 'addrs','mtu', 'hardwareaddr']
+
+        self.lg('compare g8os results to bash results')
+        params_to_check = ['name', 'addrs', 'mtu', 'hardwareaddr']
         for i in range(len(expected_nic_info)-1):
-                for param in params_to_check:
-                        self.assertEqual(expected_nic_info[i][param], g8os_nic_info[i][param])
+            for param in params_to_check:
+                self.assertEqual(expected_nic_info[i][param], g8os_nic_info[i][param])
+
+        self.lg('{} ENDED'.format(self._testID))
 
     # def test008_create_destroy_list_kvm(self):
     #     """ g8os-008
