@@ -46,7 +46,7 @@ class BasicTests(BaseTest):
 
         self.lg('{} ENDED'.format(self._testID))
 
-    @unittest.skip('bug #95')
+    # @unittest.skip('bug# https://github.com/g8os/core0/issues/95')
     def test002_kill_list_processes(self):
 
         """ g8os-002
@@ -123,7 +123,7 @@ class BasicTests(BaseTest):
     #     #. Get the info using bash and compare it to that of g8os client(write detailed scenario here)
     #     """
 
-    @unittest.skip('bug #109')
+    @unittest.skip('bug# https://github.com/g8os/core0/issues/109')
     def test005_cpu_info(self):
 
         """ g8os-005
