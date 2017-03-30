@@ -51,10 +51,7 @@ class BaseTest(unittest.TestCase):
         return resource.get().stdout.replace('\n', '').lower()
 
     def getCpuInfo(self):
-        with open('/proc/cpuinfo', 'r') as f:
-                lines = [x.strip() for x in f.readlines()]
-        
-        #self.lg(str(lines))
+        lines = self.client.bash('cat /proc/cpuinfo').get().stdout.splitlines()
         cpuInfo = { 'vendorId':[], 'family':[], 'stepping': [], 'cpu': [],
             'coreId': [],'model': [], 'cacheSize': [], 'mhz': [], 'cores': [],
             'flags': [], 'modelName':[], 'physicalId':[]}   

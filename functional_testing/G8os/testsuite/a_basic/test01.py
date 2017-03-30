@@ -40,8 +40,9 @@ class BasicTests(BaseTest):
 
         self.lg('Remove the created folder')
         self.client.bash('rm -rf {}'.format(folder))
+        time.sleep(0.5)
         rs2 = self.client.bash('ls | grep {}'.format(folder))
-        self.assertEqual(rs2.get().stdout, '')
+        self.assertEqual(self.stdout(rs2), '')
 
         self.lg('{} ENDED'.format(self._testID))
 
