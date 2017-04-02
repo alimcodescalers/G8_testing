@@ -4,6 +4,7 @@ import time
 import uuid
 import logging
 import configparser
+import requests
 
 
 class BaseTest(unittest.TestCase):
@@ -11,7 +12,10 @@ class BaseTest(unittest.TestCase):
         config = configparser.ConfigParser()
         config.read('config.ini')
         self.target_ip = config['main']['target_ip']
+        self.zt_access_token = config['main']['zt_access_token']
         self.client = g8core.Client(self.target_ip)
+        self.session = requests.Session()
+        self.session.headers['Authorization'] = 'Bearer {}'.format(self.zt_access_token)
         super(BaseTest, self).__init__(*args, **kwargs)
 
     def setUp(self):
@@ -58,3 +62,26 @@ class BaseTest(unittest.TestCase):
 
     def stdout(self, resource):
         return resource.get().stdout.replace('\n', '').lower()
+
+    def getZtNetworkID(self):
+        url = 'https://my.zerotier.com/api/network'
+        r = self.session.get(url)
+        if r.status_code == 200:
+            for item in r.json():
+                if item['type'] == 'Network':
+                    return item['id']
+            else:
+                self.lg('can\'t find network id')
+                return False
+        else:
+            self.lg('can\'t connect to zerotier, {}:{}'.format(r.status_code, r.content))
+            return False
+
+    def getZtNetworkOnlineMembers(self, networkId):
+        url = 'https://my.zerotier.com/api/network/{}'.format(networkId)
+        r = self.session.get(url)
+        if r.status_code == 200:
+            return r.json()['onlineMemberCount']
+        else:
+            self.lg('can\'t connect to zerotier, {}:{}'.format(r.status_code, r.content))
+            return False

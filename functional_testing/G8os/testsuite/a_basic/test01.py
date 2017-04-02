@@ -320,19 +320,50 @@ class BasicTests(BaseTest):
     #     #. Destroy C1 again, should fail
     #     """
     #
-    # def test010_join_leave_list_zerotier(self):
-    #     """ g8os-010
-    #     *Test case for testing joining, listing, leaving zerotier networks*
-    #
-    #     **Test Scenario:**
-    #     #. Join zerotier network (N1), should succeed
-    #     #. List zerotier network
-    #     #. Leave zerotier network (N1),should succeed
-    #     #. List zerotier networks, N1 should be gone
-    #     #. Leave zerotier network (N1), should fail
-    #     #. ref: https://www.zerotier.com/manual.shtml .. please all possible missing steps .. also add extended scenario to test zerotier functionality
-    #     """
-    #
+
+    def test010_join_leave_list_zerotier(self):
+        """ g8os-010
+        *Test case for testing joining, listing, leaving zerotier networks*
+
+        **Test Scenario:**
+        #. Get NetworkId using zerotier API
+        #. Join zerotier network (N1), should succeed
+        #. List zerotier network
+        #. Join fake zerotier network (N1), should fail
+        #. Leave zerotier network (N1), should succeed
+        #. List zerotier networks, N1 should be gone
+        #. Leave zerotier network (N1), should fail
+        """
+        self.lg('{} STARTED'.format(self._testID))
+
+        self.lg('Get NetworkId using zerotier API')
+        networkId = self.getZtNetworkID()
+
+        self.lg('Join zerotier network (N1), should succeed')
+        self.client.zerotier.join(networkId)
+
+        self.lg('List zerotier network')
+        r = self.client.zerotier.list()
+        self.assertEqual(r.json()['id'], networkId)
+
+        self.lg('Join fake zerotier network (N1), should fail')
+        with self.assertRaises(RuntimeError):
+            self.client.zerotier.join(self.rand_str())
+
+        self.lg('Leave zerotier network (N1), should succeed')
+        self.client.zerotier.leave(networkId)
+
+        self.lg('List zerotier network')
+        r = self.client.zerotier.list()
+        self.assertEqual(r.json(), [])
+
+        self.lg('Leave zerotier network (N1), should fail')
+        with self.assertRaises(RuntimeError):
+            self.client.zerotier.leave(networkId)
+
+        self.lg('{} ENDED'.format(self._testID))
+
+
     def test011_create_delete_list_bridges(self):
         """ g8os-011
         *Test case for testing creating, listing, deleting bridges*
