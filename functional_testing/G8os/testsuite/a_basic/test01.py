@@ -1,7 +1,6 @@
 from utils.utils import BaseTest
 import time
 import unittest
-#import nose.tools; nose.tools.set_trace()
 
 
 class BasicTests(BaseTest):
