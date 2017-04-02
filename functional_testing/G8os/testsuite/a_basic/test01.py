@@ -8,6 +8,7 @@ class BasicTests(BaseTest):
 
     def setUp(self):
         super(BasicTests, self).setUp()
+        self.check_g8os_connection(BasicTests)
 
     def getNicInfo(self):
         r = self.client.bash('ip -br a').get().stdout

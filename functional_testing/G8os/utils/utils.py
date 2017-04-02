@@ -26,6 +26,15 @@ class BaseTest(unittest.TestCase):
     def lg(self, msg):
         self._logger.info(msg)
 
+    def check_g8os_connection(self, classname):
+        try:
+            self.client.ping()
+        except Exception as e:
+            self.lg("can't reach g8os remote machine")
+            print("Can't reach g8os remote machine")
+            self.skipTest(classname)
+
+
     def rand_str(self):
         return str(uuid.uuid4()).replace('-', '')[1:10]
 
