@@ -333,16 +333,41 @@ class BasicTests(BaseTest):
     #     #. ref: https://www.zerotier.com/manual.shtml .. please all possible missing steps .. also add extended scenario to test zerotier functionality
     #     """
     #
-    # def test011_create_delete_list_bridges(self):
-    #     """ g8os-011
-    #     *Test case for testing creating, listing, deleting bridges*
-    #
-    #     **Test Scenario:**
-    #     #. Create bridge (B1), should succeed
-    #     #. List  bridges, B1 should be listed
-    #     #. Delete bridge B1, should succeed
-    #     #. List bridges, B1 should be gone
-    #     #. Delete bridge B1, should fail
-    #     .... please add extended scenario to test bridges functionality
-    #     """
-    #
+    def test011_create_delete_list_bridges(self):
+        """ g8os-011
+        *Test case for testing creating, listing, deleting bridges*
+
+        **Test Scenario:**
+        #. Create bridge (B1), should succeed
+        #. List bridges, B1 should be listed
+        #. Create bridge with same name of (B1), should fail
+        #. Delete bridge B1, should succeed
+        #. List bridges, B1 should be gone
+        #. Delete bridge B1, should fail
+        """
+        self.lg('{} STARTED'.format(self._testID))
+
+        self.lg('Create bridge (B1), should succeed')
+        bridge_name = self.rand_str()
+        self.client.bridge.create(bridge_name)
+
+        self.lg('List bridges, B1 should be listed')
+        response = self.client.bridge.list()
+        self.assertIn(bridge_name, response)
+
+        self.lg('Create bridge with same name of (B1), should fail')
+        with self.assertRaises(RuntimeError):
+            self.client.bridge.create(bridge_name)
+
+        self.lg('Delete bridge B1, should succeed')
+        self.client.bridge.delete(bridge_name)
+
+        self.lg('List bridges, B1 should be gone')
+        response = self.client.bridge.list()
+        self.assertNotIn(bridge_name, response)
+
+        self.lg('Delete bridge B1, should fail')
+        with self.assertRaises(RuntimeError):
+            self.client.bridge.delete(bridge_name)
+
+        self.lg('{} ENDED'.format(self._testID))
