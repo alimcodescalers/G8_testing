@@ -44,7 +44,7 @@ class BaseTest(unittest.TestCase):
         :param cmd: command used by the client (same as the command in process.list) ex: 'core.system'
         :param match: string to match intended command. ex: 'sleep 300'
         """
-        time.sleep(3)
+        time.sleep(2)
         processes = self.client.process.list()
         for p in processes:
            if p['cmd']['command'] == cmd:

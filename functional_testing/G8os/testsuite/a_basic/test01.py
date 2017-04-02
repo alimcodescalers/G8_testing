@@ -195,7 +195,8 @@ class BasicTests(BaseTest):
 
         **Test Scenario:**
         #. Get the memory information using g8os client
-        #. Get the info using bash and compare it to that of g8os client(write detailed scenario here)
+        #. Get the memory information using bash
+        #. Compare memory g8os results to that of the bash results, should be the same
         """
         self.lg('{} STARTED'.format(self._testID))
 
@@ -224,8 +225,8 @@ class BasicTests(BaseTest):
 
         **Test Scenario:**
         #. Get the CPU information using g8os client
-        #. Get the info using bash and compare it to that of g8os client
-
+        #. Get the CPU information using bash
+        #. Compare CPU g8os results to that of the bash results, should be the same
         """
         self.lg('{} STARTED'.format(self._testID))
 
@@ -249,7 +250,8 @@ class BasicTests(BaseTest):
 
         **Test Scenario:**
         #. Get the disks information using g8os client
-        #. Get the info using bash and compare it to that of g8os client
+        #. Get the disks information using bas
+        #. Compare disks g8os results to that of the bash results, should be the same
         """
         self.lg('{} STARTED'.format(self._testID))
 
@@ -273,7 +275,8 @@ class BasicTests(BaseTest):
 
         **Test Scenario:**
         #. Get the nic information using g8os client
-        #. Get the info using bash and compare it to that of g8os client(write detailed scenario here)
+        #. Get the information using bash
+        #. Compare nic g8os results to that of the bash results, should be the same
         """
         self.lg('{} STARTED'.format(self._testID))
 
