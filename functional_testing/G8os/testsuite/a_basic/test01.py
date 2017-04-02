@@ -21,26 +21,26 @@ class BasicTests(BaseTest):
             hardwareaddr = self.stdout(self.client.bash('cat /sys/class/net/{}/address'.format(nic)))
             if hardwareaddr == '00:00:00:00:00:00':
                     hardwareaddr = ''
-            tmp = {"name":nic, "hardwareaddr":hardwareaddr, "mtu":mtu, "addrs":[{"addr":x} for x in addrs]}
+            tmp = {"name": nic, "hardwareaddr": hardwareaddr, "mtu": mtu, "addrs": [{"addr": x} for x in addrs]}
             nicInfo.append(tmp)
 
         return nicInfo
 
     def getCpuInfo(self):
         lines = self.client.bash('cat /proc/cpuinfo').get().stdout.splitlines()
-        cpuInfo = { 'vendorId':[], 'family':[], 'stepping':[], 'cpu':[], 'coreId':[],'model':[],
-                    'cacheSize':[], 'mhz':[], 'cores':[], 'flags':[], 'modelName':[], 'physicalId':[]}
+        cpuInfo = {'vendorId': [], 'family': [], 'stepping': [], 'cpu': [], 'coreId': [], 'model': [],
+                    'cacheSize': [], 'mhz': [], 'cores': [], 'flags': [], 'modelName': [], 'physicalId':[]}
 
-        mapping = { "vendor_id":"vendorId", "cpu family":"family", "processor":"cpu", "core id":"coreId",
-                    "cache size":"cacheSize", "cpu MHz":"mhz", "cpu cores":"cores", "model name":"modelName",
-                    "physical id":"physicalId", "stepping":"stepping", "flags":"flags", "model": "model"}
+        mapping = { "vendor_id": "vendorId", "cpu family": "family", "processor": "cpu", "core id": "coreId",
+                    "cache size": "cacheSize", "cpu MHz": "mhz", "cpu cores": "cores", "model name": "modelName",
+                    "physical id": "physicalId", "stepping": "stepping", "flags": "flags", "model": "model"}
 
         keys = mapping.keys()
         for line in lines:
             line = line.replace('\t', '')
             for key in keys:
                 if key == line[:line.find(':')]:
-                    item = line[line.index(':')+1:].strip()
+                    item = line[line.index(':') + 1:].strip()
                     if key in ['processor', 'stepping', 'cpu cores']:
                         item = int(item)
                     if key == "cpu MHz":
@@ -54,7 +54,7 @@ class BasicTests(BaseTest):
         return cpuInfo
 
     def getDiskInfo(self):
-        diskInfo = {'mountpoint':[], 'fstype':[], 'device':[], 'opts':[]}
+        diskInfo = {'mountpoint': [], 'fstype': [], 'device': [], 'opts': []}
         response = self.client.bash('mount').get().stdout
         lines = response.splitlines()
         for line in lines:
@@ -69,19 +69,19 @@ class BasicTests(BaseTest):
     def getMemInfo(self):
 
         lines = self.client.bash('cat /proc/meminfo').get().stdout.splitlines()
-        memInfo = { 'active':0, 'available':0, 'buffers':0, 'cached':0,
-                    'free':0,'inactive': 0, 'total':0}
+        memInfo = { 'active': 0, 'available': 0, 'buffers': 0, 'cached': 0,
+                    'free': 0,'inactive': 0, 'total': 0}
 
-        mapping = { 'Active':'active', 'MemAvailable':'available', 'Buffers':'buffers',
-                    'Cached':'cached', 'MemFree':'free','Inactive':'inactive', 'MemTotal':'total'}
+        mapping = { 'Active': 'active', 'MemAvailable': 'available', 'Buffers':'buffers',
+                    'Cached': 'cached', 'MemFree': 'free', 'Inactive':'inactive', 'MemTotal':'total'}
 
         keys = mapping.keys()
         for line in lines:
             line = line.replace('\t', '')
             for key in keys:
                 if key == line[:line.find(':')]:
-                    item = int(line[line.index(':')+1:line.index(' kB')].strip())
-                    item = item *1024
+                    item = int(line[line.index(':') + 1:line.index(' kB')].strip())
+                    item = item * 1024
                     memInfo[mapping[key]] = item
 
         return memInfo
@@ -186,7 +186,6 @@ class BasicTests(BaseTest):
         krn_name = self.client.system('uname -s').get().stdout.strip()
         self.assertEqual(os_info['os'], krn_name.lower())
 
-
         self.lg('{} ENDED'.format(self._testID))
 
     def test004_mem_info(self):
@@ -210,10 +209,10 @@ class BasicTests(BaseTest):
         self.assertEqual(expected_mem_info['total'], g8os_mem_info['total'])
         params_to_check = ['active', 'available', 'buffers', 'cached', 'free', 'inactive']
         for key in params_to_check:
-            threshold = 1024*200 # acceptable threshold (200 MB)
+            threshold = 1024 * 200  # acceptable threshold (200 MB)
             g8os_value = g8os_mem_info[key]
             expected_value = expected_mem_info[key]
-            self.assertTrue(expected_value-threshold <= g8os_value <= expected_value+threshold, key)
+            self.assertTrue(expected_value - threshold <= g8os_value <= expected_value + threshold, key)
 
         self.lg('{} ENDED'.format(self._testID))
 

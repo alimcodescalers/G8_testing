@@ -11,7 +11,7 @@ class BaseTest(unittest.TestCase):
         config = configparser.ConfigParser()
         config.read('config.ini')
         self.target_ip = config['main']['target_ip']
-        self.client  = g8core.Client(self.target_ip)
+        self.client = g8core.Client(self.target_ip)
         super(BaseTest, self).__init__(*args, **kwargs)
 
     def setUp(self):
@@ -27,7 +27,7 @@ class BaseTest(unittest.TestCase):
         self._logger.info(msg)
 
     def rand_str(self):
-        return str(uuid.uuid4()).replace('-','')[1:10]
+        return str(uuid.uuid4()).replace('-', '')[1:10]
 
     def get_process_id(self, cmd, match):
         """
