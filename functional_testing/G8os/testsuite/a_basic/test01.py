@@ -346,3 +346,26 @@ class BasicTests(BaseTest):
     #     .... please add extended scenario to test bridges functionality
     #     """
     #
+
+    def test012_create_list_delete_btrfs(self):
+        """ g8os-012
+        *Test case for creating, listing and monitoring btrfs*
+
+        **Test Scenario:**
+        #. Setup two loop devices to be used by btrfs
+        #. Create Btrfs file system
+        #. List Btrfs file system
+        #. Get info for the created btrfs file system
+        """
+
+        self.lg('{} STARTED'.format(self._testID))
+
+        self.lg('Setup two loop devices to be used by btrfs')
+        loop_dev_list = self.setup_loop_devices(['bd1', 'bd2'], '100M')
+
+        self.lg('Setup two loop devices to be used by btrfs')
+        self.client.btrfs.create('main2', loop_dev_list, metadata_profile='raid1', data_profile='raid1')
+
+        self.lg('')
+        rs = self.client.btrfs.list()
+        self.lg('{} ENDED'.format(self._testID))

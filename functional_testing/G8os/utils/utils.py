@@ -58,3 +58,22 @@ class BaseTest(unittest.TestCase):
 
     def stdout(self, resource):
         return resource.get().stdout.replace('\n', '').lower()
+
+    def setup_loop_devices(self, files_names, file_size, files_loc='/'):
+        """
+        :param files_names: list of files names to be truncated
+        :param file_size: the file size (ex: 1G)
+        :param files_loc: abs path for the files (ex: /)
+        """
+        self.client.bash('modeprobe loop')  # to make /dev/loop* available
+        self.client.bash('umount --force /dev/loop*')  # Make sure to free all loop devices first
+        self.client.bash('losetup -D')  # deattach all devices
+        loop_devs = []
+        for f in files_names:
+            self.client.bash('cd {}; truncate -s {} {}'.format(files_loc, file_size, f))
+            output = self.client.bash('losetup -f')
+            free_l_dev = self.stdout(output)
+            self.client.bash('losetup {} {}{}'.format(free_l_dev, files_loc, f))
+            loop_devs.append(free_l_dev)
+            # i think i can remove filenames here if it won't affect the filesystem
+        return loop_devs
