@@ -122,7 +122,6 @@ class BasicTests(BaseTest):
 
         self.lg('{} ENDED'.format(self._testID))
 
-    @unittest.skip('bug# https://github.com/g8os/core0/issues/95')
     def test002_kill_list_processes(self):
 
         """ g8os-002
