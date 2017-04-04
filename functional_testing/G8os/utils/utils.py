@@ -61,7 +61,7 @@ class BaseTest(unittest.TestCase):
 
     def deattach_all_loop_devices(self):
         self.client.bash('modprobe loop')  # to make /dev/loop* available
-        self.client.bash('umount --force /dev/loop*')  # Make sure to free all loop devices first
+        self.client.bash('umount -f /dev/loop*')  # Make sure to free all loop devices first
         for i in range(8):
             self.client.bash('losetup -d /dev/loop{}'.format(i))  # deattach all devices
 

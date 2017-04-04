@@ -391,20 +391,18 @@ class BasicTests(BaseTest):
         self.lg('Add new loop (LD1) device')
         loop_dev_list2 = self.setup_loop_devices(['bd2'], '500M')
         self.client.btrfs.device_add(mount_point, loop_dev_list2[0])
-        rs = self.client.info(mount_point)
+        rs = self.client.btrfs.info(mount_point)
         self.assertEqual(rs['total_devices'], 3)
 
         self.lg('Remove the loop device (LD1)')
         self.client.btrfs.device_remove(mount_point, loop_dev_list2[0])
-        rs = self.client.info(mount_point)
+        rs = self.client.btrfs.info(mount_point)
         self.assertEqual(rs['total_devices'], 2)
 
         self.lg('Remove all loop devices')
         for dev in loop_dev_list:
             rs = self.client.btrfs.device_remove(mount_point, dev)
-            self.assertEqual(rs.get().state(), 'SUCCESS')
         self.deattach_all_loop_devices()
-        self.client.btrfs.list()
 
         self.lg("List the btrfs filesystems , Bfs1 shouldn't be there")
         btr_list = self.client.btrfs.list()
