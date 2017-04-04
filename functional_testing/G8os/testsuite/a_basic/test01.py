@@ -380,7 +380,7 @@ class BasicTests(BaseTest):
         self.lg('Mount the btrfs filesystem (Bfs1)')
         dirc = self.rand_str()
         mount_point = '/mnt/{}'.format(dirc)
-        self.client.bash('mkdir -p /mnt/{}'.format())
+        self.client.bash('mkdir -p {}'.format(mount_point))
         rs = self.client.disk.mount(loop_dev_list[0], mount_point, [""])
         self.assertEqual(rs.get().state(), 'SUCCESS')
 
@@ -411,5 +411,6 @@ class BasicTests(BaseTest):
         btr_list = self.client.btrfs.list()
         btr = [i for i in btr_list if i['label'] == label]
         self.assertEqual(btr, [])
+        self.client.bash('rm -rf {}'.format(mount_point))
 
         self.lg('{} ENDED'.format(self._testID))
