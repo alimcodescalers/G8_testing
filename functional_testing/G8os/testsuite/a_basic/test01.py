@@ -90,6 +90,7 @@ class BasicTests(BaseTest):
 
         """ g8os-001
         *Test case for testing basic commands using  bash and system*
+        
         **Test Scenario:**
         #. Check if you can ping the remote host, should succeed
         #. Create folder using system
@@ -126,6 +127,7 @@ class BasicTests(BaseTest):
 
         """ g8os-002
         *Test case for testing killing and listing processes*
+
         **Test Scenario:**
         #. Create process that runs for long time using both system and bash
         #. List the process, should be found
@@ -163,6 +165,7 @@ class BasicTests(BaseTest):
 
         """ g8os-003
         *Test case for checking on the system os information*
+
         **Test Scenario:**
         #. Get the os information using g8os client
         #. Get the hostname and compare it with the g8os os insformation
@@ -189,6 +192,7 @@ class BasicTests(BaseTest):
 
         """ g8os-004
         *Test case for checking on the system memory information*
+
         **Test Scenario:**
         #. Get the memory information using g8os client
         #. Get the memory information using bash
@@ -218,6 +222,7 @@ class BasicTests(BaseTest):
 
         """ g8os-005
         *Test case for checking on the system CPU information*
+
         **Test Scenario:**
         #. Get the CPU information using g8os client
         #. Get the CPU information using bash
@@ -242,6 +247,7 @@ class BasicTests(BaseTest):
 
         """ g8os-006
         *Test case for checking on the disks information*
+
         **Test Scenario:**
         #. Get the disks information using g8os client
         #. Get the disks information using bas
@@ -266,6 +272,7 @@ class BasicTests(BaseTest):
 
         """ g8os-007
         *Test case for checking on the system nic information*
+
         **Test Scenario:**
         #. Get the nic information using g8os client
         #. Get the information using bash
