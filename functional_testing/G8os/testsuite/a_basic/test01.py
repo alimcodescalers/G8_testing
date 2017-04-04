@@ -90,7 +90,6 @@ class BasicTests(BaseTest):
 
         """ g8os-001
         *Test case for testing basic commands using  bash and system*
-
         **Test Scenario:**
         #. Check if you can ping the remote host, should succeed
         #. Create folder using system
@@ -127,7 +126,6 @@ class BasicTests(BaseTest):
 
         """ g8os-002
         *Test case for testing killing and listing processes*
-
         **Test Scenario:**
         #. Create process that runs for long time using both system and bash
         #. List the process, should be found
@@ -165,7 +163,6 @@ class BasicTests(BaseTest):
 
         """ g8os-003
         *Test case for checking on the system os information*
-
         **Test Scenario:**
         #. Get the os information using g8os client
         #. Get the hostname and compare it with the g8os os insformation
@@ -192,7 +189,6 @@ class BasicTests(BaseTest):
 
         """ g8os-004
         *Test case for checking on the system memory information*
-
         **Test Scenario:**
         #. Get the memory information using g8os client
         #. Get the memory information using bash
@@ -222,7 +218,6 @@ class BasicTests(BaseTest):
 
         """ g8os-005
         *Test case for checking on the system CPU information*
-
         **Test Scenario:**
         #. Get the CPU information using g8os client
         #. Get the CPU information using bash
@@ -247,7 +242,6 @@ class BasicTests(BaseTest):
 
         """ g8os-006
         *Test case for checking on the disks information*
-
         **Test Scenario:**
         #. Get the disks information using g8os client
         #. Get the disks information using bas
@@ -272,7 +266,6 @@ class BasicTests(BaseTest):
 
         """ g8os-007
         *Test case for checking on the system nic information*
-
         **Test Scenario:**
         #. Get the nic information using g8os client
         #. Get the information using bash
@@ -320,85 +313,29 @@ class BasicTests(BaseTest):
     #     #. Destroy C1 again, should fail
     #     """
     #
-
-    def test010_join_leave_list_zerotier(self):
-        """ g8os-010
-        *Test case for testing joining, listing, leaving zerotier networks*
-
-        **Test Scenario:**
-        #. Get NetworkId using zerotier API
-        #. Join zerotier network (N1), should succeed
-        #. List zerotier network
-        #. Join fake zerotier network (N1), should fail
-        #. Leave zerotier network (N1), should succeed
-        #. List zerotier networks, N1 should be gone
-        #. Leave zerotier network (N1), should fail
-        """
-        self.lg('{} STARTED'.format(self._testID))
-
-        self.lg('Get NetworkId using zerotier API')
-        networkId = self.getZtNetworkID()
-
-        self.lg('Join zerotier network (N1), should succeed')
-        self.client.zerotier.join(networkId)
-
-        self.lg('List zerotier network')
-        r = self.client.zerotier.list()
-        self.assertEqual(r.json()['id'], networkId)
-
-        self.lg('Join fake zerotier network (N1), should fail')
-        with self.assertRaises(RuntimeError):
-            self.client.zerotier.join(self.rand_str())
-
-        self.lg('Leave zerotier network (N1), should succeed')
-        self.client.zerotier.leave(networkId)
-
-        self.lg('List zerotier network')
-        r = self.client.zerotier.list()
-        self.assertEqual(r.json(), [])
-
-        self.lg('Leave zerotier network (N1), should fail')
-        with self.assertRaises(RuntimeError):
-            self.client.zerotier.leave(networkId)
-
-        self.lg('{} ENDED'.format(self._testID))
-
-
-    def test011_create_delete_list_bridges(self):
-        """ g8os-011
-        *Test case for testing creating, listing, deleting bridges*
-
-        **Test Scenario:**
-        #. Create bridge (B1), should succeed
-        #. List bridges, B1 should be listed
-        #. Create bridge with same name of (B1), should fail
-        #. Delete bridge B1, should succeed
-        #. List bridges, B1 should be gone
-        #. Delete bridge B1, should fail
-        """
-        self.lg('{} STARTED'.format(self._testID))
-
-        self.lg('Create bridge (B1), should succeed')
-        bridge_name = self.rand_str()
-        self.client.bridge.create(bridge_name)
-
-        self.lg('List bridges, B1 should be listed')
-        response = self.client.bridge.list()
-        self.assertIn(bridge_name, response)
-
-        self.lg('Create bridge with same name of (B1), should fail')
-        with self.assertRaises(RuntimeError):
-            self.client.bridge.create(bridge_name)
-
-        self.lg('Delete bridge B1, should succeed')
-        self.client.bridge.delete(bridge_name)
-
-        self.lg('List bridges, B1 should be gone')
-        response = self.client.bridge.list()
-        self.assertNotIn(bridge_name, response)
-
-        self.lg('Delete bridge B1, should fail')
-        with self.assertRaises(RuntimeError):
-            self.client.bridge.delete(bridge_name)
-
-        self.lg('{} ENDED'.format(self._testID))
+    # def test010_join_leave_list_zerotier(self):
+    #     """ g8os-010
+    #     *Test case for testing joining, listing, leaving zerotier networks*
+    #
+    #     **Test Scenario:**
+    #     #. Join zerotier network (N1), should succeed
+    #     #. List zerotier network
+    #     #. Leave zerotier network (N1),should succeed
+    #     #. List zerotier networks, N1 should be gone
+    #     #. Leave zerotier network (N1), should fail
+    #     #. ref: https://www.zerotier.com/manual.shtml .. please all possible missing steps .. also add extended scenario to test zerotier functionality
+    #     """
+    #
+    # def test011_create_delete_list_bridges(self):
+    #     """ g8os-011
+    #     *Test case for testing creating, listing, deleting bridges*
+    #
+    #     **Test Scenario:**
+    #     #. Create bridge (B1), should succeed
+    #     #. List  bridges, B1 should be listed
+    #     #. Delete bridge B1, should succeed
+    #     #. List bridges, B1 should be gone
+    #     #. Delete bridge B1, should fail
+    #     .... please add extended scenario to test bridges functionality
+    #     """
+    #
