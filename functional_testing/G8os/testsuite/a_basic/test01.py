@@ -90,7 +90,7 @@ class BasicTests(BaseTest):
 
         """ g8os-001
         *Test case for testing basic commands using  bash and system*
-        
+
         **Test Scenario:**
         #. Check if you can ping the remote host, should succeed
         #. Create folder using system
