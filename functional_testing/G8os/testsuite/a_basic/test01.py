@@ -382,7 +382,6 @@ class BasicTests(BaseTest):
         mount_point = '/mnt/{}'.format(dirc)
         self.client.bash('mkdir -p {}'.format(mount_point))
         rs = self.client.disk.mount(loop_dev_list[0], mount_point, [""])
-        self.assertEqual(rs.get().state(), 'SUCCESS')
 
         self.lg('Get Info for the btrfs file system (Bfs1)')
         rs = self.client.btrfs.info(mount_point)
