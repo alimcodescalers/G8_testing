@@ -16,6 +16,8 @@ class BaseTest(unittest.TestCase):
         self.client = g8core.Client(self.target_ip)
         self.session = requests.Session()
         self.session.headers['Authorization'] = 'Bearer {}'.format(self.zt_access_token)
+        self.root_url = 'https://hub.gig.tech/maxux/ubuntu1604.flist'
+        self.storage = 'ardb://hub.gig.tech:16379'
         super(BaseTest, self).__init__(*args, **kwargs)
 
     def setUp(self):
@@ -23,8 +25,7 @@ class BaseTest(unittest.TestCase):
         self._startTime = time.time()
         self._logger = logging.LoggerAdapter(logging.getLogger('g8os_testsuite'),
                                              {'testid': self.shortDescription() or self._testID})
-        self.root_url = 'https://hub.gig.tech/maxux/ubuntu1604.flist'
-        self.storage = 'ardb://hub.gig.tech:16379'
+
 
     def teardown(self):
         pass
