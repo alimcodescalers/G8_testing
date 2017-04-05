@@ -209,7 +209,7 @@ class SystemTests(BaseTest):
         self.assertEqual(expected_mem_info['total'], g8os_mem_info['total'])
         params_to_check = ['active', 'available', 'buffers', 'cached', 'free', 'inactive']
         for key in params_to_check:
-            threshold = 1024 * 200  # acceptable threshold (200 MB)
+            threshold = 1024 * 300  # acceptable threshold (300 MB)
             g8os_value = g8os_mem_info[key]
             expected_value = expected_mem_info[key]
             self.assertTrue(expected_value - threshold <= g8os_value <= expected_value + threshold, key)
