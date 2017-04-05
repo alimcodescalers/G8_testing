@@ -3,11 +3,11 @@ import time
 import unittest
 
 
-class BasicTests(BaseTest):
+class SystemTests(BaseTest):
 
     def setUp(self):
-        super(BasicTests, self).setUp()
-        self.check_g8os_connection(BasicTests)
+        super(SystemTests, self).setUp()
+        self.check_g8os_connection(SystemTests)
 
     def getNicInfo(self):
         r = self.client.bash('ip -br a').get().stdout
