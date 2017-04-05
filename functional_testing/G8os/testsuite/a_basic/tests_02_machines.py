@@ -64,6 +64,11 @@ class Machinetests(BaseTest):
         with self.assertRaises(RuntimeError):
             self.client.experimental.kvm.destroy(VM_name)
 
+        self.lg('- Delete created directory, should succeed')
+        rs = self.client.bash('rm -r  /var/cache/Images')
+        result = rs.get()
+        self.assertEqual(result.state, 'SUCCESS')
+
         self.lg('{} ENDED'.format(self._testID))
 
     @unittest.skip('bug# https://github.com/g8os/core0/issues/123')
@@ -81,8 +86,7 @@ class Machinetests(BaseTest):
         """
         self.lg('{} STARTED'.format(self._testID))
         self.lg('Create a new container (C1)')
-        C1 = self.client.container.create(root_url='https://hub.gig.tech/maxux/ubuntu1604.flist',
-                                        storage='ardb://hub.gig.tech:16379')
+        C1 = self.client.container.create(root_url=self.root_url, storage=self.storage)
 
         self.lg('List all containers and check that C1 {}is there'.format(C1))
         containers = self.client.container.list()
@@ -121,8 +125,7 @@ class Machinetests(BaseTest):
         """
         self.lg('{} STARTED'.format(self._testID))
         self.lg('Create a new container (C1), and make sure its exist')
-        C1 = self.client.container.create(root_url='https://hub.gig.tech/maxux/ubuntu1604.flist'
-                                        , storage='ardb://hub.gig.tech:16379')
+        C1 = self.client.container.create(root_url=self.root_url, storage=self.storage)
         containers = self.client.container.list()
         self.assertTrue(str(C1) in containers)
 
