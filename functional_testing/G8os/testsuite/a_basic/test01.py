@@ -122,7 +122,6 @@ class BasicTests(BaseTest):
 
         self.lg('{} ENDED'.format(self._testID))
 
-    @unittest.skip('bug# https://github.com/g8os/core0/issues/95')
     def test002_kill_list_processes(self):
 
         """ g8os-002
@@ -346,3 +345,68 @@ class BasicTests(BaseTest):
     #     .... please add extended scenario to test bridges functionality
     #     """
     #
+
+    def test012_create_list_delete_btrfs(self):
+        """ g8os-012
+        *Test case for creating, listing and monitoring btrfs*
+
+        **Test Scenario:**
+        #. Setup two loop devices to be used by btrfs
+        #. Create Btrfs file system (Bfs1), should succeed
+        #. List Btrfs file system, should find the file system (Bfs1)
+        #. Mount the btrfs filesystem (Bfs1)
+        #. Get Info for the btrfs file system (Bfs1)
+        #. Add new loop (LD1) device, should succeed
+        #. Remove the loop device (LD1), should succeed
+        #. Remove all loop devices
+        #. List the btrfs filesystem, Bfs1 shouldn't be there
+        """
+
+        self.lg('{} STARTED'.format(self._testID))
+
+        self.lg('Setup two loop devices to be used by btrfs')
+        loop_dev_list = self.setup_loop_devices(['bd0', 'bd1'], '500M', deattach=True)
+
+        self.lg('Create Btrfs file system (Bfs1), should succeed')
+        label = self.rand_str()
+        self.client.btrfs.create(label, loop_dev_list)
+
+        self.lg('List Btrfs file system, should find the file system (Bfs1)')
+        btr_list = self.client.btrfs.list()
+        btr = [i for i in btr_list if i['label'] == label]
+        self.assertNotEqual(btr, [])
+
+        self.lg('Mount the btrfs filesystem (Bfs1)')
+        dirc = self.rand_str()
+        mount_point = '/mnt/{}'.format(dirc)
+        self.client.bash('mkdir -p {}'.format(mount_point))
+        rs = self.client.disk.mount(loop_dev_list[0], mount_point, [""])
+
+        self.lg('Get Info for the btrfs file system (Bfs1)')
+        rs = self.client.btrfs.info(mount_point)
+        self.assertEqual(rs['label'], label)
+        self.assertEqual(rs['total_devices'], btr[0]['total_devices'])
+
+        self.lg('Add new loop (LD1) device')
+        loop_dev_list2 = self.setup_loop_devices(['bd2'], '500M')
+        self.client.btrfs.device_add(mount_point, loop_dev_list2[0])
+        rs = self.client.btrfs.info(mount_point)
+        self.assertEqual(rs['total_devices'], 3)
+
+        self.lg('Remove the loop device (LD1)')
+        self.client.btrfs.device_remove(mount_point, loop_dev_list2[0])
+        rs = self.client.btrfs.info(mount_point)
+        self.assertEqual(rs['total_devices'], 2)
+
+        self.lg('Remove all loop devices')
+        for dev in loop_dev_list:
+            rs = self.client.btrfs.device_remove(mount_point, dev)
+        self.deattach_all_loop_devices()
+
+        self.lg("List the btrfs filesystems , Bfs1 shouldn't be there")
+        btr_list = self.client.btrfs.list()
+        btr = [i for i in btr_list if i['label'] == label]
+        self.assertEqual(btr, [])
+        self.client.bash('rm -rf {}'.format(mount_point))
+
+        self.lg('{} ENDED'.format(self._testID))
