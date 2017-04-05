@@ -18,6 +18,7 @@ class BaseTest(unittest.TestCase):
         self.session.headers['Authorization'] = 'Bearer {}'.format(self.zt_access_token)
         self.root_url = 'https://hub.gig.tech/maxux/ubuntu1604.flist'
         self.storage = 'ardb://hub.gig.tech:16379'
+        self.client.timeout = 60
         super(BaseTest, self).__init__(*args, **kwargs)
 
     def setUp(self):
@@ -40,7 +41,6 @@ class BaseTest(unittest.TestCase):
             self.lg("can't reach g8os remote machine")
             print("Can't reach g8os remote machine")
             self.skipTest(classname)
-
 
     def rand_str(self):
         return str(uuid.uuid4()).replace('-', '')[1:10]
@@ -113,3 +113,28 @@ class BaseTest(unittest.TestCase):
                 return address
         else:
             self.lg('can\'t find zerotier netowrk interface')
+            
+    def deattach_all_loop_devices(self):
+        self.client.bash('modprobe loop')  # to make /dev/loop* available
+        self.client.bash('umount -f /dev/loop*')  # Make sure to free all loop devices first
+        for i in range(8):
+            self.client.bash('losetup -d /dev/loop{}'.format(i))  # deattach all devices
+
+    def setup_loop_devices(self, files_names, file_size, files_loc='/', deattach=False):
+        """
+        :param files_names: list of files names to be truncated
+        :param file_size: the file size (ex: 1G)
+        :param files_loc: abs path for the files (ex: /)
+        :param deattach: if True, deattach all loop devices
+        """
+        if deattach:
+            self.deattach_all_loop_devices()
+        loop_devs = []
+        for f in files_names:
+            self.client.bash('cd {}; truncate -s {} {}'.format(files_loc, file_size, f))
+            output = self.client.bash('losetup -f')
+            free_l_dev = self.stdout(output)
+            self.client.bash('losetup {} {}{}'.format(free_l_dev, files_loc, f))
+            loop_devs.append(free_l_dev)
+            self.client.bash('rm -rf {}{}'.format(files_loc, f))
+        return loop_devs
