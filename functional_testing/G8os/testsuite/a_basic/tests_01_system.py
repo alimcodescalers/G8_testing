@@ -293,61 +293,8 @@ class BasicTests(BaseTest):
 
         self.lg('{} ENDED'.format(self._testID))
 
-    # def test008_create_destroy_list_kvm(self):
-    #     """ g8os-008
-    #     *Test case for testing creating, listing and destroying VMs*
-    #
-    #     **Test Scenario:**
-    #     #. Create virtual machine (VM1), should succeed
-    #     #. List all virtual machines and check that VM1 is there
-    #     #. Create another virtual machine with the same kvm domain, should fail
-    #     #. Destroy VM1, should succeed
-    #     #. List the virtual machines, VM1 should be gone
-    #     #. Destroy VM1 again, should fail
-    #     """
-    #
-    # def test009_create_list_delete_containers(self):
-    #     """ g8os-009
-    #     *Test case for testing creating, listing and deleting containers*
-    #
-    #     **Test Scenario:**
-    #     #. Create a new container (C1), should succeed
-    #     #. List all containers and check that C1 is there
-    #     #. Get client, execute command and check on the result (write more details)
-    #     #. Destroy C1, should succeed
-    #     #. List the containers, C1 should be gone
-    #     #. Destroy C1 again, should fail
-    #     """
-    #
-    # def test010_join_leave_list_zerotier(self):
-    #     """ g8os-010
-    #     *Test case for testing joining, listing, leaving zerotier networks*
-    #
-    #     **Test Scenario:**
-    #     #. Join zerotier network (N1), should succeed
-    #     #. List zerotier network
-    #     #. Leave zerotier network (N1),should succeed
-    #     #. List zerotier networks, N1 should be gone
-    #     #. Leave zerotier network (N1), should fail
-    #     #. ref: https://www.zerotier.com/manual.shtml .. please all possible missing steps .. also add extended scenario to test zerotier functionality
-    #     """
-    #
-    # def test011_create_delete_list_bridges(self):
-    #     """ g8os-011
-    #     *Test case for testing creating, listing, deleting bridges*
-    #
-    #     **Test Scenario:**
-    #     #. Create bridge (B1), should succeed
-    #     #. List  bridges, B1 should be listed
-    #     #. Delete bridge B1, should succeed
-    #     #. List bridges, B1 should be gone
-    #     #. Delete bridge B1, should fail
-    #     .... please add extended scenario to test bridges functionality
-    #     """
-    #
-
-    def test012_create_list_delete_btrfs(self):
-        """ g8os-012
+    def test008_create_list_delete_btrfs(self):
+        """ g8os-008
         *Test case for creating, listing and monitoring btrfs*
 
         **Test Scenario:**
