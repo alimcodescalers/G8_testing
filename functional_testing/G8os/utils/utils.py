@@ -23,6 +23,8 @@ class BaseTest(unittest.TestCase):
         self._startTime = time.time()
         self._logger = logging.LoggerAdapter(logging.getLogger('g8os_testsuite'),
                                              {'testid': self.shortDescription() or self._testID})
+        self.root_url = 'https://hub.gig.tech/maxux/ubuntu1604.flist'
+        self.storage = 'ardb://hub.gig.tech:16379'
 
     def teardown(self):
         pass
@@ -85,3 +87,28 @@ class BaseTest(unittest.TestCase):
         else:
             self.lg('can\'t connect to zerotier, {}:{}'.format(r.status_code, r.content))
             return False
+
+    def get_g8os_zt_ip(self, networkId):
+        """
+        method to get the zerotier ip address of the g8os client
+        """
+        nws = self.client.zerotier.list()
+        for nw in nws:
+            if nw['nwid'] == networkId:
+                address = nw['assignedAddresses'][0]
+                return address[:address.find('/')]
+        else:
+            self.lg('can\'t find network in zerotier.list()')
+
+    def get_contanier_zt_ip(self, client):
+        """
+        method to get zerotier ip address of the g8os container
+        """
+        nics = client.info.nic()
+        for nic in nics:
+            if 'zt' in nic['name']:
+                address = nic['addrs'][0]['addr']
+                address = address[:address.find('/')]
+                return address
+        else:
+            self.lg('can\'t find zerotier netowrk interface')

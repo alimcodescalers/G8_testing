@@ -8,35 +8,8 @@ class ExtendedNetworking(BaseTest):
     def setUp(self):
         super(ExtendedNetworking, self).setUp()
         self.check_g8os_connection(ExtendedNetworking)
-        self.root_url = 'https://hub.gig.tech/maxux/ubuntu1604.flist'
-        self.storage = 'ardb://hub.gig.tech:16379'
 
-    def get_g8os_zt_ip(self, networkId):
-        """
-        method to get the zerotier ip address of the g8os client
-        """
-        nws = self.client.zerotier.list()
-        for nw in nws:
-            if nw['nwid'] == networkId:
-                address = nw['assignedAddresses'][0]
-                return address[:address.find('/')]
-        else:
-            self.lg('can\'t find network in zerotier.list()')
-
-    def get_contanier_zt_ip(self, client):
-        """
-        method to get zerotier ip address of the g8os container
-        """
-        nics = client.info.nic()
-        for nic in nics:
-            if 'zt' in nic['name']:
-                address = nic['addrs'][0]['addr']
-                address = address[:address.find('/')]
-                return address
-        else:
-            self.lg('can\'t find zerotier netowrk interface')
-
-
+    @unittest.skip('bug# https://github.com/g8os/core0/issues/126')
     def test001_zerotier(self):
         """ g8os-01
         *Test case for testing zerotier functionally*
@@ -50,6 +23,8 @@ class ExtendedNetworking(BaseTest):
         #. Container c1 ping Container c2, should succeed
         #. Container c2 ping g8os client, should succeed
         #. Container c2 ping Container c1, should succeed
+        #. G8os client ping Container c1, should succeed
+        #. G8os client ping Container c2, should succeed
         #. G8os client leave zerotier network (N1), should succeed
         #. G8os client ping Container c1, should fail
         #. G8os client ping Container c2, should fail
@@ -69,7 +44,7 @@ class ExtendedNetworking(BaseTest):
         c1_client = self.client.container.client(cid_1)
         c2_client = self.client.container.client(cid_2)
 
-        time.sleep(30)
+        time.sleep(40)
 
         self.lg('Get g8os and containers zerotier ip addresses')
         g8_ip = self.get_g8os_zt_ip(networkId)
