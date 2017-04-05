@@ -41,7 +41,7 @@ class BasicNetworking(BaseTest):
         self.lg('Leave zerotier network (N1), should succeed')
         self.client.zerotier.leave(networkId)
 
-        self.lg('List zerotier network')
+        self.lg('List zerotier networks, N1 should be gone')
         r = self.client.zerotier.list()
         self.assertNotIn(networkId, [x['nwid'] for x in r])
 
