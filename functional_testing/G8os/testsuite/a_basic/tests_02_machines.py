@@ -11,7 +11,7 @@ class Machinetests(BaseTest):
         self.check_g8os_connection(Machinetests)
 
     def test001_create_destroy_list_kvm(self):
-        """ g8os-008
+        """ g8os-009
 
         *Test case for testing creating, listing and destroying VMs*
 
@@ -73,7 +73,7 @@ class Machinetests(BaseTest):
 
     @unittest.skip('bug# https://github.com/g8os/core0/issues/123')
     def test002_create_list_delete_containers(self):
-        """ g8os-009
+        """ g8os-010
         *Test case for testing creating, listing and deleting containers*
 
         **Test Scenario:**
@@ -108,7 +108,7 @@ class Machinetests(BaseTest):
         self.lg('{} ENDED'.format(self._testID))
 
     def test003_deal_with_container_client(self):
-        """ g8os-0010
+        """ g8os-011
 
         *Test case for testing dealing with container client*
 
