@@ -4,6 +4,7 @@ import time
 import uuid
 import logging
 import configparser
+import requests
 
 
 class BaseTest(unittest.TestCase):
@@ -11,7 +12,12 @@ class BaseTest(unittest.TestCase):
         config = configparser.ConfigParser()
         config.read('config.ini')
         self.target_ip = config['main']['target_ip']
+        self.zt_access_token = config['main']['zt_access_token']
         self.client = g8core.Client(self.target_ip)
+        self.session = requests.Session()
+        self.session.headers['Authorization'] = 'Bearer {}'.format(self.zt_access_token)
+        self.root_url = 'https://hub.gig.tech/maxux/ubuntu1604.flist'
+        self.storage = 'ardb://hub.gig.tech:16379'
         self.client.timeout = 60
         super(BaseTest, self).__init__(*args, **kwargs)
 
@@ -20,6 +26,7 @@ class BaseTest(unittest.TestCase):
         self._startTime = time.time()
         self._logger = logging.LoggerAdapter(logging.getLogger('g8os_testsuite'),
                                              {'testid': self.shortDescription() or self._testID})
+
 
     def teardown(self):
         pass
@@ -59,6 +66,54 @@ class BaseTest(unittest.TestCase):
     def stdout(self, resource):
         return resource.get().stdout.replace('\n', '').lower()
 
+    def getZtNetworkID(self):
+        url = 'https://my.zerotier.com/api/network'
+        r = self.session.get(url)
+        if r.status_code == 200:
+            for item in r.json():
+                if item['type'] == 'Network':
+                    return item['id']
+            else:
+                self.lg('can\'t find network id')
+                return False
+        else:
+            self.lg('can\'t connect to zerotier, {}:{}'.format(r.status_code, r.content))
+            return False
+
+    def getZtNetworkOnlineMembers(self, networkId):
+        url = 'https://my.zerotier.com/api/network/{}'.format(networkId)
+        r = self.session.get(url)
+        if r.status_code == 200:
+            return r.json()['onlineMemberCount']
+        else:
+            self.lg('can\'t connect to zerotier, {}:{}'.format(r.status_code, r.content))
+            return False
+
+    def get_g8os_zt_ip(self, networkId):
+        """
+        method to get the zerotier ip address of the g8os client
+        """
+        nws = self.client.zerotier.list()
+        for nw in nws:
+            if nw['nwid'] == networkId:
+                address = nw['assignedAddresses'][0]
+                return address[:address.find('/')]
+        else:
+            self.lg('can\'t find network in zerotier.list()')
+
+    def get_contanier_zt_ip(self, client):
+        """
+        method to get zerotier ip address of the g8os container
+        """
+        nics = client.info.nic()
+        for nic in nics:
+            if 'zt' in nic['name']:
+                address = nic['addrs'][0]['addr']
+                address = address[:address.find('/')]
+                return address
+        else:
+            self.lg('can\'t find zerotier netowrk interface')
+            
     def deattach_all_loop_devices(self):
         self.client.bash('modprobe loop')  # to make /dev/loop* available
         self.client.bash('umount -f /dev/loop*')  # Make sure to free all loop devices first
