@@ -352,7 +352,7 @@ class BasicTests(BaseTest):
 
         **Test Scenario:**
         #. Setup two loop devices to be used by btrfs
-        #. Create Btrfs file system, should succeed
+        #. Create Btrfs file system (Bfs1), should succeed
         #. List Btrfs file system, should find the file system (Bfs1)
         #. Mount the btrfs filesystem (Bfs1)
         #. Get Info for the btrfs file system (Bfs1)
