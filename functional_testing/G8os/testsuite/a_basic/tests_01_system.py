@@ -216,7 +216,6 @@ class SystemTests(BaseTest):
 
         self.lg('{} ENDED'.format(self._testID))
 
-    @unittest.skip('bug# https://github.com/g8os/core0/issues/109')
     def test005_cpu_info(self):
 
         """ g8os-005
@@ -237,6 +236,8 @@ class SystemTests(BaseTest):
 
         self.lg('compare g8os results to bash results')
         for key in expected_cpu_info.keys():
+            if key == 'cores':
+                continue
             g8os_param_list = [x[key] for x in g8os_cpu_info]
             self.assertEqual(expected_cpu_info[key], g8os_param_list)
 
