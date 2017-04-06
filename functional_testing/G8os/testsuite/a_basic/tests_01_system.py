@@ -1,6 +1,9 @@
 from utils.utils import BaseTest
 import time
 import unittest
+from nose_parameterized import parameterized
+import os
+import io
 
 
 class BasicTests(BaseTest):
@@ -8,6 +11,17 @@ class BasicTests(BaseTest):
     def setUp(self):
         super(BasicTests, self).setUp()
         self.check_g8os_connection(BasicTests)
+        self.cid = self.client.container.create(root_url=self.root_url, storage=self.storage)
+        self.client_container = self.client.container.client(self.cid)
+
+    def tearDown(self):
+        # self.client.container.terminate(self.cid)
+        super(BasicTests, self).tearDown()
+
+
+    def get_permission(self, client, path):
+        return int(self.stdout(client.bash('stat -c %a {}'.format(path))))
+
 
     def getNicInfo(self):
         r = self.client.bash('ip -br a').get().stdout
@@ -209,14 +223,13 @@ class BasicTests(BaseTest):
         self.assertEqual(expected_mem_info['total'], g8os_mem_info['total'])
         params_to_check = ['active', 'available', 'buffers', 'cached', 'free', 'inactive']
         for key in params_to_check:
-            threshold = 1024 * 200  # acceptable threshold (200 MB)
+            threshold = 1024 * 300  # acceptable threshold (300 MB)
             g8os_value = g8os_mem_info[key]
             expected_value = expected_mem_info[key]
             self.assertTrue(expected_value - threshold <= g8os_value <= expected_value + threshold, key)
 
         self.lg('{} ENDED'.format(self._testID))
 
-    @unittest.skip('bug# https://github.com/g8os/core0/issues/109')
     def test005_cpu_info(self):
 
         """ g8os-005
@@ -237,6 +250,8 @@ class BasicTests(BaseTest):
 
         self.lg('compare g8os results to bash results')
         for key in expected_cpu_info.keys():
+            if key == 'cores':
+                continue
             g8os_param_list = [x[key] for x in g8os_cpu_info]
             self.assertEqual(expected_cpu_info[key], g8os_param_list)
 
@@ -293,67 +308,284 @@ class BasicTests(BaseTest):
 
         self.lg('{} ENDED'.format(self._testID))
 
-    def test008_create_list_delete_btrfs(self):
-        """ g8os-008
-        *Test case for creating, listing and monitoring btrfs*
+    @parameterized.expand(['client', 'container'])
+    def test008_mkdir_exists_list_chmod_move_remove_directory(self, client ):
+        """ g8os-015
+        *Test case for test filesystem mkdir, exists, list, chmod, move, remove methods*
 
         **Test Scenario:**
-        #. Setup two loop devices to be used by btrfs
-        #. Create Btrfs file system (Bfs1), should succeed
-        #. List Btrfs file system, should find the file system (Bfs1)
-        #. Mount the btrfs filesystem (Bfs1)
-        #. Get Info for the btrfs file system (Bfs1)
-        #. Add new loop (LD1) device, should succeed
-        #. Remove the loop device (LD1), should succeed
-        #. Remove all loop devices
-        #. List the btrfs filesystem, Bfs1 shouldn't be there
+        #. Make new directory (D1), should succeed
+        #. Check directory (D1) is exists, should succeed
+        #. Move directory (D1), should succeed
+        #. Remove directory (D1), should succeed
+        #. Make new parent directory (D2), should succeed
+        #. Make new directory (D3) inside (D2), should succeed
+        #. Change directory (D2) mode, should succeed
         """
+        if client == 'client':
+            client = self.client
+        else:
+            client = self.client_container
 
         self.lg('{} STARTED'.format(self._testID))
 
-        self.lg('Setup two loop devices to be used by btrfs')
-        loop_dev_list = self.setup_loop_devices(['bd0', 'bd1'], '500M', deattach=True)
+        self.lg('Make new directory (D1), should succeed')
+        dir_name = self.rand_str()
+        client.filesystem.mkdir(dir_name)
 
-        self.lg('Create Btrfs file system (Bfs1), should succeed')
-        label = self.rand_str()
-        self.client.btrfs.create(label, loop_dev_list)
+        self.lg('Check directory (D1) is exists, should succeed')
+        ## using bash
+        ls = client.bash('ls').get().stdout.splitlines()
+        self.assertIn(dir_name, ls)
+        ## using bash filesystem.list
+        ls = [x['name'] for x in client.filesystem.list('.')]
+        self.assertIn(dir_name, ls)
+        ## using bash filesystem.exists
+        self.assertTrue(client.filesystem.exists(dir_name))
 
-        self.lg('List Btrfs file system, should find the file system (Bfs1)')
-        btr_list = self.client.btrfs.list()
-        btr = [i for i in btr_list if i['label'] == label]
-        self.assertNotEqual(btr, [])
+        self.lg('Move directory (D1), should succeed')
+        new_destination = '/root/{}'.format(dir_name)
+        client.filesystem.move(dir_name, new_destination)
+        self.assertTrue(client.filesystem.exists(new_destination))
+        self.assertFalse(client.filesystem.exists(dir_name))
 
-        self.lg('Mount the btrfs filesystem (Bfs1)')
-        dirc = self.rand_str()
-        mount_point = '/mnt/{}'.format(dirc)
-        self.client.bash('mkdir -p {}'.format(mount_point))
-        rs = self.client.disk.mount(loop_dev_list[0], mount_point, [""])
+        self.lg('Remove directory (D1), should succeed')
+        client.filesystem.remove(new_destination)
+        ls = client.bash('ls').get().stdout.splitlines()
+        self.assertNotIn(dir_name, ls)
 
-        self.lg('Get Info for the btrfs file system (Bfs1)')
-        rs = self.client.btrfs.info(mount_point)
-        self.assertEqual(rs['label'], label)
-        self.assertEqual(rs['total_devices'], btr[0]['total_devices'])
+        self.lg('Make new parent directory (D2), should succeed')
+        parent_dir = self.rand_str()
+        client.filesystem.mkdir(parent_dir)
 
-        self.lg('Add new loop (LD1) device')
-        loop_dev_list2 = self.setup_loop_devices(['bd2'], '500M')
-        self.client.btrfs.device_add(mount_point, loop_dev_list2[0])
-        rs = self.client.btrfs.info(mount_point)
-        self.assertEqual(rs['total_devices'], 3)
+        self.lg('Make new directory (D3) inside (D2), should succeed')
+        child_dir = '{}/{}'.format(parent_dir, self.rand_str())
+        client.filesystem.mkdir(child_dir)
 
-        self.lg('Remove the loop device (LD1)')
-        self.client.btrfs.device_remove(mount_point, loop_dev_list2[0])
-        rs = self.client.btrfs.info(mount_point)
-        self.assertEqual(rs['total_devices'], 2)
+        self.lg('Change directory (D2) mode, should succeed')
+        client.filesystem.chmod(parent_dir, 0o777)
+        parent_dir_perimission = self.get_permission(client, parent_dir)
+        child_dir_perimission = self.get_permission(client, child_dir)
+        self.assertEqual(parent_dir_perimission, 777)
+        self.assertNotEqual(child_dir_perimission, 777)
 
-        self.lg('Remove all loop devices')
-        for dev in loop_dev_list:
-            rs = self.client.btrfs.device_remove(mount_point, dev)
-        self.deattach_all_loop_devices()
+        self.lg('Change directory (D2) mode recursively, should succeed')
+        client.filesystem.chmod(parent_dir, 0o321, recursive=True)
+        parent_dir_perimission = self.get_permission(client, parent_dir)
+        child_dir_perimission = self.get_permission(client, child_dir)
+        self.assertEqual(parent_dir_perimission, 321)
+        self.assertEqual(child_dir_perimission, 321)
 
-        self.lg("List the btrfs filesystems , Bfs1 shouldn't be there")
-        btr_list = self.client.btrfs.list()
-        btr = [i for i in btr_list if i['label'] == label]
-        self.assertEqual(btr, [])
-        self.client.bash('rm -rf {}'.format(mount_point))
+        self.lg('{} ENDED'.format(self._testID))
+
+
+    @parameterized.expand(['client', 'container'])
+    def test009_open_close_read_write_file(self, client):
+
+        """ g8os-019
+        *Test case for test filesystem upload, download, upload_file, download_file methods*
+
+        **Test Scenario:**
+        #. Open file (F1) in read (r) mode, should succeed
+        #. Read file (F1) and check its content, should succeed
+        #. Try to write to the file (F1), should fail
+        #. Open file (F1) in (w+) mode
+        #. Write text to file (F1), should succeed
+        #. Check file (F1) is truncated and contains only (T2) text
+        #. Try to read the file (F1), should fail
+        #. Open file (F1) in (w+) mode
+        #. Write text to file (F1), should succeed
+        #. Read text from file (F1), should succeed
+        #. Open file (F1) in (r+) mode
+        #. Write text to file (F1), should success
+        #. Check file (F1) content, should success
+        #. Open file (F1) in (a) mode
+        #. Write text to file (F1), should succeed
+        #. Check file (F1) text , should succeed
+        #. Create file (F2) using open in (x) mode, should succeed
+        #. Check if  file (F2) exists, should succeed
+        """
+
+        if client in ['client', 'container']:
+            self.skipTest('bug# https://github.com/g8os/core0/issues/133, 136')
+
+        if client == 'client':
+            client = self.client
+        else:
+            client = self.client_container
+
+        self.lg('{} STARTED'.format(self._testID))
+
+        file_name = '{}.txt'.format(self.rand_str())
+        client.bash('touch /{}'.format(file_name))
+        time.sleep(1)
+
+        open_modes = ['r', 'w', 'a', 'w+', 'r+', 'a+', 'x']
+        for mode in open_modes:
+
+            txt = 'line1\nline2\nline3'
+            client.bash('echo "{}" > {}'.format(txt, file_name))
+            f = client.filesystem.open(file_name, mode=mode)
+
+            if mode == 'r':
+
+                self.lg('Open file (F1) in read (r) mode, should succeed')
+
+                self.lg('Read file (F1) and check its content, should succeed')
+                file_text = client.filesystem.read(f).decode('utf-8')
+                self.assertEqual(file_text, '{}\n'.format(txt))
+
+                self.lg('Try to write to the file (F1), should fail')
+                txt = new_txt = str.encode(self.rand_str())
+                with self.assertRaises(RuntimeError):
+                    client.filesystem.write(f, txt)
+
+            if mode  == 'w': #issue
+
+                self.lg('Open file (F1) in write only (w) mode')
+
+                self.lg('Write text (T2) to file')
+                new_txt = str.encode(self.rand_str())
+                client.filesystem.write(f, new_txt)
+
+                self.lg('Check file (F1) is truncated and contains only (T2) text')
+                file_text = client.bash('cat {}'.format(file_name)).get().stdout
+                self.assertEqual(file_text, '{}\n'.format(new_txt.decode('utf-8')), mode)
+
+                self.lg('Try to read the file (F1), should fail')
+                with self.assertRaises(RuntimeError):
+                    client.filesystem.read(f)
+
+            if mode == 'w+': #issue
+
+                self.lg('Open file (F1) in (w+) mode')
+
+                self.lg('Write text to file (F1), should succeed')
+                new_txt = str.encode(self.rand_str())
+                client.filesystem.write(f, new_txt)
+
+                self.lg('Read text from file (F1), should succeed')
+                client.filesystem.read(f)
+
+            #read/write(at begin)
+            if mode == 'r+':
+
+                self.lg('Open file (F1) in (r+) mode')
+
+                self.lg('Write text to file (F1), should success')
+                new_txt = str.encode(self.rand_str())
+                client.filesystem.write(f, new_txt)
+
+                self.lg('Check file (F1) content, should success')
+                file_text = client.bash('cat {}'.format(file_name)).get().stdout
+                self.assertEqual(file_text, '{}\n{}\n'.format(new_txt.decode('utf-8'), txt))
+                file_text = client.filesystem.read(f).decode('utf-8')
+                self.assertEqual(file_text, '{}\n'.format(txt))
+
+            if mode == 'a':
+
+                self.lg('Open file (F1) in (a) mode')
+
+                self.lg('Write text to file (F1), should succeed')
+                new_txt = str.encode(self.rand_str())
+                client.filesystem.write(f, new_txt)
+                file_text = client.bash('cat {}'.format(file_name)).get().stdout
+
+                self.lg('Check file (F1) text , should succeed')
+                self.assertEqual(file_text.decode('utf-8'), '{}\n{}\n'.format(txt, new_txt))
+
+
+            if mode == 'x':
+
+                self.lg('Create file (F2) using open in (x) mode, should succeed')
+                file_name_2 = '{}.txt'.format(self.rand_str())
+                client.filesystem.open(file_name_2, mode=mode)
+
+                self.lg('Check if  file (F2) exists, should succeed')
+                ls = client.bash('ls').get().stdout.splitlines()
+                self.assertIn(file_name_2, ls)
+
+            else:
+                with self.assertRaises(RuntimeError):
+                    client.filesystem.open(self.rand_str(), mode=mode)
+
+            client.filesystem.close(f)
+
+        self.lg('{} ENDED'.format(self._testID))
+
+
+    @parameterized.expand(['client', 'container'])
+    def test010_upload_download_file(self, client):
+
+        """ g8os-018
+        *Test case for test filesystem upload, download, upload_file, download_file methods*
+
+        **Test Scenario:**
+        #. Create local file (LF1) and write data to it, should succeed
+        #. Upload file (LF1) to g8os/contaier
+        #. Check file (LF1) is exists in g8os/contaier and check its data
+        #. Upload buffer data to the remote file
+        #. Check the remote file content equal to buffer content
+        #. Create remote file (RF1) and write data to it, should succeed
+        #. Download file (RF1) to localhost
+        #. Check file (RF1) is exists in localhost and check its data
+        #. Download file (RF1) to buffer
+        #. Check buffer data equal to file (RF1) content
+        """
+
+        if client == 'client':
+            client = self.client
+        else:
+            client = self.client_container
+
+        self.lg('{} STARTED'.format(self._testID))
+
+        self.lg('Create local file (LF1) and write data to it, should succeed')
+        local_file_name = '{}.txt'.format(self.rand_str())
+        remote_file_name = '{}.txt'.format(self.rand_str())
+
+        test_txt = self.rand_str()
+        with open(local_file_name, 'w+') as f:
+            f.write(test_txt)
+
+        self.lg('Upload file (LF1) to g8os/container')
+        client.filesystem.upload_file('/{}'.format(remote_file_name), local_file_name)
+
+        self.lg('Check file (LF1) is exists in g8os/container and check its data')
+        ls = client.bash('ls').get().stdout.splitlines()
+        self.assertIn(remote_file_name, ls)
+        file_text = client.bash('cat {}'.format(remote_file_name)).get().stdout.strip()
+        self.assertEqual(file_text, test_txt)
+
+        self.lg('Upload buffer data to the remote file')
+        client.bash('echo "" > {}'.format(remote_file_name))
+        buff = io.BytesIO(bytes(self.rand_str().encode('utf-8')))
+        client.filesystem.upload('/{}'.format(remote_file_name), buff)
+
+        self.lg('Check the remote file content equal to buffer content')
+        file_text = client.bash('cat {}'.format(remote_file_name)).get().stdout.strip()
+        self.assertEqual(buff.getvalue().decode('utf-8'), file_text)
+
+        self.lg('Create remote file (RF1) and write data to it, should succeed')
+        remote_file_name = '{}.txt'.format(self.rand_str())
+        local_file_name = '{}.txt'.format(self.rand_str())
+        test_txt = self.rand_str()
+        client.bash('echo "{}" > {}'.format(test_txt, remote_file_name))
+
+        self.lg('Download file (RF1) to localhost')
+        client.filesystem.download_file('/{}'.format(remote_file_name), local_file_name)
+
+        self.lg('Check file (RF1) is exists in localhost and check its data')
+        ls = os.listdir()
+        self.assertIn(local_file_name, ls)
+        with open(local_file_name, 'r') as f:
+            self.assertEqual(f.read().strip(), test_txt)
+
+        self.lg('Download file (RF1) to buffer')
+        buff = io.BytesIO()
+        client.filesystem.download('/{}'.format(remote_file_name), buff)
+
+        self.lg('Check buffer data equal to file (RF1) content')
+        self.assertEqual(buff.getvalue().decode('utf-8').strip(), test_txt)
 
         self.lg('{} ENDED'.format(self._testID))
