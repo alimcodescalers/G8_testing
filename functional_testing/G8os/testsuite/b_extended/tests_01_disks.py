@@ -1,11 +1,11 @@
 from utils.utils import BaseTest
 
 
-class ExtendedSystem(BaseTest):
+class DisksTests(BaseTest):
 
     def setUp(self):
-        super(ExtendedSystem, self).setUp()
-        self.check_g8os_connection(ExtendedSystem)
+        super(DisksTests, self).setUp()
+        self.check_g8os_connection(DisksTests)
 
 
     def create_btrfs(self):
