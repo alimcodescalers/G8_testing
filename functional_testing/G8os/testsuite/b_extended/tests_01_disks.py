@@ -76,7 +76,7 @@ class ExtendedSystem(BaseTest):
         self.lg('{} ENDED'.format(self._testID))
 
     def test002_subvolumes_btrfs(self):
-        """ g8os-009
+        """ g8os-016
         *Test case for creating, listing and deleting btrfs subvolumes*
 
         **Test Scenario:**
@@ -134,7 +134,7 @@ class ExtendedSystem(BaseTest):
         self.lg('{} ENDED'.format(self._testID))
 
     def test003_snapshots_btrfs(self):
-        """ g8os-0010
+        """ g8os-0017
         *Test case for creating, listing and deleting btrfs snapshots*
 
         **Test Scenario:**
