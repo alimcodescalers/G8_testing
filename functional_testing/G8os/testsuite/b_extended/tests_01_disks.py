@@ -282,11 +282,12 @@ class DisksTests(BaseTest):
         mount_point = '/mnt/{}'.format(self.rand_str())
         self.lg('Mount disk using g8os disk mount.')
         loop_dev_list = self.setup_loop_devices(filename, '500M', deattach=True)
+        print (loop_dev_list)
         self.client.btrfs.create(label, loop_dev_list)
 
         self.lg('Mount disk using g8os disk mount')
         self.client.bash('mkdir -p {}'.format(mount_point))
-        self.client.disk.mount(loop_dev_list[0], mount_point, [""])
+        self.client.disk.mount(loop_dev_list[0], mount_point, ["async"])
 
         self.lg('Get disk info , the mounted disk should be there.')
         disks = self.client.bash(' lsblk -n -io NAME ').get().stdout
@@ -327,8 +328,6 @@ class DisksTests(BaseTest):
         """
         self.lg('{} STARTED'.format(self._testID))
         filename = [self.rand_str()]
-        label = self.rand_str()
-        mount_point = '/mnt/{}'.format(self.rand_str())
 
         self.lg('create loop device and put file system on it')
         loop_dev_list = self.setup_loop_devices(filename, '500M', deattach=True)
@@ -366,4 +365,83 @@ class DisksTests(BaseTest):
             if disk['name'] == device_name:
                 self.assertTrue('children' not in disk.keys())
 
+        self.lg('{} ENDED'.format(self._testID))
+
+    def test007_extended_disk_partitions(self):
+
+        """ g8os-025
+
+        *Test case for test creating Partitions in disk *
+
+        **Test Scenario:**
+
+        #. create loop device and put file system on it.
+        #. Make a partition table with type msdos for this disk, should succeed.
+        #. Check disk table type from disk info ,msdos type should be there .
+        #. Make 2 partition for disk with 50% space of disk,
+            one with extended type and other with primary type,should succeed.
+        #. check disk  exist in disk list with 2 partition.
+        #. Mount part1 of disk  using g8os disk mount, should succeed.
+        #. Mount part2 of disk  using g8os disk mount, should succeed.
+        #. Get disk info, check the mounted points for two partitions.
+        #. Unmount the disk, shouldn\'t be found in the disks list.
+
+        """
+        self.lg('{} STARTED'.format(self._testID))
+        table_type = 'msdos'
+        filename = [self.rand_str()]
+        label = self.rand_str()
+        label2 = self.rand_str()
+        mount_point_part1 = '/mnt/{}'.format(self.rand_str())
+        mount_point_part2 = '/mnt/{}'.format(self.rand_str())
+        self.lg('create loop device and put file system on it')
+        loop_dev_list = self.setup_loop_devices(filename, '500M', deattach=True)
+        device_name = loop_dev_list[0]
+        device_name = device_name[device_name.index('/')+5:]
+
+        self.lg('Make a partition table with  msdos type for this disk, should succeed.')
+        self.client.disk.mktable(device_name, table_type)
+        self.lg('Check disk table type from disk info ,msdos type should be there .')
+        info = self.client.disk.getinfo(device_name)
+        self.assertEqual(info['table'], table_type)
+
+        self.lg('Make 2 partition for disk with 50% space of disk with different types, should succeed.')
+        self.client.disk.mkpart(device_name, '1', '50%', 'extended')
+        self.client.disk.mkpart(device_name, '50%', '100%')
+
+        self.lg('check that disk exist in disk list with 2 partition ')
+        disks = self.client.disk.list()
+        for disk in disks['blockdevices']:
+            if disk['name'] == device_name:
+                self.assertEqual(len(disk['children']), 2)
+
+        self.lg('Mount part1 of disk  using g8os disk mount, should succeed')
+        self.client.btrfs.create(label, ['{}p1'.format(loop_dev_list[0])])
+        self.client.bash('mkdir -p {}'.format(mount_point_part1))
+        self.client.disk.mount('{}p1'.format(loop_dev_list[0]), mount_point_part1, [""])
+
+        self.lg('Mount part2 of disk  using g8os disk mount, should succeed')
+        self.client.btrfs.create(label2, ['{}p2'.format(loop_dev_list[0])])
+        self.client.bash('mkdir -p {}'.format(mount_point_part2))
+        self.client.disk.mount('{}p2'.format(loop_dev_list[0]), mount_point_part2, [""])
+
+        self.lg('Get disk info, check the mounted points for two partitions.')
+        part1_name = '{}p1'.format(device_name)
+        part2_name = '{}p2'.format(device_name)
+        info = self.client.disk.getinfo(device_name)
+        partitions = info['children']
+        for part in partitions:
+            if part['name'] == part1_name:
+                self.assertEqual(part['mountpoint'], mount_point_part1)
+            else:
+                self.assertEqual(str(part['mountpoint']), mount_point_part2)
+
+        self.lg('unmount the disk, shouldn\'t be found in the disks list')
+        self.client.disk.umount('{}p1'.format(loop_dev_list[0]))
+        disks = self.client.bash(' lsblk -n -io NAME ').get().stdout
+        disks = disks.splitlines()
+        result = [disk in '{}p1'.format(loop_dev_list[0]) for disk in disks]
+        self.assertFalse(True in result)
+        result = [disk in '{}'.format(loop_dev_list[0]) for disk in disks]
+        self.assertIn(True, result)
         self.lg('{} ENDED'.format(self._testID))
