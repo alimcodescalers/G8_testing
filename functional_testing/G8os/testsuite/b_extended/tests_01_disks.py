@@ -282,7 +282,6 @@ class DisksTests(BaseTest):
         mount_point = '/mnt/{}'.format(self.rand_str())
         self.lg('Mount disk using g8os disk mount.')
         loop_dev_list = self.setup_loop_devices(filename, '500M', deattach=True)
-        print (loop_dev_list)
         self.client.btrfs.create(label, loop_dev_list)
 
         self.lg('Mount disk using g8os disk mount')
@@ -384,7 +383,7 @@ class DisksTests(BaseTest):
         #. Mount part1 of disk  using g8os disk mount, should succeed.
         #. Mount part2 of disk  using g8os disk mount, should succeed.
         #. Get disk info, check the mounted points for two partitions.
-        #. Unmount the disk, shouldn\'t be found in the disks list.
+        #. Unmount the partition 1, shouldn\'t be found in the disks list,and disk should still exist.
 
         """
         self.lg('{} STARTED'.format(self._testID))
