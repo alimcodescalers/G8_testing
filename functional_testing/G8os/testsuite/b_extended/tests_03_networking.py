@@ -1,6 +1,7 @@
 from utils.utils import BaseTest
 import time
 import unittest
+from random import randint
 
 
 class ExtendedNetworking(BaseTest):
@@ -8,6 +9,11 @@ class ExtendedNetworking(BaseTest):
     def setUp(self):
         super(ExtendedNetworking, self).setUp()
         self.check_g8os_connection(ExtendedNetworking)
+
+    def rand_mac_address(self):
+        mac_addr = ["{:02X}".format(randint(0, 255)) for x in range(6)]
+        return ':'.join(mac_addr)
+
 
     @unittest.skip('bug# https://github.com/g8os/core0/issues/126')
     def test001_zerotier(self):
@@ -96,6 +102,116 @@ class ExtendedNetworking(BaseTest):
 
         self.lg('{} ENDED'.format(self._testID))
 
+    @unittest.skip('bug: https://github.com/g8os/core0/issues/127')
+    def test002_create_bridges_with_specs_hwaddr(self):
 
-    # def test002_bridges(self):
-    #     pass
+        """ g8os-023
+        *Test case for testing creating, listing, deleting bridges*
+
+        **Test Scenario:**
+        #. Create bridge (B1) with specifice hardware address (HA), should succeed
+        #. List bridges, (B1) should be listed
+        #. Check the created bridge hardware address equal to (HA), should succeed
+        #. Delete bridge (B1), should succeed
+        #. Create bridge (B2) with invalid hardware address, should fail
+
+        """
+        self.lg('{} STARTED'.format(self._testID))
+
+        self.lg('Create bridge (B1) with specifice hardware address (HA), should succeed')
+        bridge_name = self.rand_str()
+        hardwareaddr = self.rand_mac_address()
+        self.client.bridge.create(bridge_name, hwaddr=hardwareaddr)
+
+        self.lg('List bridges, (B1) should be listed')
+        bridges = self.client.bridge.list()
+        self.assertIn(bridge_name, bridges)
+
+        self.lg('Check the created bridge hardware address equal to (HA), should succeed')
+        nics = self.client.info.nic()
+        nic_names = [x['name'] for x in nics]
+        self.assertIn(bridge_name, nic_names)
+        for nic in nics:
+            if nic['name'] == bridge_name:
+                self.assertEqual(nic['hardwareaddr'], hardwareaddr)
+
+        self.lg('Delete bridge (B1), should succeed')
+        self.client.bridge.delete(bridge_name)
+        bridges = self.client.bridge.list()
+        self.assertNotIn(bridge_name, bridges)
+
+        self.lg('Create bridge (B2) with invalid hardware address, should fail')
+        bridge_name = self.rand_str()
+        hardwareaddr = self.rand_str()
+        with self.assertRaises(RuntimeError):
+            self.client.bridge.create(bridge_name, hwaddr=hardwareaddr)
+
+        self.lg('{} ENDED'.format(self._testID))
+
+
+    def test003_create_bridges_with_specs_network(self):
+        """ g8os-024
+        *Test case for testing creating, listing, deleting bridges*
+
+        **Test Scenario:**
+        #. Create bridge (B1) with static network and cidr (C1), should succeed
+        #. Check the created bridge addresses contains cidr (C1), should succeed
+        #. Delete bridge (B1), should succeed
+        #. Create bridge with invalid cidr, should fail
+        #. Create bridge (B2) with dsnmasq network and cidr (C2), should succeed
+        #. Check the bridge (B2) addresses contains cidr (C2), should succeed
+        #. Delete bridge (B2), should succeed
+
+        """
+        self.lg('{} STARTED'.format(self._testID))
+
+        self.lg('Create bridge (B1) with static network and cidr (C1), should succeed')
+        bridge_name = self.rand_str()
+        cidr = "10.20.30.1/24"
+        settings = {"cidr":cidr}
+        self.client.bridge.create(bridge_name, network='static', settings=settings)
+
+        self.lg('Check the created bridge addresses contains cidr (C1), should succeed')
+        nics = self.client.info.nic()
+        nic_names = [x['name'] for x in nics]
+        self.assertIn(bridge_name, nic_names)
+        for nic in nics:
+            if nic['name'] == bridge_name:
+                addrs = [x['addr'] for x in nic['addrs']]
+                self.assertIn(cidr, addrs)
+
+        self.lg('Delete bridge (B1), should succeed')
+        self.client.bridge.delete(bridge_name)
+        bridges = self.client.bridge.list()
+        self.assertNotIn(bridge_name, bridges)
+
+        self.lg('Create bridge with invalid cidr, should fail')
+        bridge_name = self.rand_str()
+        cidr = "10.20.30.1"
+        settings = {"cidr":cidr}
+        with self.assertRaises(RuntimeError):
+            self.client.bridge.create(bridge_name, network='static', settings=settings)
+
+        self.lg('Create bridge (B2) with dsnmasq network and cidr (C2), should succeed')
+        bridge_name = self.rand_str()
+        cidr = "10.20.30.1/24"
+        start = "10.20.30.2/24"
+        end = "10.20.30.3/24"
+        settings = {"cidr":cidr, "start":start, "end":end}
+        self.client.bridge.create(bridge_name, network='static', settings=settings)
+
+        self.lg('Check the bridge (B2) addresses contains cidr (C2), should succeed')
+        nics = self.client.info.nic()
+        nic_names = [x['name'] for x in nics]
+        self.assertIn(bridge_name, nic_names)
+        for nic in nics:
+            if nic['name'] == bridge_name:
+                addrs = [x['addr'] for x in nic['addrs']]
+                self.assertIn(cidr, addrs)
+
+        self.lg('Delete bridge (B2), should succeed')
+        self.client.bridge.delete(bridge_name)
+        bridges = self.client.bridge.list()
+        self.assertNotIn(bridge_name, bridges)
+
+        self.lg('{} ENDED'.format(self._testID))
