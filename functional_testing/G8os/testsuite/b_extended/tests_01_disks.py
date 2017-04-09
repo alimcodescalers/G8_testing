@@ -258,7 +258,7 @@ class DisksTests(BaseTest):
 
             self.lg('compare g8os results to disk{} of the bash results, should be the same '.format(disk))
             for key in bash_disk_info.keys:
-                self.assertEqual(g8os_disk_info[key], bash_disk_info)
+                self.assertEqual(g8os_disk_info[key], bash_disk_info[key])
 
         self.lg('{} ENDED'.format(self._testID))
 
@@ -269,18 +269,18 @@ class DisksTests(BaseTest):
 
         **Test Scenario:**
 
-        #. Make device to be mounted.
+        #. create loop device and put file system on it
         #. Mount disk using g8os disk mount.
-        #. Get disk info , should mounted disk be here.
+        #. Get disk info , the mounted disk should be there.
         #. Try mount it again , should fail.
-        #. Remount disk ,should deattach from disk list.
+        #. unmount the disk, shouldn't be found in the disks list
 
         """
         self.lg('{} STARTED'.format(self._testID))
         filename = [self.rand_str()]
         label = self.rand_str()
         mount_point = '/mnt/{}'.format(self.rand_str())
-        self.lg('Make device to be mounted')
+        self.lg('Mount disk using g8os disk mount.')
         loop_dev_list = self.setup_loop_devices(filename, '500M', deattach=True)
         self.client.btrfs.create(label, loop_dev_list)
 
@@ -288,7 +288,7 @@ class DisksTests(BaseTest):
         self.client.bash('mkdir -p {}'.format(mount_point))
         self.client.disk.mount(loop_dev_list[0], mount_point, [""])
 
-        self.lg('Get disk info , should mounted disk be here')
+        self.lg('Get disk info , the mounted disk should be there.')
         disks = self.client.bash(' lsblk -n -io NAME ').get().stdout
         disks = disks.splitlines()
         result = [disk in loop_dev_list[0] for disk in disks]
@@ -298,7 +298,7 @@ class DisksTests(BaseTest):
         with self.assertRaises(RuntimeError):
             self.client.disk.mount(loop_dev_list[0], mount_point, [""])
 
-        self.lg('Remount disk ,should deattach from disk list')
+        self.lg('unmount the disk, shouldn\'t be found in the disks list')
 
         self.client.disk.umount(loop_dev_list[0])
         disks = self.client.bash(' lsblk -n -io NAME ').get().stdout
@@ -316,13 +316,13 @@ class DisksTests(BaseTest):
 
         **Test Scenario:**
 
-        #. make new disk.
-        #. Make partion for disk before make table for it , should fail.
+        #. create loop device and put file system on it
+        #. Make partion for disk before making partion table for it , should fail.
         #. Make a partion table for this disk, should succeed.
         #. Make 2 partion for disk with 50% space of disk , should succeed.
-        #. check disk  exist in disk list with 2 partions .
+        #. check disk  exist in disk list with 2 partion .
         #. Make partion for this disk again  , should fail.
-        #. Remove partion for this disk ,should succeed.
+        #. Remove all partions for this disk ,should succeed.
 
         """
         self.lg('{} STARTED'.format(self._testID))
@@ -330,12 +330,12 @@ class DisksTests(BaseTest):
         label = self.rand_str()
         mount_point = '/mnt/{}'.format(self.rand_str())
 
-        self.lg('Make device to be mounted')
+        self.lg('create loop device and put file system on it')
         loop_dev_list = self.setup_loop_devices(filename, '500M', deattach=True)
         device_name = loop_dev_list[0]
         device_name = device_name[device_name.index('/')+5:]
 
-        self.lg('Make partion for disk before make table for it , should fail.')
+        self.lg('Make partion for disk before making partion table for it , should fail.')
         with self.assertRaises(RuntimeError):
             self.client.disk.mkpart(device_name, '0', '50%')
 
@@ -346,7 +346,7 @@ class DisksTests(BaseTest):
         self.client.disk.mkpart(device_name, '0', '50%')
         self.client.disk.mkpart(device_name, '50%', '100%')
 
-        self.lg('check disk  exist in disk list with 2 partions ')
+        self.lg('check disk  exist in disk list with 2 partion ')
         disks = self.client.disk.list()
         for disk in disks['blockdevices']:
             if disk['name'] == device_name:
