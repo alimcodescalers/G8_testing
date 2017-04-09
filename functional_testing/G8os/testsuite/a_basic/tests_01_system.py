@@ -12,17 +12,16 @@ class SystemTests(BaseTest):
 
         super(SystemTests, self).setUp()
         self.check_g8os_connection(SystemTests)
-        self.cid = self.client.container.create(root_url=self.root_url, storage=self.storage)
-        self.client_container = self.client.container.client(self.cid)
-
-    def tearDown(self):
-        self.client.container.terminate(self.cid)
-        super(SystemTests, self).tearDown()
-
 
     def get_permission(self, client, path):
         return int(self.stdout(client.bash('stat -c %a {}'.format(path))))
 
+    def create_container(self):
+        self.cid = self.client.container.create(root_url=self.root_url, storage=self.storage)
+        self.client_container = self.client.container.client(self.cid)
+
+    def remove_container(self):
+        self.client.container.terminate(self.cid)
 
     def getNicInfo(self):
         r = self.client.bash('ip -br a').get().stdout
@@ -31,7 +30,7 @@ class SystemTests(BaseTest):
         for nic in nics:
             if '@' in nic:
                 nic = nic[:nic.index('@')]
-            addrs = self.client.bash('ip -br a | grep -E "{}"'.format(nic)).get().stdout.splitlines()[0].split()[2:]
+            addrs = self.client.bash('ip -br a show "{}"'.format(nic)).get().stdout.splitlines()[0].split()[2:]
             mtu = int(self.stdout(self.client.bash('cat /sys/class/net/{}/mtu'.format(nic))))
             hardwareaddr = self.stdout(self.client.bash('cat /sys/class/net/{}/address'.format(nic)))
             if hardwareaddr == '00:00:00:00:00:00':
@@ -310,7 +309,7 @@ class SystemTests(BaseTest):
         self.lg('{} ENDED'.format(self._testID))
 
     @parameterized.expand(['client', 'container'])
-    def test008_mkdir_exists_list_chmod_move_remove_directory(self, client ):
+    def test008_mkdir_exists_list_chmod_move_remove_directory(self, client_type):
         """ g8os-015
         *Test case for test filesystem mkdir, exists, list, chmod, move, remove methods*
 
@@ -323,9 +322,10 @@ class SystemTests(BaseTest):
         #. Make new directory (D3) inside (D2), should succeed
         #. Change directory (D2) mode, should succeed
         """
-        if client == 'client':
+        if client_type == 'client':
             client = self.client
         else:
+            self.create_container()
             client = self.client_container
 
         self.lg('{} STARTED'.format(self._testID))
@@ -377,11 +377,14 @@ class SystemTests(BaseTest):
         self.assertEqual(parent_dir_perimission, 321)
         self.assertEqual(child_dir_perimission, 321)
 
+        if client_type == 'container':
+            self.remove_container()
+
         self.lg('{} ENDED'.format(self._testID))
 
 
     @parameterized.expand(['client', 'container'])
-    def test009_open_close_read_write_file(self, client):
+    def test009_open_close_read_write_file(self, client_type):
 
         """ g8os-019
         *Test case for test filesystem upload, download, upload_file, download_file methods*
@@ -407,12 +410,13 @@ class SystemTests(BaseTest):
         #. Check if  file (F2) exists, should succeed
         """
 
-        if client in ['client', 'container']:
+        if client_type in ['client', 'container']:
             self.skipTest('bug# https://github.com/g8os/core0/issues/133, 136')
 
-        if client == 'client':
+        if client_type == 'client':
             client = self.client
         else:
+            self.create_container()
             client = self.client_container
 
         self.lg('{} STARTED'.format(self._testID))
@@ -512,11 +516,14 @@ class SystemTests(BaseTest):
 
             client.filesystem.close(f)
 
+        if client_type == 'container':
+            self.remove_container()
+
         self.lg('{} ENDED'.format(self._testID))
 
 
     @parameterized.expand(['client', 'container'])
-    def test010_upload_download_file(self, client):
+    def test010_upload_download_file(self, client_type):
 
         """ g8os-018
         *Test case for test filesystem upload, download, upload_file, download_file methods*
@@ -534,9 +541,10 @@ class SystemTests(BaseTest):
         #. Check buffer data equal to file (RF1) content
         """
 
-        if client == 'client':
+        if client_type == 'client':
             client = self.client
         else:
+            self.create_container()
             client = self.client_container
 
         self.lg('{} STARTED'.format(self._testID))
@@ -588,5 +596,8 @@ class SystemTests(BaseTest):
 
         self.lg('Check buffer data equal to file (RF1) content')
         self.assertEqual(buff.getvalue().decode('utf-8').strip(), test_txt)
+
+        if client_type == 'container':
+            self.remove_container()
 
         self.lg('{} ENDED'.format(self._testID))
