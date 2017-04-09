@@ -281,29 +281,29 @@ class DisksTests(BaseTest):
         label = self.rand_str()
         mount_point = '/mnt/{}'.format(self.rand_str())
         self.lg('Make device to be mounted')
-        self.loop_dev_list = self.setup_loop_devices(filename, '500M', deattach=True)
-        self.client.btrfs.create(label, self.loop_dev_list)
+        loop_dev_list = self.setup_loop_devices(filename, '500M', deattach=True)
+        self.client.btrfs.create(label, loop_dev_list)
 
         self.lg('Mount disk using g8os disk mount')
         self.client.bash('mkdir -p {}'.format(mount_point))
-        self.client.disk.mount(self.loop_dev_list[0], mount_point, [""])
+        self.client.disk.mount(loop_dev_list[0], mount_point, [""])
 
         self.lg('Get disk info , should mounted disk be here')
         disks = self.client.bash(' lsblk -n -io NAME ').get().stdout
         disks = disks.splitlines()
-        result = [disk in self.loop_dev_list[0] for disk in disks]
+        result = [disk in loop_dev_list[0] for disk in disks]
         self.assertTrue(True in result)
 
         self.lg('Try mount it again , should fail')
         with self.assertRaises(RuntimeError):
-            self.client.disk.mount(self.loop_dev_list[0], mount_point, [""])
+            self.client.disk.mount(loop_dev_list[0], mount_point, [""])
 
         self.lg('Remount disk ,should deattach from disk list')
 
-        self.client.disk.umount(self.loop_dev_list[0])
+        self.client.disk.umount(loop_dev_list[0])
         disks = self.client.bash(' lsblk -n -io NAME ').get().stdout
         disks = disks.splitlines()
-        result = [disk in self.loop_dev_list[0] for disk in disks]
+        result = [disk in loop_dev_list[0] for disk in disks]
         self.assertFalse(True in result)
 
         self.lg('{} ENDED'.format(self._testID))
@@ -331,8 +331,8 @@ class DisksTests(BaseTest):
         mount_point = '/mnt/{}'.format(self.rand_str())
 
         self.lg('Make device to be mounted')
-        self.loop_dev_list = self.setup_loop_devices(filename, '500M', deattach=True)
-        device_name = self.loop_dev_list[0]
+        loop_dev_list = self.setup_loop_devices(filename, '500M', deattach=True)
+        device_name = loop_dev_list[0]
         device_name = device_name[device_name.index('/')+5:]
 
         self.lg('Make partion for disk before make table for it , should fail.')
