@@ -17,7 +17,7 @@ class SystemTests(BaseTest):
 
     def tearDown(self):
         self.client.container.terminate(self.cid)
-        super(BasicTests, self).tearDown()
+        super(SystemTests, self).tearDown()
 
 
     def get_permission(self, client, path):
