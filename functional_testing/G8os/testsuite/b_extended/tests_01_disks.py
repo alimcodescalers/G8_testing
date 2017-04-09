@@ -1,4 +1,5 @@
 from utils.utils import BaseTest
+import unittest
 
 
 class DisksTests(BaseTest):
@@ -6,7 +7,6 @@ class DisksTests(BaseTest):
     def setUp(self):
         super(DisksTests, self).setUp()
         self.check_g8os_connection(DisksTests)
-
 
     def create_btrfs(self):
         self.lg('Create Btrfs file system (Bfs1), should succeed')
@@ -23,6 +23,46 @@ class DisksTests(BaseTest):
         for dev in self.loop_dev_list:
             self.client.btrfs.device_remove(self.mount_point, dev)
         self.deattach_all_loop_devices()
+
+    def bash_disk_info(self, keys, diskname):
+        diskinf = {}
+        info = self.client.bash('lsblk -d dev/{} -O -P -b'.format(diskname))
+        info = self.stdout(info)
+        lines = info.split()
+        for key in keys:
+            for line in lines:
+                if key == line[:line.find('=')]:
+                    value = line[line.find('=')+2:-1]
+                    if value == '':
+                        value = None
+                    if key == 'vendor':
+                        value = line[line.find('=')+2:].ca
+                    diskinf[key] = value
+                    break
+        diskinf['blocksize'] = self.client.bash(' blockdev --getbsz dev/{} '.format(diskname)).get().stdout
+        remaininfo = self.client.bash('parted dev/{} print '.format(diskname)).get().stdout
+        remaininfo_lines = remaininfo.splitlines()
+        for i, line in enumerate(remaininfo_lines):
+            if 'Partition Table' in line:
+                diskinf['table'] = str(line[line.find(':')+2:])
+            if i == 6:
+                lines = line.split()
+                sizes = [lines[1], lines[2]]
+                for n, size in enumerate(sizes):
+                    if 'TB' in size:
+                        sizes[n] = int(float((size[:size.find('TB')]))*1024*1024*1024*1024)
+                    elif 'GB' in size:
+                        sizes[n] = int(float((size[:size.find('GB')]))*1024*1024*1024)
+                    elif 'MB' in size:
+                        sizes[n] = int(float(size[:size.find('MB')])*1024*1024)
+                    elif 'KB' in size:
+                        sizes[n] = int(float(size[:size.find('KB')])*1024)
+                    else:
+                        sizes[n] = int(float(size[:size.find('B')]))
+
+                diskinf['start'] = sizes[0]
+                diskinf['end'] = sizes[1]
+        return diskinf
 
     def test001_create_list_delete_btrfs(self):
         """ g8os-008
@@ -182,5 +222,148 @@ class DisksTests(BaseTest):
         self.assertIsNone(sub_list)
 
         self.destroy_btrfs()
+
+        self.lg('{} ENDED'.format(self._testID))
+
+    @unittest.skip('bug# https://github.com/g8os/core0/issues/134')
+    def test004_disk_get_info(self):
+        """ g8os-020
+
+        *Test case for checking on the disks information*
+
+        **Test Scenario:**
+
+        #. Get the disks name  using disk list
+        #. Get disk info using bash
+        #. Get disk info using g8os disk info
+        #. Compare g8os results to that of the bash results, should be the same
+
+        """
+        self.lg('{} STARTED'.format(self._testID))
+
+        self.lg('Get the disks names  using disk list')
+        disks_names = []
+        disks = self.client.disk.list()
+        for disk in disks['blockdevices']:
+            disks_names.append(disk['name'])
+
+        for disk in disks_names:
+
+            self.lg('Get disk {} info  using g8os disk info  '.format(disk))
+            g8os_disk_info = self.client.disk.getinfo(disk)
+            keys = g8os_disk_info.keys()
+
+            self.lg('Get disk {} info  using bash '.format(disk))
+            bash_disk_info = self.bash_disk_info(keys, disk)
+
+            self.lg('compare g8os results to disk{} of the bash results, should be the same '.format(disk))
+            for key in bash_disk_info.keys:
+                self.assertEqual(g8os_disk_info[key], bash_disk_info[key])
+
+        self.lg('{} ENDED'.format(self._testID))
+
+    def test005_disk_mount_and_unmount(self):
+        """ g8os-021
+
+        *Test case for test mount disk and unmount *
+
+        **Test Scenario:**
+
+        #. create loop device and put file system on it
+        #. Mount disk using g8os disk mount.
+        #. Get disk info , the mounted disk should be there.
+        #. Try mount it again , should fail.
+        #. unmount the disk, shouldn't be found in the disks list
+
+        """
+        self.lg('{} STARTED'.format(self._testID))
+        filename = [self.rand_str()]
+        label = self.rand_str()
+        mount_point = '/mnt/{}'.format(self.rand_str())
+        self.lg('Mount disk using g8os disk mount.')
+        loop_dev_list = self.setup_loop_devices(filename, '500M', deattach=True)
+        self.client.btrfs.create(label, loop_dev_list)
+
+        self.lg('Mount disk using g8os disk mount')
+        self.client.bash('mkdir -p {}'.format(mount_point))
+        self.client.disk.mount(loop_dev_list[0], mount_point, [""])
+
+        self.lg('Get disk info , the mounted disk should be there.')
+        disks = self.client.bash(' lsblk -n -io NAME ').get().stdout
+        disks = disks.splitlines()
+        result = [disk in loop_dev_list[0] for disk in disks]
+        self.assertTrue(True in result)
+
+        self.lg('Try mount it again , should fail')
+        with self.assertRaises(RuntimeError):
+            self.client.disk.mount(loop_dev_list[0], mount_point, [""])
+
+        self.lg('unmount the disk, shouldn\'t be found in the disks list')
+
+        self.client.disk.umount(loop_dev_list[0])
+        disks = self.client.bash(' lsblk -n -io NAME ').get().stdout
+        disks = disks.splitlines()
+        result = [disk in loop_dev_list[0] for disk in disks]
+        self.assertFalse(True in result)
+
+        self.lg('{} ENDED'.format(self._testID))
+
+    def test006_disk_partitions(self):
+
+        """ g8os-022
+
+        *Test case for test creating Partitions in disk *
+
+        **Test Scenario:**
+
+        #. create loop device and put file system on it
+        #. Make partition for disk before making partition table for it , should fail.
+        #. Make a partition table for this disk, should succeed.
+        #. Make 2 partition for disk with 50% space of disk , should succeed.
+        #. check disk  exist in disk list with 2 partition .
+        #. Make partition for this disk again  , should fail.
+        #. Remove all partitions for this disk ,should succeed.
+
+        """
+        self.lg('{} STARTED'.format(self._testID))
+        filename = [self.rand_str()]
+        label = self.rand_str()
+        mount_point = '/mnt/{}'.format(self.rand_str())
+
+        self.lg('create loop device and put file system on it')
+        loop_dev_list = self.setup_loop_devices(filename, '500M', deattach=True)
+        device_name = loop_dev_list[0]
+        device_name = device_name[device_name.index('/')+5:]
+
+        self.lg('Make partition for disk before making partition table for it , should fail.')
+        with self.assertRaises(RuntimeError):
+            self.client.disk.mkpart(device_name, '0', '50%')
+
+        self.lg('Make a partition table for this disk, should succeed.')
+        self.client.disk.mktable(device_name)
+
+        self.lg('Make 2 partition for disk with 50% space of disk , should succeed.')
+        self.client.disk.mkpart(device_name, '0', '50%')
+        self.client.disk.mkpart(device_name, '50%', '100%')
+
+        self.lg('check disk  exist in disk list with 2 partition ')
+        disks = self.client.disk.list()
+        for disk in disks['blockdevices']:
+            if disk['name'] == device_name:
+                self.assertEqual(len(disk['children']), 2)
+
+        self.lg('Make partition for this disk again  , should fail.')
+        with self.assertRaises(RuntimeError):
+            self.client.disk.mkpart(device_name, '0', '50%')
+
+        self.lg('Remove partition for this disk ,should succeed.')
+        self.client.disk.rmpart(device_name, 1)
+        self.client.disk.rmpart(device_name, 2)
+
+        self.lg('check that  partitions for this disk removed ,should succeed.')
+        disks = self.client.disk.list()
+        for disk in disks['blockdevices']:
+            if disk['name'] == device_name:
+                self.assertTrue('children' not in disk.keys())
 
         self.lg('{} ENDED'.format(self._testID))
