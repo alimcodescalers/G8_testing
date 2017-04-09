@@ -158,7 +158,7 @@ class ExtendedNetworking(BaseTest):
         #. Check the created bridge addresses contains cidr (C1), should succeed
         #. Delete bridge (B1), should succeed
         #. Create bridge with invalid cidr, should fail
-        #. Create bridge (B2) with dsnmasq network and cidr (C2), should succeed
+        #. Create bridge (B2) with dnsmasq network and cidr (C2), should succeed
         #. Check the bridge (B2) addresses contains cidr (C2), should succeed
         #. Delete bridge (B2), should succeed
 
@@ -192,13 +192,13 @@ class ExtendedNetworking(BaseTest):
         with self.assertRaises(RuntimeError):
             self.client.bridge.create(bridge_name, network='static', settings=settings)
 
-        self.lg('Create bridge (B2) with dsnmasq network and cidr (C2), should succeed')
+        self.lg('Create bridge (B2) with dnsmasq network and cidr (C2), should succeed')
         bridge_name = self.rand_str()
         cidr = "10.20.30.1/24"
-        start = "10.20.30.2/24"
-        end = "10.20.30.3/24"
+        start = "10.20.30.2"
+        end = "10.20.30.3"
         settings = {"cidr":cidr, "start":start, "end":end}
-        self.client.bridge.create(bridge_name, network='static', settings=settings)
+        self.client.bridge.create(bridge_name, network='dnsmasq', settings=settings)
 
         self.lg('Check the bridge (B2) addresses contains cidr (C2), should succeed')
         nics = self.client.info.nic()
