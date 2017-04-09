@@ -6,16 +6,17 @@ import os
 import io
 
 
-class BasicTests(BaseTest):
+class SystemTests(BaseTest):
 
     def setUp(self):
-        super(BasicTests, self).setUp()
-        self.check_g8os_connection(BasicTests)
+
+        super(SystemTests, self).setUp()
+        self.check_g8os_connection(SystemTests)
         self.cid = self.client.container.create(root_url=self.root_url, storage=self.storage)
         self.client_container = self.client.container.client(self.cid)
 
     def tearDown(self):
-        # self.client.container.terminate(self.cid)
+        self.client.container.terminate(self.cid)
         super(BasicTests, self).tearDown()
 
 
@@ -302,7 +303,7 @@ class BasicTests(BaseTest):
 
         self.lg('compare g8os results to bash results')
         params_to_check = ['name', 'addrs', 'mtu', 'hardwareaddr']
-        for i in range(len(expected_nic_info)-1):
+        for i in range(len(expected_nic_info) - 1):
             for param in params_to_check:
                 self.assertEqual(expected_nic_info[i][param], g8os_nic_info[i][param])
 

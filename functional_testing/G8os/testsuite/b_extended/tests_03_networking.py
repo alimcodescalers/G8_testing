@@ -11,7 +11,7 @@ class ExtendedNetworking(BaseTest):
 
     @unittest.skip('bug# https://github.com/g8os/core0/issues/126')
     def test001_zerotier(self):
-        """ g8os-01
+        """ g8os-014
         *Test case for testing zerotier functionally*
 
         **Test Scenario:**

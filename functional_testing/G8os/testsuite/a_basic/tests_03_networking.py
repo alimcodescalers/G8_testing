@@ -10,7 +10,7 @@ class BasicNetworking(BaseTest):
         self.check_g8os_connection(BasicNetworking)
 
     def test001_join_leave_list_zerotier(self):
-        """ g8os-010
+        """ g8os-012
         *Test case for testing joining, listing, leaving zerotier networks*
 
         **Test Scenario:**
@@ -53,7 +53,7 @@ class BasicNetworking(BaseTest):
 
 
     def test002_create_delete_list_bridges(self):
-        """ g8os-011
+        """ g8os-013
         *Test case for testing creating, listing, deleting bridges*
 
         **Test Scenario:**
