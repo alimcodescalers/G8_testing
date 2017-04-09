@@ -315,7 +315,7 @@ class SystemTests(BaseTest):
 
         **Test Scenario:**
         #. Make new directory (D1), should succeed
-        #. Check directory (D1) is exists, should succeed
+        #. Check directory (D1) exists, should succeed
         #. Move directory (D1), should succeed
         #. Remove directory (D1), should succeed
         #. Make new parent directory (D2), should succeed
@@ -530,13 +530,13 @@ class SystemTests(BaseTest):
 
         **Test Scenario:**
         #. Create local file (LF1) and write data to it, should succeed
-        #. Upload file (LF1) to g8os/contaier
-        #. Check file (LF1) is exists in g8os/contaier and check its data
+        #. Upload file (LF1) to g8os/container
+        #. Check file (LF1) exists in g8os/container and check its data
         #. Upload buffer data to the remote file
         #. Check the remote file content equal to buffer content
         #. Create remote file (RF1) and write data to it, should succeed
         #. Download file (RF1) to localhost
-        #. Check file (RF1) is exists in localhost and check its data
+        #. Check file (RF1) exists in localhost and check its data
         #. Download file (RF1) to buffer
         #. Check buffer data equal to file (RF1) content
         """
