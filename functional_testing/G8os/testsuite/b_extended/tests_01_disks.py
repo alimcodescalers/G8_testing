@@ -11,8 +11,7 @@ class DisksTests(BaseTest):
     def create_btrfs(self):
         self.lg('Create Btrfs file system (Bfs1), should succeed')
         self.label = self.rand_str()
-        self.loop_dev_list = self.setup_loop_devices(['bd0'], '500M', deattach=False)
-        print (self.loop_dev_list)
+        self.loop_dev_list = self.setup_loop_devices(['bd0', 'bd1'], '500M', deattach=True)
         self.lg('Mount the btrfs filesystem (Bfs1)')
         self.client.btrfs.create(self.label, self.loop_dev_list)
         self.mount_point = '/mnt/{}'.format(self.rand_str())
