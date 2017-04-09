@@ -308,7 +308,7 @@ class DisksTests(BaseTest):
 
         self.lg('{} ENDED'.format(self._testID))
 
-    def test006_disk_partions(self):
+    def test006_disk_partitions(self):
 
         """ g8os-022
 
@@ -317,12 +317,12 @@ class DisksTests(BaseTest):
         **Test Scenario:**
 
         #. create loop device and put file system on it
-        #. Make partion for disk before making partion table for it , should fail.
-        #. Make a partion table for this disk, should succeed.
-        #. Make 2 partion for disk with 50% space of disk , should succeed.
-        #. check disk  exist in disk list with 2 partion .
-        #. Make partion for this disk again  , should fail.
-        #. Remove all partions for this disk ,should succeed.
+        #. Make partition for disk before making partition table for it , should fail.
+        #. Make a partition table for this disk, should succeed.
+        #. Make 2 partition for disk with 50% space of disk , should succeed.
+        #. check disk  exist in disk list with 2 partition .
+        #. Make partition for this disk again  , should fail.
+        #. Remove all partitions for this disk ,should succeed.
 
         """
         self.lg('{} STARTED'.format(self._testID))
@@ -335,32 +335,32 @@ class DisksTests(BaseTest):
         device_name = loop_dev_list[0]
         device_name = device_name[device_name.index('/')+5:]
 
-        self.lg('Make partion for disk before making partion table for it , should fail.')
+        self.lg('Make partition for disk before making partition table for it , should fail.')
         with self.assertRaises(RuntimeError):
             self.client.disk.mkpart(device_name, '0', '50%')
 
-        self.lg('Make a partion table for this disk, should succeed.')
+        self.lg('Make a partition table for this disk, should succeed.')
         self.client.disk.mktable(device_name)
 
-        self.lg('Make 2 partion for disk with 50% space of disk , should succeed.')
+        self.lg('Make 2 partition for disk with 50% space of disk , should succeed.')
         self.client.disk.mkpart(device_name, '0', '50%')
         self.client.disk.mkpart(device_name, '50%', '100%')
 
-        self.lg('check disk  exist in disk list with 2 partion ')
+        self.lg('check disk  exist in disk list with 2 partition ')
         disks = self.client.disk.list()
         for disk in disks['blockdevices']:
             if disk['name'] == device_name:
                 self.assertEqual(len(disk['children']), 2)
 
-        self.lg('Make partion for this disk again  , should fail.')
+        self.lg('Make partition for this disk again  , should fail.')
         with self.assertRaises(RuntimeError):
             self.client.disk.mkpart(device_name, '0', '50%')
 
-        self.lg('Remove partion for this disk ,should succeed.')
+        self.lg('Remove partition for this disk ,should succeed.')
         self.client.disk.rmpart(device_name, 1)
         self.client.disk.rmpart(device_name, 2)
 
-        self.lg('check that  partions for this disk removed ,should succeed.')
+        self.lg('check that  partitions for this disk removed ,should succeed.')
         disks = self.client.disk.list()
         for disk in disks['blockdevices']:
             if disk['name'] == device_name:
