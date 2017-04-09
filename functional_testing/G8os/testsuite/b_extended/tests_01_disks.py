@@ -26,8 +26,8 @@ class DisksTests(BaseTest):
 
     def bash_disk_info(self, keys, diskname):
         diskinf = {}
-        info = self.client.bash('lsblk -d dev/{} -O -P -b'.format(diskname)).get().stdout
-        info = info.lower()
+        info = self.client.bash('lsblk -d dev/{} -O -P -b'.format(diskname))
+        info = self.stdout(info)
         lines = info.split()
         for key in keys:
             for line in lines:
@@ -241,18 +241,19 @@ class DisksTests(BaseTest):
         """
         self.lg('{} STARTED'.format(self._testID))
 
-        self.lg('Get the disks name  using disk list')
-        disk_names = []
+        self.lg('Get the disks names  using disk list')
+        disks_names = []
         disks = self.client.disk.list()
         for disk in disks['blockdevices']:
-            disk_names.append(disk['name'])
+            disks_names.append(disk['name'])
 
         for disk in disks_names:
-            self.lg('Get disk {} info  using bash '.format(disk))
+
+            self.lg('Get disk {} info  using g8os disk info  '.format(disk))
             g8os_disk_info = self.client.disk.getinfo(disk)
             keys = g8os_disk_info.keys()
 
-            self.lg('Get disk {} info  using gos disk info  '.format(disk))
+            self.lg('Get disk {} info  using bash '.format(disk))
             bash_disk_info = self.bash_disk_info(keys, disk)
 
             self.lg('compare g8os results to disk{} of the bash results, should be the same '.format(disk))
