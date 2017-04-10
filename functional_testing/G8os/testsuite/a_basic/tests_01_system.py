@@ -296,6 +296,9 @@ class SystemTests(BaseTest):
         """
         self.lg('{} STARTED'.format(self._testID))
 
+        if client_type == 'container':
+            self.skipTest('bug# https://github.com/g8os/core0/issues/145')
+
         if client_type == 'client':
             client = self.client
         else:
@@ -315,8 +318,7 @@ class SystemTests(BaseTest):
 
         self.lg('{} ENDED'.format(self._testID))
 
-    @parameterized.expand(['client', 'container'])
-    def test007_nic_info(self, client_type):
+    def test007_nic_info(self):
 
         """ g8os-007
         *Test case for checking on the system nic information*
@@ -324,21 +326,15 @@ class SystemTests(BaseTest):
         **Test Scenario:**
         #. Get the nic information using g8os client
         #. Get the information using bash
-        #. Compare nic g8os/container results to that of the bash results, should be the same
+        #. Compare nic g8os results to that of the bash results, should be the same
         """
         self.lg('{} STARTED'.format(self._testID))
 
-        if client_type == 'client':
-            client = self.client
-        else:
-            self.create_container()
-            client = self.client_container
-
         self.lg('get nic info using linux bash command (ip a)')
-        expected_nic_info = self.getNicInfo(client)
+        expected_nic_info = self.getNicInfo(self.client)
 
-        self.lg('get nic info using g8os/container client')
-        g8os_nic_info = client.info.nic()
+        self.lg('get nic info using g8os client')
+        g8os_nic_info = self.client.info.nic()
 
         self.lg('compare g8os/container results to bash results')
         params_to_check = ['name', 'addrs', 'mtu', 'hardwareaddr']
