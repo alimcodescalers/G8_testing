@@ -23,16 +23,16 @@ class SystemTests(BaseTest):
     def remove_container(self):
         self.client.container.terminate(self.cid)
 
-    def getNicInfo(self):
-        r = self.client.bash('ip -br a').get().stdout
+    def getNicInfo(self, client):
+        r = client.bash('ip -br a').get().stdout
         nics = [x.split()[0] for x in r.splitlines()]
         nicInfo = []
         for nic in nics:
             if '@' in nic:
                 nic = nic[:nic.index('@')]
-            addrs = self.client.bash('ip -br a show "{}"'.format(nic)).get().stdout.splitlines()[0].split()[2:]
-            mtu = int(self.stdout(self.client.bash('cat /sys/class/net/{}/mtu'.format(nic))))
-            hardwareaddr = self.stdout(self.client.bash('cat /sys/class/net/{}/address'.format(nic)))
+            addrs = client.bash('ip -br a show "{}"'.format(nic)).get().stdout.splitlines()[0].split()[2:]
+            mtu = int(self.stdout(client.bash('cat /sys/class/net/{}/mtu'.format(nic))))
+            hardwareaddr = self.stdout(client.bash('cat /sys/class/net/{}/address'.format(nic)))
             if hardwareaddr == '00:00:00:00:00:00':
                     hardwareaddr = ''
             tmp = {"name": nic, "hardwareaddr": hardwareaddr, "mtu": mtu, "addrs": [{"addr": x} for x in addrs]}
@@ -40,8 +40,8 @@ class SystemTests(BaseTest):
 
         return nicInfo
 
-    def getCpuInfo(self):
-        lines = self.client.bash('cat /proc/cpuinfo').get().stdout.splitlines()
+    def getCpuInfo(self, client):
+        lines = client.bash('cat /proc/cpuinfo').get().stdout.splitlines()
         cpuInfo = {'vendorId': [], 'family': [], 'stepping': [], 'cpu': [], 'coreId': [], 'model': [],
                     'cacheSize': [], 'mhz': [], 'cores': [], 'flags': [], 'modelName': [], 'physicalId':[]}
 
@@ -67,9 +67,9 @@ class SystemTests(BaseTest):
 
         return cpuInfo
 
-    def getDiskInfo(self):
+    def getDiskInfo(self, client):
         diskInfo = {'mountpoint': [], 'fstype': [], 'device': [], 'opts': []}
-        response = self.client.bash('mount').get().stdout
+        response = client.bash('mount').get().stdout
         lines = response.splitlines()
         for line in lines:
             line = line.split()
@@ -80,9 +80,9 @@ class SystemTests(BaseTest):
 
         return diskInfo
 
-    def getMemInfo(self):
+    def getMemInfo(self, client):
 
-        lines = self.client.bash('cat /proc/meminfo').get().stdout.splitlines()
+        lines = client.bash('cat /proc/meminfo').get().stdout.splitlines()
         memInfo = { 'active': 0, 'available': 0, 'buffers': 0, 'cached': 0,
                     'free': 0,'inactive': 0, 'total': 0}
 
@@ -180,52 +180,65 @@ class SystemTests(BaseTest):
 
             self.lg('{} ENDED'.format(self._testID))
 
-    def test003_os_info(self):
+    @parameterized.expand(['client', 'container'])
+    def test003_os_info(self, client_type):
 
         """ g8os-003
         *Test case for checking on the system os information*
 
         **Test Scenario:**
-        #. Get the os information using g8os client
-        #. Get the hostname and compare it with the g8os os insformation
-        #. Get the kernal's name and compare it with the g8os os insformation
-        #. compare the rest of the info ...
+        #. Get the os information using g8os/container client
+        #. Get the hostname and compare it with the g8os/container os insformation
+        #. Get the kernal's name and compare it with the g8os/container os insformation
         """
 
         self.lg('{} STARTED'.format(self._testID))
 
-        self.lg('Get the os information using g8os client')
-        os_info = self.client.info.os()
+        if client_type == 'client':
+            client = self.client
+        else:
+            self.create_container()
+            client = self.client_container
 
-        self.lg('Get the hostname and compare it with the g8os os insformation')
-        hostname = self.client.system('uname -n').get().stdout.strip()
+        self.lg('Get the os information using g8os/container client')
+        os_info = client.info.os()
+
+        self.lg('Get the hostname and compare it with the g8os/container os insformation')
+        hostname = client.system('uname -n').get().stdout.strip()
         self.assertEqual(os_info['hostname'], hostname)
 
-        self.lg('Get the kernal\'s name and compare it with the g8os os insformation')
-        krn_name = self.client.system('uname -s').get().stdout.strip()
+        self.lg('Get the kernal\'s name and compare it with the g8os/container os insformation')
+        krn_name = client.system('uname -s').get().stdout.strip()
         self.assertEqual(os_info['os'], krn_name.lower())
 
         self.lg('{} ENDED'.format(self._testID))
 
-    def test004_mem_info(self):
+    @parameterized.expand(['client', 'container'])
+    def test004_mem_info(self, client_type):
 
         """ g8os-004
         *Test case for checking on the system memory information*
 
         **Test Scenario:**
-        #. Get the memory information using g8os client
+        #. Get the memory information using g8os/container client
         #. Get the memory information using bash
-        #. Compare memory g8os results to that of the bash results, should be the same
+        #. Compare memory g8os/container  results to that of the bash results, should be the same
         """
         self.lg('{} STARTED'.format(self._testID))
 
+        if client_type == 'client':
+            client = self.client
+        else:
+            self.create_container()
+            client = self.client_container
+
         self.lg('get memory info using bash')
-        expected_mem_info = self.getMemInfo()
+        expected_mem_info = self.getMemInfo(client)
 
-        self.lg('get memory info using g8os')
-        g8os_mem_info = self.client.info.mem()
+        self.lg('get memory info using g8os/container ')
+        g8os_mem_info = client.info.mem()
 
-        self.lg('compare g8os results to bash results')
+        self.lg('compare g8os/container  results to bash results')
         self.assertEqual(expected_mem_info['total'], g8os_mem_info['total'])
         params_to_check = ['active', 'available', 'buffers', 'cached', 'free', 'inactive']
         for key in params_to_check:
@@ -236,25 +249,32 @@ class SystemTests(BaseTest):
 
         self.lg('{} ENDED'.format(self._testID))
 
-    def test005_cpu_info(self):
+    @parameterized.expand(['client', 'container'])
+    def test005_cpu_info(self, client_type):
 
         """ g8os-005
         *Test case for checking on the system CPU information*
 
         **Test Scenario:**
-        #. Get the CPU information using g8os client
+        #. Get the CPU information using g8os/container client
         #. Get the CPU information using bash
-        #. Compare CPU g8os results to that of the bash results, should be the same
+        #. Compare CPU g8os/container  results to that of the bash results, should be the same
         """
         self.lg('{} STARTED'.format(self._testID))
 
+        if client_type == 'client':
+            client = self.client
+        else:
+            self.create_container()
+            client = self.client_container
+
         self.lg('get cpu info using bash')
-        expected_cpu_info = self.getCpuInfo()
+        expected_cpu_info = self.getCpuInfo(client)
 
         self.lg('get cpu info using g8os')
-        g8os_cpu_info = self.client.info.cpu()
+        g8os_cpu_info = client.info.cpu()
 
-        self.lg('compare g8os results to bash results')
+        self.lg('compare g8os/container results to bash results')
         for key in expected_cpu_info.keys():
             if key == 'cores':
                 continue
@@ -263,7 +283,8 @@ class SystemTests(BaseTest):
 
         self.lg('{} ENDED'.format(self._testID))
 
-    def test006_disk_info(self):
+    @parameterized.expand(['client', 'container'])
+    def test006_disk_info(self, client_type):
 
         """ g8os-006
         *Test case for checking on the disks information*
@@ -275,11 +296,20 @@ class SystemTests(BaseTest):
         """
         self.lg('{} STARTED'.format(self._testID))
 
+        if client_type == 'container':
+            self.skipTest('bug# https://github.com/g8os/core0/issues/145')
+
+        if client_type == 'client':
+            client = self.client
+        else:
+            self.create_container()
+            client = self.client_container
+
         self.lg('get disks info using linux bash command (mount)')
-        expected_disk_info = self.getDiskInfo()
+        expected_disk_info = self.getDiskInfo(client)
 
         self.lg('get cpu info using g8os')
-        g8os_disk_info = self.client.info.disk()
+        g8os_disk_info = client.info.disk()
 
         self.lg('compare g8os results to bash results')
         for key in expected_disk_info.keys():
@@ -301,12 +331,12 @@ class SystemTests(BaseTest):
         self.lg('{} STARTED'.format(self._testID))
 
         self.lg('get nic info using linux bash command (ip a)')
-        expected_nic_info = self.getNicInfo()
+        expected_nic_info = self.getNicInfo(self.client)
 
         self.lg('get nic info using g8os client')
         g8os_nic_info = self.client.info.nic()
 
-        self.lg('compare g8os results to bash results')
+        self.lg('compare g8os/container results to bash results')
         params_to_check = ['name', 'addrs', 'mtu', 'hardwareaddr']
         for i in range(len(expected_nic_info) - 1):
             for param in params_to_check:
