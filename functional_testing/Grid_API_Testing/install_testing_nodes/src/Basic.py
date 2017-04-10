@@ -10,7 +10,7 @@ class Basic(object):
         self.account = ''
         self.account_id = ''
         self.logging = logging
-        self.log('TestingEnvironment.log')
+        self.log('install_testing_nodes/install_testing_nodes.log')
         self.values = {'environment': '',
                        'username': '',
                        'password': '',
