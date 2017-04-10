@@ -108,7 +108,8 @@ class SystemTests(BaseTest):
         **Test Scenario:**
         #. Check if you can ping the remote host, should succeed
         #. Create folder using system
-        #. Check that the folder is created
+        #. Check that the folder is created using bash (C1)
+        #. Check that you can get same responce for (C1)
         #. Remove the created folder
         """
 
@@ -127,6 +128,11 @@ class SystemTests(BaseTest):
         rs_ob = rs1.get()
         self.assertEqual(rs_ob.stdout, '{}\n'.format(folder))
         self.assertEqual(rs_ob.state, 'SUCCESS')
+
+        self.lg('Check that you can get same responce for (C1)')
+        rs11 = self.client.response_for(rs1.id)
+        self.assertEqual(self.stdout(rs11), self.stdout(rs1))
+        self.assertEqual(rs1.id, rs11.id)
 
         self.lg('Remove the created folder')
         self.client.bash('rm -rf {}'.format(folder))
