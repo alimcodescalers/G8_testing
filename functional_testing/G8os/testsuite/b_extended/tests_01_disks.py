@@ -287,7 +287,7 @@ class DisksTests(BaseTest):
 
         self.lg('Mount disk using g8os disk mount')
         self.client.bash('mkdir -p {}'.format(mount_point))
-        self.client.disk.mount(loop_dev_list[0], mount_point, ["async"])
+        self.client.disk.mount(loop_dev_list[0], mount_point,[""])
 
         self.lg('Get disk info , the mounted disk should be there.')
         disks = self.client.bash(' lsblk -n -io NAME ').get().stdout
@@ -379,7 +379,7 @@ class DisksTests(BaseTest):
         #. Make a partition table with type msdos for this disk, should succeed.
         #. Check disk table type from disk info ,msdos type should be there .
         #. Make primary partition for disk with 50% space of disk.
-        #. ake extended partition with remain disk space ,should succeed.
+        #. Make extended partition with remain disk space ,should succeed.
         #. Divide extended partition to logical partition ,should succeed .
         #. Check disk  exist in disk list with 2 partition.
         #. Mount partition 1 and 2 of disk  using g8os disk mount with rw option , should succeed.
