@@ -35,11 +35,12 @@ class RequestEnvAPI(Basic):
             if client_response.status_code == 200:
                 self.account_id = client_response.text
                 self.values['account'] = self.account
-                self.logging.info(' [+] DONE : Create %s account' % self.account)
+                self.logging.info(' [+] DONE : Create %s : %s account\n' % (self.account, self.account_id))
                 print(colored(' [+] DONE : Create %s : %s account\n' % (self.account, self.account_id), 'green'))
             else:
-                self.logging.error(
-                    ' [-] ERROR : response status code %i %s' % (client_response.status_code, client_response.content))
+                self.logging.error(colored(
+                    ' [-] ERROR : response status code %i %s' % (client_response.status_code, client_response.content)),
+                    'red')
                 print(colored(
                     ' [-] ERROR : response status code %i %s' % (client_response.status_code, client_response.content)),
                     'red')
@@ -61,7 +62,7 @@ class RequestEnvAPI(Basic):
             for element in client_response.json():
                 if account == element['name']:
                     self.account_id = element['id']
-                    self.logging.info(' [+] DONE : Account ID : % d' % self.account_id)
+                    self.logging.info(' [+] DONE : Account ID : % d\n' % self.account_id)
                     print(colored(' [+] DONE : Account ID : % d\n' % self.account_id))
                     break
             else:
@@ -103,7 +104,7 @@ class RequestEnvAPI(Basic):
 
         if client_response.status_code == 200:
             self.cloudspace['id'] = client_response.text
-            self.logging.info(' [+] DONE : Create %s cloudspace' % self.cloudspace['name'])
+            self.logging.info(' [+] DONE : Create %s cloudspace\n' % self.cloudspace['name'])
             print(colored(' [+] DONE : Create %s cloudspace\n' % self.cloudspace['name'], 'green'))
         else:
             self.logging.error(
@@ -130,10 +131,9 @@ class RequestEnvAPI(Basic):
             client_response = self.client._session.post(url=api, headers=self.client_header, data=client_data)
             if client_response.status_code == 200:
                 self.virtualmachine['id'] = client_response.text
-                self.logging.info(' [+] DONE : Create %s virtual machine' % self.virtualmachine['name'])
-                print(colored(
-                    ' [+] DONE : Create %s : %s virtual machine\n' % (self.virtualmachine['name'], self.virtualmachine['id']),
-                    'green'))
+                self.logging.info(
+                    ' [+] DONE : Create %s : %s virtual machine\n' % (self.virtualmachine['name'], self.virtualmachine['id']))
+                print(colored(' [+] DONE : Create %s : %s virtual machine\n' % (self.virtualmachine['name'], self.virtualmachine['id']), 'green'))
                 self.get_virtualmachine_password()
                 break
             else:
@@ -169,7 +169,7 @@ class RequestEnvAPI(Basic):
 
         for key in publicPorts:
             self.logging.info(' [*] START : port forward creation ...')
-            print(colored(' [*] START : port forward creation ...', 'white'))
+            print(colored(' [*] START : port forward creation ...'))
             api = 'https://' + self.values['environment'] + '/restmachine/cloudapi/portforwarding/create'
             client_data = {'cloudspaceId': self.cloudspace['id'],
                            'publicIp': self.cloudspace['ip'],
@@ -206,7 +206,7 @@ class RequestEnvAPI(Basic):
 
         if client_response.status_code == 200:
             self.cloudspace['ip'] = client_response.json()['publicipaddress']
-            self.logging.info(' [+] cloudpsace public IP : %s ' % self.cloudspace['ip'])
+            self.logging.info(' [+] cloudpsace public IP : %s \n' % self.cloudspace['ip'])
             print(colored(' [+] cloudpsace public IP : %s \n' % self.cloudspace['ip'], 'green'))
         else:
             self.logging.error(
@@ -226,7 +226,7 @@ class RequestEnvAPI(Basic):
 
         if client_response.status_code == 200:
             self.virtualmachine['password'] = client_response.json()['accounts'][0]['password']
-            self.logging.info(' [+] Virtual machine password : %s' % self.virtualmachine['password'])
+            self.logging.info(' [+] Virtual machine password : %s\n' % self.virtualmachine['password'])
             print(colored(' [+] Virtual machine password : %s\n' % self.virtualmachine['password'], 'green'))
         else:
             self.logging.error(
@@ -264,7 +264,7 @@ class RequestEnvAPI(Basic):
 
         if client_response.status_code == 200:
             self.virtualmachine['ip'] = client_response.json()['interfaces'][0]['ipAddress']
-            self.logging.info(' [+] Virtual machine ip : %s' % self.virtualmachine['ip'])
+            self.logging.info(' [+] Virtual machine ip : %s\n' % self.virtualmachine['ip'])
             print(colored(' [+] Virtual machine ip : %s\n' % self.virtualmachine['ip'], 'green'))
         else:
             self.logging.error(

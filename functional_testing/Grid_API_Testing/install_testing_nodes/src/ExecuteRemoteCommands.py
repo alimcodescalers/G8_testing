@@ -15,15 +15,14 @@ class ExecuteRemoteCommands(RequestEnvAPI):
             stdin, stdout, stderr = self.ssh.exec_command(command)
             tracback = stdout.readlines()
             if len(tracback) != 0:
-                self.logging.info(' [+] Done!')
+                self.logging.info(' [+] Done!\n')
                 print(colored(' [+] Done!\n', 'green'))
             elif not skip_error:
-                import ipdb; ipdb.set_trace()
-                self.logging.info(' [-] Failed! \n%s' % tracback)
+                self.logging.info(' [-] Failed!' % tracback)
                 print(colored(' [-] Failed!' % tracback, 'red'))
             return tracback
         except:
-            self.logging.error(" [-] ERROR : Can't execute %s command" % command)
+            self.logging.error(" [-] ERROR : Can't execute %s command\n" % command)
             print(colored(" [-] ERROR : Can't execute %s command\n" % command, 'red'))
 
     def trasport_file(self, filepath):
@@ -38,7 +37,7 @@ class ExecuteRemoteCommands(RequestEnvAPI):
             try:
                 self.ssh.connect(self.cloudspace['ip'], port=port, username=self.username,
                                  password=self.virtualmachine['password'])
-                self.logging.info(' [+] Connected! ')
+                self.logging.info(' [+] Connected!\n')
                 print(colored(' [+] Connected!\n', 'green'))
                 break
             except:
@@ -55,7 +54,7 @@ class ExecuteRemoteCommands(RequestEnvAPI):
         self.execute_command(command=command)
 
     def install_docker(self):
-        self.logging.info(' [*] Installing docker ... ')
+        self.logging.info(' [*] Installing docker  ... ')
         print(colored(' [*] Installing docker  ... ', 'white'))
         command = 'echo %s | sudo -S apt-get -y install docker docker.io' % self.virtualmachine['password']
         self.execute_command(command=command)
@@ -70,7 +69,7 @@ class ExecuteRemoteCommands(RequestEnvAPI):
     def install_jumpscale(self, branch):
         self.logging.info(' [*] Installing jumpscale .... ')
         print(colored(' [*] Installing jumpscale .... ', 'white'))
-        command = """echo 'apt-get -y upgrade && cd $TMPDIR;\nexport JSBRANCH=%s;\ncurl -k https://raw.githubusercontent.com/Jumpscale/jumpscale_core8/$JSBRANCH/install/install.sh?$RANDOM > install.sh;\nbash install.sh;' > jsInstaller.sh""" % branch
+        command = """echo 'cd /tmp && export JSBRANCH=%s && curl -k https://raw.githubusercontent.com/Jumpscale/jumpscale_core8/$JSBRANCH/install/install.sh?$RANDOM > install.sh && bash install.sh' > jsInstaller.sh""" % branch
         self.execute_command(command=command, skip_error=True)
         import ipdb; ipdb.set_trace()
         command = 'echo %s | sudo -S bash jsInstaller.sh' % self.virtualmachine['password']
@@ -88,7 +87,12 @@ class ExecuteRemoteCommands(RequestEnvAPI):
     def start_AYS_server(self):
         self.logging.info(' [*] Starting AYS .... ')
         print(colored(' [*] Starting AYS .... ', 'white'))
-        command = 'echo %s | sudo -S bash -c "ays start --bind 0.0.0.0 --debug; ays repo create --name grid --git http://github.com/user/repo" ' % self.virtualmachine['password']
+        command = 'echo %s | sudo -S bash -c "ays start --bind 0.0.0.0 --debug" ' % self.virtualmachine['password']
+        self.execute_command(command=command)
+
+        self.logging.info(' [*] Create grid repo .... ')
+        print(colored(' [*] Create grid repo .... ', 'white'))
+        command = 'echo %s | sudo -S bash -c "ays repo create --name grid --git http://github.com/user/repo" ' % self.virtualmachine['password']
         self.execute_command(command=command)
 
     def clone_ays_templates(self, branch):

@@ -26,7 +26,6 @@ if __name__ == '__main__':
     executer.create_port_forward(publicPorts={22: 2201, 5000: 5000})
     executer.connect_to_virtual_machine(port=2201)
     executer.update_machine()
-    import ipdb;ipdb.set_trace()
     executer.install_jumpscale(branch='8.2.0')
     executer.install_g8core_python_client(branch='0.12.0')
     executer.start_AYS_server()
