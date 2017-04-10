@@ -4,10 +4,13 @@ from xml.etree.ElementTree import Element, SubElement, tostring
 from bs4 import BeautifulSoup
 from random import randint
 from unittest import TestCase
+from api_testing.utiles.utiles import Utiles
 
-class BaseTest(TestCase):
+
+class TestcasesBase(TestCase):
     def __init__(self):
-        super(BaseTest, self).__init__()
+        super(TestcasesBase, self).__init__()
+        self.config = Utiles().get_config_values()
 
     def setUp(self):
         pass

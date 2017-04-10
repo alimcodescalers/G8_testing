@@ -1,19 +1,24 @@
-from api_testing.testcases.base_test import BaseTest
+import random
+from api_testing.testcases.testcases_base import TestcasesBase
+from api_testing.grid_apis.apis.nodes_apis import NodesAPI
 
 
-class TestNodeidAPI(BaseTest):
+class TestNodeidAPI(TestcasesBase):
     def __init__(self):
         super(TestNodeidAPI, self).__init__()
+        self.nodes_api = NodesAPI()
 
-    def test001__list_nodes(self):
+    def test001_list_nodes(self):
         """ GAT-001
-        *GET:/nodes/ Expected: List of all nodes*
+        *GET:/node/ Expected: List of all nodes*
 
         **Test Scenario:**
 
         #. send get nodes api request.
         #. compare results with golden value.
         """
+        status_code, response_content = self.nodes_api.get_node()
+        self.assertEqual(status_code, 200)
 
     def test002_get_node_details(self):
         """ GAT-002
@@ -24,6 +29,14 @@ class TestNodeidAPI(BaseTest):
         #. send get nodes/{nodeid} api request.
         #. compare results with golden value.
         """
+        status_code, response_content = self.nodes_api.get_node()
+        self.assertEqual(status_code, 200)
+        nodes_list = response_content
+        node_id = nodes_list[random.randint(0, len(nodes_list)-1)]
+        status_code, response_content = self.nodes_api.get_node_nodeid(node_id=node_id)
+        self.assertEqual(status_code, 200)
+
+
 
     def test003_list_jobs(self):
         """ GAT-003
