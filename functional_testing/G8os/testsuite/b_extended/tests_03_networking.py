@@ -129,11 +129,9 @@ class ExtendedNetworking(BaseTest):
 
         self.lg('Check the created bridge hardware address equal to (HA), should succeed')
         nics = self.client.info.nic()
-        nic_names = [x['name'] for x in nics]
-        self.assertIn(bridge_name, nic_names)
-        for nic in nics:
-            if nic['name'] == bridge_name:
-                self.assertEqual(nic['hardwareaddr'], hardwareaddr)
+        nic = [x for x in nics if x['name'] == bridge_name]
+        self.assertNotEqual(nic, [])
+        self.assertEqual(nic[0]['hardwareaddr'], hardwareaddr)
 
         self.lg('Delete bridge (B1), should succeed')
         self.client.bridge.delete(bridge_name)
@@ -173,12 +171,10 @@ class ExtendedNetworking(BaseTest):
 
         self.lg('Check the created bridge addresses contains cidr (C1), should succeed')
         nics = self.client.info.nic()
-        nic_names = [x['name'] for x in nics]
-        self.assertIn(bridge_name, nic_names)
-        for nic in nics:
-            if nic['name'] == bridge_name:
-                addrs = [x['addr'] for x in nic['addrs']]
-                self.assertIn(cidr, addrs)
+        nic = [x for x in nics if x['name'] == bridge_name]
+        self.assertNotEqual(nic, [])
+        addrs = [x['addr'] for x in nic[0]['addrs']]
+        self.assertIn(cidr, addrs)
 
         self.lg('Delete bridge (B1), should succeed')
         self.client.bridge.delete(bridge_name)
@@ -202,12 +198,10 @@ class ExtendedNetworking(BaseTest):
 
         self.lg('Check the bridge (B2) addresses contains cidr (C2), should succeed')
         nics = self.client.info.nic()
-        nic_names = [x['name'] for x in nics]
-        self.assertIn(bridge_name, nic_names)
-        for nic in nics:
-            if nic['name'] == bridge_name:
-                addrs = [x['addr'] for x in nic['addrs']]
-                self.assertIn(cidr, addrs)
+        nic = [x for x in nics if x['name'] == bridge_name]
+        self.assertNotEqual(nic, [])
+        addrs = [x['addr'] for x in nic[0]['addrs']]
+        self.assertIn(cidr, addrs)
 
         self.lg('Delete bridge (B2), should succeed')
         self.client.bridge.delete(bridge_name)
