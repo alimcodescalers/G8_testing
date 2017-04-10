@@ -282,11 +282,12 @@ class DisksTests(BaseTest):
         mount_point = '/mnt/{}'.format(self.rand_str())
         self.lg('Mount disk using g8os disk mount.')
         loop_dev_list = self.setup_loop_devices(filename, '500M', deattach=True)
+
         self.client.btrfs.create(label, loop_dev_list)
 
         self.lg('Mount disk using g8os disk mount')
         self.client.bash('mkdir -p {}'.format(mount_point))
-        self.client.disk.mount(loop_dev_list[0], mount_point, [""])
+        self.client.disk.mount(loop_dev_list[0], mount_point,[""])
 
         self.lg('Get disk info , the mounted disk should be there.')
         disks = self.client.bash(' lsblk -n -io NAME ').get().stdout
@@ -327,8 +328,6 @@ class DisksTests(BaseTest):
         """
         self.lg('{} STARTED'.format(self._testID))
         filename = [self.rand_str()]
-        label = self.rand_str()
-        mount_point = '/mnt/{}'.format(self.rand_str())
 
         self.lg('create loop device and put file system on it')
         loop_dev_list = self.setup_loop_devices(filename, '500M', deattach=True)
@@ -365,5 +364,89 @@ class DisksTests(BaseTest):
         for disk in disks['blockdevices']:
             if disk['name'] == device_name:
                 self.assertTrue('children' not in disk.keys())
+
+        self.lg('{} ENDED'.format(self._testID))
+
+    def test007_extended_disk_partitions(self):
+
+        """ g8os-025
+
+        *Test case for test creating Partitions in disk *
+
+        **Test Scenario:**
+
+        #. Create loop device .
+        #. Make a partition table with type msdos for this disk, should succeed.
+        #. Check disk table type from disk info ,msdos type should be there .
+        #. Make primary partition for disk with 50% space of disk.
+        #. Make extended partition with remain disk space ,should succeed.
+        #. Divide extended partition to logical partition ,should succeed .
+        #. Check disk  exist in disk list with 2 partition.
+        #. Mount partition 1 and 2 of disk  using g8os disk mount with rw option , should succeed.
+        #. Get disk info, check the mounted point for partition.
+        #. Remove mounted partition ,should fail
+        #. Unmount the partition1, should succeed.
+
+        """
+        self.lg('{} STARTED'.format(self._testID))
+        table_type = 'msdos'
+        filename = [self.rand_str()]
+        label = self.rand_str()
+        mount_point_part1 = '/mnt/{}'.format(self.rand_str())
+        mount_point_part2 = '/mnt/{}'.format(self.rand_str())
+        self.lg('Create loop device ')
+        loop_dev_list = self.setup_loop_devices(filename, '500M', deattach=True)
+        device_name = loop_dev_list[0]
+        device_name = device_name[device_name.index('/')+5:]
+
+        self.lg('Make a partition table with  msdos type for this disk, should succeed.')
+        self.client.disk.mktable(device_name, table_type)
+
+        self.lg('Check disk table type from disk info ,msdos type should be there .')
+        info = self.client.disk.getinfo(device_name)
+        self.assertEqual(info['table'], table_type)
+
+        self.lg('Make primary partition for disk with 50% space of disk.')
+        self.client.disk.mkpart(device_name, '1', '50%')
+
+        self.lg('Make extended partition with remain disk space ,should succeed.')
+        self.client.disk.mkpart(device_name, '51%', '100%', 'extended')
+
+        self.lg(' Divide extended partition to logical, should succeed.')
+        self.client.disk.mkpart(device_name, '51%', '100%', 'logical')
+
+        self.lg('check that disk exist in disk list with 2 partition ')
+        disks = self.client.disk.list()
+        for disk in disks['blockdevices']:
+            if disk['name'] == device_name:
+                self.assertEqual(len(disk['children']), 2)
+
+        self.lg('Mount partition 1 of disk  using g8os disk mount with rw option , should succeed')
+        self.client.btrfs.create(label, ['{}p1'.format(loop_dev_list[0])])
+        self.client.bash('mkdir -p {}'.format(mount_point_part1))
+        self.client.disk.mount('{}p1'.format(loop_dev_list[0]), mount_point_part1, ["rw"])
+
+        self.lg('Mount partition 2 of disk  using g8os disk mount with rw option , should succeed')
+        self.client.btrfs.create(label, ['{}p5'.format(loop_dev_list[0])])
+        self.client.bash('mkdir -p {}'.format(mount_point_part2))
+        self.client.disk.mount('{}p5'.format(loop_dev_list[0]), mount_point_part2, ["rw"])
+
+        self.lg('Get disk info, check the mounted points for two partitions.')
+        part1_name = '{}p1'.format(device_name)
+        info = self.client.disk.getinfo(device_name)
+        partitions = info['children']
+        for part in partitions:
+            if part['name'] == part1_name:
+                self.assertEqual(str(part['mountpoint']), mount_point_part1)
+            else:
+                self.assertEqual(str(part['mountpoint']), mount_point_part2)
+
+        self.lg('Remove mounted partion ,should fail')
+        with self.assertRaises(RuntimeError):
+            self.client.disk.rmpart('{}p5'.format(device_name),5)
+
+        self.lg('Unmount the partitions, should succeed')
+        self.client.disk.umount('{}p1'.format(loop_dev_list[0]))
+        self.client.disk.umount('{}p5'.format(loop_dev_list[0]))
 
         self.lg('{} ENDED'.format(self._testID))
