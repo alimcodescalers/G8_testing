@@ -37,7 +37,6 @@ class TestNodeidAPI(TestcasesBase):
         self.assertEqual(status_code, 200)
 
 
-
     def test003_list_jobs(self):
         """ GAT-003
         *GET:/nodes/{nodeid}/jobs - Expected: job list items*

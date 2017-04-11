@@ -50,7 +50,7 @@ class ExecuteRemoteCommands(RequestEnvAPI):
     def update_machine(self):
         self.logging.info(' [*] Updating virtual machine OS ... ')
         print(colored(' [*] Updating virtual machine OS ... ', 'white'))
-        command = 'echo %s | sudo -S apt-get update' % self.virtualmachine['password']
+        command = 'echo %s | sudo -S apt-get -y update' % self.virtualmachine['password']
         self.execute_command(command=command)
 
     def install_docker(self):
@@ -74,6 +74,7 @@ class ExecuteRemoteCommands(RequestEnvAPI):
         import ipdb; ipdb.set_trace()
         command = 'echo %s | sudo -S bash jsInstaller.sh' % self.virtualmachine['password']
         self.execute_command(command=command)
+
 
     def install_g8core_python_client(self, branch):
         self.logging.info(' [*] Installing g8core python client .... ')
