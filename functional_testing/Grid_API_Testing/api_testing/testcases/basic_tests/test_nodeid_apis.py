@@ -7,6 +7,7 @@ class TestNodeidAPI(TestcasesBase):
     def __init__(self):
         super(TestNodeidAPI, self).__init__()
         self.nodes_api = NodesAPI()
+        self.base_test = TestcasesBase()
 
     def test001_list_nodes(self):
         """ GAT-001
@@ -14,11 +15,11 @@ class TestNodeidAPI(TestcasesBase):
 
         **Test Scenario:**
 
-        #. send get nodes api request.
-        #. compare results with golden value.
+        #. Send get nodes api request.
+        #. Compare results with golden value.
         """
-        status_code, response_content = self.nodes_api.get_node()
-        self.assertEqual(status_code, 200)
+        response = self.nodes_api.get_node()
+        self.assertEqual(response.status_code, 200)
 
     def test002_get_node_details(self):
         """ GAT-002
@@ -26,17 +27,13 @@ class TestNodeidAPI(TestcasesBase):
 
         **Test Scenario:**
 
-        #. send get nodes/{nodeid} api request.
-        #. compare results with golden value.
+        #. Choose one random node of list of running nodes.
+        #. Send get nodes/{nodeid} api request.
+        #. Compare results with golden value.
         """
-        status_code, response_content = self.nodes_api.get_node()
-        self.assertEqual(status_code, 200)
-        nodes_list = response_content
-        node_id = nodes_list[random.randint(0, len(nodes_list)-1)]
-        status_code, response_content = self.nodes_api.get_node_nodeid(node_id=node_id)
-        self.assertEqual(status_code, 200)
-
-
+        node_id=self.base_test.get_random_node()
+        response = self.nodes_api.get_node_nodeid(node_id=node_id)
+        self.assertEqual(response.status_code, 200)
 
     def test003_list_jobs(self):
         """ GAT-003
@@ -44,9 +41,13 @@ class TestNodeidAPI(TestcasesBase):
 
         **Test Scenario:**
 
-        #. send get /nodes/{nodeid}/jobs api request.
-        #. compare results with golden value.
+        #. Choose one random node of list of running nodes.
+        #. Send get /nodes/{nodeid}/jobs api request.
+        #. Compare results with golden value.
         """
+        node_id=self.base_test.get_random_node()
+        response = response.self.nodes_api.get_running_jobs(node_id=node_id)
+        self.assertEqual(response.status_code, 200)
 
     def test004_kill_jobs(self):
         """ GAT-004
@@ -54,9 +55,23 @@ class TestNodeidAPI(TestcasesBase):
 
         **Test Scenario:**
 
-        #. send get /nodes/{nodeid}/jobs api request.
-        #. check that all jobs has been killed.
+        #. Choose one random node of list of running nodes.
+        #. Send get /nodes/{nodeid}/jobs api request.
+        #. Check that all jobs has been killed.
         """
+        self.lg('Choose one random node of list of running nodes.')
+        node_id=self.base_test.get_random_node()
+        self.lg(' Send get /nodes/{nodeid}/jobs api request.')
+        status_code = self.nodes_api.kill_job(node_id=node_id)
+        self.assertEqual(status_code, 204)
+        self.lg('Check that all jobs has been killed.')
+        response = response.self.nodes_api.get_running_jobs(node_id=node_id)
+        self.assertEqual(response.status_code, 200)
+        jobs_list = response.response_content.json()
+        for job in jobs_list:
+            self.assertTrue(job['state'], 'KILLED')
+
+
 
     def test005_get_job_details(self):
         """ GAT-005
@@ -64,11 +79,28 @@ class TestNodeidAPI(TestcasesBase):
 
         **Test Scenario:**
 
-        #. get list of jobs.
-        #. choose one of these jobs to list its details.
-        #. send get /nodes/{nodeid}/jobs/{jobid} api request.
-        #. compare response with the golden values.
+        #. Choose one random node of list of running nodes.
+        #. Get list of jobs of this node .
+        #. Choose one of these jobs to list its details.
+        #. Send get /nodes/{nodeid}/jobs/{jobid} api request.
+        #. Compare response with the golden values.
         """
+
+        self.lg('Choose one random node of list of running nodes.')
+        node_id = self.base_test.get_random_node()
+
+        self.lg('Get list of jobs of this node .')
+        response = self.nodes_api.get_running_jobs(node_id=node_id)
+        self.assertEqual(response.status_code, 200)
+
+        self.lg('Choose one of these jobs to list its details.')
+        jobs_list = response.response_content.json()
+        job_id = nodes_list[random.randint(0, len(jobs_list)]
+
+        self.lg('Send get /nodes/{nodeid}/jobs/{jobid} api request.')
+        response = self.nodes_api.get_job_details(node_id=node_id,job_id=job_id)
+        self.assertEqual(response.status_code, 200)
+
 
     def test006_kill_specific_job(self):
         """ GAT-006
@@ -82,6 +114,13 @@ class TestNodeidAPI(TestcasesBase):
         #. verify this job has been killed.
         """
 
+        node_id = self.base_test.get_random_node()
+        status_code, response_content = self.nodes_api.get_running_jobs(node_id=node_id)
+        job_list = response_content
+        job_id = job_list[random.randint(0, len(job_list)-1)
+        status_code, response_content = self.nodes_api.kill_job(node_id=node_id, job_id=job_id)
+        self.assertEqual(status_code, 204)
+
     def test007_ping_specific_node(self):
         """ GAT-007
         *POST:/nodes/{nodeid}/ping *
@@ -89,10 +128,16 @@ class TestNodeidAPI(TestcasesBase):
         **Test Scenario:**
 
         #. get list of running nodes.
-        #. choose one of these nodes.
+        #. choose one random node of these nodes.
         #. post /nodes/{nodeid}/ping api.
         #. check response status code.
         """
+        node_id = self.base_test.get_random_node()
+        status_code, response_content = self.nodes_api.get_running_jobs(node_id=node_id)
+        job_list = response_content
+        job_id = job_list[random.randint(0, len(job_list)-1)
+        status_code, response_content = self.nodes_api.ping_node(node_id=node_id)
+        self.assertEqual(status_code, 200)
 
     def test008_get_node_state(self):
         """ GAT-008
@@ -105,6 +150,9 @@ class TestNodeidAPI(TestcasesBase):
         #. get /nodes/{nodeid}/state api.
         #. compare response data with the golden values.
         """
+        node_id = self.base_test.get_random_node()
+        status_code, response_content = self.nodes_api.get_node_state(node_id=node_id)
+        self.assertEqual(status_code, 200)
 
     def test009_reboot_node(self):
         """ GAT-009
@@ -117,6 +165,9 @@ class TestNodeidAPI(TestcasesBase):
         #. post /nodes/{nodeid}/reboot api.
         #. verify that this node has been rebooted.
         """
+        node_id = self.base_test.get_random_node()
+        status_code, response_content = self.nodes_api.reboot_node(node_id=node_id)
+        self.assertEqual(status_code, 204)
 
     def test010_get_cpus_details(self):
         """ GAT-010
@@ -129,6 +180,9 @@ class TestNodeidAPI(TestcasesBase):
         #. get /nodes/{nodeid}/cpus api.
         #. compare response data with the golden values.
         """
+        node_id = self.base_test.get_random_node()
+        status_code, response_content = self.nodes_api.reboot_node(node_id=node_id)
+        self.assertEqual(status_code, 200)
 
     def test011_get_disks_details(self):
         """ GAT-011
@@ -141,6 +195,9 @@ class TestNodeidAPI(TestcasesBase):
         #. get /nodes/{nodeid}/disks api.
         #. compare response data with the golden values.
         """
+        node_id = self.base_test.get_random_node()
+        status_code, response_content = self.nodes_api.get_disks_detail(node_id=node_id)
+        self.assertEqual(status_code, 200)
 
     def test012_get_memmory_details(self):
         """ GAT-012
@@ -153,6 +210,9 @@ class TestNodeidAPI(TestcasesBase):
         #. get /nodes/{nodeid}/mem api.
         #. compare response data with the golden values.
         """
+                node_id = self.base_test.get_random_node()
+                status_code, response_content = self.nodes_api.reboot_node(node_id=node_id)
+                self.assertEqual(status_code, 200)
 
     def test013_get_nics_details(self):
         """ GAT-013
@@ -241,4 +301,3 @@ class TestNodeidAPI(TestcasesBase):
         #. post /nodes/{nodeid}/bridges api.
         #. compare response data with the golden values.
         """
-
