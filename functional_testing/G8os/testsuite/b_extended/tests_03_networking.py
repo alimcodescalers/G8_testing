@@ -285,7 +285,7 @@ class ExtendedNetworking(BaseTest):
         bridge_name = self.rand_str()[0:3]
         settings = {'cidr': '10.1.0.1/24'}
 
-        for nat in [False, True]:
+        for nat in [True, False]:
 
             self.lg('Create bridge (B1) with nat = {}, should succeed'.format(nat))
             self.client.bridge.create(bridge_name, network='static', nat=nat, settings=settings)
