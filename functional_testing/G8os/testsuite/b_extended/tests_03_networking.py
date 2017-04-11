@@ -1,6 +1,7 @@
 from utils.utils import BaseTest
 import time
 import unittest
+from random import randint
 
 
 class ExtendedNetworking(BaseTest):
@@ -8,6 +9,11 @@ class ExtendedNetworking(BaseTest):
     def setUp(self):
         super(ExtendedNetworking, self).setUp()
         self.check_g8os_connection(ExtendedNetworking)
+
+    def rand_mac_address(self):
+        mac_addr = ["{:02X}".format(randint(0, 255)) for x in range(6)]
+        return ':'.join(mac_addr)
+
 
     @unittest.skip('bug# https://github.com/g8os/core0/issues/126')
     def test001_zerotier(self):
@@ -96,6 +102,225 @@ class ExtendedNetworking(BaseTest):
 
         self.lg('{} ENDED'.format(self._testID))
 
+    @unittest.skip('bug: https://github.com/g8os/core0/issues/127')
+    def test002_create_bridges_with_specs_hwaddr(self):
 
-    # def test002_bridges(self):
-    #     pass
+        """ g8os-023
+        *Test case for testing creating, listing, deleting bridges*
+
+        **Test Scenario:**
+        #. Create bridge (B1) with specifice hardware address (HA), should succeed
+        #. List bridges, (B1) should be listed
+        #. Check the created bridge hardware address equal to (HA), should succeed
+        #. Delete bridge (B1), should succeed
+        #. Create bridge (B2) with invalid hardware address, should fail
+
+        """
+        self.lg('{} STARTED'.format(self._testID))
+
+        self.lg('Create bridge (B1) with specifice hardware address (HA), should succeed')
+        bridge_name = self.rand_str()
+        hardwareaddr = self.rand_mac_address()
+        self.client.bridge.create(bridge_name, hwaddr=hardwareaddr)
+
+        self.lg('List bridges, (B1) should be listed')
+        bridges = self.client.bridge.list()
+        self.assertIn(bridge_name, bridges)
+
+        self.lg('Check the created bridge hardware address equal to (HA), should succeed')
+        nics = self.client.info.nic()
+        nic = [x for x in nics if x['name'] == bridge_name]
+        self.assertNotEqual(nic, [])
+        self.assertEqual(nic[0]['hardwareaddr'], hardwareaddr)
+
+        self.lg('Delete bridge (B1), should succeed')
+        self.client.bridge.delete(bridge_name)
+        bridges = self.client.bridge.list()
+        self.assertNotIn(bridge_name, bridges)
+
+        self.lg('Create bridge (B2) with invalid hardware address, should fail')
+        bridge_name = self.rand_str()
+        hardwareaddr = self.rand_str()
+        with self.assertRaises(RuntimeError):
+            self.client.bridge.create(bridge_name, hwaddr=hardwareaddr)
+
+        self.lg('{} ENDED'.format(self._testID))
+
+    def test003_create_bridges_with_specs_network(self):
+        """ g8os-024
+        *Test case for testing creating, listing, deleting bridges*
+
+        **Test Scenario:**
+        #. Create bridge (B1) with static network and cidr (C1), should succeed
+        #. Check the created bridge addresses contains cidr (C1), should succeed
+        #. Delete bridge (B1), should succeed
+        #. Create bridge with invalid cidr, should fail
+        #. Create bridge (B2) with dnsmasq network and cidr (C2), should succeed
+        #. Check the bridge (B2) addresses contains cidr (C2), should succeed
+        #. Delete bridge (B2), should succeed
+
+        """
+        self.lg('{} STARTED'.format(self._testID))
+
+        self.lg('Create bridge (B1) with static network and cidr (C1), should succeed')
+        bridge_name = self.rand_str()
+        cidr = "10.20.30.1/24"
+        settings = {"cidr":cidr}
+        self.client.bridge.create(bridge_name, network='static', settings=settings)
+
+        self.lg('Check the created bridge addresses contains cidr (C1), should succeed')
+        nics = self.client.info.nic()
+        nic = [x for x in nics if x['name'] == bridge_name]
+        self.assertNotEqual(nic, [])
+        addrs = [x['addr'] for x in nic[0]['addrs']]
+        self.assertIn(cidr, addrs)
+
+        self.lg('Delete bridge (B1), should succeed')
+        self.client.bridge.delete(bridge_name)
+        bridges = self.client.bridge.list()
+        self.assertNotIn(bridge_name, bridges)
+
+        self.lg('Create bridge with invalid cidr, should fail')
+        bridge_name = self.rand_str()
+        cidr = "10.20.30.1"
+        settings = {"cidr":cidr}
+        with self.assertRaises(RuntimeError):
+            self.client.bridge.create(bridge_name, network='static', settings=settings)
+
+        self.lg('Create bridge (B2) with dnsmasq network and cidr (C2), should succeed')
+        bridge_name = self.rand_str()
+        cidr = "10.20.30.1/24"
+        start = "10.20.30.2"
+        end = "10.20.30.3"
+        settings = {"cidr":cidr, "start":start, "end":end}
+        self.client.bridge.create(bridge_name, network='dnsmasq', settings=settings)
+
+        self.lg('Check the bridge (B2) addresses contains cidr (C2), should succeed')
+        nics = self.client.info.nic()
+        nic = [x for x in nics if x['name'] == bridge_name]
+        self.assertNotEqual(nic, [])
+        addrs = [x['addr'] for x in nic[0]['addrs']]
+        self.assertIn(cidr, addrs)
+
+        self.lg('Delete bridge (B2), should succeed')
+        self.client.bridge.delete(bridge_name)
+        bridges = self.client.bridge.list()
+        self.assertNotIn(bridge_name, bridges)
+
+        self.lg('{} ENDED'.format(self._testID))
+
+    @unittest.skip('bug: https://github.com/g8os/core0/issues/147')
+    def test004_attach_bridge_to_container(self):
+        """ g8os-027
+        *Test case for testing creating, listing, deleting bridges*
+
+        **Test Scenario:**
+        #. Create bridge (B1) with dnsmasq network and cidr (CIDR1), should succeed
+        #. Create 2 containers C1, C2 with bridge (B1), should succeed
+        #. Check if each container (C1), (C2) got an ip address, should succeed
+        #. Check if each container can reach the other one, should succeed
+        #. Delete bridge (B1), should succeed
+        #. Check if host can reach remote server (google.com) using dns
+        """
+
+        self.lg('{} STARTED'.format(self._testID))
+
+        self.lg('Create bridge (B1) with dnsmasq network and cidr (CIDR1), should succeed')
+        bridge_name = self.rand_str()
+        cidr = "10.20.30.1/24"
+        ip_range = ["10.20.30.2", "10.20.30.3"]
+        start = ip_range[0]
+        end = ip_range[1]
+        settings = {"cidr":cidr, "start":start, "end":end}
+        self.client.bridge.create(bridge_name, network='dnsmasq', settings=settings)
+
+        self.lg('Create 2 containers C1, C2 with bridge (B1), should succeed')
+        cid_1 = self.client.container.create(self.root_url, storage=self.storage, bridge=[(bridge_name, 'dhcp')])
+        cid_2 = self.client.container.create(self.root_url, storage=self.storage, bridge=[(bridge_name, 'dhcp')])
+        client_c1 = self.client.container.client(cid_1)
+        client_c2 = self.client.container.client(cid_2)
+
+        for container_client in [client_c1, client_c2]:
+            self.lg('Check if each container (C1), (C2) got an ip address, should succeed')
+            nics = container_client.info.nic()
+            nic = [x for x in nics if x['name'] == 'eth1']
+            self.assertNotEqual(nic, [])
+            current_container_addr = [x['addr'] for x in nic['addrs'] if x['addr'][:x['addr'].find('/')] in ip_range][0]
+            self.assertNotEqual(current_container_addr, [])
+            other_container_addr = [x for x in ip_range if x != current_container_addr][0]
+
+            self.lg('Check if each container can reach the other one, should succeed')
+            response = container_client.bash('ping -w10 {}'.format(other_container_addr)).get()
+            self.assertEqual(response.state, 'SUCCESS', response.stderr)
+
+        self.lg('Delete bridge (B1), should succeed')
+        self.client.bridge.delete(bridge_name)
+        bridges = self.client.bridge.list()
+        self.assertNotIn(bridge_name, bridges)
+
+        self.lg('Check if host can reach remote server (google.com) using dns')
+        response = self.client.bash('ping -w10 google.com').get()
+        self.assertEqual(response.state, 'SUCCESS', response.stderr)
+
+        self.lg('{} ENDED'.format(self._testID))
+
+    @unittest.skip('bug: https://github.com/g8os/core0/issues/153')
+    def test005_create_bridges_with_specs_nat(self):
+        """ g8os-028
+        *Test case for testing creating, listing, deleting bridges*
+
+        **Test Scenario:**
+        #. Create bridge (B1) with nat = False/True, should succeed
+        #. Create new container and attach bridge (B1) to it, should succeed
+        #. Remove container's default network interface eth0, should succeed
+        #. set network interface eth1 as default route, should succeed
+        #. Try to ping 8.8.8.8 when NAT is enabled, should succeed
+        #. Try to ping 8.8.8.8 when NAT is disabled, should fail
+        #. Delete bridge (B2), should succeed
+        #. Delete container, should succeed
+
+        """
+        self.lg('{} STARTED'.format(self._testID))
+
+        bridge_name = self.rand_str()[0:3]
+        settings = {'cidr': '10.1.0.1/24'}
+
+        for nat in [True, False]:
+
+            self.lg('Create bridge (B1) with nat = {}, should succeed'.format(nat))
+            self.client.bridge.create(bridge_name, network='static', nat=nat, settings=settings)
+            time.sleep(2)
+
+            self.lg('Create new container and attach bridge (B1) to it, should succeed')
+            cid = self.client.container.create(self.root_url, storage=self.storage,  bridge=[(bridge_name, '10.1.0.2/24')])
+            container_client = self.client.container.client(cid)
+            time.sleep(2)
+
+            self.lg('Remove default network interface eth0, should succeed')
+            response = container_client.bash('ip l s eth0 down').get()
+            self.assertEqual(response.state, 'SUCCESS', response.stderr)
+            time.sleep(2)
+
+            self.lg('set network interface eth1 as default route, should succeed')
+            response = container_client.bash('ip route add default dev eth1 via 10.1.0.1').get()
+            self.assertEqual(response.state, 'SUCCESS', response.stderr)
+            time.sleep(2)
+
+            if nat:
+                self.lg('Try to ping 8.8.8.8 when NAT is enabled, should succeed')
+                response = container_client.bash('ping -w3 8.8.8.8', response.stdout).get()
+                self.assertEqual(response.state, 'SUCCESS', response.stdout)
+            else:
+                self.lg('Try to ping 8.8.8.8 when NAT is disabled, should fail')
+                response = container_client.bash('ping -w3 8.8.8.8', response.stdout).get()
+                self.assertEqual(response.state, 'ERROR', response.stdout)
+
+            self.lg('Delete bridge (B1), should succeed')
+            self.client.bridge.delete(bridge_name)
+            bridges = self.client.bridge.list()
+            self.assertNotIn(bridge_name, bridges)
+
+            self.lg('Delete container, should succeed')
+            self.client.container.terminate(cid)
+
+        self.lg('{} ENDED'.format(self._testID))
