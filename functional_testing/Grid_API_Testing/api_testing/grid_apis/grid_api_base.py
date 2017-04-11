@@ -22,7 +22,7 @@ class GridAPIBase(object):
         elif method == 'delete':
             response = self.requests.delete(url=api, headers=self.headers, data=body)
 
-        return response.status_code, response.content
+        return response
 
     def build_api(self, api):
         api_path = self.api_base_url

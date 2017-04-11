@@ -18,7 +18,7 @@ class TestNodeidAPI(TestcasesBase):
         #. Send get nodes api request.
         #. Compare results with golden value.
         """
-        response = self.nodes_api.get_node()
+        response = self.nodes_api.get_nodes()
         self.assertEqual(response.status_code, 200)
 
     def test002_get_node_details(self):
