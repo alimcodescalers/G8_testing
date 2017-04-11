@@ -17,8 +17,8 @@ class TestNodeidAPI(TestcasesBase):
         #. send get nodes api request.
         #. compare results with golden value.
         """
-        status_code, response_content = self.nodes_api.get_node()
-        self.assertEqual(status_code, 200)
+        response = self.nodes_api.get_nodes()
+        self.assertEqual(response.status_code, 200)
 
     def test002_get_node_details(self):
         """ GAT-002
@@ -29,13 +29,12 @@ class TestNodeidAPI(TestcasesBase):
         #. send get nodes/{nodeid} api request.
         #. compare results with golden value.
         """
-        status_code, response_content = self.nodes_api.get_node()
+        status_code, response_content = self.nodes_api.get_nodes()
         self.assertEqual(status_code, 200)
         nodes_list = response_content
         node_id = nodes_list[random.randint(0, len(nodes_list)-1)]
-        status_code, response_content = self.nodes_api.get_node_nodeid(node_id=node_id)
-        self.assertEqual(status_code, 200)
-
+        response = self.nodes_api.get_nodes_nodeid(nodeid=node_id)
+        self.assertEqual(response.status_code, 200)
 
     def test003_list_jobs(self):
         """ GAT-003
