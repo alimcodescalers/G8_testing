@@ -3,17 +3,17 @@ from api_testing.grid_apis.grid_api_base import GridAPIBase
 
 class NodesAPI(GridAPIBase):
     def __init__(self):
-        super(NodesAPI, self).__init__()
+        super().__init__()
 
-    def get_node(self):
+    def get_nodes(self):
         method = 'get'
-        api = ['node']
+        api = ['nodes']
         return self.request_api(method=method,
                                 api=api)
 
-    def get_node_nodeid(self, node_id):
+    def get_nodes_nodeid(self, nodeid):
         method = 'get'
-        api = ['node', node_id]
+        api = ['nodes', nodeid]
         return self.request_api(api=api,
                                 method=method)
 

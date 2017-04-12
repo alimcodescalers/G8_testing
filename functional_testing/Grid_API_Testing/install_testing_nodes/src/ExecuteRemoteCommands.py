@@ -1,5 +1,5 @@
 import paramiko, time
-from src.RequestEnvAPI import RequestEnvAPI
+from install_testing_nodes.src.RequestEnvAPI import RequestEnvAPI
 from termcolor import colored
 
 
@@ -69,31 +69,47 @@ class ExecuteRemoteCommands(RequestEnvAPI):
     def install_jumpscale(self, branch):
         self.logging.info(' [*] Installing jumpscale .... ')
         print(colored(' [*] Installing jumpscale .... ', 'white'))
-        command = """echo 'cd /tmp && export JSBRANCH=%s && curl -k https://raw.githubusercontent.com/Jumpscale/jumpscale_core8/$JSBRANCH/install/install.sh?$RANDOM > install.sh && bash install.sh' > jsInstaller.sh""" % branch
+        command = """echo 'cd /tmp && export JSBRANCH="%s" && curl -k https://raw.githubusercontent.com/Jumpscale/jumpscale_core8/$JSBRANCH/install/install.sh?$RANDOM > install.sh && bash install.sh' > jsInstaller.sh""" % branch
         self.execute_command(command=command, skip_error=True)
-        import ipdb; ipdb.set_trace()
-        command = 'echo %s | sudo -S bash jsInstaller.sh' % self.virtualmachine['password']
-        self.execute_command(command=command)
+        # command = 'echo %s | sudo -S bash jsInstaller.sh' % self.virtualmachine['password']
+        command = """ echo %s | sudo -S bash -c "tmux new-session -d -s installJS 'bash jsInstaller.sh; bash -i'" """ % self.virtualmachine['password']
+        self.execute_command(command=command, skip_error=True)
 
+        for _ in range(15):
+            command = 'which js'
+            tracback = self.execute_command(command=command, skip_error=True)
+            if not tracback:
+                time.sleep(60)
+            else:
+                self.logging.info(' [+] Done!\n')
+                print(colored(' [+] Done!\n', 'green'))
+                break
+        else:
+            self.logging.info(' [-] Failed!')
+            print(colored(' [-] Failed!', 'red'))
 
-    def install_g8core_python_client(self, branch):
+    def install_g8core_python_client(self):
         self.logging.info(' [*] Installing g8core python client .... ')
         print(colored(' [*] Installing g8core python client .... ', 'white'))
-        command = """echo echo 'cd $TMPDIR;\ngit clone https://github.com/g8os/core0/\ncd core0\ngit checkout %s\ncd pyclient\npip install .\n' > g8_python_client.sh""" % branch
-        self.execute_command(command=command, skip_error=True)
+        # command = """echo echo 'cd $TMPDIR;\ngit clone https://github.com/g8os/core0/\ncd core0\ngit checkout %s\ncd pyclient\npip install .\n' > g8_python_client.sh""" % branch
+        # self.execute_command(command=command, skip_error=True)
 
-        command = 'echo %s | sudo -S bash g8_python_client.sh' % self.virtualmachine['password']
+        #command = 'echo %s | sudo -S bash g8_python_client.sh' % self.virtualmachine['password']
+        command = 'echo %s | sudo -S pip3 install g8core' % self.virtualmachine['password']
         self.execute_command(command=command)
+
 
     def start_AYS_server(self):
         self.logging.info(' [*] Starting AYS .... ')
         print(colored(' [*] Starting AYS .... ', 'white'))
         command = 'echo %s | sudo -S bash -c "ays start --bind 0.0.0.0 --debug" ' % self.virtualmachine['password']
-        self.execute_command(command=command)
+        self.execute_command(command=command, skip_error=True)
 
+        time.sleep(10)
         self.logging.info(' [*] Create grid repo .... ')
         print(colored(' [*] Create grid repo .... ', 'white'))
-        command = 'echo %s | sudo -S bash -c "ays repo create --name grid --git http://github.com/user/repo" ' % self.virtualmachine['password']
+        command = 'echo %s | sudo -S bash -c "ays repo create --name grid --git http://github.com/user/repo" ' % \
+                  self.virtualmachine['password']
         self.execute_command(command=command)
 
     def clone_ays_templates(self, branch):
@@ -105,10 +121,13 @@ class ExecuteRemoteCommands(RequestEnvAPI):
         command = 'echo %s | sudo -S bash clone_ays_template.sh' % self.virtualmachine['password']
         self.execute_command(command=command)
 
-    def discover_g8os_nodes(self, g8os_ip):
+    def discover_g8os_nodes(self):
         self.logging.info(' [*] Discover g8os nodes .... ')
         print(colored(' [*] Discover g8os nodes .... ', 'white'))
-        command = """echo 'cd /optvar/cockpit_repos/grid/ && printf "node.g8os__discovering:\\n  redisAddr: %s" > blueprints/discover_nodes&&ays blueprint&&ays run create --follow' > discover_g8os_nodes.sh""" % g8os_ip
+
+        discovering_blueprint = self.get_discovering_blueprint()
+
+        command = """echo 'cd /optvar/cockpit_repos/grid/ && printf %s > blueprints/discover_nodes&&ays blueprint&&ays run create --follow' > discover_g8os_nodes.sh""" % discovering_blueprint
         self.execute_command(command=command, skip_error=True)
 
         command = 'echo %s | sudo -S bash discover_g8os_nodes.sh' % self.virtualmachine['password']
@@ -125,8 +144,9 @@ class ExecuteRemoteCommands(RequestEnvAPI):
     def start_API_server(self, API_branch, ays_server_ip):
         self.logging.info(' [*] Starting %s G8OS Grid API ..... ' % API_branch)
         print(colored(' [*] Starting %s G8OS Grid API ..... ' % API_branch, 'white'))
-        command = """ echo 'mkdir -p /opt/code/ && cd /opt/code/ && export GOPATH='/opt/code/' && go get github.com/g8os/grid; cd src/github.com/g8os/grid/ && git checkout %s && git pull && cd api && go get && go install && /opt/code/bin/api --bind :8080 --ays-url http://%s:5000 --ays-repo grid&' > start_api_server.sh """ % (
+        command = """ echo 'mkdir -p /opt/code/ && cd /opt/code/ && export GOPATH='/opt/code/' && go get github.com/g8os/grid; cd src/github.com/g8os/grid/ && git checkout %s && git pull && cd api && export GOPATH=/opt/code/ && go get && go install && /opt/code/bin/api --bind :8080 --ays-url http://%s:5000 --ays-repo grid&' > start_api_server.sh """ % (
             API_branch, ays_server_ip)
         self.execute_command(command, skip_error=True)
         command = 'echo %s | sudo -S bash start_api_server.sh' % self.virtualmachine['password']
         self.execute_command(command=command)
+

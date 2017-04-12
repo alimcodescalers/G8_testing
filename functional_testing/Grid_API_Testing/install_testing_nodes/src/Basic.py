@@ -1,6 +1,6 @@
 import time, requests, os, uuid, logging, configparser
 from subprocess import Popen, PIPE
-from src.client import Client
+from install_testing_nodes.src.client import Client
 from random import randint
 
 
@@ -16,6 +16,7 @@ class Basic(object):
                        'password': '',
                        'location': ''
                        }
+        self.g8os_ip_list = []
         self.client_header = {'Content-Type': 'application/x-www-form-urlencoded',
                               'Accept': 'application/json'}
         self.requests = requests
@@ -25,6 +26,7 @@ class Basic(object):
         self.get_config_values()
         if not self.values['password']:
             self.values['password'] = str(input("Please, Enter %s's password : " % self.values['username']))
+        self.get_g8os_ips()
 
     def get_config_values(self):
         script_dir = os.path.dirname(__file__)
@@ -76,3 +78,17 @@ class Basic(object):
     @staticmethod
     def random_integer(min_val, max_val):
         return randint(int(min_val), int(max_val))
+
+    def get_g8os_ips(self):
+        for i in range(10):
+            check = 'g8os_ip_%i' % i
+            if check in self.values.keys():
+                self.g8os_ip_list.append([self.values[check], self.values['g8os_mac_%i' % i]])
+
+    def get_discovering_blueprint(self):
+        import ipdb; ipdb.set_trace()
+        blueprint = ''
+        for g8os in self.g8os_ip_list:
+            tmp = "node.g8os__%s:\\n  redisAddr: %s\\n \\n" % (g8os[0], g8os[1])
+            blueprint += tmp
+        return blueprint

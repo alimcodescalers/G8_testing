@@ -1,9 +1,12 @@
 from termcolor import colored
-from src.ExecuteRemoteCommands import ExecuteRemoteCommands
+from install_testing_nodes.src.ExecuteRemoteCommands import ExecuteRemoteCommands
+
+JUMPSACLE_BRANCH = "8.2.0"
+GRID_API_BRANCH = "1.1.0-alpha"
+AYS_TEMPLATE_BRANCH = "0.2.0"
 
 if __name__ == '__main__':
     executer = ExecuteRemoteCommands()
-    # import ipdb; ipdb.set_trace()
     print(colored(' [*] STEP 1 : create account', 'yellow'))
     executer.create_account()
     print(colored(' [*] STEP 2 : create cloud space', 'yellow'))
@@ -18,7 +21,7 @@ if __name__ == '__main__':
     executer.install_docker()
     executer.install_g8os()
     executer.get_virtualmachine_ip()
-    g8os_ip = executer.virtualmachine['ip']
+    executer.g8os_ip_list.append([executer.virtualmachine['ip'], 'dockerG8os'])
 
     # AYS server vm
     print(colored(' [*] STEP 4 : create AYS server node', 'yellow'))
@@ -26,11 +29,11 @@ if __name__ == '__main__':
     executer.create_port_forward(publicPorts={22: 2201, 5000: 5000})
     executer.connect_to_virtual_machine(port=2201)
     executer.update_machine()
-    executer.install_jumpscale(branch='8.2.0')
-    executer.install_g8core_python_client(branch='0.12.0')
+    executer.install_jumpscale(branch=JUMPSACLE_BRANCH)
+    executer.install_g8core_python_client()
     executer.start_AYS_server()
-    executer.clone_ays_templates(branch='0.2.0')
-    executer.discover_g8os_nodes(g8os_ip=g8os_ip)
+    executer.clone_ays_templates(branch=AYS_TEMPLATE_BRANCH)
+    executer.discover_g8os_nodes()
     executer.get_virtualmachine_ip()
     ays_server_ip = executer.virtualmachine['ip']
 
@@ -41,7 +44,7 @@ if __name__ == '__main__':
     executer.connect_to_virtual_machine(port=2202)
     executer.update_machine()
     executer.install_go()
-    executer.start_API_server(API_branch='nodes-api',
+    executer.start_API_server(API_branch=GRID_API_BRANCH,
                                ays_server_ip=ays_server_ip)
     executer.get_virtualmachine_ip()
 

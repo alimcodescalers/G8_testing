@@ -5,7 +5,7 @@ from api_testing.utiles.utiles import Utiles
 class GridAPIBase(object):
     def __init__(self):
         self.config = Utiles().get_config_values()
-        self.api_base_url = self.config['api_url']
+        self.api_base_url = self.config['api_base_url']
         self.headers = {'content-type': 'application/json'}
         self.requests = requests
 
@@ -13,7 +13,7 @@ class GridAPIBase(object):
         if method not in ['post', 'get', 'delete']:
             raise NameError(" [*] %s method isn't handled" % method)
 
-        self.build_api(api)
+        api = self.build_api(api)
 
         if method == 'get':
             response = self.requests.get(url=api, headers=self.headers, data=body)
@@ -26,7 +26,7 @@ class GridAPIBase(object):
 
     def build_api(self, api):
         api_path = self.api_base_url
-        if api_path != '/':
+        if api_path[-1] != '/':
             api_path += '/'
 
         for item in api:

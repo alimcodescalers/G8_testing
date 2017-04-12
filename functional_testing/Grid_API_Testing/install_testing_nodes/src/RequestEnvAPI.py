@@ -1,6 +1,6 @@
 import time
 from termcolor import colored
-from src.Basic import Basic
+from install_testing_nodes.src.Basic import Basic
 
 
 class RequestEnvAPI(Basic):
@@ -123,7 +123,7 @@ class RequestEnvAPI(Basic):
         client_data = {
             'cloudspaceId': self.cloudspace['id'],
             'name': self.virtualmachine['name'],
-            'sizeId': 2,
+            'sizeId': 3,
             'imageId': self.ubunutu_16_image_id,
             'disksize': 20}
 

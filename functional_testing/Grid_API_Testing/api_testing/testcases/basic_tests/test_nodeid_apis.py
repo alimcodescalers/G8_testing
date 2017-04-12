@@ -4,8 +4,8 @@ from api_testing.grid_apis.apis.nodes_apis import NodesAPI
 
 
 class TestNodeidAPI(TestcasesBase):
-    def __init__(self):
-        super(TestNodeidAPI, self).__init__()
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self.nodes_api = NodesAPI()
 
     def test001_list_nodes(self):
@@ -29,9 +29,9 @@ class TestNodeidAPI(TestcasesBase):
         #. send get nodes/{nodeid} api request.
         #. compare results with golden value.
         """
-        status_code, response_content = self.nodes_api.get_nodes()
-        self.assertEqual(status_code, 200)
-        nodes_list = response_content
+        response = self.nodes_api.get_nodes()
+        self.assertEqual(response.status_code, 200)
+        nodes_list = response.content
         node_id = nodes_list[random.randint(0, len(nodes_list)-1)]
         response = self.nodes_api.get_nodes_nodeid(nodeid=node_id)
         self.assertEqual(response.status_code, 200)
