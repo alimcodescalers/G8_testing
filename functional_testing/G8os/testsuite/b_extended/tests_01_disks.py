@@ -450,3 +450,40 @@ class DisksTests(BaseTest):
         self.client.disk.umount('{}p5'.format(loop_dev_list[0]))
 
         self.lg('{} ENDED'.format(self._testID))
+
+    def test008_quota_btrfs(self):
+        """ g8os-026
+        *Test case for btrfs quota*
+
+        **Test Scenario:**
+        #. Create Btrfs file system, should succeed
+        #. Create btrfs subvolume (SV1), should succeed
+        #. Apply btrfs quota for SV1 with limit (L1), should succeed
+        #. Try to write file inside that directory exceeding L1, should fail
+        #. Destroy this btrfs filesystem
+        """
+
+        self.lg('{} STARTED'.format(self._testID))
+        self.skipTest('https://github.com/g8os/core0/issues/161')
+
+        self.lg('Create Btrfs file system, should succeed')
+        self.create_btrfs()
+
+        self.lg('Create btrfs subvolume (SV1), should succeed')
+        sv1 = self.rand_str()
+        sv1_path = '{}/{}'.format(self.mount_point, sv1)
+        self.client.btrfs.subvol_create(sv1_path)
+
+        self.lg('Apply btrfs quota for SV1 with limit (L1), should succeed')
+        L1 = '100M'
+        self.client.btrfs.subvol_quota(sv1_path, L1)
+        self.client.bash('btrfs gquota show -r ') # then check the limits
+
+        self.lg('Try to write file inside that directory exceeding L1, should fail')
+        with self.assertRaises(RuntimeError):
+            self.client.bash('fallocate -l 200M {}'.format(self.rand_str))
+
+        self.lg('Destroy this btrfs filesystem')
+        self.destroy_btrfs()
+
+        self.lg('{} ENDED'.format(self._testID))
