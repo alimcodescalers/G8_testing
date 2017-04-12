@@ -7,7 +7,29 @@ class Client:
     def stdout(self, resource):
         return resource.get().stdout.replace('\n', '').lower()
 
-    def get_nic_info(self):
+    def get_node_cpus(self):
+        lines = self.client.bash('cat /proc/cpuinfo').get().stdout.splitlines()
+        cpuInfo = []
+        cpuInfo_format = {'family': "", 'cacheSize': "", 'mhz': "", 'cores': "", 'flags': ""}
+        for line in lines:
+            line = line.replace('\t', '').strip()
+            key = line[:line.find(':')]
+            value = line[line.find(':')+2:]
+            if key == 'processor':
+                cpuInfo.append(dict(cpuInfo_format))
+            if key == 'cpu family':
+                cpuInfo[-1]['family'] = value
+            elif key == 'cache size':
+                cpuInfo[-1]['cacheSize'] = int(value[:value.index(' KB')])
+            elif key == 'cpu MHz':
+                cpuInfo[-1]['mhz'] = value
+            elif key == 'cpu cores':
+                cpuInfo[-1]['cores'] = int(value)
+            elif key == 'flags':
+                cpuInfo[-1]['flags'] = value.split(' ')
+        return cpuInfo
+
+    def get_node_nics(self):
         r = self.client.bash('ip -br a').get().stdout
         nics = [x.split()[0] for x in r.splitlines()]
         nicInfo = []
@@ -25,60 +47,36 @@ class Client:
 
         return nicInfo
 
-    def get_cpu_info(self):
+    def get_node_bridges(self):
+        bridgesInfo = []
+        nics = self.client.bash('ls /sys/class/net').get().stdout.splitlines()
+        for nic in nics:
+            status = self.client.bash('cat /sys/class/net/{}/operstate'.format(nic)).get().stdout.strip()
+            bridge = {"name":nic, "status":status, "config":""}
+            bridgesInfo.append(bridge)
 
-        lines = self.client.bash('cat /proc/cpuinfo').get().stdout.splitlines()
-        cpuInfo = {'vendorId': [], 'family': [], 'stepping': [], 'cpu': [], 'coreId': [], 'model': [],
-                    'cacheSize': [], 'mhz': [], 'cores': [], 'flags': [], 'modelName': [], 'physicalId':[]}
+        return bridgesInfo
 
-        mapping = { "vendor_id": "vendorId", "cpu family": "family", "processor": "cpu", "core id": "coreId",
-                    "cache size": "cacheSize", "cpu MHz": "mhz", "cpu cores": "cores", "model name": "modelName",
-                    "physical id": "physicalId", "stepping": "stepping", "flags": "flags", "model": "model"}
-
-        keys = mapping.keys()
-        for line in lines:
-            line = line.replace('\t', '')
-            for key in keys:
-                if key == line[:line.find(':')]:
-                    item = line[line.index(':') + 1:].strip()
-                    if key in ['processor', 'stepping', 'cpu cores']:
-                        item = int(item)
-                    if key == "cpu MHz":
-                        item = float(item)
-                    if key == 'cache size':
-                        item = int(item[:item.index(' KB')])
-                    if key == 'flags':
-                        item = item.split(' ')
-
-                    cpuInfo[mapping[key]].append(item)
-
-        return cpuInfo
-
-    def get_mem_info(self):
+    def get_node_mem(self):
         lines = self.client.bash('cat /proc/meminfo').get().stdout.splitlines()
         memInfo = { 'active': 0, 'available': 0, 'buffers': 0, 'cached': 0,
                     'free': 0,'inactive': 0, 'total': 0}
-
-        mapping = { 'Active': 'active', 'MemAvailable': 'available', 'Buffers':'buffers',
-                    'Cached': 'cached', 'MemFree': 'free', 'Inactive':'inactive', 'MemTotal':'total'}
-
-        keys = mapping.keys()
         for line in lines:
-            line = line.replace('\t', '')
-            for key in keys:
-                if key == line[:line.find(':')]:
-                    item = int(line[line.index(':') + 1:line.index(' kB')].strip())
-                    item = item * 1024
-                    memInfo[mapping[key]] = item
-
+            line = line.replace('\t', '').strip()
+            key = line[:line.find(':')].lower()
+            value = line[line.find(':')+2:line.find('kB')].strip()
+            if 'mem' == key[:3]:
+                key = key[3:]
+            if key in memInfo.keys():
+                memInfo[key] = int(value)
         return memInfo
 
-    def get_os_info(self):
+    def get_node_info(self):
         hostname = self.client.system('uname -n').get().stdout.strip()
         krn_name = self.client.system('uname -s').get().stdout.strip().lower()
         return {"hostname":hostname, "kernel":krn_name}
 
-    def get_disks_info(self):
+    def get_node_disks(self):
         diskInfo = {'mountpoint': [], 'fstype': [], 'device': [], 'opts': []}
         response = self.client.bash('mount').get().stdout
         lines = response.splitlines()

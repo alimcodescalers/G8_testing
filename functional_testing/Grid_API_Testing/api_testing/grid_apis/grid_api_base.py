@@ -10,7 +10,7 @@ class GridAPIBase(object):
         self.requests = requests
 
     def request_api(self, method, api, body=''):
-        if method not in ['post', 'get', 'delete']:
+        if method not in ['post', 'get', 'put', 'delete']:
             raise NameError(" [*] %s method isn't handled" % method)
 
         api = self.build_api(api)
@@ -19,6 +19,8 @@ class GridAPIBase(object):
             response = self.requests.get(url=api, headers=self.headers, data=body)
         elif method == 'post':
             response = self.requests.post(url=api, headers=self.headers, data=body)
+        elif method == 'put':
+            response = self.requests.put(url=api, headers=self.headers, data=body)
         elif method == 'delete':
             response = self.requests.delete(url=api, headers=self.headers, data=body)
 
