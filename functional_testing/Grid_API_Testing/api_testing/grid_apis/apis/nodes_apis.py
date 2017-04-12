@@ -5,69 +5,144 @@ class NodesAPI(GridAPIBase):
     def __init__(self):
         super(NodesAPI, self).__init__()
 
-    def get_node(self):
+    def get_nodes(self):
         method = 'get'
-        api = ['node']
+        api = ['nodes']
         return self.request_api(method=method,
                                 api=api)
 
-    def get_node_nodeid(self, node_id):
+    def get_nodes_nodeid(self, node_id):
         method = 'get'
-        api = ['node', node_id]
+        api = ['nodes', node_id]
         return self.request_api(api=api,
                                 method=method)
 
-    def get_running_jobs(self, node_id):
+    def get_nodes_nodeid_jobs(self, node_id):
         method = 'get'
-        api = ['node', node_id, 'job']
+        api = ['nodes', node_id, 'jobs']
         return self.request_api(api=api,
                                 method=method)
 
-    def kill_running_jobs(self, node_id, job_id=''):
+    def delete_nodes_nodeid_jobs(self, node_id):
         method = 'delete'
-        api = ['node', node_id, 'job']
+        api = ['nodes', node_id, 'jobs']
         return self.request_api(api=api,
                                 method=method)
 
-    def kill_job(self, node_id, job_id):
-        method = 'delete'
-        api = ['node', node_id, 'job', job_id]
-        return self.request_api(api=api,
-                                method=method)
-
-
-    def get_job_details(self, node_id, job_id=''):
+    def get_nodes_nodeid_jobs_jobid(self, node_id, job_id):
         method = 'get'
-        api = ['node', node_id, 'job', job_id]
+        api = ['nodes', node_id, 'jobs', job_id]
 
         return self.request_api(api=api,
                                 method=method)
 
-    def ping_node(self, node_id):
+    def delete_nodes_nodeid_jobs_jobid(self, node_id, job_id):
+        method = 'delete'
+        api = ['nodes', node_id, 'jobs', job_id]
+        return self.request_api(api=api,
+                                method=method)
+
+    def post_nodes_nodeid_ping(self, node_id):
         method = 'post'
-        api = ['node', node_id, 'ping']
+        api = ['nodes', node_id, 'ping']
 
         return self.request_api(api=api,
                                 method=method)
 
-    def get_node_state(self, node_id):
+    def get_nodes_nodeid_state(self, node_id):
         method = 'get'
         api = ['node', node_id, 'state']
 
         return self.request_api(api=api,
                                 method=method)
 
-    def reboot_node(self, node_id):
+    def post_nodes_nodeid_reboot(self, node_id):
         method = 'post'
         api = ['node', node_id, 'reboot']
 
         return self.request_api(api=api,
                                 method=method)
 
+    def get_nodes_nodeid_cpu(self, node_id):
+        method = 'post'
+        api = ['nodes', node_id, 'cpu']
 
-    def get_disks_detail(self, node_id):
+        return self.request_api(api=api,
+                                method=method)
+
+    def get_nodes_nodeid_disk(self, node_id):
         method = 'get'
-        api = ['node', node_id, 'disk']
+        api = ['nodes', node_id, 'disk']
+
+        return self.request_api(api=api,
+                                method=method)
+
+    def get_nodes_nodeid_mem(self, node_id):
+        method = 'get'
+        api = ['nodes', node_id, 'mem']
+
+        return self.request_api(api=api,
+                                method=method)
+
+    def get_nodes_nodeid_nic(self, node_id):
+        method = 'get'
+        api = ['nodes', node_id, 'nic']
+
+        return self.request_api(api=api,
+                                method=method)
+
+    def get_nodes_nodeid_info(self, node_id):
+        method = 'get'
+        api = ['nodes', node_id, 'info']
+
+        return self.request_api(api=api,
+                                method=method)
+
+    def get_nodes_nodeid_process(self, node_id):
+        method = 'get'
+        api = ['nodes', node_id, 'process']
+
+        return self.request_api(api=api,
+                                method=method)
+
+    def get_nodes_nodeid_process_processid(self, node_id, process_id):
+        method = 'get'
+        api = ['nodes', node_id, 'process', process_id]
+
+        return self.request_api(api=api,
+                                method=method)
+
+    def delete_nodes_nodeid_process_processid(self, node_id, process_id):
+        method = 'delete'
+        api = ['nodes', node_id, 'process', process_id]
+
+        return self.request_api(api=api,
+                                method=method)
+
+    def post_nodes_nodeid_bridges(self, node_id, body):
+        method = 'post'
+        api = ['nodes', node_id, 'bridges']
+
+        return self.request_api(api=api,
+                                method=method, body=body)
+
+    def get_nodes_nodeid_bridges(self, node_id):
+        method = 'get'
+        api = ['nodes', node_id, 'bridges']
+
+        return self.request_api(api=api,
+                                method=method)
+
+    def get_nodes_nodeid_bridges_bridgeid(self, node_id, bridge_id):
+        method = 'get'
+        api = ['nodes', node_id, 'bridges',bridge_id]
+
+        return self.request_api(api=api,
+                                method=metho
+
+    def delete_nodes_nodeid_bridges_bridgeid(self, node_id, bridge_id):
+        method = 'delete'
+        api = ['nodes', node_id, 'bridges',bridge_id]
 
         return self.request_api(api=api,
                                 method=method)
