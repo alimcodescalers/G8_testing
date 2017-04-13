@@ -35,11 +35,11 @@ class TestVmsAPI(TestcasesBase):
 
     def tearDown(self):
         self.lg.info('Delete virtual machine (VM0)')
-        self.vms_api.delete_node_vms_vmid(self.nodeid, self.vm_id)
+        self.vms_api.delete_nodes_vms_vmid(self.nodeid, self.vm_id)
 
         super(TestVmsAPI, self).tearDown()
 
-    def test001_get_node_vms_vmid(self):
+    def test001_get_nodes_vms_vmid(self):
         """ GAT-001
         **Test Scenario:**
 
@@ -49,14 +49,14 @@ class TestVmsAPI(TestcasesBase):
         #. Get nonexisting virtual machine, should fail with 404.
         """
         self.lg.info('Get virtual machine (VM0), should succeed with 200')
-        response = self.vms_api.get_node_vms_vmid(self.nodeid, self.vm_id)
+        response = self.vms_api.get_nodes_vms_vmid(self.nodeid, self.vm_id)
         self.assertEqual(response.status_code, 200)
         for key in self.body.keys():
             self.assertEqual(self.body[key], response.json()[key])
         self.assertEqual(response.json()['status'], 'running')
 
         self.lg.info('Get nonexisting virtual machine, should fail with 404')
-        response = self.vms_api.get_node_vms_vmid(self.nodeid, 'fake_vm')
+        response = self.vms_api.get_nodes_vms_vmid(self.nodeid, 'fake_vm')
         self.assertEqual(response.status_code, 404)
 
     def test002_get_node_vms(self):
@@ -104,22 +104,22 @@ class TestVmsAPI(TestcasesBase):
         vm_location = response.headers['Location']
 
         self.lg.info('Get virtual machine (VM1), should succeed with 200')
-        response = self.vms_api.get_node_vms_vmid(self.nodeid, vm_id)
+        response = self.vms_api.get_nodes_vms_vmid(self.nodeid, vm_id)
         self.assertEqual(response.status_code, 200)
         for key in body.keys():
             self.assertEqual(body[key], response.json()[key])
         self.assertEqual(response.json()['status'], 'running')
 
         self.lg.info('Delete virtual machine (VM1), should succeed with 204')
-        response = self.vms_api.delete_node_vms_vmid(self.nodeid, vm_id)
+        response = self.vms_api.delete_nodes_vms_vmid(self.nodeid, vm_id)
         self.assertEqual(response.status_code, 204)
 
         self.lg.info('Create virtual machine with missing parameters, should fail with 400')
         body = {"id":self.random_string()}
-        response = self.vms_api.post_node_vms_vmid(self.nodeid, body)
+        response = self.vms_api.post_nodes_vms_vmid(self.nodeid, body)
         self.assertEqual(response.status_code, 400)
 
-    def test004_put_node_vms_vmid(self):
+    def test004_put_nodes_vms_vmid(self):
         """ GAT-004
         **Test Scenario:**
 
@@ -146,11 +146,11 @@ class TestVmsAPI(TestcasesBase):
                 "userCloudInit":vm_userCloudInit,
                 "systemCloudInit":vm_systemCloudInit}
 
-        response = self.vms_api.put_node_vms_vmid(self.nodeid, self.vm_id, body)
+        response = self.vms_api.put_nodes_vms_vmid(self.nodeid, self.vm_id, body)
         self.assertEqual(response.status_code, 204)
 
         self.lg.info('Get virtual machine (VM0), should succeed with 200')
-        response = self.vms_api.get_node_vms_vmid(self.nodeid, vm_id)
+        response = self.vms_api.get_nodes_vms_vmid(self.nodeid, vm_id)
         self.assertEqual(response.status_code, 200)
         for key in body.keys():
             self.assertEqual(body[key], response.json()[key])
@@ -159,10 +159,10 @@ class TestVmsAPI(TestcasesBase):
 
         self.lg.info('Update virtual machine with missing parameters, should fail with 400')
         body = {"id":self.random_string()}
-        response = self.vms_api.post_node_vms_vmid(self.nodeid, body)
+        response = self.vms_api.post_nodes_vms_vmid(self.nodeid, body)
         self.assertEqual(response.status_code, 400)
 
-    def test005_get_node_vms_vmid_info(self):
+    def test005_get_nodes_vms_vmid_info(self):
         """ GAT-005
         **Test Scenario:**
 
@@ -172,16 +172,16 @@ class TestVmsAPI(TestcasesBase):
         #. Get nonexisting virtual machine info, should fail with 404.
         """
         self.lg.info('Get virtual machine (VM0) info, should succeed with 200')
-        response = self.vms_api.get_node_vms_vmid_info(self.nodeid, self.vm_id)
+        response = self.vms_api.get_nodes_vms_vmid_info(self.nodeid, self.vm_id)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()['nics'], self.vm_nics)
         self.assertEqual(response.json()['disks'], self.vm_disks)
 
         self.lg.info('Get nonexisting virtual machine info, should fail with 404')
-        response = self.vms_api.get_node_vms_vmid_info(self.nodeid, 'fake_vm')
+        response = self.vms_api.get_nodes_vms_vmid_info(self.nodeid, 'fake_vm')
         self.assertEqual(response.status_code, 404)
 
-    def test006_post_node_vms_vmid_start(self):
+    def test006_post_nodes_vms_vmid_start(self):
         """ GAT-006
         **Test Scenario:**
 
@@ -192,19 +192,19 @@ class TestVmsAPI(TestcasesBase):
         #. Get virtual machine (VM0), virtual machine (VM0) status should be running.
         """
         self.lg.info('Stop virtual machine (VM0), should succeed with 204')
-        response = self.vms_api.post_node_vms_vmid_stop(self.nodeid, self.vm_id)
+        response = self.vms_api.post_nodes_vms_vmid_stop(self.nodeid, self.vm_id)
         self.assertEqual(response.status_code, 204)
 
         self.lg.info('Start virtual machine (VM0), should succeed with 204')
-        response = self.vms_api.post_node_vms_vmid_start(self.nodeid, self.vm_id)
+        response = self.vms_api.post_nodes_vms_vmid_start(self.nodeid, self.vm_id)
         self.assertEqual(response.status_code, 204)
 
         self.lg.info('Get virtual machine (VM0), virtual machine (VM0) status should be running')
-        response = self.vms_api.get_node_vms_vmid(self.nodeid, self.vm_id)
+        response = self.vms_api.get_nodes_vms_vmid(self.nodeid, self.vm_id)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()['status'], 'running')
 
-    def test007_post_node_vms_vmid_stop(self):
+    def test007_post_nodes_vms_vmid_stop(self):
         """ GAT-007
         **Test Scenario:**
 
@@ -214,15 +214,15 @@ class TestVmsAPI(TestcasesBase):
         #. Get virtual machine (VM0), virtual machine (VM0) status should be halted.
         """
         self.lg.info('Stop virtual machine (VM0), should succeed with 204')
-        response = self.vms_api.post_node_vms_vmid_stop(self.nodeid, self.vm_id)
+        response = self.vms_api.post_nodes_vms_vmid_stop(self.nodeid, self.vm_id)
         self.assertEqual(response.status_code, 204)
 
         self.lg.info('Get virtual machine (VM0), virtual machine (VM0) status should be running')
-        response = self.vms_api.get_node_vms_vmid(self.nodeid, self.vm_id)
+        response = self.vms_api.get_nodes_vms_vmid(self.nodeid, self.vm_id)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()['status'], 'halting')
 
-    def test008_post_node_vms_vmid_pause(self):
+    def test008_post_nodes_vms_vmid_pause(self):
         """ GAT-008
         **Test Scenario:**
 
@@ -232,15 +232,15 @@ class TestVmsAPI(TestcasesBase):
         #. Get virtual machine (VM0), virtual machine (VM0) status should be paused.
         """
         self.lg.info('Pause virtual machine (VM0), should succeed with 204')
-        response = self.vms_api.post_node_vms_vmid_pause(self.nodeid, self.vm_id)
+        response = self.vms_api.post_nodes_vms_vmid_pause(self.nodeid, self.vm_id)
         self.assertEqual(response.status_code, 204)
 
         self.lg.info('Get virtual machine (VM0), virtual machine (VM0) status should be paused')
-        response = self.vms_api.get_node_vms_vmid(self.nodeid, self.vm_id)
+        response = self.vms_api.get_nodes_vms_vmid(self.nodeid, self.vm_id)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()['status'], 'paused')
 
-    def test009_post_node_vms_vmid_shutdown(self):
+    def test009_post_nodes_vms_vmid_shutdown(self):
         """ GAT-009
         **Test Scenario:**
 
@@ -250,15 +250,15 @@ class TestVmsAPI(TestcasesBase):
         #. Get virtual machine (VM0), virtual machine (VM0) status should be halted.
         """
         self.lg.info('Shutdown virtual machine (VM0), should succeed with 204')
-        response = self.vms_api.post_node_vms_vmid_shutdown(self.nodeid, self.vm_id)
+        response = self.vms_api.post_nodes_vms_vmid_shutdown(self.nodeid, self.vm_id)
         self.assertEqual(response.status_code, 204)
 
         self.lg.info('Get virtual machine (VM0), virtual machine (VM0) status should be halted')
-        response = self.vms_api.get_node_vms_vmid(self.nodeid, self.vm_id)
+        response = self.vms_api.get_nodes_vms_vmid(self.nodeid, self.vm_id)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()['status'], 'halted')
 
-    def test010_post_node_vms_vmid_migrate(self):
+    def test010_post_nodes_vms_vmid_migrate(self):
         """ GAT-010
         **Test Scenario:**
 
@@ -269,10 +269,10 @@ class TestVmsAPI(TestcasesBase):
         """
         self.lg.info('Migrate virtual machine (VM0) to another node, should succeed with 204')
         node_2 = self.get_random_node(except_node=self.nodeid)
-        response = self.vms_api.post_node_vms_vmid_migrate(node_2, self.vm_id)
+        response = self.vms_api.post_nodes_vms_vmid_migrate(node_2, self.vm_id)
         self.assertEqual(response.status_code, 204)
 
         self.lg.info('Get virtual machine (VM0), virtual machine (VM0) status should be running')
-        response = self.vms_api.get_node_vms_vmid(self.nodeid, self.vm_id)
+        response = self.vms_api.get_nodes_vms_vmid(self.nodeid, self.vm_id)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()['status'], 'migrating')
