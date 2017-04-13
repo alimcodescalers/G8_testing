@@ -89,6 +89,8 @@ class Basic(object):
         import ipdb; ipdb.set_trace()
         blueprint = ''
         for g8os in self.g8os_ip_list:
-            tmp = "node.g8os__%s:\\n  redisAddr: %s\\n \\n" % (g8os[0], g8os[1])
+            if ':' in g8os[1]:
+                g8os[1].replace(':', '')
+            tmp = "node.g8os__%s:\\n  redisAddr: %s\\n \\n" % (g8os[1], g8os[0])
             blueprint += tmp
         return blueprint

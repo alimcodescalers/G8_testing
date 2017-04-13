@@ -3,7 +3,7 @@ from install_testing_nodes.src.ExecuteRemoteCommands import ExecuteRemoteCommand
 
 JUMPSACLE_BRANCH = "8.2.0"
 GRID_API_BRANCH = "1.1.0-alpha"
-AYS_TEMPLATE_BRANCH = "0.2.0"
+AYS_TEMPLATE_BRANCH = "1.1.0-alpha"
 
 if __name__ == '__main__':
     executer = ExecuteRemoteCommands()
@@ -29,6 +29,7 @@ if __name__ == '__main__':
     executer.create_port_forward(publicPorts={22: 2201, 5000: 5000})
     executer.connect_to_virtual_machine(port=2201)
     executer.update_machine()
+    import ipdb; ipdb.set_trace()
     executer.install_jumpscale(branch=JUMPSACLE_BRANCH)
     executer.install_g8core_python_client()
     executer.start_AYS_server()

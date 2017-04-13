@@ -72,7 +72,7 @@ class ExecuteRemoteCommands(RequestEnvAPI):
         command = """echo 'cd /tmp && export JSBRANCH="%s" && curl -k https://raw.githubusercontent.com/Jumpscale/jumpscale_core8/$JSBRANCH/install/install.sh?$RANDOM > install.sh && bash install.sh' > jsInstaller.sh""" % branch
         self.execute_command(command=command, skip_error=True)
         # command = 'echo %s | sudo -S bash jsInstaller.sh' % self.virtualmachine['password']
-        command = """ echo %s | sudo -S bash -c "tmux new-session -d -s installJS 'bash jsInstaller.sh; bash -i'" """ % self.virtualmachine['password']
+        command = """ echo %s | sudo -S bash -c "tmux new-session -d -s installJS 'echo yes | bash jsInstaller.sh; bash -i'" """ % self.virtualmachine['password']
         self.execute_command(command=command, skip_error=True)
 
         for _ in range(15):
@@ -126,8 +126,8 @@ class ExecuteRemoteCommands(RequestEnvAPI):
         print(colored(' [*] Discover g8os nodes .... ', 'white'))
 
         discovering_blueprint = self.get_discovering_blueprint()
-
-        command = """echo 'cd /optvar/cockpit_repos/grid/ && printf %s > blueprints/discover_nodes&&ays blueprint&&ays run create --follow' > discover_g8os_nodes.sh""" % discovering_blueprint
+        import ipdb; ipdb.set_trace()
+        command = """echo 'cd /optvar/cockpit_repos/grid/ && printf "%s" > blueprints/discover_nodes && ays blueprint && ays run create --follow' > discover_g8os_nodes.sh""" % discovering_blueprint
         self.execute_command(command=command, skip_error=True)
 
         command = 'echo %s | sudo -S bash discover_g8os_nodes.sh' % self.virtualmachine['password']
