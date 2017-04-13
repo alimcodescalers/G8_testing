@@ -18,10 +18,12 @@ class TestcasesBase(TestCase):
     def tearDown(self):
         pass
 
-    def get_random_node(self):
+    def get_random_node(self, except_node=None):
         response = self.nodes_api.get_nodes()
         self.assertEqual(response.status_code, 200)
         nodes_list = [x['id'] for x in response.json()]
+        if except_node != None and except_node in nodes_list:
+            nodes_list = nodes_list.remove(except_node)
         node_id = nodes_list[randint(0, len(nodes_list)-1)]
         return node_id
 

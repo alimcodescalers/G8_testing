@@ -228,12 +228,12 @@ class TestVmsAPI(TestcasesBase):
 
         #. Get random nodid (N0).
         #. Create virtual machine (VM0) on node (N0).
-        #. Pause virtual machine (VM0), should succeed with 201.
+        #. Pause virtual machine (VM0), should succeed with 204.
         #. Get virtual machine (VM0), virtual machine (VM0) status should be paused.
         """
-        self.lg.info('Stop virtual machine (VM0), should succeed with 204')
+        self.lg.info('Pause virtual machine (VM0), should succeed with 204')
         response = self.vms_api.post_node_vms_vmid_pause(self.nodeid, self.vm_id)
-        self.assertEqual(response.status_code, 201)
+        self.assertEqual(response.status_code, 204)
 
         self.lg.info('Get virtual machine (VM0), virtual machine (VM0) status should be paused')
         response = self.vms_api.get_node_vms_vmid(self.nodeid, self.vm_id)
@@ -246,14 +246,14 @@ class TestVmsAPI(TestcasesBase):
 
         #. Get random nodid (N0).
         #. Create virtual machine (VM0) on node (N0).
-        #. Shutdown virtual machine (VM0), should succeed with 201.
+        #. Shutdown virtual machine (VM0), should succeed with 204.
         #. Get virtual machine (VM0), virtual machine (VM0) status should be halted.
         """
-        self.lg.info('Stop virtual machine (VM0), should succeed with 201')
+        self.lg.info('Shutdown virtual machine (VM0), should succeed with 204')
         response = self.vms_api.post_node_vms_vmid_shutdown(self.nodeid, self.vm_id)
-        self.assertEqual(response.status_code, 201)
+        self.assertEqual(response.status_code, 204)
 
-        self.lg.info('Get virtual machine (VM0), virtual machine (VM0) status should be running')
+        self.lg.info('Get virtual machine (VM0), virtual machine (VM0) status should be halted')
         response = self.vms_api.get_node_vms_vmid(self.nodeid, self.vm_id)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()['status'], 'halted')
@@ -264,14 +264,15 @@ class TestVmsAPI(TestcasesBase):
 
         #. Get random nodid (N0).
         #. Create virtual machine (VM0) on node (N0).
-        #. Migrate virtual machine (VM0), should succeed with 201.
-        #. Get virtual machine (VM0), virtual machine (VM0) status should be halted.
+        #. Migrate virtual machine (VM0) to another node, should succeed with 204.
+        #. Get virtual machine (VM0), virtual machine (VM0) status should be migrating.
         """
-        self.lg.info('Stop virtual machine (VM0), should succeed with 201')
-        response = self.vms_api.post_node_vms_vmid_migrate(self.nodeid, self.vm_id)
-        self.assertEqual(response.status_code, 201)
+        self.lg.info('Migrate virtual machine (VM0) to another node, should succeed with 204')
+        node_2 = self.get_random_node(except_node=self.nodeid)
+        response = self.vms_api.post_node_vms_vmid_migrate(node_2, self.vm_id)
+        self.assertEqual(response.status_code, 204)
 
         self.lg.info('Get virtual machine (VM0), virtual machine (VM0) status should be running')
         response = self.vms_api.get_node_vms_vmid(self.nodeid, self.vm_id)
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json()['status'], 'halted')
+        self.assertEqual(response.json()['status'], 'migrating')
