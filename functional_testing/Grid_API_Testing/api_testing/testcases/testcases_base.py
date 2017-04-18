@@ -22,17 +22,9 @@ class TestcasesBase(TestCase):
     def setUp(self):
         pass
 
-    def get_random_node(self):
-        response = self.nodes_api.get_nodes()
-        self.assertEqual(response.status_code, 200)
-        nodes_list = response.json()
-
-        node_id = nodes_list[random.randint(0, len(nodes_list)-1)]['id']
-        return node_id
-
     def randomMAC(self):
         random_mac = [0x00, 0x16, 0x3e, random.randint(0x00, 0x7f), random.randint(0x00, 0xff), random.randint(0x00, 0xff)]
-        mac_address = ':'.join(map(lambda x: "%02x" %x, random_mac))
+        mac_address = ':'.join(map(lambda x: "%02x" % x, random_mac))
         return mac_address
 
     def get_random_container(self, node_id):
@@ -52,7 +44,7 @@ class TestcasesBase(TestCase):
         response = self.nodes_api.get_nodes()
         self.assertEqual(response.status_code, 200)
         nodes_list = [x['id'] for x in response.json()]
-        if except_node != None and except_node in nodes_list:
+        if except_node is not None and except_node in nodes_list:
             nodes_list = nodes_list.remove(except_node)
         node_id = nodes_list[randint(0, len(nodes_list)-1)]
         return node_id
