@@ -29,9 +29,9 @@ class TestNodeidAPI(TestcasesBase):
 
         self.lg.info('Compare results with golden value.')
         data = response.json()
-        self.assertEqual(len(data), len(self.utiles.nodes_info))
+        self.assertEqual(len(data), len(self.nodes_info))
         nodes_id = []
-        for node in self.utiles.nodes_info:
+        for node in self.nodes_info:
             nodes_id.append(node['id'])
 
         for node in data:

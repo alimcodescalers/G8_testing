@@ -13,7 +13,7 @@ class TestcasesBase(TestCase):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.utiles = Utiles()
-        self.config =self.utiles.get_config_values()
+        self.config = self.utiles.get_config_values()
         self.nodes_info = self.utiles.nodes
         self.containter_api = ContainersAPI()
         self.lg = self.utiles.logging
