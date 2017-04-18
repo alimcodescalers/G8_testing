@@ -16,17 +16,13 @@ class TestcasesBase(TestCase):
         self.containter_api = ContainersAPI()
         self.lg = Utiles().logging
         self.nodes_api = NodesAPI()
+        self.session = requests.Session()
+        self.zerotier_token = self.config['zerotier_token']
+        self.session.headers['Authorization'] = 'Bearer {}'.format(self.zerotier_token)
+
 
     def setUp(self):
         pass
-
-    def get_random_node(self):
-        response = self.nodes_api.get_nodes()
-        self.assertEqual(response.status_code, 200)
-        nodes_list = response.json()
-
-        node_id = nodes_list[random.randint(0, len(nodes_list)-1)]['id']
-        return node_id
 
     def randomMAC(self):
         random_mac = [0x00, 0x16, 0x3e, random.randint(0x00, 0x7f), random.randint(0x00, 0xff), random.randint(0x00, 0xff)]
@@ -60,3 +56,17 @@ class TestcasesBase(TestCase):
 
     def random_item(self, array):
         return array[randint(0, len(array)-1)]
+
+    def getZtNetworkID(self):
+        url = 'https://my.zerotier.com/api/network'
+        r = self.session.get(url)
+        if r.status_code == 200:
+            for item in r.json():
+                if item['type'] == 'Network':
+                    return item['id']
+            else:
+                self.lg('can\'t find network id')
+                return False
+        else:
+            self.lg('can\'t connect to zerotier, {}:{}'.format(r.status_code, r.content))
+            return False

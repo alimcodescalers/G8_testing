@@ -1,6 +1,7 @@
 from random import randint
 from api_testing.testcases.testcases_base import TestcasesBase
 from api_testing.grid_apis.apis.storagepools_apis import StoragepoolsAPI
+import unittest, time
 
 
 
@@ -20,7 +21,7 @@ class TestStoragepoolsAPI(TestcasesBase):
         self.levels = ['raid0', 'raid1', 'raid5', 'raid6', 'raid10', 'dup', 'single']
         self.metadata = self.random_item(self.levels)
         self.data = self.random_item(self.levels)
-        self.devices = ['/dev/sd0']
+        self.devices = ['/dev/sda']
         self.body = {"name":self.storagepool_name, "metadataProfile":self.metadata, "dataProfile":self.data, "devices":self.devices}
         self.storagepool_api.post_storagepools(self.nodeid, self.body)
 
@@ -53,6 +54,8 @@ class TestStoragepoolsAPI(TestcasesBase):
         response = self.storagepool_api.get_storagepools_storagepoolname(self.nodeid, self.storagepool_name)
         self.assertEqual(response.status_code, 200)
         for key in self.body.keys():
+            if key == 'devices':
+                continue
             self.assertEqual(response.json()[key], self.body[key])
 
         self.lg.info('Get nonexisting storagepool, should fail with 404')
@@ -90,27 +93,29 @@ class TestStoragepoolsAPI(TestcasesBase):
         levels = ['raid0', 'raid1', 'raid5', 'raid6', 'raid10', 'dup', 'single']
         metadata = self.random_item(levels)
         data = self.random_item(levels)
-        body = {"name":name, "metadataProfile":metadata, "dataProfile":data, "devices":[]}
-        response = self.storagepool_api.post_storagepools(nodeid, name)
+        body = {"name":name, "metadataProfile":metadata, "dataProfile":data, "devices":['/dev/sda']}
+        response = self.storagepool_api.post_storagepools(nodeid, body)
         self.assertEqual(response.status_code, 201)
-        mountpoint = response.header['location']
+        mountpoint = response.headers['Location']
 
         self.lg.info('Get Storagepool (SP1), should succeed with 200')
         response = self.storagepool_api.get_storagepools_storagepoolname(nodeid, name)
         self.assertEqual(response.status_code, 200)
         for key in body.keys():
+            if key == 'devices':
+                continue
             self.assertEqual(response.json()[key], body[key])
-        self.assertEqual(mountpoint, response.json()['mountpoint'])
 
-        self.lg.info('Delete Storagepool (SP0), should succeed with 204')
-        response = self.storagepool_api.delete_storagepools_storagepoolname(nodeid, name)
-        self.assertEqual(response.status_code, 204)
+        # self.lg.info('Delete Storagepool (SP0), should succeed with 204')
+        # response = self.storagepool_api.delete_storagepools_storagepoolname(nodeid, name)
+        # self.assertEqual(response.status_code, 204)
 
         self.lg.info('Create invalid storagepool, should fail with 400')
         body = {"name":name, "metadataProfile":metadata}
-        response = self.storagepool_api.post_storagepools(nodeid, name)
+        response = self.storagepool_api.post_storagepools(nodeid, body)
         self.assertEqual(response.status_code, 400)
 
+    @unittest.skip('bug: #86')
     def test004_delete_storagepool(self):
         """ GAT-004
         **Test Scenario:**
@@ -144,9 +149,14 @@ class TestStoragepoolsAPI(TestcasesBase):
         #. Get nonexisting device, should fail with 404.
         """
         self.lg.info('Get device (DV0), should succeed with 200')
-        response = self.storagepool_api.get_storagepools_storagepoolname_devices_deviceid(self.nodeid, self.storagepool_name, self.devices[0])
+
+        response = self.storagepool_api.get_storagepools_storagepoolname_devices(self.nodeid, self.storagepool_name)
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json()['uuid'], self.devices[0])
+        device_uuid = response.json()[0]['uuid']
+
+        response = self.storagepool_api.get_storagepools_storagepoolname_devices_deviceid(self.nodeid, self.storagepool_name, device_uuid)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()['uuid'], device_uuid)
         self.assertEqual(response.json()['status'], 'healthy')
 
         self.lg.info('Get nonexisting device, should fail with 404')
@@ -164,8 +174,10 @@ class TestStoragepoolsAPI(TestcasesBase):
         self.lg.info('list storagepool (SP0) devices, should succeed with 200')
         response = self.storagepool_api.get_storagepools_storagepoolname_devices(self.nodeid, self.storagepool_name)
         self.assertEqual(response.status_code, 200)
-        self.assertIn(self.devices[0], [x['uuid'] for x in response.json()])
+        self.assertEqual(len(response.json()), 1)
+        self.assertEqual(response.json()[0]['status'], 'healthy')
 
+    @unittest.skip('bug: #87')
     def test007_post_storagepool_device(self):
         """ GAT-007
         **Test Scenario:**
@@ -191,6 +203,7 @@ class TestStoragepoolsAPI(TestcasesBase):
         response = self.storagepool_api.post_storagepools_storagepoolname_devices(self.nodeid, self.storagepool_name, body)
         self.assertEqual(response.status_code, 404)
 
+    @unittest.skip('blocked because of bug: #87')
     def test008_delete_storagepool_device(self):
         """ GAT-008
         **Test Scenario:**
@@ -214,6 +227,7 @@ class TestStoragepoolsAPI(TestcasesBase):
         response = self.storagepool_api.delete_storagepools_storagepoolname_devices_deviceid(self.nodeid, self.storagepool_name, 'fake_device')
         self.assertEqual(response.status_code, 404)
 
+    @unittest.skip('blocked because of bug: #85')
     def test009_get_storagepool_filessystem(self):
         """ GAT-009
         **Test Scenario:**
@@ -234,6 +248,7 @@ class TestStoragepoolsAPI(TestcasesBase):
         response = self.storagepool_api.get_storagepools_storagepoolname(self.nodeid, self.storagepool_name, 'fake_filesystem')
         self.assertEqual(response.status_code, 404)
 
+    @unittest.skip('blocked because of bug: #85')
     def test010_list_storagepool_filesystems(self):
         """ GAT-010
         **Test Scenario:**
@@ -248,6 +263,7 @@ class TestStoragepoolsAPI(TestcasesBase):
         self.assertEqual(response.status_code, 200)
         self.assertIn(self.fs_name, response.json())
 
+    @unittest.skip('bug: #85')
     def test011_post_storagepool_filesystem(self):
         """ GAT-011
         **Test Scenario:**
@@ -283,6 +299,7 @@ class TestStoragepoolsAPI(TestcasesBase):
         response = lf.storagepool_api.post_storagepools_storagepoolname_filesystems(self.nodeid, self.storagepool_name, body)
         self.assertEqual(response.status_code, 400)
 
+    @unittest.skip('blocked because of bug: #85')
     def test012_delete_storagepool_filesystem(self):
         """ GAT-012
         **Test Scenario:**
@@ -307,6 +324,7 @@ class TestStoragepoolsAPI(TestcasesBase):
         response = self.storagepool_api.delete_storagepools_storagepoolname_filesystems_filesystemname(self.nodeid, self.storagepool_name, 'fake_filesystem')
         self.assertEqual(response.status_code, 404)
 
+    @unittest.skip('blocked because of bug: #85')
     def test013_get_storagepool_filessystem_snapshot(self):
         """ GAT-013
         **Test Scenario:**
@@ -332,6 +350,7 @@ class TestStoragepoolsAPI(TestcasesBase):
                                                                                            'fake_snapshot')
         self.assertEqual(response.status_code, 404)
 
+    @unittest.skip('blocked because of bug: #85')
     def test014_list_storagepool_filesystems_snapshots(self):
         """ GAT-014
         **Test Scenario:**
@@ -347,6 +366,7 @@ class TestStoragepoolsAPI(TestcasesBase):
         self.assertEqual(response.status_code, 200)
         self.assertIn(self.ss_name, response.json())
 
+    @unittest.skip('blocked because of bug: #85')
     def test015_post_storagepool_filesystem_snapshot(self):
         """ GAT-015
         **Test Scenario:**
@@ -384,6 +404,7 @@ class TestStoragepoolsAPI(TestcasesBase):
         response = lf.storagepool_api.post_filesystems_snapshots(self.nodeid, self.storagepool_name, self.fs_name, body)
         self.assertEqual(response.status_code, 400)
 
+    @unittest.skip('blocked because of bug: #85')
     def test016_delete_storagepool_filesystem_snapshot(self):
         """ GAT-016
         **Test Scenario:**

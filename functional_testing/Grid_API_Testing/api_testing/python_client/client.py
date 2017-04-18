@@ -7,7 +7,7 @@ class Client:
     def stdout(self, resource):
         return resource.get().stdout.replace('\n', '').lower()
 
-    def get_nodes_cpus(self):
+    def get_node_cpus(self):
         lines = self.client.bash('cat /proc/cpuinfo').get().stdout.splitlines()
         cpuInfo = []
         cpuInfo_format = {'family': "", 'cacheSize': "", 'mhz': "", 'cores': "", 'flags': ""}
@@ -29,7 +29,7 @@ class Client:
                 cpuInfo[-1]['flags'] = value.split(' ')
         return cpuInfo
 
-    def get_nodes_nics(self):
+    def get_node_nics(self):
         r = self.client.bash('ip -br a').get().stdout
         nics = [x.split()[0] for x in r.splitlines()]
         nicInfo = []
@@ -47,7 +47,7 @@ class Client:
 
         return nicInfo
 
-    def get_nodes_bridges(self):
+    def get_node_bridges(self):
         bridgesInfo = []
         nics = self.client.bash('ls /sys/class/net').get().stdout.splitlines()
         for nic in nics:
@@ -57,7 +57,7 @@ class Client:
 
         return bridgesInfo
 
-    def get_nodes_mem(self):
+    def get_node_mem(self):
         lines = self.client.bash('cat /proc/meminfo').get().stdout.splitlines()
         memInfo = { 'active': 0, 'available': 0, 'buffers': 0, 'cached': 0,
                     'free': 0,'inactive': 0, 'total': 0}
@@ -71,20 +71,22 @@ class Client:
                 memInfo[key] = int(value)
         return memInfo
 
-    def get_nodes_info(self):
+    def get_node_info(self):
         hostname = self.client.system('uname -n').get().stdout.strip()
         krn_name = self.client.system('uname -s').get().stdout.strip().lower()
         return {"hostname":hostname, "kernel":krn_name}
 
-    def get_nodes_disks(self):
-        diskInfo = {'mountpoint': [], 'fstype': [], 'device': [], 'opts': []}
+    def get_node_disks(self):
+        diskInfo = []
+        diskInfo_dict = {'mountpoint': [], 'fstype': [], 'device': [], 'opts': []}
         response = self.client.bash('mount').get().stdout
         lines = response.splitlines()
         for line in lines:
             line = line.split()
-            diskInfo['mountpoint'].append(line[2])
-            diskInfo['fstype'].append(line[4])
-            diskInfo['device'].append(line[0])
-            diskInfo['opts'].append(line[5][1:-1])
-
+            item = dict(diskInfo_dict)
+            item['mountpoint'] = line[2]
+            item['fstype'] = line[4]
+            item['device'] = line[0]
+            item['opts'] = line[5][1:-1]
+            diskInfo.append(item)
         return diskInfo
