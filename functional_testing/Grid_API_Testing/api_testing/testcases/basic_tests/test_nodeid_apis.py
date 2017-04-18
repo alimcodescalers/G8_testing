@@ -50,6 +50,10 @@ class TestNodeidAPI(TestcasesBase):
 
         self.lg.info('Choose one random node of list of running nodes.')
         node_id = self.base_test.get_random_node()
+        if node_id is None:
+            self.lg.info(' No node found')
+            return
+
         self.lg.info(' Send get nodes/{nodeid} api request.')
         response = self.nodes_api.get_nodes_nodeid(node_id=node_id)
         self.assertEqual(response.status_code, 200)

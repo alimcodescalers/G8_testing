@@ -46,8 +46,10 @@ class TestcasesBase(TestCase):
         nodes_list = [x['id'] for x in response.json()]
         if except_node is not None and except_node in nodes_list:
             nodes_list = nodes_list.remove(except_node)
-        node_id = nodes_list[randint(0, len(nodes_list)-1)]
-        return node_id
+
+        if len(nodes_list) > 0:
+            node_id = nodes_list[randint(0, len(nodes_list)-1)]
+            return node_id
 
     def random_string(self, size=10):
         return str(uuid.uuid4()).replace('-', '')[:size]
