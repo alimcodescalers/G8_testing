@@ -55,6 +55,11 @@ class TestNodeidAPI(TestcasesBase):
         self.assertEqual(response.status_code, 200)
         self.lg.info('Compare results with golden value.')
 
+        data = response.json()
+        self.assertEqual(data['id'], node_id)
+        self.assertIn(data['status'], ('running', 'halted'))
+        self.assertIn('hostname', data)
+
     def test003_list_jobs(self):
         """ GAT-003
         *GET:/nodes/{nodeid}/jobs - Expected: job list items*
@@ -66,7 +71,7 @@ class TestNodeidAPI(TestcasesBase):
         #. Compare results with golden value.
         """
         self.lg.info('Choose one random node of list of running nodes.')
-        node_id=self.base_test.get_random_node()
+        node_id = self.base_test.get_random_node()
 
         self.lg.info('Send get /nodes/{nodeid}/jobs api request.')
         response = self.nodes_api.get_nodes_nodeid_jobs(node_id=node_id)
