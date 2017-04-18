@@ -86,11 +86,10 @@ class Basic(object):
                 self.g8os_ip_list.append([self.values[check], self.values['g8os_mac_%i' % i]])
 
     def get_discovering_blueprint(self):
-        import ipdb; ipdb.set_trace()
         blueprint = ''
         for g8os in self.g8os_ip_list:
             if ':' in g8os[1]:
-                g8os[1].replace(':', '')
+                g8os[1] = g8os[1].replace(':', '')
             tmp = "node.g8os__%s:\\n  redisAddr: %s\\n \\n" % (g8os[1], g8os[0])
             blueprint += tmp
         return blueprint
