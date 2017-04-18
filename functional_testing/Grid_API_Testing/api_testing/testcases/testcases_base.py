@@ -12,9 +12,11 @@ import random
 class TestcasesBase(TestCase):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.config = Utiles().get_config_values()
+        self.utiles = Utiles()
+        self.config =self.utiles.get_config_values()
+        self.nodes_info = self.utiles.nodes
         self.containter_api = ContainersAPI()
-        self.lg = Utiles().logging
+        self.lg = self.utiles.logging
         self.nodes_api = NodesAPI()
         self.session = requests.Session()
         self.zerotier_token = self.config['zerotier_token']
