@@ -52,7 +52,7 @@ class Client:
         nics = self.client.bash('ls /sys/class/net').get().stdout.splitlines()
         for nic in nics:
             status = self.client.bash('cat /sys/class/net/{}/operstate'.format(nic)).get().stdout.strip()
-            bridge = {"name":nic, "status":status, "config":""}
+            bridge = {"name":nic, "status":status}
             bridgesInfo.append(bridge)
 
         return bridgesInfo

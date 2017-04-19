@@ -15,7 +15,7 @@ class TestStorageclustersAPI(TestcasesBase):
         self.servers = randint(1,3)
         self.types = ['nvme', 'ssd', 'hdd', 'archive']
         self.drivetype = self.random_item(self.types)
-        self.slaveNodes = False
+        self.slaveNodes = self.random_item([True, False])
         self.nodes = [self.get_random_node()]
         self.body = {"label": self.label,
                      "servers": self.servers,
@@ -68,7 +68,7 @@ class TestStorageclustersAPI(TestcasesBase):
         label = self.rand_str()
         servers = randint(1,3)
         drivetype = self.random_item(self.types)
-        slaveNodes = False
+        slaveNodes = self.random_item([True, False])
         nodes = [self.get_random_node()]
         body = {"label": label,
                 "servers": servers,
