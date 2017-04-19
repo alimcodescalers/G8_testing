@@ -8,7 +8,7 @@ class Storageclusters(GridAPIBase):
     def post_storageclusters(self, body):
         method = 'post'
         api = ['storageclusters']
-        return self.request_api(method=method, api=api, body)
+        return self.request_api(method=method, api=api, body=body)
 
     def get_storageclusters(self):
         method = 'get'

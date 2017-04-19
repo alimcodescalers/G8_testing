@@ -25,6 +25,7 @@ class TestZerotiersAPI(TestcasesBase):
         self.zerotier_api.delete_nodes_zerotiers_zerotierid(self.nodeid, self.nwid)
         super(TestZerotiersAPI, self).tearDown()
 
+    @unittest.skip('bug: #99')
     def test001_list_node_zerotiers(self):
         """ GAT-001
         **Test Scenario:**

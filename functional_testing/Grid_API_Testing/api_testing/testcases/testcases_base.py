@@ -6,6 +6,7 @@ from api_testing.grid_apis.apis.nodes_apis import NodesAPI
 from api_testing.grid_apis.apis.containers_apis import ContainersAPI
 import json
 import random
+import requests
 
 
 

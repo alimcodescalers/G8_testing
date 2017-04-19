@@ -139,6 +139,7 @@ class TestStoragepoolsAPI(TestcasesBase):
         response = self.storagepool_api.delete_storagepools_storagepoolname(self.nodeid, 'fake_storagepool')
         self.assertEqual(response.status_code, 404)
 
+    @unittest.skip('bug: #94')
     def test005_get_storagepool_device(self):
         """ GAT-005
         **Test Scenario:**
@@ -163,6 +164,7 @@ class TestStoragepoolsAPI(TestcasesBase):
         response = self.storagepool_api.get_storagepools_storagepoolname_devices_deviceid(self.nodeid, self.storagepool_name, 'fake_device')
         self.assertEqual(response.status_code, 404)
 
+    @unittest.skip('bug: #93')
     def test006_list_storagepool_devices(self):
         """ GAT-006
         **Test Scenario:**
@@ -203,7 +205,7 @@ class TestStoragepoolsAPI(TestcasesBase):
         response = self.storagepool_api.post_storagepools_storagepoolname_devices(self.nodeid, self.storagepool_name, body)
         self.assertEqual(response.status_code, 404)
 
-    @unittest.skip('blocked because of bug: #87')
+    @unittest.skip('blocked bug: #87')
     def test008_delete_storagepool_device(self):
         """ GAT-008
         **Test Scenario:**
@@ -227,7 +229,7 @@ class TestStoragepoolsAPI(TestcasesBase):
         response = self.storagepool_api.delete_storagepools_storagepoolname_devices_deviceid(self.nodeid, self.storagepool_name, 'fake_device')
         self.assertEqual(response.status_code, 404)
 
-    @unittest.skip('blocked because of bug: #85')
+    @unittest.skip('blocked bug: #85')
     def test009_get_storagepool_filessystem(self):
         """ GAT-009
         **Test Scenario:**
@@ -248,7 +250,7 @@ class TestStoragepoolsAPI(TestcasesBase):
         response = self.storagepool_api.get_storagepools_storagepoolname(self.nodeid, self.storagepool_name, 'fake_filesystem')
         self.assertEqual(response.status_code, 404)
 
-    @unittest.skip('blocked because of bug: #85')
+    @unittest.skip('blocked bug: #85')
     def test010_list_storagepool_filesystems(self):
         """ GAT-010
         **Test Scenario:**
@@ -299,7 +301,7 @@ class TestStoragepoolsAPI(TestcasesBase):
         response = lf.storagepool_api.post_storagepools_storagepoolname_filesystems(self.nodeid, self.storagepool_name, body)
         self.assertEqual(response.status_code, 400)
 
-    @unittest.skip('blocked because of bug: #85')
+    @unittest.skip('blocked bug: #85')
     def test012_delete_storagepool_filesystem(self):
         """ GAT-012
         **Test Scenario:**
@@ -324,7 +326,7 @@ class TestStoragepoolsAPI(TestcasesBase):
         response = self.storagepool_api.delete_storagepools_storagepoolname_filesystems_filesystemname(self.nodeid, self.storagepool_name, 'fake_filesystem')
         self.assertEqual(response.status_code, 404)
 
-    @unittest.skip('blocked because of bug: #85')
+    @unittest.skip('blocked bug: #85')
     def test013_get_storagepool_filessystem_snapshot(self):
         """ GAT-013
         **Test Scenario:**
@@ -350,7 +352,7 @@ class TestStoragepoolsAPI(TestcasesBase):
                                                                                            'fake_snapshot')
         self.assertEqual(response.status_code, 404)
 
-    @unittest.skip('blocked because of bug: #85')
+    @unittest.skip('blocked bug: #85')
     def test014_list_storagepool_filesystems_snapshots(self):
         """ GAT-014
         **Test Scenario:**
@@ -366,7 +368,7 @@ class TestStoragepoolsAPI(TestcasesBase):
         self.assertEqual(response.status_code, 200)
         self.assertIn(self.ss_name, response.json())
 
-    @unittest.skip('blocked because of bug: #85')
+    @unittest.skip('blocked bug: #85')
     def test015_post_storagepool_filesystem_snapshot(self):
         """ GAT-015
         **Test Scenario:**
@@ -404,7 +406,7 @@ class TestStoragepoolsAPI(TestcasesBase):
         response = lf.storagepool_api.post_filesystems_snapshots(self.nodeid, self.storagepool_name, self.fs_name, body)
         self.assertEqual(response.status_code, 400)
 
-    @unittest.skip('blocked because of bug: #85')
+    @unittest.skip('blocked bug: #85')
     def test016_delete_storagepool_filesystem_snapshot(self):
         """ GAT-016
         **Test Scenario:**
