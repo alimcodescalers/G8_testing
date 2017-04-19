@@ -20,7 +20,7 @@ class ExtendedNetworking(BaseTest):
         """ g8os-014
         *Test case for testing zerotier functionally*
 
-        **Test Scenarioc3
+        **Test Scenario:**
         #. Get NetworkId (N1) using zerotier API
         #. G8os client join zerotier network (N1)
         #. Create 2 containers c1, c2 and make them join (N1)
@@ -45,7 +45,7 @@ class ExtendedNetworking(BaseTest):
         self.client.zerotier.join(networkId)
 
         self.lg('Create 2 containers c1, c2 and make them join (N1) && create there clients')
-        nic = {'type': 'zerotier', 'id': networkId}
+        nic = [{'type': 'zerotier', 'id': networkId}]
         cid_1 = self.client.container.create(root_url=self.root_url, storage=self.storage, nics=nic)
         cid_2 = self.client.container.create(root_url=self.root_url, storage=self.storage, nics=nic)
         c1_client = self.client.container.client(cid_1)

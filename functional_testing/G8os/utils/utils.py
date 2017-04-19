@@ -18,6 +18,7 @@ class BaseTest(unittest.TestCase):
         self.session.headers['Authorization'] = 'Bearer {}'.format(self.zt_access_token)
         self.root_url = 'https://hub.gig.tech/maxux/ubuntu1604.flist'
         self.storage = 'ardb://hub.gig.tech:16379'
+        self.kvm_image = 'https://stor.jumpscale.org/public/Images/Ubuntu.14.04.x64.qcow2'
         self.client.timeout = 60
         super(BaseTest, self).__init__(*args, **kwargs)
 
@@ -113,7 +114,7 @@ class BaseTest(unittest.TestCase):
                 return address
         else:
             self.lg('can\'t find zerotier netowrk interface')
-            
+
     def deattach_all_loop_devices(self):
         self.client.bash('modprobe loop')  # to make /dev/loop* available
         self.client.bash('umount -f /dev/loop*')  # Make sure to free all loop devices first
