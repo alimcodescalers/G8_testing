@@ -16,8 +16,14 @@ class TestcontaineridAPI(TestcasesBase):
     def setUp(self):
         self.container_name = self.base_test.rand_str()
         self.hostname = self.base_test.rand_str()
-        self.body = {"id": self.container_name, "hostname": self.hostname,
-                     "flist": self.root_url, "hostNetworking": False}
+        self.body = {"id": self.container_name, "hostname": self.hostname, "flist": self.root_url,
+                     "hostNetworking": False, "initProcesses": [], "filesystems": [],
+                     "nics": [{'type': 'default',
+                               'id': '', 'config': {'dhcp': False,
+                                                    'gateway': '',
+                                                    'cidr': '',
+                                                    'dns': None}}],
+                     "ports": [], "storage": "ardb://hub.gig.tech:16379"}
 
 
     def test001_list_containers(self):
@@ -30,6 +36,8 @@ class TestcontaineridAPI(TestcasesBase):
         #. Send get nodes/{nodeid}/containers api request.
         #. Compare results with golden value.
         """
+        from pprint import pprint; import ipdb; ipdb.set_trace()
+        containers_id = []
         self.lg.info('Choose one random node of list of running nodes.')
         node_id = self.base_test.get_random_node()
 
@@ -38,7 +46,18 @@ class TestcontaineridAPI(TestcasesBase):
         self.assertEqual(response.status_code, 200)
 
         self.lg.info('Compare results with golden value.')
-        contaiers_list = response.json()
+        containers_list = response.json()
+        for container in containers_list:
+            response = self.containers_api.get_containers_containerid(node_id, container['id'])
+            self.assertEqual(response.status_code, 200)
+            data = response.json()
+            if data['containerid']:
+                containers_id.append(data['containerid'])
+        containers_id.sort()
+        self.assertEqual(sorted(list(self.g8core.client.container.list().keys())), containers_id)
+
+
+
         #result :list from python client with contaires
         # self.assertEqual(len(contaiers_list), len(result),
         #                  'different length from apis than python client')
@@ -75,6 +94,18 @@ class TestcontaineridAPI(TestcasesBase):
         self.assertEqual(response.status_code, 201)
 
         self.lg.info('Compare results with golden value.')
+        self.assertEqual(response.headers['Location'], "/nodes/%s/containers/%s" % (node_id, self.container_name))
+
+        response = self.containers_api.get_containers_containerid(node_id, self.container_name)
+        self.assertEqual(response.status_code, 200)
+        response_data = response.json()
+        for key, item in response_data.items():
+            if key == 'status' or key == 'containerid':
+                continue
+            elif key == 'initprocesses':
+                self.assertEqual(response_data[key], self.body['initProcesses'])
+                continue
+            self.assertEqual(response_data[key], self.body[key])
 
         self.lg.info('delete created container')
         response = self.containers_api.delete_containers_containerid(node_id, self.container_name)
@@ -100,11 +131,20 @@ class TestcontaineridAPI(TestcasesBase):
         self.lg.info('Choose one random node of list of running nodes.')
         node_id = self.base_test.get_random_node()
         self.lg.info('Choose random container of list of running nodes')
-        container_id = self.base_test.get_random_container(node_id)
+        container_name = self.base_test.get_random_container(node_id)
 
         self.lg.info('Send get nodes/{nodeid}/containers/containerid api request.')
-        response = self.containers_api.get_containers_containerid(node_id, container_id)
+        response = self.containers_api.get_containers_containerid(node_id, container_name)
         self.assertEqual(response.status_code, 200)
+        data = response.json()
+        container_id = data['containerid']
+        golden_value = self.g8core.client.container.list()[container_id]['container']
+        self.assertEqual(data['hostNetworking'], golden_value['host_network'])
+        self.assertEqual(data['hostname'], golden_value['hostname'])
+        self.assertEqual(data['nics'], golden_value['nics'])
+        self.assertEqual(data['ports'], golden_value['port'])
+        self.assertEqual(data['flist'], golden_value['root'])
+        self.assertEqual(data['storage'], golden_value['storage'])
 
         self.lg.info('Compare results with golden value.')
 
@@ -122,14 +162,15 @@ class TestcontaineridAPI(TestcasesBase):
         #. Check that container running .
 
         """
+        from pprint import pprint; import ipdb; ipdb.set_trace()
         self.lg.info('Choose one random node of list of running nodes.')
         node_id = self.base_test.get_random_node()
         self.lg.info('Create container ')
         response = self.containers_api.post_containers(node_id, self.body)
-        self.assertEqual(response.status_code,200)
+        self.assertEqual(response.status_code,201)
         self.lg.info('post:/node/{nodeid}/containers/containerid/stop.')
         response = self.containers_api.post_containers_containerid_stop(node_id, self.container_name)
-        self.assertEqual(response.status_code,201)
+        self.assertEqual(response.status_code,200)
 
         self.lg.info('Check that container stoped.')
         response = self.containers_api.get_containers_containerid(node_id, self.container_name)

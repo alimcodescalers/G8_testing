@@ -21,6 +21,7 @@ class TestNodeidAPI(TestcasesBase):
         #. Send get nodes api request.
         #. Compare results with golden value.
         """
+        from pprint import pprint; import ipdb; ipdb.set_trace()
         self.lg.info('get nodes api request ')
         response = self.nodes_api.get_nodes()
 
@@ -29,9 +30,9 @@ class TestNodeidAPI(TestcasesBase):
 
         self.lg.info('Compare results with golden value.')
         data = response.json()
-        self.assertEqual(len(data), len(self.utiles.nodes_info))
+        self.assertEqual(len(data), len(self.nodes_info))
         nodes_id = []
-        for node in self.utiles.nodes_info:
+        for node in self.nodes_info:
             nodes_id.append(node['id'])
 
         for node in data:

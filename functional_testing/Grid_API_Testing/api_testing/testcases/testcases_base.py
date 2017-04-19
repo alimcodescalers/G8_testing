@@ -4,9 +4,11 @@ from unittest import TestCase
 from api_testing.utiles.utiles import Utiles
 from api_testing.grid_apis.apis.nodes_apis import NodesAPI
 from api_testing.grid_apis.apis.containers_apis import ContainersAPI
+
 import json
 import random
 
+from api_testing.python_client.client import Client
 
 
 class TestcasesBase(TestCase):
@@ -14,6 +16,8 @@ class TestcasesBase(TestCase):
         super().__init__(*args, **kwargs)
         self.utiles = Utiles()
         self.config =self.utiles.get_config_values()
+        self.target_ip = self.config['g8os_ip']
+        self.g8core = Client(self.target_ip)
         self.nodes_info = self.utiles.nodes
         self.containter_api = ContainersAPI()
         self.lg = self.utiles.logging
