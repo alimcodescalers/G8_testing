@@ -13,7 +13,7 @@ class TestVolumes(TestcasesBase):
     def setUp(self):
         self.lg.info('Create default volume.')
         self.volume_size = random.randint(1,50)
-        selfblock_size = 4096
+        block_size = 4096
         self.volumn_id = self.rand_str()
         readOnly = random.choice(False, True)
         volume_type = random.choice('boot','db','cache','tmp')
@@ -37,7 +37,8 @@ class TestVolumes(TestcasesBase):
 
         #. Send post volumes api request.
         #. check that created volume exist in volume list.
-
+        #. Delete Created volume
+        #. check that created volume isn't exist in volume list.
         """
         self.lg.info('Create new volume.')
         volume_size = random.randint(1,10)
