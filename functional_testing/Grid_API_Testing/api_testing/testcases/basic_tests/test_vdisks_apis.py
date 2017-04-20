@@ -5,7 +5,7 @@ from api_testing.grid_apis.apis.storageclusters_apis import Storageclusters
 from api_testing.python_client.client import Client
 import unittest
 
-@unittest.skip('')
+@unittest.skip('bug: #112')
 class TestVdisks(TestcasesBase):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -50,7 +50,7 @@ class TestVdisks(TestcasesBase):
     def tearDown(self):
         self.lg.info('Delete vdisk (VD0)')
         self.vdisks_apis.delete_vdisks_vdiskid(self.vdisk_id)
-        super(TestVdisks, self).setUp()
+        super(TestVdisks, self).tearDown()
 
     def test001_get_vdisk_details(self):
         """ GAT-002
@@ -136,7 +136,33 @@ class TestVdisks(TestcasesBase):
         response = self.vdisks_apis.post_vdisks(body)
         self.assertEqual(response.status_code, 400)
 
-    def test004_resize_vdisk(self):
+
+    def test004_delete_vdisk(self):
+        """ GAT-001
+        *Delete:/vdisks/{vdiskid}*
+
+        **Test Scenario:**
+
+        #. Create vdisk (VD0).
+        #. Delete vdisk (VD0), should succeed with 204.
+        #. List vdisks, (VD0) should be gone.
+        #. Delete nonexisting vdisk, should fail with 404.
+        """
+        self.lg.info('Delete vdisk (VD0), should succeed with 204')
+        self.vdisks_apis.delete_vdisks_vdiskid(self.vdisk_id)
+        self.assertEqual(response.status_code, 204)
+
+        self.lg.info('List vdisks, (VD0) should be gone')
+        response = self.vdisks_apis.get_vdisks()
+        self.assertEqual(response.status_code, 200)
+        self.assertNotIn(self.vdisk_id, [x['id'] for x in response.json()])
+
+        self.lg.info('Delete nonexisting vdisk, should fail with 404')
+        self.vdisks_apis.delete_vdisks_vdiskid('fake_vdisk')
+        self.assertEqual(response.status_code, 404)
+
+
+    def test005_resize_vdisk(self):
         """ GAT-003
         *POST:/vdisks/{vdiskid}/resize*
 
@@ -173,7 +199,7 @@ class TestVdisks(TestcasesBase):
         self.assertEqual(new_size, response.json()['size'])
 
     @unittest.skip('Not implemented')
-    def test005_Rollback_volume(self):
+    def test006_Rollback_volume(self):
         """ GAT-004
         *POST:/vdisks/{vdiskid}/rollback*
 
