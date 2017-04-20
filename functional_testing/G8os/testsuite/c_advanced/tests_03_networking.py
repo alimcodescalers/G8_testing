@@ -156,14 +156,14 @@ class AdvancedNetworking(BaseTest):
         c1 = self.client.container.create(root_url=self.root_url, storage=self.storage, nics=nic1)
         c1_client = self.client.container.client(c1)
         r = c1_client.system('ip a').get()
-        c1_ip = re.search(r'192.168.[\d+].[\d+]', r.stdout)
+        c1_ip = re.search(r'192.168.[\d+].[\d+]', r.stdout).group()
 
         self.lg('Create container (c2) connected on (v1) and connect it to default network.')
-        nic2 = [{'type', 'default'}, {'type': 'vlan', 'id': v1_id, 'config': {'dhcp': True}}]
+        nic2 = [{'type': 'default'}, {'type': 'vlan', 'id': v1_id, 'config': {'dhcp': True}}]
         c2 = self.client.container.create(root_url=self.root_url, storage=self.storage, nics=nic2)
         c2_client = self.client.container.client(c2)
         r = c2_client.system('ip a').get()
-        c2_ip = re.search(r'192.168.[\d+].[\d+]', r.stdout)
+        c2_ip = re.search(r'192.168.[\d+].[\d+]', r.stdout).group()
 
         self.lg('Create conatiner (c3) on a new vlan bridge (v2)')
         v2_id = str(randint(1, 4094))
