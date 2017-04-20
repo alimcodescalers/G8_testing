@@ -145,16 +145,18 @@ class AdvancedNetworking(BaseTest):
 
         dhcp_c = self.client.container.create(root_url=self.root_url, storage=self.storage, nics=nic)
         dhcp_c_client = self.client.container.client(dhcp_c)
-        r = dhcp_c_client.system('apt-get update').get()
-        self.assertEqual(r.state, 'SUCCESS')
-        r = dhcp_c_client.system('apt-get install -y dnsmasq-base').get()
-        self.assertEqual(r.state, 'SUCCESS')
-        dhcp_c_client.system('dnsmasq --no-hosts --keep-in-foreground --listen-address=192.168.1.1 --interface=eth0 --dhcp-range=192.168.1.2,192.168.1.3,255.255.0.0 --dhcp-option=6,192.168.1.1 --bind-interfaces --except-interface=lo')
+        rs = dhcp_c_client.system('apt-get update').get()
+        self.assertEqual(rs.state, 'SUCCESS')
+        rs = dhcp_c_client.system('apt-get install -y dnsmasq-base').get()
+        self.assertEqual(rs.state, 'SUCCESS')
+        dhcp_c_client.system('dnsmasq --no-hosts --keep-in-foreground --listen-address=192.168.1.1 --interface=eth0 --dhcp-range=192.168.1.2,192.168.1.3,255.255.0.0 --bind-interfaces --except-interface=lo')
+        time.sleep(40)
 
         self.lg('Create container (c1) on a new vlan bridge (v1), should succeed')
         nic1 = [{'type': 'vlan', 'id': v1_id, 'config': {'dhcp': True}}]
         c1 = self.client.container.create(root_url=self.root_url, storage=self.storage, nics=nic1)
         c1_client = self.client.container.client(c1)
+        time.sleep(6)
         r = c1_client.system('ip a').get()
         c1_ip = re.search(r'192.168.[\d+].[\d+]', r.stdout).group()
 
@@ -162,6 +164,7 @@ class AdvancedNetworking(BaseTest):
         nic2 = [{'type': 'default'}, {'type': 'vlan', 'id': v1_id, 'config': {'dhcp': True}}]
         c2 = self.client.container.create(root_url=self.root_url, storage=self.storage, nics=nic2)
         c2_client = self.client.container.client(c2)
+        time.sleep(6)
         r = c2_client.system('ip a').get()
         c2_ip = re.search(r'192.168.[\d+].[\d+]', r.stdout).group()
 
@@ -173,6 +176,7 @@ class AdvancedNetworking(BaseTest):
         c3_client = self.client.container.client(c3)
 
         self.lg('Check that (c2) can reach the internet while (c1) can\'t')
+        c2_client.bash('ip r del default via 192.168.1.1')
         r = c2_client.bash('ping -w5 8.8.8.8').get()
         self.assertEqual(r.state, 'SUCCESS', r.stdout)
         r = c1_client.bash('ping -w5 8.8.8.8').get()
