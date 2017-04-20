@@ -1,21 +1,25 @@
 from utils.utils import BaseTest
 import time
-import unittest
+import re
 from random import randint
 
 
 class AdvancedNetworking(BaseTest):
 
     def __init__(self, *args, **kwargs):
-        containers = self.client.container.list().values()
-        ovs_exist = [True for c in containers if c['container']['arguments']['tags'] == ['ovs']]
-        if True not in ovs_exist:
+        super(AdvancedNetworking, self).__init__(*args, **kwargs)
+        self.check_g8os_connection(AdvancedNetworking)
+        containers = self.client.container.find('ovs')
+        ovs_exist = [key for key, value in containers.items()]
+        if not ovs_exist:
             ovs = self.client.container.create(self.root_url, host_network=True, storage=self.storage, tags=['ovs'])
             self.ovscl = self.client.container.client(ovs)
-            self.lg('creating backplane bridge')
+            time.sleep(2)
             self.ovscl.json('ovs.bridge-add', {"bridge": "backplane"})
-            self.lg('creating vxlan bridge to be used for vxlans')
-            self.json('ovs.vlan-ensure', {'master': 'backplane', 'vlan': 2000, 'name': 'vxbackend'})
+            self.ovscl.json('ovs.vlan-ensure', {'master': 'backplane', 'vlan': 2000, 'name': 'vxbackend'})
+        else:
+            ovs = int(ovs_exist[0])
+            self.ovscl = self.client.container.client(ovs)
 
     def setUp(self):
         super(AdvancedNetworking, self).setUp()
@@ -122,12 +126,10 @@ class AdvancedNetworking(BaseTest):
         #. Create dhcp server on a container
         #. Create container (c1) on a new vxlan bridge (v1), should succeed.
         #. Create container (c2) connected on (v1) and connect it to default network.
-        #. Create virtual machine (vm1) on (v1), should succeed
         #. Create conatiner (c3) on a new vlan bridge (v2)
         #. Check that (c2) can reach the internet while (c1) can't.
         #. Check if (c1) can reach (c2), should be reachable
         #. Check if (c1) can reach (vm1), should be reachable
-        #. Check if (vm1) can reach (c1), should be reachable
         #. Check if (c3) can reach (c1), shouldn't be reachable
         #. Delete the vlan bridge, should succeed
         #. Check if (c1) can reach (c2), shouldn't be reachable
@@ -143,26 +145,30 @@ class AdvancedNetworking(BaseTest):
 
         dhcp_c = self.client.container.create(root_url=self.root_url, storage=self.storage, nics=nic)
         dhcp_c_client = self.client.container.client(dhcp_c)
-        dhcp_c_client.system('apt-get update').get()
-        dhcp_c_client.system('apt-get install -y dnsmasq-base').get()
-        r = dhcp_c_client.system('dnsmasq --no-hosts --keep-in-foreground --listen-address=192.168.1.1 --interface=eth0 --dhcp-range=192.168.1.2,192.168.1.3,255.255.0.0 --dhcp-option=6,192.168.1.1 --bind-interfaces --except-interface=lo')
-        r.get()
+        r = dhcp_c_client.system('apt-get update').get()
+        self.assertEqual(r.state, 'SUCCESS')
+        r = dhcp_c_client.system('apt-get install -y dnsmasq-base').get()
+        self.assertEqual(r.state, 'SUCCESS')
+        dhcp_c_client.system('dnsmasq --no-hosts --keep-in-foreground --listen-address=192.168.1.1 --interface=eth0 --dhcp-range=192.168.1.2,192.168.1.3,255.255.0.0 --dhcp-option=6,192.168.1.1 --bind-interfaces --except-interface=lo')
 
         self.lg('Create container (c1) on a new vlan bridge (v1), should succeed')
         nic1 = [{'type': 'vlan', 'id': v1_id, 'config': {'dhcp': True}}]
         c1 = self.client.container.create(root_url=self.root_url, storage=self.storage, nics=nic1)
         c1_client = self.client.container.client(c1)
+        r = c1_client.system('ip a').get()
+        c1_ip = re.search(r'192.168.[\d+].[\d+]', r.stdout)
 
         self.lg('Create container (c2) connected on (v1) and connect it to default network.')
         nic2 = [{'type', 'default'}, {'type': 'vlan', 'id': v1_id, 'config': {'dhcp': True}}]
         c2 = self.client.container.create(root_url=self.root_url, storage=self.storage, nics=nic2)
         c2_client = self.client.container.client(c2)
-
-        #self.lg('Create virtual machine (vm1) on (v1), should succeed')
+        r = c2_client.system('ip a').get()
+        c2_ip = re.search(r'192.168.[\d+].[\d+]', r.stdout)
 
         self.lg('Create conatiner (c3) on a new vlan bridge (v2)')
         v2_id = str(randint(1, 4094))
-        nic3 = [{'type': 'vlan', 'id': v2_id, 'config': {'dhcp': True}}]
+        c3_ip = '192.168.1.30'
+        nic3 = [{'type': 'vlan', 'id': v2_id, 'config': {'cidr': '{}/24'.format(c3_ip)}}]
         c3 = self.client.container.create(root_url=self.root_url, storage=self.storage, nics=nic3)
         c3_client = self.client.container.client(c3)
 
@@ -176,15 +182,12 @@ class AdvancedNetworking(BaseTest):
         r = c1_client.bash('ping -w5 {}'.format(c2_ip)).get()
         self.assertEqual(r.state, 'SUCCESS', r.stdout)
 
-        #self.lg('Check if (c1) can reach (vm1), should be reachable')
-
-        #self.lg('Check if (vm1) can reach (c1), should be reachable')
-
         self.lg('Check if (c3) can reach (c1), shouldn\'t be reachable')
         r = c3_client.bash('ping -w5 {}'.format(c1_ip)).get()
         self.assertEqual(r.state, 'ERROR', r.stdout)
 
         self.lg('Delete the vlan bridge (v1), should succeed')
+        vbridge = 'vlbr' + v2_id
         self.ovscl.json('ovs.bridge-del', {"bridge": vbridge})
 
         self.lg('Check if (c1) can reach (c2), shouldn\'t be reachable')
@@ -238,6 +241,7 @@ class AdvancedNetworking(BaseTest):
 
         self.lg('Delete both bridges, should succeed')
         vxbridge = 'vxlbr' + vx1_id
+        vbridge = 'vlbr' + v2_id
         self.ovscl.json('ovs.bridge-del', {"bridge": vxbridge})
         self.ovscl.json('ovs.bridge-del', {"bridge": vbridge})
 
