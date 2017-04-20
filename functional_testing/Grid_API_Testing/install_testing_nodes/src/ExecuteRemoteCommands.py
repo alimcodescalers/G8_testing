@@ -141,7 +141,7 @@ class ExecuteRemoteCommands(RequestEnvAPI):
     def start_API_server(self, API_branch, ays_server_ip):
         self.logging.info(' [*] Starting %s G8OS Grid API ..... ' % API_branch)
         print(colored(' [*] Starting %s G8OS Grid API ..... ' % API_branch, 'white'))
-        command = """ echo 'mkdir -p /opt/code/ && cd /opt/code/ && export GOPATH='/opt/code/' && go get github.com/g8os/grid; cd src/github.com/g8os/grid/ && git checkout %s && git pull && cd api && export GOPATH=/opt/code/ && go get && go install && /opt/code/bin/api --bind :8080 --ays-url http://%s:5000 --ays-repo grid&' > start_api_server.sh """ % (
+        command = """ echo 'mkdir -p /opt/code/ && cd /opt/code/ && export GOPATH="/opt/code/" && go get github.com/g8os/grid; cd src/github.com/g8os/grid/ && git checkout %s && git pull && cd api && export GOPATH="/opt/code/" && go get && go install && /opt/code/bin/api --bind :8080 --ays-url http://%s:5000 --ays-repo grid&' > start_api_server.sh """ % (
             API_branch, ays_server_ip)
         self.execute_command(command, skip_error=True)
         command = 'echo %s | sudo -S bash start_api_server.sh' % self.virtualmachine['password']
