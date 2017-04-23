@@ -232,8 +232,8 @@ class ExtendedNetworking(BaseTest):
 
         self.lg('Create 2 containers C1, C2 with bridge (B1), should succeed')
         nic1 = [{'type': 'bridge', 'id': bridge_name, 'config': {'dhcp': True}}]
-        cid_1 = self.client.container.create(self.root_url, storage=self.storage, nics=nic)
-        cid_2 = self.client.container.create(self.root_url, storage=self.storage, nics=nic)
+        cid_1 = self.client.container.create(self.root_url, storage=self.storage, nics=nic1)
+        cid_2 = self.client.container.create(self.root_url, storage=self.storage, nics=nic1)
         client_c1 = self.client.container.client(cid_1)
         client_c2 = self.client.container.client(cid_2)
 
@@ -242,7 +242,7 @@ class ExtendedNetworking(BaseTest):
             nics = container_client.info.nic()
             nic = [x for x in nics if x['name'] == 'eth0']
             self.assertNotEqual(nic, [])
-            current_container_addr = [x['addr'] for x in nic['addrs'] if x['addr'][:x['addr'].find('/')] in ip_range][0]
+            current_container_addr = [x['addr'] for x in nic[0]['addrs'] if x['addr'][:x['addr'].find('/')] in ip_range][0]
             self.assertNotEqual(current_container_addr, [])
             other_container_addr = [x for x in ip_range if x != current_container_addr][0]
 
