@@ -4,6 +4,7 @@ from unittest import TestCase
 from api_testing.utiles.utiles import Utiles
 from api_testing.grid_apis.apis.nodes_apis import NodesAPI
 from api_testing.grid_apis.apis.containers_apis import ContainersAPI
+from api_testing.utiles.nodes_info import *
 import json
 import random
 import requests
@@ -22,6 +23,7 @@ class TestcasesBase(TestCase):
         self.session = requests.Session()
         self.zerotier_token = self.config['zerotier_token']
         self.session.headers['Authorization'] = 'Bearer {}'.format(self.zerotier_token)
+        self.nodes_info = nodes
 
 
     def setUp(self):

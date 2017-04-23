@@ -2,8 +2,9 @@ from random import randint
 from api_testing.testcases.testcases_base import TestcasesBase
 from api_testing.grid_apis.apis.bridges_apis import BridgesAPI
 import unittest
+from api_testing.python_client.client import Client
 
-
+@unittest.skip('bugs: #113, #104, #105')
 class TestBridgesAPI(TestcasesBase):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -14,6 +15,8 @@ class TestBridgesAPI(TestcasesBase):
 
         self.lg.info('Get random nodid (N0)')
         self.nodeid = self.get_random_node()
+        pyclient_ip = [x['pyclient'] for x in self.nodes_info if x['id'] == self.nodeid][0]
+        self.pyclient = Client(pyclient_ip)
 
         self.lg.info('Create bridge (B0) on node (N0)')
         self.name = self.rand_str()
@@ -51,6 +54,9 @@ class TestBridgesAPI(TestcasesBase):
         self.assertEqual(self.name, response.json()['name'])
         self.assertEqual(self.networkMode, response.json()['settings'])
         self.assertEqual('up', response.json()['status'])
+        bridges = self.pyclient.client.bridge.list()
+        self.assertIn(self.name, bridges)
+
 
         self.lg.info('Get nonexisting bridge, should fail with 404')
         response = self.bridges_api.get_nodes_bridges_bridgeid(self.nodeid, 'fake_bridge')
@@ -72,6 +78,7 @@ class TestBridgesAPI(TestcasesBase):
         self.assertEqual(response.status_code, 200)
         self.assertIn(self.name, [x['name'] for x in response.json()])
 
+    @unittest.skip('bug: #113')
     def test003_create_bridge(self):
         """ GAT-003
         *POST:/nodes/{nodeid}/bridges *
@@ -80,6 +87,7 @@ class TestBridgesAPI(TestcasesBase):
 
         #. Get random node (N0).
         #. Create bridge (B1) on node (N0), should succeed with 201.
+        #. Get bridges using pyclient , (B1) should be listed
         #. List node (N0) bridges, (B1) should be listed.
         #. Delete bridge (B1), should succeed with 204.
         """
@@ -101,11 +109,17 @@ class TestBridgesAPI(TestcasesBase):
         response = self.bridges_api.post_nodes_bridges(self.nodeid, body)
         self.assertEqual(response.status_code, 201, response.content)
 
+        bridges = self.pyclient.client.bridge.list()
+        self.assertIn(name, bridges)
+
+        nics = self.pyclient.client.info.nic()
+        self.assertEqual(hwaddr, [x['hardwareaddr'] for x in nics if x['name'] == name ][0])
+        
         #bug #104
-        # self.lg.info('Get bridge (B0), should succeed with 200')
-        # response = self.bridges_api.get_nodes_bridges(self.nodeid)
-        # self.assertEqual(response.status_code, 200)
-        # self.assertIn(name, [x['name'] for x in response.json()])
+        self.lg.info('Get bridge (B0), should succeed with 200')
+        response = self.bridges_api.get_nodes_bridges(self.nodeid)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(name, [x['name'] for x in response.json()])
 
         self.lg.info('Delete bridge (B1), should succeed with 204')
         response = self.bridges_api.delete_nodes_bridges_bridgeid(self.nodeid, name)
@@ -126,8 +140,11 @@ class TestBridgesAPI(TestcasesBase):
         response = self.bridges_api.delete_nodes_bridges_bridgeid(self.nodeid, self.name)
         self.assertEqual(response.status_code, 204)
 
+        bridges = self.pyclient.client.bridge.list()
+        self.assertNotIn(self.name, bridges)
+
         #bug #104
-        # self.lg.info('List node (N0) bridges, (B0) should be gone')
-        # response = self.bridges_api.get_nodes_bridges(self.nodeid)
-        # self.assertEqual(response.status_code, 200)
-        # self.assertNotIn(self.name, [x['name'] for x in response.json()])
+        self.lg.info('List node (N0) bridges, (B0) should be gone')
+        response = self.bridges_api.get_nodes_bridges(self.nodeid)
+        self.assertEqual(response.status_code, 200)
+        self.assertNotIn(self.name, [x['name'] for x in response.json()])

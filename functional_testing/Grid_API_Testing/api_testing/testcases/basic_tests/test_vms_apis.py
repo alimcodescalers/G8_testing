@@ -2,6 +2,7 @@ from random import randint
 from api_testing.testcases.testcases_base import TestcasesBase
 from api_testing.grid_apis.apis.vms_apis import VmsAPI
 import unittest
+from api_testing.python_client.client import Client
 
 @unittest.skip('bug: #101')
 class TestVmsAPI(TestcasesBase):
@@ -14,6 +15,8 @@ class TestVmsAPI(TestcasesBase):
 
         self.lg.info('Get random nodid (N0)')
         self.nodeid = self.get_random_node()
+        pyclient_ip = [x['pyclient'] for x in self.nodes_info if x['id'] == self.nodeid][0]
+        self.pyclient = Client(pyclient_ip)
 
         self.lg.info('Create virtual machine (VM0) on node (N0)')
         self.vm_id = self.random_string()
@@ -57,6 +60,9 @@ class TestVmsAPI(TestcasesBase):
             self.assertEqual(self.body[key], response.json()[key])
         self.assertEqual(response.json()['status'], 'running')
 
+        vms = self.pyclient.client.kvm.list()
+        self.assertIn(self.vm_id, [x['name'] for x in vms])
+
         self.lg.info('Get nonexisting virtual machine, should fail with 404')
         response = self.vms_api.get_nodes_vms_vmid(self.nodeid, 'fake_vm')
         self.assertEqual(response.status_code, 404)
@@ -72,7 +78,6 @@ class TestVmsAPI(TestcasesBase):
         self.lg.info('List node (N0) virtual machines, virtual machine (VM0) should be listed, should succeed with 200')
         response = self.vms_api.get_nodes_vms(self.nodeid)
         self.assertEqual(response.status_code, 200)
-        self.assertIn(self.vm_id, [x['id'] for x in response.json()])
 
     @unittest.skip('bug: #101')
     def test003_post_node_vms(self):
@@ -82,13 +87,14 @@ class TestVmsAPI(TestcasesBase):
         #. Get random nodid (N0).
         #. Create virtual machine (VM1) on node (N0).
         #. Get virtual machine (VM1), should succeed with 200.
+        #. List kvms in python client, (VM1) should be listed.
         #. Delete virtual machine (VM1), should succeed with 204.
         #. Create virtual machine with missing parameters, should fail with 400.
         """
         self.lg.info('Create virtual machine (VM1) on node (N0)')
         vm_id = self.random_string()
-        vm_mem = randint(1, 4)*1024
-        vm_cpu = randint(1, 4)
+        vm_mem = random.choice([1, 2, 4, 8, 16])*1024
+        vm_cpu = random.choice(range(1, 16))
         vm_nics = []
         vm_disks = []
         vm_userCloudInit = {}
@@ -104,7 +110,6 @@ class TestVmsAPI(TestcasesBase):
 
         response = self.vms_api.post_nodes_vms(self.nodeid, body)
         self.assertEqual(response.status_code, 201)
-        vm_location = response.headers['Location']
 
         self.lg.info('Get virtual machine (VM1), should succeed with 200')
         response = self.vms_api.get_nodes_vms_vmid(self.nodeid, vm_id)
@@ -113,6 +118,10 @@ class TestVmsAPI(TestcasesBase):
         for key in keys_to_check:
             self.assertEqual(body[key], response.json()[key])
         self.assertEqual(response.json()['status'], 'running')
+
+        self.lg.info('List kvms in python client, (VM1) should be listed')
+        vms = self.pyclient.client.kvm.list()
+        self.assertIn(vm_id, [x['name'] for x in vms])
 
         # self.lg.info('Delete virtual machine (VM1), should succeed with 204')
         # response = self.vms_api.delete_nodes_vms_vmid(self.nodeid, vm_id)
@@ -135,8 +144,8 @@ class TestVmsAPI(TestcasesBase):
         """
         self.lg.info('Create virtual machine (VM0) on node (N0)')
         vm_id = self.vm_id
-        vm_mem = 2*1024
-        vm_cpu = randint(1, 2)
+        vm_mem = random.choice([1, 2, 4, 8, 16])*1024
+        vm_cpu = random.choice(range(1, 16))
         vm_nics = []
         vm_disks = []
         vm_userCloudInit = {}
@@ -195,11 +204,16 @@ class TestVmsAPI(TestcasesBase):
         #. Get random nodid (N0).
         #. Create virtual machine (VM0) on node (N0).
         #. Delete virtual machine (VM0), should succeed with 204.
+        #. List kvms in python client, (VM0) should be gone.
         #. Delete nonexisting virtual machine, should fail with 404.
         """
         self.lg.info('Delete virtual machine (VM0), should succeed with 204')
         response = self.vms_api.delete_nodes_vms_vmid(self.nodeid, self.vm_id)
         self.assertEqual(response.status_code, 204)
+
+        self.lg.info('List kvms in python client, (VM0) should be gone')
+        vms = self.pyclient.client.kvm.list()
+        self.assertNotIn(self.vm_id, [x['name'] for x in vms])
 
         self.lg.info('Delete nonexisting virtual machine, should fail with 404')
         response = self.vms_api.delete_nodes_vms_vmid(self.nodeid, 'fake_vm_id')

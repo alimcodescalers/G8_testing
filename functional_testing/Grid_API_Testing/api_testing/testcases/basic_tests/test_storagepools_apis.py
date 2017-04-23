@@ -96,8 +96,7 @@ class TestStoragepoolsAPI(TestcasesBase):
         body = {"name":name, "metadataProfile":metadata, "dataProfile":data, "devices":['/dev/sda']}
         response = self.storagepool_api.post_storagepools(nodeid, body)
         self.assertEqual(response.status_code, 201)
-        mountpoint = response.headers['Location']
-
+        
         self.lg.info('Get Storagepool (SP1), should succeed with 200')
         response = self.storagepool_api.get_storagepools_storagepoolname(nodeid, name)
         self.assertEqual(response.status_code, 200)

@@ -12,7 +12,7 @@ class TestStorageclustersAPI(TestcasesBase):
         super(TestStorageclustersAPI, self).setUp()
         self.lg.info('Deploy new storage cluster (SC0)')
         self.label = self.rand_str()
-        self.servers = randint(1,3)
+        self.servers = randint(1,1000)
         self.types = ['nvme', 'ssd', 'hdd', 'archive']
         self.drivetype = self.random_item(self.types)
         self.slaveNodes = self.random_item([True, False])
@@ -41,6 +41,7 @@ class TestStorageclustersAPI(TestcasesBase):
         self.assertEqual(response.status_code, 200)
         for key in ['label', 'driveType', 'nodes']:
             self.assertEqual(response.json()[key], self.body[key])
+        self.assertNotEqual(response.json()['status'], 'error')
 
         self.lg.info('Get nonexisting storage cluster (SC0), should fail with 404')
         response = self.storageclusters_api.get_storageclusters_label('fake_label')
@@ -66,7 +67,7 @@ class TestStorageclustersAPI(TestcasesBase):
         """
         self.lg.info('Deploy new storage cluster (SC1), should succeed with 201')
         label = self.rand_str()
-        servers = randint(1,3)
+        servers = randint(1,1000)
         drivetype = self.random_item(self.types)
         slaveNodes = self.random_item([True, False])
         nodes = [self.get_random_node()]
