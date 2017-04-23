@@ -117,7 +117,7 @@ class ExtendedNetworking(BaseTest):
 
         self.lg('Create bridge (B1) with specifice hardware address (HA), should succeed')
         bridge_name = self.rand_str()
-        hardwareaddr = self.rand_mac_address()
+        hardwareaddr = '32:64:7d:0b:c7:aa' # private mac
         self.client.bridge.create(bridge_name, hwaddr=hardwareaddr)
 
         self.lg('List bridges, (B1) should be listed')
@@ -128,7 +128,7 @@ class ExtendedNetworking(BaseTest):
         nics = self.client.info.nic()
         nic = [x for x in nics if x['name'] == bridge_name]
         self.assertNotEqual(nic, [])
-        self.assertEqual(nic[0]['hardwareaddr'], hardwareaddr)
+        self.assertEqual(nic[0]['hardwareaddr'].lower(), hardwareaddr.lower())
 
         self.lg('Delete bridge (B1), should succeed')
         self.client.bridge.delete(bridge_name)
