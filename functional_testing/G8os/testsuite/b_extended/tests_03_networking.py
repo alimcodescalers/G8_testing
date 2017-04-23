@@ -231,15 +231,16 @@ class ExtendedNetworking(BaseTest):
         self.client.bridge.create(bridge_name, network='dnsmasq', settings=settings)
 
         self.lg('Create 2 containers C1, C2 with bridge (B1), should succeed')
-        cid_1 = self.client.container.create(self.root_url, storage=self.storage, bridge=[(bridge_name, 'dhcp')])
-        cid_2 = self.client.container.create(self.root_url, storage=self.storage, bridge=[(bridge_name, 'dhcp')])
+        nic1 = [{'type': 'bridge', 'id': bridge_name, 'config': {'dhcp': True}}]
+        cid_1 = self.client.container.create(self.root_url, storage=self.storage, nics=nic)
+        cid_2 = self.client.container.create(self.root_url, storage=self.storage, nics=nic)
         client_c1 = self.client.container.client(cid_1)
         client_c2 = self.client.container.client(cid_2)
 
         for container_client in [client_c1, client_c2]:
             self.lg('Check if each container (C1), (C2) got an ip address, should succeed')
             nics = container_client.info.nic()
-            nic = [x for x in nics if x['name'] == 'eth1']
+            nic = [x for x in nics if x['name'] == 'eth0']
             self.assertNotEqual(nic, [])
             current_container_addr = [x['addr'] for x in nic['addrs'] if x['addr'][:x['addr'].find('/')] in ip_range][0]
             self.assertNotEqual(current_container_addr, [])
