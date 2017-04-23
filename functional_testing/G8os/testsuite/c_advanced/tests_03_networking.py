@@ -25,16 +25,6 @@ class AdvancedNetworking(BaseTest):
         super(AdvancedNetworking, self).setUp()
         self.check_g8os_connection(AdvancedNetworking)
 
-    def create_vm(self, name, nic):
-        rs = self.client.bash('ls /var/cache/ | grep Images')
-        if not rs.get().stdout:
-            self.lg('- Make new directory in cash and download machine Image on it')
-            rs = self.client.bash('mkdir /var/cache/Images')
-            self.assertEqual(rs.get().state, 'SUCCESS')
-            rs = self.client.bash('wget {} -P /var/cache/Images'.format(self.kvm_image))
-            self.assertEqual(rs.get().state, 'SUCCESS')
-            self.image = '/var/cache/Images/Ubuntu.14.04.x64.qcow2'
-        self.client.kvm.create(name=name, media=[{'url': self.image}], nics=nic)
 
     def test001_vxlans_connections(self):
         """ g8os-000
@@ -70,10 +60,6 @@ class AdvancedNetworking(BaseTest):
         c2 = self.client.container.create(root_url=self.root_url, storage=self.storage, nics=nic2)
         c2_client = self.client.container.client(c2)
 
-        #self.lg('Create virtual machine (vm1) on (vx1), should succeed')
-        #vm_nic = [{'type': 'vxlan', 'id': vx1_id}]
-        #self.create_vm('vm1', vm_nic)
-
         self.lg('Create conatiner (c3) on a new vxlan bridge (vx2)')
         vx2_id = str(randint(10000, 20000))
         c3_ip = '192.168.2.3'
@@ -90,14 +76,6 @@ class AdvancedNetworking(BaseTest):
         self.lg('Check if (c1) can reach (c2), should be reachable')
         r = c1_client.bash('ping -w5 {}'.format(c2_ip)).get()
         self.assertEqual(r.state, 'SUCCESS', r.stdout)
-
-        #self.lg('Check if (c1) can reach (vm1), should be reachable')
-        #r = c1_client.bash('ping -w5 {}'.format(vm1_ip)).get()
-        #self.assertEqual(r.state, 'SUCCESS', r.stdout)
-
-        #self.lg('Check if (vm1) can reach (c1), should be reachable')
-        #r = c1_client.bash('ping -w5 {}'.format(c1_ip)).get()
-        #self.assertEqual(r.state, 'SUCCESS', r.stdout)
 
         self.lg('Check if (c3) can reach (c1), shouldn\'t be reachable')
         r = c3_client.bash('ping -w5 {}'.format(c1_ip)).get()
@@ -124,12 +102,11 @@ class AdvancedNetworking(BaseTest):
 
         **Test Scenario:**
         #. Create dhcp server on a container
-        #. Create container (c1) on a new vxlan bridge (v1), should succeed.
+        #. Create container (c1) on a new vlan bridge (v1), should succeed.
         #. Create container (c2) connected on (v1) and connect it to default network.
         #. Create conatiner (c3) on a new vlan bridge (v2)
         #. Check that (c2) can reach the internet while (c1) can't.
         #. Check if (c1) can reach (c2), should be reachable
-        #. Check if (c1) can reach (vm1), should be reachable
         #. Check if (c3) can reach (c1), shouldn't be reachable
         #. Delete the vlan bridge, should succeed
         #. Check if (c1) can reach (c2), shouldn't be reachable
@@ -191,7 +168,7 @@ class AdvancedNetworking(BaseTest):
         self.assertEqual(r.state, 'ERROR', r.stdout)
 
         self.lg('Delete the vlan bridge (v1), should succeed')
-        vbridge = 'vlbr' + v2_id
+        vbridge = 'vlbr' + v1_id
         self.ovscl.json('ovs.bridge-del', {"bridge": vbridge})
 
         self.lg('Check if (c1) can reach (c2), shouldn\'t be reachable')
