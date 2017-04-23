@@ -27,7 +27,7 @@ class AdvancedNetworking(BaseTest):
 
 
     def test001_vxlans_connections(self):
-        """ g8os-000
+        """ g8os-029
         *Test case for testing vxlans connections*
 
         **Test Scenario:**
@@ -97,7 +97,7 @@ class AdvancedNetworking(BaseTest):
         self.lg('{} ENDED'.format(self._testID))
 
     def test002_vlans_connections(self):
-        """ g8os-000
+        """ g8os-030
         *Test case for testing vlans connections*
 
         **Test Scenario:**
@@ -184,7 +184,7 @@ class AdvancedNetworking(BaseTest):
         self.lg('{} ENDED'.format(self._testID))
 
     def test003_vxlan_vlan_connections(self):
-        """ g8os-000
+        """ g8os-031
         *Test case for testing vxlans-vlans connections*
 
         **Test Scenario:**
