@@ -446,9 +446,6 @@ class SystemTests(BaseTest):
         #. Check if  file (F2) exists, should succeed
         """
 
-        if client_type in ['client', 'container']:
-            self.skipTest('bug# https://github.com/g8os/core0/issues/133, 136')
-
         if client_type == 'client':
             client = self.client
         else:

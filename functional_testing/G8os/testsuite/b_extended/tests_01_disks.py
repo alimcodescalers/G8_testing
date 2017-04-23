@@ -225,7 +225,6 @@ class DisksTests(BaseTest):
 
         self.lg('{} ENDED'.format(self._testID))
 
-    @unittest.skip('bug# https://github.com/g8os/core0/issues/134')
     def test004_disk_get_info(self):
         """ g8os-020
 

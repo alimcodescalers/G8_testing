@@ -14,8 +14,6 @@ class ExtendedNetworking(BaseTest):
         mac_addr = ["{:02X}".format(randint(0, 255)) for x in range(6)]
         return ':'.join(mac_addr)
 
-
-    @unittest.skip('bug# https://github.com/g8os/core0/issues/126')
     def test001_zerotier(self):
         """ g8os-014
         *Test case for testing zerotier functionally*
@@ -102,7 +100,6 @@ class ExtendedNetworking(BaseTest):
 
         self.lg('{} ENDED'.format(self._testID))
 
-    @unittest.skip('bug: https://github.com/g8os/core0/issues/127')
     def test002_create_bridges_with_specs_hwaddr(self):
 
         """ g8os-023
@@ -209,7 +206,6 @@ class ExtendedNetworking(BaseTest):
 
         self.lg('{} ENDED'.format(self._testID))
 
-    @unittest.skip('bug: https://github.com/g8os/core0/issues/147')
     def test004_attach_bridge_to_container(self):
         """ g8os-027
         *Test case for testing creating, listing, deleting bridges*
@@ -264,7 +260,6 @@ class ExtendedNetworking(BaseTest):
 
         self.lg('{} ENDED'.format(self._testID))
 
-    @unittest.skip('bug: https://github.com/g8os/core0/issues/153')
     def test005_create_bridges_with_specs_nat(self):
         """ g8os-028
         *Test case for testing creating, listing, deleting bridges*
