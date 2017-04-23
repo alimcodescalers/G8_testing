@@ -9,6 +9,7 @@ class Machinetests(BaseTest):
         super(Machinetests, self).setUp()
         self.check_g8os_connection(Machinetests)
 
+    @unittest.skip('https://github.com/g8os/core0/issues/180')
     def test001_create_destroy_list_kvm(self):
         """ g8os-009
 
