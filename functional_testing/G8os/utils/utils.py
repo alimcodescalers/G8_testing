@@ -45,22 +45,16 @@ class BaseTest(unittest.TestCase):
     def rand_str(self):
         return str(uuid.uuid4()).replace('-', '')[1:10]
 
-    def get_process_id(self, cmd, match):
+    def get_process_id(self, cmdline):
         """
         Get the id of certain process
-        :param cmd: command used by the client (same as the command in process.list) ex: 'core.system'
-        :param match: string to match intended command. ex: 'sleep 300'
+        :param cmdline: whole command to be executed
         """
-        time.sleep(2)
+        time.sleep(1)
         processes = self.client.process.list()
         for p in processes:
-           if p['cmd']['command'] == cmd:
-              if cmd == 'core.system':
-                 if p['cmd']['arguments']['name'] == match:
-                    return p['cmd']['id']
-              if cmd == 'bash':
-                 if p['cmd']['arguments']['script'] == match:
-                    return p['cmd']['id']
+           if p['cmdline'] == cmdline:
+               return p['pid']
         return
 
     def stdout(self, resource):
@@ -113,7 +107,7 @@ class BaseTest(unittest.TestCase):
                 return address
         else:
             self.lg('can\'t find zerotier netowrk interface')
-            
+
     def deattach_all_loop_devices(self):
         self.client.bash('modprobe loop')  # to make /dev/loop* available
         self.client.bash('umount -f /dev/loop*')  # Make sure to free all loop devices first

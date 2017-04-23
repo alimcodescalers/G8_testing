@@ -1,7 +1,6 @@
 from utils.utils import BaseTest
 import time
 import unittest
-import uuid
 
 
 class Machinetests(BaseTest):
@@ -24,8 +23,8 @@ class Machinetests(BaseTest):
         #. Destroy VM1, should succeed
         #. List the virtual machines, VM1 should be gone
         #. Destroy VM1 again, should fail
-
         """
+
         self.lg('{} STARTED'.format(self._testID))
         VM_name = self.rand_str()
 
@@ -43,26 +42,26 @@ class Machinetests(BaseTest):
         self.assertEqual(result.state, 'SUCCESS')
 
         self.lg('- Create virtual machine {} , should succeed'.format(VM_name))
-        self.client.experimental.kvm.create(name=VM_name, media=[{'url': '/var/cache/Images/Ubuntu.14.04.x64.qcow2'}])
+        self.client.kvm.create(name=VM_name, media=[{'url': '/var/cache/Images/Ubuntu.14.04.x64.qcow2'}])
 
         self.lg('- List all virtual machines and check that VM {} is there '.format(VM_name))
-        Vms_list = self.client.experimental.kvm.list()
+        Vms_list = self.client.kvm.list()
         self.assertTrue(any(vm['name'] == VM_name for vm in Vms_list))
 
         self.lg('- create another virtual machine with the same kvm domain ,should fail')
         with self.assertRaises(RuntimeError):
-            self.client.experimental.kvm.create(name=VM_name, media=[{'url': '/var/cache/Images/Ubuntu.14.04.x64.qcow2'}])
+            self.client.kvm.create(name=VM_name, media=[{'url': '/var/cache/Images/Ubuntu.14.04.x64.qcow2'}])
 
         self.lg('- Destroy VM {}'.format(VM_name))
-        self.client.experimental.kvm.destroy(VM_name)
+        self.client.kvm.destroy(VM_name)
 
         self.lg('- List the virtual machines , VM {} should be gone'.format(VM_name))
-        Vms_list = self.client.experimental.kvm.list()
+        Vms_list = self.client.kvm.list()
         self.assertFalse(any(vm['name'] == VM_name for vm in Vms_list))
 
         self.lg('- Destroy VM {} again should fail'.format(VM_name))
         with self.assertRaises(RuntimeError):
-            self.client.experimental.kvm.destroy(VM_name)
+            self.client.kvm.destroy(VM_name)
 
         self.lg('- Delete created directory, should succeed')
         rs = self.client.bash('rm -r  /var/cache/Images')

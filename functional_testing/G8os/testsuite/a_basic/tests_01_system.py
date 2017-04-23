@@ -156,29 +156,22 @@ class SystemTests(BaseTest):
 
         self.lg('{} STARTED'.format(self._testID))
 
-        for i in range(2):
-            if i == 0:
-               cmd = 'core.system'
-               match = 'sleep'
-               self.client.system('sleep 40')
-            else:
-               cmd = 'bash'
-               match = 'sleep 40'
-               self.client.bash('sleep 40')
-            self.lg('Created process that runs for long time using {}'.format(cmd))
+        cmd = 'sleep 40'
+        self.client.bash(cmd)
+        self.lg('Created process that runs for long time using {}'.format(cmd))
 
-            self.lg('List the process, should be found')
-            id = self.get_process_id(cmd, match)
-            self.assertIsNotNone(id)
+        self.lg('List the process, should be found')
+        id = self.get_process_id(cmd)
+        self.assertIsNotNone(id)
 
-            self.lg('Kill the process')
-            self.client.process.kill(id)
+        self.lg('Kill the process')
+        self.client.process.kill(id)
 
-            self.lg('List the process, shouldn\'t be found')
-            id = self.get_process_id(cmd, match)
-            self.assertIsNone(id)
+        self.lg('List the process, shouldn\'t be found')
+        id = self.get_process_id(cmd)
+        self.assertIsNone(id)
 
-            self.lg('{} ENDED'.format(self._testID))
+        self.lg('{} ENDED'.format(self._testID))
 
     @parameterized.expand(['client', 'container'])
     def test003_os_info(self, client_type):
