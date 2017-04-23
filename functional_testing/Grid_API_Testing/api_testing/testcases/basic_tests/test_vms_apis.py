@@ -78,6 +78,8 @@ class TestVmsAPI(TestcasesBase):
         self.lg.info('List node (N0) virtual machines, virtual machine (VM0) should be listed, should succeed with 200')
         response = self.vms_api.get_nodes_vms(self.nodeid)
         self.assertEqual(response.status_code, 200)
+        self.assertIn(self.vm_id, [x['id'] for x in response.json()])
+        
 
     @unittest.skip('bug: #101')
     def test003_post_node_vms(self):
