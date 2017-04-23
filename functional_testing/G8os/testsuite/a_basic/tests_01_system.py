@@ -638,9 +638,9 @@ class SystemTests(BaseTest):
 
         self.lg('{} ENDED'.format(self._testID))
 
-    def test000_kill_list_jobs(self):
+    def test011_kill_list_jobs(self):
 
-        """ g8os-000
+        """ g8os-032
         *Test case for testing killing and listing jobs*
 
         **Test Scenario:**
@@ -657,15 +657,15 @@ class SystemTests(BaseTest):
         match = 'sleep'
         self.client.system('sleep 40')
 
-        self.lg('List the process, should be found')
+        self.lg('List the job, should be found')
         id = self.get_job_id(cmd, match)
         self.assertIsNotNone(id)
 
-        self.lg('Kill the process')
-        self.client.process.kill(id)
+        self.lg('Kill the job')
+        self.client.job.kill(id)
 
-        self.lg('List the process, shouldn\'t be found')
-        id = self.get_process_id(cmd, match)
+        self.lg('List the job, shouldn\'t be found')
+        id = self.get_job_id(cmd, match)
         self.assertIsNone(id)
 
         self.lg('{} ENDED'.format(self._testID))
