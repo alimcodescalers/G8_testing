@@ -19,7 +19,6 @@ class BaseTest(unittest.TestCase):
         self.root_url = 'https://hub.gig.tech/maxux/ubuntu1604.flist'
         self.ovs_flist = 'https://hub.gig.tech/gig-official-apps/ovs.flist'
         self.storage = 'ardb://hub.gig.tech:16379'
-        self.kvm_image = 'https://stor.jumpscale.org/public/Images/Ubuntu.14.04.x64.qcow2'
         self.client.timeout = 80
         super(BaseTest, self).__init__(*args, **kwargs)
 
