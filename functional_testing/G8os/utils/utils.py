@@ -63,6 +63,24 @@ class BaseTest(unittest.TestCase):
                     return p['cmd']['id']
         return
 
+    def get_job_id(self, cmd, match):
+        """
+        Get the id of certain job
+        :param cmd: command used by the client (same as the command in job.list) ex: 'core.system'
+        :param match: string to match intended command. ex: 'sleep 300'
+        """
+        time.sleep(2)
+        jobs = self.client.job.list()
+        for j in jobs:
+           if j['cmd']['command'] == cmd:
+              if cmd == 'core.system':
+                 if j['cmd']['arguments']['name'] == match:
+                    return j['cmd']['id']
+              if cmd == 'bash':
+                 if j['cmd']['arguments']['script'] == match:
+                    return j['cmd']['id']
+        return
+
     def stdout(self, resource):
         return resource.get().stdout.replace('\n', '').lower()
 
@@ -113,7 +131,7 @@ class BaseTest(unittest.TestCase):
                 return address
         else:
             self.lg('can\'t find zerotier netowrk interface')
-            
+
     def deattach_all_loop_devices(self):
         self.client.bash('modprobe loop')  # to make /dev/loop* available
         self.client.bash('umount -f /dev/loop*')  # Make sure to free all loop devices first

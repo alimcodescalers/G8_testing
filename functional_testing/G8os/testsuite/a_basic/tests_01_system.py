@@ -637,3 +637,35 @@ class SystemTests(BaseTest):
             self.remove_container()
 
         self.lg('{} ENDED'.format(self._testID))
+
+    def test011_kill_list_jobs(self):
+
+        """ g8os-032
+        *Test case for testing killing and listing jobs*
+
+        **Test Scenario:**
+        #. Create job that runs for long time
+        #. List the job, should be found
+        #. Kill the job
+        #. List the job, shouldn't be found
+        """
+
+        self.lg('{} STARTED'.format(self._testID))
+
+        self.lg('Create job that runs for long time')
+        cmd = 'core.system'
+        match = 'sleep'
+        self.client.system('sleep 40')
+
+        self.lg('List the job, should be found')
+        id = self.get_job_id(cmd, match)
+        self.assertIsNotNone(id)
+
+        self.lg('Kill the job')
+        self.client.job.kill(id)
+
+        self.lg('List the job, shouldn\'t be found')
+        id = self.get_job_id(cmd, match)
+        self.assertIsNone(id)
+
+        self.lg('{} ENDED'.format(self._testID))
