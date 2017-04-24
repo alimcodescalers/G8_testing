@@ -173,12 +173,8 @@ class TestNodeidAPI(TestcasesBase):
 
         self.lg.info(' verify this job has been killed.')
         response = self.nodes_api.get_nodes_nodeid_jobs_jobid(node_id=self.node_id, job_id=job_id)
-        if response.status_code == 200:
-            job = response.json()
-            self.assertEqual(job["name"], "job.list", 'job %s still exist'%job_id)
-
-        else:
-            self.assertEqual(response.status_code, 404)
+        if response.status_code != 404:
+            self.assertEqual(response.json()["state"], "KILLED", 'job stil %s exist'%job_id)
 
     def test007_ping_specific_node(self):
         """ GAT-007
@@ -228,7 +224,7 @@ class TestNodeidAPI(TestcasesBase):
                 if key == "rss":
                     self.assertAlmostEqual(node_state[key],
                                            client_state[key],
-                                           delta=300000)
+                                           delta=1000000)
                 else:
                     self.assertEqual(node_state[key],
                                      client_state[key])
@@ -276,7 +272,6 @@ class TestNodeidAPI(TestcasesBase):
                 if key != 'cores':
                     self.assertEqual(cpu_info[key], result[i][key], "different cpu info ")
 
-    @unittest.skip("https://github.com/g8os/grid/issues/95")
     def test011_get_disks_details(self):
         """ GAT-011
         *GET:/nodes/{nodeid}/disks *
@@ -293,10 +288,12 @@ class TestNodeidAPI(TestcasesBase):
         disks_info=response.json()
         self.lg.info('compare response data with the golden values.')
         result = self.pyhton_client.get_nodes_disks()
-        for i, disk_info in enumerate(disks_info):
-            for key in disk_info.keys():
-                if key in result[i].keys():
-                    self.assertEqual(disk_info[key], result[i][key])
+        for disk_info in disks_info:
+            for disk in result:
+                if disk['device'] == disk_info['device']:
+                    for key in disk.keys():
+                        self.assertEqual(disk_info[key], disk[key], "different value for key%s"%key)
+                    break
 
     def test012_get_memmory_details(self):
         """ GAT-012

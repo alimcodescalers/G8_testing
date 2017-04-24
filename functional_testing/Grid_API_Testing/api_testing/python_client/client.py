@@ -82,16 +82,21 @@ class Client:
 
     def get_nodes_disks(self):
         diskInfo = []
-        diskInfo_format = {'mountpoint': [], 'fstype': [], 'device': [], 'opts': []}
-        response = self.client.bash('mount').get().stdout
-        lines = response.splitlines()
-        for line in lines:
-            line = line.split()
+        diskInfo_format = {'mountpoint':"", 'fstype': "", 'device': [], 'size': 0}
+        response = self.client.disk.list()
+        disks = response['blockdevices']
+        for disk in disks:
             item = dict(diskInfo_format)
-            item['mountpoint'] = line[2]
-            item['fstype'] = line[4]
-            item['device'] = line[0]
-            item['opts'] = line[5][1:-1]
+            if disk['mountpoint']:
+                item['mountpoint'] = disk['mountpoint']
+
+            if disk['fstype']!= None:
+                item['fstype'] = disk['fstype']
+
+            item['device'] = '/dev/%s'%disk['name']
+
+            if int(disk['size']) >= 1073741824:
+                item['size'] = int(disk['size'])/(1024*1024*1024)
             diskInfo.append(item)
         return diskInfo
 
