@@ -4,6 +4,7 @@ from api_testing.grid_apis.apis.nodes_apis import NodesAPI
 from api_testing.utiles.nodes_info import nodes
 from api_testing.python_client.client import Client
 import unittest
+import time
 
 class TestNodeidAPI(TestcasesBase):
     def __init__(self, *args, **kwargs):
@@ -18,7 +19,7 @@ class TestNodeidAPI(TestcasesBase):
                 self.g8os_ip = node['ip']
                 self.node = node
                 break
-        self.pyhton_client = Client(self.g8os_ip)
+        self.python_client = Client(self.g8os_ip)
 
     def test001_list_nodes(self):
         """ GAT-001
@@ -55,6 +56,7 @@ class TestNodeidAPI(TestcasesBase):
         self.lg.info(' Send get nodes/{nodeid} api request.')
         response = self.nodes_api.get_nodes_nodeid(node_id=self.node_id)
         self.assertEqual(response.status_code, 200)
+
         self.lg.info('Compare results with golden value.')
         node_details = response.json()
         for key in self.node.keys():
@@ -74,9 +76,10 @@ class TestNodeidAPI(TestcasesBase):
         self.lg.info('Send get /nodes/{nodeid}/jobs api request.')
         response = self.nodes_api.get_nodes_nodeid_jobs(node_id=self.node_id)
         self.assertEqual(response.status_code, 200)
+
         self.lg.info('Compare results with golden value.')
         jobs = response.json()
-        client_jobs = self.pyhton_client.get_jobs_list()
+        client_jobs = self.python_client.get_jobs_list()
         self.assertEqual(len(jobs), len(client_jobs))
         for job in jobs:
             for client_job in client_jobs:
@@ -99,6 +102,7 @@ class TestNodeidAPI(TestcasesBase):
         self.lg.info(' Send get /nodes/{nodeid}/jobs api request.')
         status_code = self.nodes_api.delete_nodes_nodeid_jobs(node_id=self.node_id)
         self.assertEqual(status_code, 204)
+
         self.lg.info('Check that all jobs has been killed.')
         response = self.nodes_api.get_nodes_nodeid_jobs(node_id=self.node_id)
         jobs_list = response.json()
@@ -131,7 +135,7 @@ class TestNodeidAPI(TestcasesBase):
 
         self.lg.info('Compare response with the golden values.')
         job_details = response.json()
-        client_jobs = self.pyhton_client.get_jobs_list()
+        client_jobs = self.python_client.get_jobs_list()
         for client_job in client_jobs:
             if client_job['id'] == job_id:
                 for key in job_details.keys():
@@ -145,36 +149,21 @@ class TestNodeidAPI(TestcasesBase):
 
         **Test Scenario:**
 
-        #. Choose one random node of list of running nodes.
-        #. get list of jobs.
-        #. choose one of these jobs to list its details.
+        #. Start new job .
         #. delete /nodes/{nodeid}/jobs/{jobid} api.
         #. verify this job has been killed.
         """
-        self.lg.info('get list of jobs.')
-        response = self.nodes_api.get_nodes_nodeid_jobs(node_id=self.node_id)
-        self.assertEqual(response.status_code, 200)
-        job_list = response.json()
-
-        self.lg.info('choose one of these jobs to list its details.')
-        for job in job_list:
-            job = job_list[random.randint(0, len(job_list)-1)]
-            if "redis" in job['id']:
-                job_list.remove(job)
-                continue
-            else:
-                job_id = job['id']
-                break
-            self.assertEqual(len(job_list),0)
+        self.lg.info('start new job ')
+        job_id = self.python_client.start_job()
+        self.assertTrue(job_id)
 
         self.lg.info(' delete /nodes/{nodeid}/jobs/{jobid} api.')
         response = self.nodes_api.delete_nodes_nodeid_jobs_jobid(node_id=self.node_id, job_id=job_id)
         self.assertEqual(response.status_code, 204)
 
-        self.lg.info(' verify this job has been killed.')
-        response = self.nodes_api.get_nodes_nodeid_jobs_jobid(node_id=self.node_id, job_id=job_id)
-        if response.status_code != 404:
-            self.assertEqual(response.json()["state"], "KILLED", 'job stil %s exist'%job_id)
+        self.lg.info("verify this job has been killed.")
+        jobs = self.python_client.get_jobs_list()
+        self.assertFalse(any(job['id'] == job_id for job in jobs))
 
     def test007_ping_specific_node(self):
         """ GAT-007
@@ -217,7 +206,7 @@ class TestNodeidAPI(TestcasesBase):
         self.assertEqual(response.status_code, 200)
 
         self.lg.info('Compare response data with the golden values.')
-        client_state = self.pyhton_client.get_node_state()
+        client_state = self.python_client.get_node_state()
         node_state = response.json()
         for key in node_state.keys():
             if key in client_state.keys():
@@ -265,7 +254,7 @@ class TestNodeidAPI(TestcasesBase):
         self.assertEqual(response.status_code, 200)
 
         self.lg.info('compare response data with the golden values.')
-        result = self.pyhton_client.get_nodes_cpus()
+        result = self.python_client.get_nodes_cpus()
         cpus_info = response.json()
         for i, cpu_info in enumerate(cpus_info):
             for key in cpu_info.keys():
@@ -287,7 +276,7 @@ class TestNodeidAPI(TestcasesBase):
         self.assertEqual(response.status_code, 200)
         disks_info=response.json()
         self.lg.info('compare response data with the golden values.')
-        result = self.pyhton_client.get_nodes_disks()
+        result = self.python_client.get_nodes_disks()
         for disk_info in disks_info:
             for disk in result:
                 if disk['device'] == disk_info['device']:
@@ -310,7 +299,7 @@ class TestNodeidAPI(TestcasesBase):
         self.assertEqual(response.status_code, 200)
 
         self.lg.info('compare response data with the golden values.')
-        result = self.pyhton_client.get_nodes_mem()
+        result = self.python_client.get_nodes_mem()
         memory_info = response.json()
         for key in memory_info.keys():
             if key in result.keys():
@@ -337,7 +326,7 @@ class TestNodeidAPI(TestcasesBase):
         self.assertEqual(response.status_code, 200)
 
         self.lg.info('compare response data with the golden values.')
-        result = self.pyhton_client.get_nodes_nics()
+        result = self.python_client.get_nodes_nics()
         nics_info = response.json()
         for i, nic_info in enumerate(nics_info):
             for key in nic_info.keys():
@@ -359,7 +348,7 @@ class TestNodeidAPI(TestcasesBase):
         self.assertEqual(response.status_code, 200)
 
         self.lg.info('compare response data with the golden values.')
-        result = self.pyhton_client.get_nodes_info()
+        result = self.python_client.get_nodes_info()
         node_info = response.json()
         for key in node_info.keys():
             if key in result.keys():
@@ -382,7 +371,7 @@ class TestNodeidAPI(TestcasesBase):
         self.lg.info('compare response data with the golden values.')
         processes = {}
         client_processes={}
-        client_result = self.pyhton_client.get_processes_list()
+        client_result = self.python_client.get_processes_list()
         for process in client_result:
             client_processes[process['pid']]=process
 
@@ -398,7 +387,7 @@ class TestNodeidAPI(TestcasesBase):
                             self.assertAlmostEqual(process_info[info],
                                                    client_processes[process_id][info],
                                                    msg="different value with key%s"%info,
-                                                   delta=600000)
+                                                   delta=1000000)
                         else:
                             self.assertEqual(process_info[info],
                                              client_processes[process_id][info],
@@ -431,7 +420,7 @@ class TestNodeidAPI(TestcasesBase):
 
         self.lg.info('Compare response data with the golden values.')
         process_info = response.json()
-        client_result = self.pyhton_client.get_processes_list()
+        client_result = self.python_client.get_processes_list()
         for process in client_result:
             if process['pid'] == process_info['pid']:
                 for info in process_info.keys():
@@ -441,38 +430,26 @@ class TestNodeidAPI(TestcasesBase):
                                             "different value with key%s"%info)
                 break
 
-    @unittest.skip("https://github.com/g8os/grid/issues/106")
     def test017_delete_process(self):
         """ GAT-017
         *DELETE:/nodes/{nodeid}/processes/{processid} *
 
         **Test Scenario:**
 
-        #. Choose one random node from list of running nodes.
-        #. Get list of running processes
-        #. Choose one of them.
+        #. Start new process.
         #. Delete /nodes/{nodeid}/processes/{processid} api.
         #. Make sure that this process has been killed.
-        """
-        self.lg.info('Get list of running processes')
-        response = self.nodes_api.get_nodes_nodeid_processes(node_id=self.node_id)
-        self.assertEqual(response.status_code, 200)
-        processes_list=response.json()
 
-        self.lg.info('Choose one of these processes to list its details.')
-        for _ in processes_list:
-            process=processes_list[random.randint(1, len(processes_list)-1)]
-            if 'redis' in process["cmdline"]:
-                processes_list.remove('redis')
-            else:
-                process_id =process['pid']
-                break
+        """
+        self.lg.info('Start new process.')
+        process_id = self.python_client.start_process()
+        self.assertTrue(process_id)
 
         self.lg.info('delete /nodes/{nodeid}/processes/{processid} api.')
-        response = self.nodes_api.delete_nodes_nodeid_process_processid(node_id=self.node_id,process_id=str(process_id))
+        response = self.nodes_api.delete_nodes_nodeid_process_processid(node_id=self.node_id,
+                                                                        process_id=str(process_id))
         self.assertEqual(response.status_code, 204)
 
         self.lg.info('Make sure that this process has been killed.')
-        client_result = self.pyhton_client.get_processes_list()
-        for process in client_result:
-            self.assertNotEqual(process['pid'], process_id)
+        client_processes = self.python_client.get_processes_list()
+        self.assertFalse(any(process['pid']== process_id for process in client_processes))

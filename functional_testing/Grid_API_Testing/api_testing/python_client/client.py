@@ -121,3 +121,19 @@ class Client:
         state = self.client.json('core.state', {})
         del state['cpu']
         return state
+
+    def start_job(self):
+        job_id = self.client.system("tailf /etc/nsswitch.conf").id
+        jobs = self.client.job.list()
+        for job in jobs:
+            if job['cmd']['id'] == job_id:
+                return job_id
+        return False
+
+    def start_process(self):
+        self.client.system("tailf /etc/nsswitch.conf")
+        processes = self.get_processes_list()
+        for process in processes:
+            if process['cmdline'] == "tailf /etc/nsswitch.conf":
+                return process['pid']
+        return False
