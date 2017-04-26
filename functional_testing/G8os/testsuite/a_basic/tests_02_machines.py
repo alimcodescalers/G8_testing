@@ -139,9 +139,7 @@ class Machinetests(BaseTest):
 
         self.lg('Use container client to check folder is exist using bash')
         output = C1_client.bash('ls | grep {}'.format(folder))
-        result = output.get()
-        self.assertEqual(result.stdout, '{}\n'.format(folder))
-        self.assertEqual(result.state, 'SUCCESS')
+        self.assertEqual(self.stdout(output), folder)
 
         self.lg('Check that the folder is created only in container')
         output2 = self.client.bash('ls | grep {}'.format(folder))

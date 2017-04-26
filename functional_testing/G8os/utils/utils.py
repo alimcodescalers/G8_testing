@@ -134,7 +134,7 @@ class BaseTest(unittest.TestCase):
             self.client.bash('rm -rf {}{}'.format(files_loc, f))
         return loop_devs
 
-    def create_container(self, root_url, storage=None, nics=None):
+    def create_container(self, root_url, storage=None, nics=[]):
         container = self.client.container.create(root_url=root_url, storage=storage, nics=nics)
         result = container.get(30)
         if result.state != 'SUCCESS':
