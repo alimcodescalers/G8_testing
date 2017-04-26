@@ -17,8 +17,9 @@ class BaseTest(unittest.TestCase):
         self.session = requests.Session()
         self.session.headers['Authorization'] = 'Bearer {}'.format(self.zt_access_token)
         self.root_url = 'https://hub.gig.tech/maxux/ubuntu1604.flist'
+        self.ovs_flist = 'https://hub.gig.tech/gig-official-apps/ovs.flist'
         self.storage = 'ardb://hub.gig.tech:16379'
-        self.client.timeout = 60
+        self.client.timeout = 80
         super(BaseTest, self).__init__(*args, **kwargs)
 
     def setUp(self):

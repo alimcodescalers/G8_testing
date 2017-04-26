@@ -45,8 +45,9 @@ class ExtendedNetworking(BaseTest):
         self.client.zerotier.join(networkId)
 
         self.lg('Create 2 containers c1, c2 and make them join (N1) && create there clients')
-        cid_1 = self.client.container.create(root_url=self.root_url, storage=self.storage, zerotier=networkId)
-        cid_2 = self.client.container.create(root_url=self.root_url, storage=self.storage, zerotier=networkId)
+        nic = [{'type': 'zerotier', 'id': networkId}]
+        cid_1 = self.client.container.create(root_url=self.root_url, storage=self.storage, nics=nic)
+        cid_2 = self.client.container.create(root_url=self.root_url, storage=self.storage, nics=nic)
         c1_client = self.client.container.client(cid_1)
         c2_client = self.client.container.client(cid_2)
 
