@@ -16,8 +16,8 @@ class SystemTests(BaseTest):
     def get_permission(self, client, path):
         return int(self.stdout(client.bash('stat -c %a {}'.format(path))))
 
-    def create_container(self):
-        self.cid = self.client.container.create(root_url=self.root_url, storage=self.storage)
+    def container_create(self):
+        self.cid = self.create_container(root_url=self.root_url, storage=self.storage)
         self.client_container = self.client.container.client(self.cid)
 
     def remove_container(self):
@@ -190,7 +190,7 @@ class SystemTests(BaseTest):
         if client_type == 'client':
             client = self.client
         else:
-            self.create_container()
+            self.container_create()
             client = self.client_container
 
         self.lg('Get the os information using g8os/container client')
@@ -222,7 +222,7 @@ class SystemTests(BaseTest):
         if client_type == 'client':
             client = self.client
         else:
-            self.create_container()
+            self.container_create()
             client = self.client_container
 
         self.lg('get memory info using bash')
@@ -258,7 +258,7 @@ class SystemTests(BaseTest):
         if client_type == 'client':
             client = self.client
         else:
-            self.create_container()
+            self.container_create()
             client = self.client_container
 
         self.lg('get cpu info using bash')
@@ -295,7 +295,7 @@ class SystemTests(BaseTest):
         if client_type == 'client':
             client = self.client
         else:
-            self.create_container()
+            self.container_create()
             client = self.client_container
 
         self.lg('get disks info using linux bash command (mount)')
@@ -354,7 +354,7 @@ class SystemTests(BaseTest):
         if client_type == 'client':
             client = self.client
         else:
-            self.create_container()
+            self.container_create()
             client = self.client_container
 
         self.lg('{} STARTED'.format(self._testID))
@@ -442,7 +442,7 @@ class SystemTests(BaseTest):
         if client_type == 'client':
             client = self.client
         else:
-            self.create_container()
+            self.container_create()
             client = self.client_container
 
         self.lg('{} STARTED'.format(self._testID))
@@ -570,7 +570,7 @@ class SystemTests(BaseTest):
         if client_type == 'client':
             client = self.client
         else:
-            self.create_container()
+            self.container_create()
             client = self.client_container
 
         self.lg('{} STARTED'.format(self._testID))
