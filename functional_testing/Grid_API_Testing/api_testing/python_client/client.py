@@ -96,7 +96,7 @@ class Client:
             item['device'] = '/dev/%s'%disk['name']
 
             if int(disk['size']) >= 1073741824:
-                item['size'] = int(disk['size'])/(1024*1024*1024)
+                item['size'] = int(int(disk['size'])/(1024*1024*1024))
             diskInfo.append(item)
         return diskInfo
 
