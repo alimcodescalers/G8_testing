@@ -85,11 +85,11 @@ class TestStorageclustersAPI(TestcasesBase):
         self.assertIn(label, response.json())
 
         #bug 96
-        # self.lg.info('Kill storage cluster (SC1), should succeed with 204')
-        # response = self.storageclusters_api.delete_storageclusters_label(label)
-        # self.assertEqual(response.status_code, 204)
+        self.lg.info('Kill storage cluster (SC1), should succeed with 204')
+        response = self.storageclusters_api.delete_storageclusters_label(label)
+        self.assertEqual(response.status_code, 204)
 
-    @unittest.skip('bug: #96')
+    # @unittest.skip('bug: #96')
     def test004_kill_storagecluster_label(self):
         """ GAT-004
         **Test Scenario:**
@@ -107,6 +107,7 @@ class TestStorageclustersAPI(TestcasesBase):
         self.assertEqual(response.status_code, 200)
         self.assertNotIn(self.label, response.json())
 
-        self.lg.info('Kill nonexisting storage cluster, should fail with 404')
-        response = lf.storageclusters_api.delete_storageclusters_label('fake_label')
-        self.assertEqual(response.status_code, 404)
+        #bug 135
+        # self.lg.info('Kill nonexisting storage cluster, should fail with 404')
+        # response = self.storageclusters_api.delete_storageclusters_label('fake_label')
+        # self.assertEqual(response.status_code, 404)
