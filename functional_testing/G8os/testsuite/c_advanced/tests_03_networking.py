@@ -33,12 +33,9 @@ class AdvancedNetworking(BaseTest):
         **Test Scenario:**
         #. Create container (c1) on a new vxlan bridge (vx1), should succeed
         #. Create container (c2) connected on (vx1) and connect it to default network
-        #. Create virtual machine (vm1) on (vx1), should succeed
         #. Create conatiner (c3) on a new vxlan bridge (vx2)
         #. Check that (c2) can reach the internet while (c1) can't
         #. Check if (c1) can reach (c2), should be reachable
-        #. Check if (c1) can reach (vm1), should be reachable
-        #. Check if (vm1) can reach (c1), should be reachable
         #. Check if (c3) can reach (c1), shouldn't be reachable
         #. Delete the vxlan bridge (vx1), should succeed
         #. Check if (c1) can reach (c2), shouldn't be reachable
@@ -133,7 +130,7 @@ class AdvancedNetworking(BaseTest):
         nic1 = [{'type': 'vlan', 'id': v1_id, 'config': {'dhcp': True}}]
         c1 = self.client.container.create(root_url=self.root_url, storage=self.storage, nics=nic1)
         c1_client = self.client.container.client(c1)
-        time.sleep(6)
+        time.sleep(5)
         r = c1_client.system('ip a').get()
         c1_ip = re.search(r'192.168.[\d+].[\d+]', r.stdout).group()
 
@@ -141,7 +138,7 @@ class AdvancedNetworking(BaseTest):
         nic2 = [{'type': 'default'}, {'type': 'vlan', 'id': v1_id, 'config': {'dhcp': True}}]
         c2 = self.client.container.create(root_url=self.root_url, storage=self.storage, nics=nic2)
         c2_client = self.client.container.client(c2)
-        time.sleep(6)
+        time.sleep(5)
         r = c2_client.system('ip a').get()
         c2_ip = re.search(r'192.168.[\d+].[\d+]', r.stdout).group()
 
