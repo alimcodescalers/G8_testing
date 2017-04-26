@@ -125,7 +125,7 @@ class Machinetests(BaseTest):
         """
         self.lg('{} STARTED'.format(self._testID))
         self.lg('Create a new container (C1), and make sure its exist')
-        C1 = self.client.container.create(root_url=self.root_url, storage=self.storage)
+        C1 = self.create_container(root_url=self.root_url, storage=self.storage)
         containers = self.client.container.list()
         self.assertTrue(str(C1) in containers)
 

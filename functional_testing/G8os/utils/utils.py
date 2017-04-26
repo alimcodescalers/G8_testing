@@ -5,6 +5,7 @@ import uuid
 import logging
 import configparser
 import requests
+import json
 
 
 class BaseTest(unittest.TestCase):
@@ -132,3 +133,11 @@ class BaseTest(unittest.TestCase):
             loop_devs.append(free_l_dev)
             self.client.bash('rm -rf {}{}'.format(files_loc, f))
         return loop_devs
+
+    def create_container(self, root_url, storage=None, nics=None):
+        container = self.client.container.create(root_url=root_url, storage=storage, nics=nics)
+        result = container.get(30)
+        if result.state != 'SUCCESS':
+            raise RuntimeError('failed to create container %s' % result.data)
+        container_id = json.loads(result.data)
+        return container_id
