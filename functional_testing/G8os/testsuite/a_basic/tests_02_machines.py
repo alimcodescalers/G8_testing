@@ -132,10 +132,10 @@ class Machinetests(BaseTest):
         self.lg('Get container client(C1)')
         C1_client = self.client.container.client(C1)
 
-        self.lg('Use container client  to create  folder using system, should succeed')
+        self.lg('Use container client to create  folder using system, should succeed')
         folder = self.rand_str()
         C1_client.system('mkdir {}'.format(folder))
-        time.sleep(0.5)
+        time.sleep(1.5)
 
         self.lg('Use container client to check folder is exist using bash')
         output = C1_client.bash('ls | grep {}'.format(folder))
@@ -147,8 +147,11 @@ class Machinetests(BaseTest):
 
         self.lg('Remove the created folder using bash,check that it removed ')
         C1_client.bash('rm -rf {}'.format(folder))
-        time.sleep(0.5)
+        time.sleep(1)
         output = self.client.bash('ls | grep {}'.format(folder))
         self.assertEqual(self.stdout(output), '')
+
+        self.lg('Destroy C1, should succeed')
+        self.client.container.terminate(C1)
 
         self.lg('{} ENDED'.format(self._testID))
