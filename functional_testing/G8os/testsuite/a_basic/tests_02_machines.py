@@ -1,7 +1,6 @@
 from utils.utils import BaseTest
 import time
 import unittest
-import uuid
 
 
 class Machinetests(BaseTest):
@@ -10,6 +9,7 @@ class Machinetests(BaseTest):
         super(Machinetests, self).setUp()
         self.check_g8os_connection(Machinetests)
 
+    @unittest.skip('https://github.com/g8os/core0/issues/180')
     def test001_create_destroy_list_kvm(self):
         """ g8os-009
 
@@ -24,8 +24,8 @@ class Machinetests(BaseTest):
         #. Destroy VM1, should succeed
         #. List the virtual machines, VM1 should be gone
         #. Destroy VM1 again, should fail
-
         """
+
         self.lg('{} STARTED'.format(self._testID))
         VM_name = self.rand_str()
 
@@ -43,26 +43,26 @@ class Machinetests(BaseTest):
         self.assertEqual(result.state, 'SUCCESS')
 
         self.lg('- Create virtual machine {} , should succeed'.format(VM_name))
-        self.client.experimental.kvm.create(name=VM_name, media=[{'url': '/var/cache/Images/Ubuntu.14.04.x64.qcow2'}])
+        self.client.kvm.create(name=VM_name, media=[{'url': '/var/cache/Images/Ubuntu.14.04.x64.qcow2'}])
 
         self.lg('- List all virtual machines and check that VM {} is there '.format(VM_name))
-        Vms_list = self.client.experimental.kvm.list()
+        Vms_list = self.client.kvm.list()
         self.assertTrue(any(vm['name'] == VM_name for vm in Vms_list))
 
         self.lg('- create another virtual machine with the same kvm domain ,should fail')
         with self.assertRaises(RuntimeError):
-            self.client.experimental.kvm.create(name=VM_name, media=[{'url': '/var/cache/Images/Ubuntu.14.04.x64.qcow2'}])
+            self.client.kvm.create(name=VM_name, media=[{'url': '/var/cache/Images/Ubuntu.14.04.x64.qcow2'}])
 
         self.lg('- Destroy VM {}'.format(VM_name))
-        self.client.experimental.kvm.destroy(VM_name)
+        self.client.kvm.destroy(VM_name)
 
         self.lg('- List the virtual machines , VM {} should be gone'.format(VM_name))
-        Vms_list = self.client.experimental.kvm.list()
+        Vms_list = self.client.kvm.list()
         self.assertFalse(any(vm['name'] == VM_name for vm in Vms_list))
 
         self.lg('- Destroy VM {} again should fail'.format(VM_name))
         with self.assertRaises(RuntimeError):
-            self.client.experimental.kvm.destroy(VM_name)
+            self.client.kvm.destroy(VM_name)
 
         self.lg('- Delete created directory, should succeed')
         rs = self.client.bash('rm -r  /var/cache/Images')
@@ -125,23 +125,21 @@ class Machinetests(BaseTest):
         """
         self.lg('{} STARTED'.format(self._testID))
         self.lg('Create a new container (C1), and make sure its exist')
-        C1 = self.client.container.create(root_url=self.root_url, storage=self.storage)
+        C1 = self.create_container(root_url=self.root_url, storage=self.storage)
         containers = self.client.container.list()
         self.assertTrue(str(C1) in containers)
 
         self.lg('Get container client(C1)')
         C1_client = self.client.container.client(C1)
 
-        self.lg('Use container client  to create  folder using system, should succeed')
+        self.lg('Use container client to create  folder using system, should succeed')
         folder = self.rand_str()
         C1_client.system('mkdir {}'.format(folder))
-        time.sleep(0.5)
+        time.sleep(1.5)
 
         self.lg('Use container client to check folder is exist using bash')
         output = C1_client.bash('ls | grep {}'.format(folder))
-        result = output.get()
-        self.assertEqual(result.stdout, '{}\n'.format(folder))
-        self.assertEqual(result.state, 'SUCCESS')
+        self.assertEqual(self.stdout(output), folder)
 
         self.lg('Check that the folder is created only in container')
         output2 = self.client.bash('ls | grep {}'.format(folder))
@@ -149,8 +147,11 @@ class Machinetests(BaseTest):
 
         self.lg('Remove the created folder using bash,check that it removed ')
         C1_client.bash('rm -rf {}'.format(folder))
-        time.sleep(0.5)
+        time.sleep(1)
         output = self.client.bash('ls | grep {}'.format(folder))
         self.assertEqual(self.stdout(output), '')
+
+        self.lg('Destroy C1, should succeed')
+        self.client.container.terminate(C1)
 
         self.lg('{} ENDED'.format(self._testID))

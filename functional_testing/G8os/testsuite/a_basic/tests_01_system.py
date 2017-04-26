@@ -16,8 +16,8 @@ class SystemTests(BaseTest):
     def get_permission(self, client, path):
         return int(self.stdout(client.bash('stat -c %a {}'.format(path))))
 
-    def create_container(self):
-        self.cid = self.client.container.create(root_url=self.root_url, storage=self.storage)
+    def container_create(self):
+        self.cid = self.create_container(root_url=self.root_url, storage=self.storage)
         self.client_container = self.client.container.client(self.cid)
 
     def remove_container(self):
@@ -156,29 +156,22 @@ class SystemTests(BaseTest):
 
         self.lg('{} STARTED'.format(self._testID))
 
-        for i in range(2):
-            if i == 0:
-               cmd = 'core.system'
-               match = 'sleep'
-               self.client.system('sleep 40')
-            else:
-               cmd = 'bash'
-               match = 'sleep 40'
-               self.client.bash('sleep 40')
-            self.lg('Created process that runs for long time using {}'.format(cmd))
+        cmd = 'sleep 40'
+        self.client.bash(cmd)
+        self.lg('Created process that runs for long time using {}'.format(cmd))
 
-            self.lg('List the process, should be found')
-            id = self.get_process_id(cmd, match)
-            self.assertIsNotNone(id)
+        self.lg('List the process, should be found')
+        id = self.get_process_id(cmd)
+        self.assertIsNotNone(id)
 
-            self.lg('Kill the process')
-            self.client.process.kill(id)
+        self.lg('Kill the process')
+        self.client.process.kill(id)
 
-            self.lg('List the process, shouldn\'t be found')
-            id = self.get_process_id(cmd, match)
-            self.assertIsNone(id)
+        self.lg('List the process, shouldn\'t be found')
+        id = self.get_process_id(cmd)
+        self.assertIsNone(id)
 
-            self.lg('{} ENDED'.format(self._testID))
+        self.lg('{} ENDED'.format(self._testID))
 
     @parameterized.expand(['client', 'container'])
     def test003_os_info(self, client_type):
@@ -197,7 +190,7 @@ class SystemTests(BaseTest):
         if client_type == 'client':
             client = self.client
         else:
-            self.create_container()
+            self.container_create()
             client = self.client_container
 
         self.lg('Get the os information using g8os/container client')
@@ -229,7 +222,7 @@ class SystemTests(BaseTest):
         if client_type == 'client':
             client = self.client
         else:
-            self.create_container()
+            self.container_create()
             client = self.client_container
 
         self.lg('get memory info using bash')
@@ -265,7 +258,7 @@ class SystemTests(BaseTest):
         if client_type == 'client':
             client = self.client
         else:
-            self.create_container()
+            self.container_create()
             client = self.client_container
 
         self.lg('get cpu info using bash')
@@ -302,7 +295,7 @@ class SystemTests(BaseTest):
         if client_type == 'client':
             client = self.client
         else:
-            self.create_container()
+            self.container_create()
             client = self.client_container
 
         self.lg('get disks info using linux bash command (mount)')
@@ -361,7 +354,7 @@ class SystemTests(BaseTest):
         if client_type == 'client':
             client = self.client
         else:
-            self.create_container()
+            self.container_create()
             client = self.client_container
 
         self.lg('{} STARTED'.format(self._testID))
@@ -446,13 +439,10 @@ class SystemTests(BaseTest):
         #. Check if  file (F2) exists, should succeed
         """
 
-        if client_type in ['client', 'container']:
-            self.skipTest('bug# https://github.com/g8os/core0/issues/133, 136')
-
         if client_type == 'client':
             client = self.client
         else:
-            self.create_container()
+            self.container_create()
             client = self.client_container
 
         self.lg('{} STARTED'.format(self._testID))
@@ -580,7 +570,7 @@ class SystemTests(BaseTest):
         if client_type == 'client':
             client = self.client
         else:
-            self.create_container()
+            self.container_create()
             client = self.client_container
 
         self.lg('{} STARTED'.format(self._testID))

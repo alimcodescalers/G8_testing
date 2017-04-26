@@ -5,6 +5,7 @@ import uuid
 import logging
 import configparser
 import requests
+import json
 
 
 class BaseTest(unittest.TestCase):
@@ -46,22 +47,16 @@ class BaseTest(unittest.TestCase):
     def rand_str(self):
         return str(uuid.uuid4()).replace('-', '')[1:10]
 
-    def get_process_id(self, cmd, match):
+    def get_process_id(self, cmdline):
         """
         Get the id of certain process
-        :param cmd: command used by the client (same as the command in process.list) ex: 'core.system'
-        :param match: string to match intended command. ex: 'sleep 300'
+        :param cmdline: whole command to be executed
         """
-        time.sleep(2)
+        time.sleep(1)
         processes = self.client.process.list()
         for p in processes:
-           if p['cmd']['command'] == cmd:
-              if cmd == 'core.system':
-                 if p['cmd']['arguments']['name'] == match:
-                    return p['cmd']['id']
-              if cmd == 'bash':
-                 if p['cmd']['arguments']['script'] == match:
-                    return p['cmd']['id']
+           if p['cmdline'] == cmdline:
+               return p['pid']
         return
 
     def get_job_id(self, cmd, match):
@@ -157,3 +152,11 @@ class BaseTest(unittest.TestCase):
             loop_devs.append(free_l_dev)
             self.client.bash('rm -rf {}{}'.format(files_loc, f))
         return loop_devs
+
+    def create_container(self, root_url, storage=None, nics=[]):
+        container = self.client.container.create(root_url=root_url, storage=storage, nics=nics)
+        result = container.get(30)
+        if result.state != 'SUCCESS':
+            raise RuntimeError('failed to create container %s' % result.data)
+        container_id = json.loads(result.data)
+        return container_id

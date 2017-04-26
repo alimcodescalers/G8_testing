@@ -14,8 +14,6 @@ class ExtendedNetworking(BaseTest):
         mac_addr = ["{:02X}".format(randint(0, 255)) for x in range(6)]
         return ':'.join(mac_addr)
 
-
-    @unittest.skip('bug# https://github.com/g8os/core0/issues/126')
     def test001_zerotier(self):
         """ g8os-014
         *Test case for testing zerotier functionally*
@@ -103,7 +101,6 @@ class ExtendedNetworking(BaseTest):
 
         self.lg('{} ENDED'.format(self._testID))
 
-    @unittest.skip('bug: https://github.com/g8os/core0/issues/127')
     def test002_create_bridges_with_specs_hwaddr(self):
 
         """ g8os-023
@@ -121,7 +118,7 @@ class ExtendedNetworking(BaseTest):
 
         self.lg('Create bridge (B1) with specifice hardware address (HA), should succeed')
         bridge_name = self.rand_str()
-        hardwareaddr = self.rand_mac_address()
+        hardwareaddr = '32:64:7d:0b:c7:aa' # private mac
         self.client.bridge.create(bridge_name, hwaddr=hardwareaddr)
 
         self.lg('List bridges, (B1) should be listed')
@@ -132,7 +129,7 @@ class ExtendedNetworking(BaseTest):
         nics = self.client.info.nic()
         nic = [x for x in nics if x['name'] == bridge_name]
         self.assertNotEqual(nic, [])
-        self.assertEqual(nic[0]['hardwareaddr'], hardwareaddr)
+        self.assertEqual(nic[0]['hardwareaddr'].lower(), hardwareaddr.lower())
 
         self.lg('Delete bridge (B1), should succeed')
         self.client.bridge.delete(bridge_name)
@@ -210,7 +207,6 @@ class ExtendedNetworking(BaseTest):
 
         self.lg('{} ENDED'.format(self._testID))
 
-    @unittest.skip('bug: https://github.com/g8os/core0/issues/147')
     def test004_attach_bridge_to_container(self):
         """ g8os-027
         *Test case for testing creating, listing, deleting bridges*
@@ -236,17 +232,18 @@ class ExtendedNetworking(BaseTest):
         self.client.bridge.create(bridge_name, network='dnsmasq', settings=settings)
 
         self.lg('Create 2 containers C1, C2 with bridge (B1), should succeed')
-        cid_1 = self.client.container.create(self.root_url, storage=self.storage, bridge=[(bridge_name, 'dhcp')])
-        cid_2 = self.client.container.create(self.root_url, storage=self.storage, bridge=[(bridge_name, 'dhcp')])
+        nic1 = [{'type': 'bridge', 'id': bridge_name, 'config': {'dhcp': True}}]
+        cid_1 = self.client.container.create(self.root_url, storage=self.storage, nics=nic1)
+        cid_2 = self.client.container.create(self.root_url, storage=self.storage, nics=nic1)
         client_c1 = self.client.container.client(cid_1)
         client_c2 = self.client.container.client(cid_2)
 
         for container_client in [client_c1, client_c2]:
             self.lg('Check if each container (C1), (C2) got an ip address, should succeed')
             nics = container_client.info.nic()
-            nic = [x for x in nics if x['name'] == 'eth1']
+            nic = [x for x in nics if x['name'] == 'eth0']
             self.assertNotEqual(nic, [])
-            current_container_addr = [x['addr'] for x in nic['addrs'] if x['addr'][:x['addr'].find('/')] in ip_range][0]
+            current_container_addr = [x['addr'] for x in nic[0]['addrs'] if x['addr'][:x['addr'].find('/')] in ip_range][0]
             self.assertNotEqual(current_container_addr, [])
             other_container_addr = [x for x in ip_range if x != current_container_addr][0]
 
@@ -265,7 +262,6 @@ class ExtendedNetworking(BaseTest):
 
         self.lg('{} ENDED'.format(self._testID))
 
-    @unittest.skip('bug: https://github.com/g8os/core0/issues/153')
     def test005_create_bridges_with_specs_nat(self):
         """ g8os-028
         *Test case for testing creating, listing, deleting bridges*
