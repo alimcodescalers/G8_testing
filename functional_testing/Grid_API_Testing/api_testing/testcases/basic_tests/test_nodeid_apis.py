@@ -303,13 +303,9 @@ class TestNodeidAPI(TestcasesBase):
         memory_info = response.json()
         for key in memory_info.keys():
             if key in result.keys():
-                if key == "available":
-                    self.assertAlmostEqual(memory_info[key], result[key],
+                self.assertAlmostEqual(memory_info[key], result[key],
                                        msg="different keys%s"%key,
                                         delta=500000)
-
-                else:
-                    self.assertEqual(memory_info[key], result[key], msg="different keys%s"%key)
 
     def test013_get_nics_details(self):
         """ GAT-013
