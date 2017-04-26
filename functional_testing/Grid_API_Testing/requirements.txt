@@ -2,3 +2,6 @@ termcolor
 requests
 paramiko
 configparser
+packet
+g8core
+pyvirtualdisplay

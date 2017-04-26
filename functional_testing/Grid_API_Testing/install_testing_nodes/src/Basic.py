@@ -14,7 +14,9 @@ class Basic(object):
         self.values = {'environment': '',
                        'username': '',
                        'password': '',
-                       'location': ''
+                       'location': '',
+                       'packet_username': '',
+                       'packer_password': ''
                        }
         self.g8os_ip_list = []
         self.client_header = {'Content-Type': 'application/x-www-form-urlencoded',
@@ -85,11 +87,18 @@ class Basic(object):
             if check in self.values.keys():
                 self.g8os_ip_list.append([self.values[check], self.values['g8os_mac_%i' % i]])
 
-    def get_discovering_blueprint(self):
+    def get_discovering_blueprint(self, auto_discovering=False):
         blueprint = ''
-        for g8os in self.g8os_ip_list:
-            if ':' in g8os[1]:
-                g8os[1] = g8os[1].replace(':', '')
-            tmp = "node.g8os__%s:\\n  redisAddr: %s\\n \\n" % (g8os[1], g8os[0])
-            blueprint += tmp
+
+        if auto_discovering:
+            blueprint = "bootstrap.g8os__grid1:\\nactions:\\n  - action: install\\n \\n"
+        else:
+            for g8os in self.g8os_ip_list:
+                if ':' in g8os[1]:
+                    g8os[1] = g8os[1].replace(':', '')
+                tmp = "node.g8os__%s:\\n  redisAddr: %s\\n \\n" % (g8os[1], g8os[0])
+                blueprint += tmp
         return blueprint
+
+    def build_discovering_blueprint(self):
+        pass
