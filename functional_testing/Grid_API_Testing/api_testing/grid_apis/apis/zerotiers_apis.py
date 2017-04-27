@@ -10,6 +10,11 @@ class ZerotiersAPI(GridAPIBase):
         api = ['nodes', nodeid, 'zerotiers']
         return self.request_api(method=method, api=api)
 
+    def get_nodes_zerotiers_zerotierid(self, nodeid, zerotierid):
+        method = 'get'
+        api = ['nodes', nodeid, 'zerotiers', zerotierid]
+        return self.request_api(method=method, api=api)
+
     def post_nodes_zerotiers(self, nodeid, body):
         method = 'post'
         api = ['nodes', nodeid, 'zerotiers']
