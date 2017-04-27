@@ -88,3 +88,31 @@ class Client:
             diskInfo['opts'].append(line[5][1:-1])
 
         return diskInfo
+
+    def get_container_info(self, container_id):
+        container_info = {}
+        golden_data = self.client.container.list().get(str(container_id), None)
+        if not golden_data: ##return what ,it should container be here .
+            return False
+        golden_value = golden_data['container']
+        container_info['nics'] = ([{i: nic[i] for i in nic if i != 'hwaddr'} for nic in golden_value['arguments']['nics']])
+        container_info['ports'] = (['%s:%s' % (key, value) for key, value in golden_value['arguments']['port'].items()])
+        container_info['hostNetworking'] = golden_value['arguments']['host_network']
+        container_info['hostname'] = golden_value['arguments']['hostname']
+        container_info['flist'] = golden_value['arguments']['root']
+        container_info['storage'] = golden_value['arguments']['storage']
+        return container_info
+
+    def get_container_job_list(self, container_id):
+        golden_values = []
+        container = self.client.container.client(container_id)
+        container_data = container.job.list()
+        # cannot compare directly as the job.list is considered a job and has a different id everytime is is called
+        for i, golden_value in enumerate(container_data[:]):
+            if golden_value.get('command', "") == 'job.list':
+                container_data.pop(i)
+                continue
+            golden_values.append((golden_value['cmd']['id'], golden_value['starttime']))
+        golden_values = set(golden_values)
+        api_jobs = set([(job['id'], job['startTime'])for job in running_jobs_list])
+        self.assertEqual(len(golden_values.difference(api_jobs)), 1)
