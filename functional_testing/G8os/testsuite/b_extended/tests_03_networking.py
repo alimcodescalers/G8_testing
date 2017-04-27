@@ -14,6 +14,7 @@ class ExtendedNetworking(BaseTest):
         mac_addr = ["{:02X}".format(randint(0, 255)) for x in range(6)]
         return ':'.join(mac_addr)
 
+    @unittest.skip('bug: https://github.com/g8os/core0/issues/194')
     def test001_zerotier(self):
         """ g8os-014
         *Test case for testing zerotier functionally*
