@@ -44,8 +44,8 @@ class ExtendedNetworking(BaseTest):
 
         self.lg('Create 2 containers c1, c2 and make them join (N1) && create there clients')
         nic = [{'type': 'zerotier', 'id': networkId}]
-        cid_1 = self.client.container.create(root_url=self.root_url, storage=self.storage, nics=nic)
-        cid_2 = self.client.container.create(root_url=self.root_url, storage=self.storage, nics=nic)
+        cid_1 = self.create_container(root_url=self.root_url, storage=self.storage, nics=nic)
+        cid_2 = self.create_container(root_url=self.root_url, storage=self.storage, nics=nic)
         c1_client = self.client.container.client(cid_1)
         c2_client = self.client.container.client(cid_2)
 
@@ -233,8 +233,8 @@ class ExtendedNetworking(BaseTest):
 
         self.lg('Create 2 containers C1, C2 with bridge (B1), should succeed')
         nic1 = [{'type': 'bridge', 'id': bridge_name, 'config': {'dhcp': True}}]
-        cid_1 = self.client.container.create(self.root_url, storage=self.storage, nics=nic1)
-        cid_2 = self.client.container.create(self.root_url, storage=self.storage, nics=nic1)
+        cid_1 = self.create_container(self.root_url, storage=self.storage, nics=nic1)
+        cid_2 = self.create_container(self.root_url, storage=self.storage, nics=nic1)
         client_c1 = self.client.container.client(cid_1)
         client_c2 = self.client.container.client(cid_2)
 
@@ -289,7 +289,7 @@ class ExtendedNetworking(BaseTest):
             time.sleep(2)
 
             self.lg('Create new container and attach bridge (B1) to it, should succeed')
-            cid = self.client.container.create(self.root_url, storage=self.storage,  bridge=[(bridge_name, '10.1.0.2/24')])
+            cid = self.create_container(self.root_url, storage=self.storage, bridge=[(bridge_name, '10.1.0.2/24')])
             container_client = self.client.container.client(cid)
             time.sleep(2)
 
