@@ -29,6 +29,7 @@ class TestcontaineridAPI(TestcasesBase):
                                                               'dns': None}}]}
 
     def tearDown(self):
+        self.lg.info('TearDown:delete all created container ')
         for container in self.createdcontainer:
             self.containers_api.delete_containers_containerid(container['node'],
                                                               container['container'])
@@ -145,7 +146,7 @@ class TestcontaineridAPI(TestcasesBase):
         self.lg.info('Create container ')
         response = self.containers_api.post_containers(self.node_id , self.container_body)
         self.assertEqual(response.status_code, 201)
-        self.createdcontainer.append({"node":node_id, "container":container_name})
+        self.createdcontainer.append({"node":self.node_id, "container":self.container_name})
         container_id = self.wait_for_container_status("running",
                                                       self.containers_api.get_containers_containerid,
                                                       node_id=self.node_id,
@@ -190,6 +191,7 @@ class TestcontaineridAPI(TestcasesBase):
         """
         self.lg.info('Choose random container of list of running nodes')
         container_id, container_name = self.get_random_container(self.node_id )
+
         self.lg.info('Send get nodes/{nodeid}/containers/containerid/jobs api request.')
         response = self.containers_api.get_containers_containerid_jobs(self.node_id , container_name)
         self.assertEqual(response.status_code, 200)
