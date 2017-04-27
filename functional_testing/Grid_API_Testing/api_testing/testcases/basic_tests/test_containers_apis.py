@@ -163,6 +163,7 @@ class TestcontaineridAPI(TestcasesBase):
                                                        node_id=self.node_id,
                                                        container_id=self.container_name),0)
 
+        time.sleep(10)
         self.assertTrue(str(container_id) not in self.g8core.client.container.list().keys())
 
         self.lg.info('post:/node/{nodeid}/containers/containerid/start.')
@@ -175,6 +176,7 @@ class TestcontaineridAPI(TestcasesBase):
                                                       node_id=self.node_id,
                                                       container_id=self.container_name)
         self.assertTrue(container_id)
+        time.sleep(10)
         self.assertTrue(str(container_id) in self.g8core.client.container.list().keys())
 
     def test005_get_running_jobs(self):
@@ -342,7 +344,7 @@ class TestcontaineridAPI(TestcasesBase):
         self.assertEqual(response.status_code, 204)
 
         self.lg.info('Check that job delted from running jobs list.')
-        response = self.containers_api.get_containers_containerid_jobs(node_id, container_name)
+        response = self.containers_api.get_containers_containerid_jobs(self.node_id, container_name)
         self.assertEqual(response.status_code, 200)
         running_jobs_list = response.json()
         for job in running_jobs_list:
@@ -566,7 +568,7 @@ class TestcontaineridAPI(TestcasesBase):
         self.assertEqual(response.status_code, 204)
 
         self.lg.info('Check that created process deleted from process list.')
-        response = self.containers_api.get_containers_containerid_processes(node_id, container_name)
+        response = self.containers_api.get_containers_containerid_processes(self.node_id, container_name)
         self.assertEqual(response.status_code, 200)
         processes_list = response.json()
         for process in processes_list:
