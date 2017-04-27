@@ -1,4 +1,5 @@
 import g8core
+import time
 
 class Client:
     def __init__(self, ip):
@@ -92,7 +93,7 @@ class Client:
     def get_container_info(self, container_id):
         container_info = {}
         golden_data = self.client.container.list().get(str(container_id), None)
-        if not golden_data: ##return what ,it should container be here .
+        if not golden_data:
             return False
         golden_value = golden_data['container']
         container_info['nics'] = ([{i: nic[i] for i in nic if i != 'hwaddr'} for nic in golden_value['arguments']['nics']])
@@ -113,6 +114,28 @@ class Client:
                 container_data.pop(i)
                 continue
             golden_values.append((golden_value['cmd']['id'], golden_value['starttime']))
-        golden_values = set(golden_values)
-        api_jobs = set([(job['id'], job['startTime'])for job in running_jobs_list])
-        self.assertEqual(len(golden_values.difference(api_jobs)), 1)
+        return set(golden_values)
+
+    def wait_on_container_update(self, container_id, timeout, removed):
+        for _ in range(timeout):
+            if removed:
+                if str(container_id) not in self.client.container.list().keys():
+                    return True
+            else:
+                if str(container_id) in self.client.container.list().keys():
+                    return True
+            time.sleep(1)
+        return False
+
+    def wait_on_container_job_update(self, container_id, job_id, timeout, removed):
+        container = self.client.container.client(container_id)
+        for _ in range(timeout):
+            if removed:
+                if job_id not in [item['cmd']['id']for item in container.job.list()]:
+                    return True
+            else:
+                if job_id in [item['cmd']['id']for item in container.job.list()]:
+                    return True
+            time.sleep(1)
+        return False
+

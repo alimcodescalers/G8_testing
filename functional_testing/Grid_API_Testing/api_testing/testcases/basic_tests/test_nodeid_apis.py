@@ -21,7 +21,6 @@ class TestNodeidAPI(TestcasesBase):
         #. Send get nodes api request.
         #. Compare results with golden value.
         """
-        from pprint import pprint; import ipdb; ipdb.set_trace()
         self.lg.info('get nodes api request ')
         response = self.nodes_api.get_nodes()
 

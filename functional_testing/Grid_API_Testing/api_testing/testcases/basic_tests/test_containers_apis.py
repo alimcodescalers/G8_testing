@@ -46,12 +46,12 @@ class TestcontaineridAPI(TestcasesBase):
         """
         containers_id = []
         self.lg.info('Send get nodes/{nodeid}/containers api request.')
-        response = self.containers_api.get_containers(self.node_id )
+        response = self.containers_api.get_containers(self.node_id)
         self.assertEqual(response.status_code, 200)
         self.lg.info('Compare results with golden value.')
         containers_list = response.json()
         for container in containers_list:
-            response = self.containers_api.get_containers_containerid(self.node_id , container['id'])
+            response = self.containers_api.get_containers_containerid(self.node_id, container['id'])
             self.assertEqual(response.status_code, 200)
             data = response.json()
             if data['containerid']:
@@ -73,17 +73,16 @@ class TestcontaineridAPI(TestcasesBase):
         """
 
         self.lg.info('Send post nodes/{nodeid}/containers api request.')
-        response = self.containers_api.post_containers(node_id =self.node_id, body=self.container_body)
+        response = self.containers_api.post_containers(node_id=self.node_id, body=self.container_body)
         self.assertEqual(response.status_code, 201)
 
         self.lg.info('Make sure it created with required values, should succeed.')
-        self.assertEqual(response.headers['Location'], "/nodes/%s/containers/%s" % (self.node_id , self.container_name))
-        self.assertTrue(self.wait_for_container_status("running",
-                                       self.containers_api.get_containers_containerid,
-                                       node_id=self.node_id,
-                                       container_id=self.container_name))
+        self.assertEqual(response.headers['Location'], "/nodes/%s/containers/%s" % (self.node_id, self.container_name))
+        self.assertTrue(self.wait_for_container_status("running", self.containers_api.get_containers_containerid,
+                                                       node_id=self.node_id,
+                                                       container_id=self.container_name))
 
-        response = self.containers_api.get_containers_containerid(self.node_id , self.container_name)
+        response = self.containers_api.get_containers_containerid(self.node_id, self.container_name)
         self.assertEqual(response.status_code, 200)
         response_data = response.json()
         for key in response_data.keys():
@@ -100,7 +99,7 @@ class TestcontaineridAPI(TestcasesBase):
         self.lg.info('Make sure that it deleted ')
         response = self.containers_api.get_containers(self.node_id)
         containers_list = response.json()
-        self.assertFalse(any(container['id']==self.container_name for container in containers_list))
+        self.assertFalse(any(container['id'] == self.container_name for container in containers_list))
 
     def test003_get_container_details(self):
         """ GAT-003
@@ -115,7 +114,7 @@ class TestcontaineridAPI(TestcasesBase):
 
         """
         self.lg.info('Choose random container of list of running nodes')
-        container_id, container_name = self.get_random_container(self.node_id )
+        container_id, container_name = self.get_random_container(self.node_id)
         self.assertTrue(container_id)
 
         self.lg.info('Send get nodes/{nodeid}/containers/containerid api request.')
@@ -144,40 +143,35 @@ class TestcontaineridAPI(TestcasesBase):
 
         """
         self.lg.info('Create container ')
-        response = self.containers_api.post_containers(self.node_id , self.container_body)
+        response = self.containers_api.post_containers(self.node_id, self.container_body)
         self.assertEqual(response.status_code, 201)
-        self.createdcontainer.append({"node":self.node_id, "container":self.container_name})
-        container_id = self.wait_for_container_status("running",
-                                                      self.containers_api.get_containers_containerid,
+        self.createdcontainer.append({"node": self.node_id, "container": self.container_name})
+        container_id = self.wait_for_container_status("running", self.containers_api.get_containers_containerid,
                                                       node_id=self.node_id,
                                                       container_id=self.container_name)
         self.assertTrue(container_id)
         self.lg.info('post:/node/{nodeid}/containers/containerid/stop.')
 
-        response = self.containers_api.post_containers_containerid_stop(self.node_id , self.container_name)
+        response = self.containers_api.post_containers_containerid_stop(self.node_id, self.container_name)
         self.assertEqual(response.status_code, 204)
 
         self.lg.info('Check that container stoped.')
-        self.assertEqual(self.wait_for_container_status("halted",
-                                                       self.containers_api.get_containers_containerid,
-                                                       node_id=self.node_id,
-                                                       container_id=self.container_name),0)
+        self.assertEqual(self.wait_for_container_status("halted", self.containers_api.get_containers_containerid,
+                                                        node_id=self.node_id,
+                                                        container_id=self.container_name), 0)
 
-        time.sleep(10)
-        self.assertTrue(str(container_id) not in self.g8core.client.container.list().keys())
+        self.assertTrue(self.g8core.wait_on_container_update(container_id, 60, True))
 
         self.lg.info('post:/node/{nodeid}/containers/containerid/start.')
-        response = self.containers_api.post_containers_containerid_start(self.node_id , self.container_name)
+        response = self.containers_api.post_containers_containerid_start(self.node_id, self.container_name)
         self.assertEqual(response.status_code, 201)
 
         self.lg.info('Check that container running.')
-        container_id = self.wait_for_container_status("running",
-                                                      self.containers_api.get_containers_containerid,
+        container_id = self.wait_for_container_status("running", self.containers_api.get_containers_containerid,
                                                       node_id=self.node_id,
                                                       container_id=self.container_name)
         self.assertTrue(container_id)
-        time.sleep(10)
-        self.assertTrue(str(container_id) in self.g8core.client.container.list().keys())
+        self.assertTrue(self.g8core.wait_on_container_update(container_id, 60, False))
 
     def test005_get_running_jobs(self):
         """ GAT-005
@@ -192,25 +186,16 @@ class TestcontaineridAPI(TestcasesBase):
 
         """
         self.lg.info('Choose random container of list of running nodes')
-        container_id, container_name = self.get_random_container(self.node_id )
+        container_id, container_name = self.get_random_container(self.node_id)
 
         self.lg.info('Send get nodes/{nodeid}/containers/containerid/jobs api request.')
-        response = self.containers_api.get_containers_containerid_jobs(self.node_id , container_name)
+        response = self.containers_api.get_containers_containerid_jobs(self.node_id, container_name)
         self.assertEqual(response.status_code, 200)
 
         self.lg.info('Compare results with golden value.')
         running_jobs_list = response.json()
-        container = self.g8core.client.container.client(container_id)
-        container_data = container.job.list()
-        golden_values = []
+        golden_values = self.g8core.get_container_job_list(container_id)
 
-        # cannot compare directly as the job.list is considered a job and has a different id everytime is is called
-        for i, golden_value in enumerate(container_data[:]):
-            if golden_value.get('command', "") == 'job.list':
-                container_data.pop(i)
-                continue
-            golden_values.append((golden_value['cmd']['id'], golden_value['starttime']))
-        golden_values = set(golden_values)
         api_jobs = set([(job['id'], job['startTime'])for job in running_jobs_list])
         self.assertEqual(len(golden_values.difference(api_jobs)), 1)
 
@@ -228,25 +213,27 @@ class TestcontaineridAPI(TestcasesBase):
 
         """
         self.lg.info('Choose random container of list of running nodes')
-        container_id, container_name = self.get_random_container(self.node_id )
+        container_id, container_name = self.get_random_container(self.node_id)
 
         self.lg.info('Spawn multiple jobs.')
         for i in range(0, 3):
-            response = self.containers_api.post_containers_containerid_processes(self.node_id , container_name, self.process_body)
+            response = self.containers_api.post_containers_containerid_processes(self.node_id, container_name,
+                                                                                 self.process_body)
             self.assertEqual(response.status_code, 202)
+            job_id = response.headers['Location'].split('/')[6]
+            self.assertTrue(self.g8core.wait_on_container_job_update(container_id, job_id, 15, False))
 
         self.lg.info('Send delete nodes/{nodeid}/containers/containerid/jobs api request.')
-        response = self.containers_api.delete_containers_containerid_jobs(self.node_id , container_name)
+        response = self.containers_api.delete_containers_containerid_jobs(self.node_id, container_name)
         self.assertEqual(response.status_code, 204)
         time.sleep(5)
 
         self.lg.info('Check that all jobs in this container killed ')
-        response = self.containers_api.get_containers_containerid_jobs(self.node_id , container_name)
+        response = self.containers_api.get_containers_containerid_jobs(self.node_id, container_name)
         self.assertEqual(response.status_code, 200)
         jobs_list = response.json()
-        container = self.g8core.client.container.client(container_id)
         self.assertEqual(len(jobs_list), 1)
-        self.assertEqual(len(container.job.list()), 1)
+        self.assertEqual(len(self.g8core.get_container_job_list(container_id)), 1)
 
         self.lg.info('Compare results with golden value.')
 
@@ -264,21 +251,21 @@ class TestcontaineridAPI(TestcasesBase):
 
         """
         self.lg.info('Choose one random container of list of running nodes')
-        container_id, container_name = self.get_random_container(self.node_id )
+        container_id, container_name = self.get_random_container(self.node_id)
 
         self.lg.info(' spawn job in container ')
-        response = self.containers_api.post_containers_containerid_processes(self.node_id , container_name, self.process_body)
+        response = self.containers_api.post_containers_containerid_processes(self.node_id, container_name, 
+                                                                             self.process_body)
         self.assertEqual(response.status_code, 202)
-        time.sleep(10)
         job_id = response.headers['Location'].split('/')[6]
-
+        self.assertTrue(self.g8core.wait_on_container_job_update(container_id, job_id, 15, False))
 
         self.lg.info('Send get nodes/{nodeid}/containers/containerid/jobs/jobid api request.')
-        response = self.containers_api.get_containers_containerid_jobs_jobid(self.node_id , container_name, job_id)
+        response = self.containers_api.get_containers_containerid_jobs_jobid(self.node_id, container_name, job_id)
         self.assertEqual(response.status_code, 200)
         job_details = response.json()
 
-        #get result from python client
+        # get result from python client
         self.lg.info('Compare results with golden value.')
         container = self.g8core.client.container.client(container_id)
         golden_value = container.job.list(job_id)[0]
@@ -286,8 +273,9 @@ class TestcontaineridAPI(TestcasesBase):
         self.assertEqual(golden_value['cmd']['id'], job_details['id'])
         self.assertEqual(golden_value['starttime'], job_details['startTime'])
 
-        response = self.containers_api.delete_containers_containerid_jobs_jobid(self.node_id , container_name, job_id)
+        response = self.containers_api.delete_containers_containerid_jobs_jobid(self.node_id, container_name, job_id)
         self.assertEqual(response.status_code, 204)
+        self.assertTrue(self.g8core.wait_on_container_job_update(container_id, job_id, 15, True))
 
     def test008_post_signal_job_in_container_details(self):
         """ GAT-008
@@ -304,18 +292,19 @@ class TestcontaineridAPI(TestcasesBase):
         signal = random.randint(1, 30)
         body = {'signal': signal}
         self.lg.info('Choose one random container of list of running nodes')
-        container_id, container_name = self.get_random_container(self.node_id )
+        container_id, container_name = self.get_random_container(self.node_id)
 
         self.lg.info(' spawn job in container ')
-        response = self.containers_api.post_containers_containerid_processes(self.node_id , container_name, self.process_body)
+        response = self.containers_api.post_containers_containerid_processes(self.node_id, container_name, 
+                                                                             self.process_body)
         self.assertEqual(response.status_code, 202)
         job_id = response.headers['Location'].split('/')[6]
 
         self.lg.info('Send post  nodes/{nodeid}/containers/containerid/jobs/jobid api request.')
-        response = self.containers_api.post_containers_containerid_jobs_jobid(self.node_id , container_name, job_id, body)
+        response = self.containers_api.post_containers_containerid_jobs_jobid(self.node_id, container_name,
+                                                                              job_id, body)
         self.assertEqual(response.status_code, 204)
-        # needs to be compared to golden value
-        # TODO:
+
 
     def test009_kill_specific_job(self):
         """ GAT-009
@@ -330,17 +319,17 @@ class TestcontaineridAPI(TestcasesBase):
         #. Check that job delted from running jobs list.
         """
         self.lg.info('Choose one random container of list of running nodes')
-        container_id, container_name = self.get_random_container(self.node_id )
+        container_id, container_name = self.get_random_container(self.node_id)
 
         self.lg.info(' spawn job in container ')
-        response = self.containers_api.post_containers_containerid_processes(self.node_id, container_name, self.process_body)
+        response = self.containers_api.post_containers_containerid_processes(self.node_id, container_name,
+                                                                             self.process_body)
         self.assertEqual(response.status_code, 202)
         time.sleep(15)
         job_id = response.headers['Location'].split('/')[6]
 
-
         self.lg.info('Send delete  nodes/{nodeid}/containers/containerid/jobs/jobid api request.')
-        response = self.containers_api.delete_containers_containerid_jobs_jobid(self.node_id , container_name, job_id)
+        response = self.containers_api.delete_containers_containerid_jobs_jobid(self.node_id, container_name, job_id)
         self.assertEqual(response.status_code, 204)
 
         self.lg.info('Check that job delted from running jobs list.')
@@ -362,9 +351,9 @@ class TestcontaineridAPI(TestcasesBase):
 
         """
         self.lg.info('Choose one random container of list of running nodes')
-        _, container_name = self.get_random_container(self.node_id )
+        _, container_name = self.get_random_container(self.node_id)
         self.lg.info('Send post  nodes/{nodeid}/containers/containerid/ping api request.')
-        response = self.containers_api.post_containers_containerid_ping(self.node_id , container_name)
+        response = self.containers_api.post_containers_containerid_ping(self.node_id, container_name)
         self.assertEqual(response.status_code, 200)
 
     def test011_get_state_of_container(self):
@@ -380,10 +369,10 @@ class TestcontaineridAPI(TestcasesBase):
 
         """
         self.lg.info('Choose one random container of list of running nodes')
-        container_id, container_name = self.get_random_container(self.node_id )
+        container_id, container_name = self.get_random_container(self.node_id)
 
         self.lg.info('Send GET  nodes/{nodeid}/containers/containerid/state api request.')
-        response = self.containers_api.get_containers_containerid_state(self.node_id , container_name)
+        response = self.containers_api.get_containers_containerid_state(self.node_id, container_name)
         self.assertEqual(response.status_code, 200)
 
         self.lg.info(' Compare results with golden value.')
@@ -406,19 +395,20 @@ class TestcontaineridAPI(TestcasesBase):
 
         """
         self.lg.info('Choose one random container of list of running nodes')
-        container_id, container_name = self.get_random_container(self.node_id )
+        container_id, container_name = self.get_random_container(self.node_id)
 
         self.lg.info('Send post  nodes/{nodeid}/containers/containerid/state api request.')
-        response = self.containers_api.get_containers_containerid_info(self.node_id , container_name)
+        response = self.containers_api.get_containers_containerid_info(self.node_id, container_name)
         self.assertEqual(response.status_code, 200)
 
         self.lg.info(' Compare results with golden value.')
         container_info = response.json()
         container = self.g8core.client.container.client(container_id)
         golden_value = container.info.os()
-        self.assertAlmostEqual(golden_value.pop('uptime'), container_info.pop('uptime'), delta=20)
-        self.assertEqual(golden_value, container_info)
-
+        self.assertAlmostEqual(golden_value.pop('uptime'), container_info.pop('uptime'), delta=50)
+        for key in container_info:
+            if key not in golden_value:
+                self.assertEqual(golden_value[key], container_info[key])
 
     def test013_get_running_processes_in_container(self):
         """ GAT-013
@@ -433,10 +423,10 @@ class TestcontaineridAPI(TestcasesBase):
 
         """
         self.lg.info('Choose one random container of list of running nodes')
-        container_id, container_name = self.get_random_container(self.node_id )
+        container_id, container_name = self.get_random_container(self.node_id)
 
         self.lg.info('Send post  nodes/{nodeid}/containers/containerid/state api request.')
-        response = self.containers_api.get_containers_containerid_processes(self.node_id , container_name)
+        response = self.containers_api.get_containers_containerid_processes(self.node_id, container_name)
         self.assertEqual(response.status_code, 200)
         processes = response.json()
         container = self.g8core.client.container.client(container_id)
@@ -451,9 +441,9 @@ class TestcontaineridAPI(TestcasesBase):
         for i, p in enumerate(processes):
             self.assertEqual(p['cmdline'], golden_values[i]['cmdline'])
             self.assertEqual(p['pid'], golden_values[i]['pid'])
-            self.assertEqual(p['rss'], golden_values[i]['rss'])
+            self.assertAlmostEqual(p['rss'], golden_values[i]['rss'], delta=1000000)
             self.assertEqual(p['swap'], golden_values[i]['swap'])
-            self.assertEqual(p['vms'], golden_values[i]['vms'])
+            self.assertAlmostEqual(p['vms'], golden_values[i]['vms'], delta=10000000)
 
     def test014_post_create_new_processes_in_container(self):
         """ GAT-014
@@ -470,15 +460,17 @@ class TestcontaineridAPI(TestcasesBase):
         """
         process_name = self.process_body['name']
         self.lg.info('Choose one random container of list of running nodes')
-        container_id, container_name = self.get_random_container(self.node_id )
+        container_id, container_name = self.get_random_container(self.node_id)
 
         self.lg.info('Send post  nodes/{nodeid}/containers/containerid/processes api request.')
-        response = self.containers_api.post_containers_containerid_processes(self.node_id , container_name, self.process_body)
+        response = self.containers_api.post_containers_containerid_processes(self.node_id, container_name,
+                                                                             self.process_body)
         self.assertEqual(response.status_code, 202)
-        time.sleep(5)
+        job_id = response.headers['Location'].split('/')[6]
+        self.assertTrue(self.g8core.wait_on_container_job_update(container_id, job_id, 15, False))
 
         self.lg.info('Check that created process added to process list.')
-        response = self.containers_api.get_containers_containerid_processes(self.node_id , container_name)
+        response = self.containers_api.get_containers_containerid_processes(self.node_id, container_name)
         self.assertEqual(response.status_code, 200)
         processes = [p['cmdline'] for p in response.json()]
         self.assertIn(process_name, processes)
@@ -502,13 +494,16 @@ class TestcontaineridAPI(TestcasesBase):
 
         """
         self.lg.info('Choose one random container of list of running nodes')
-        container_id, container_name = self.get_random_container(self.node_id )
+        container_id, container_name = self.get_random_container(self.node_id)
 
         self.lg.info('Choose one random process of list of processes')
-        response = self.containers_api.post_containers_containerid_processes(self.node_id , container_name, self.process_body)
+        response = self.containers_api.post_containers_containerid_processes(self.node_id, container_name,
+                                                                             self.process_body)
         self.assertEqual(response.status_code, 202)
-        time.sleep(5)
-        response = self.containers_api.get_containers_containerid_processes(self.node_id , container_name)
+        job_id = response.headers['Location'].split('/')[6]
+        self.assertTrue(self.g8core.wait_on_container_job_update(container_id, job_id, 15, False))
+
+        response = self.containers_api.get_containers_containerid_processes(self.node_id, container_name)
         self.assertEqual(response.status_code, 200)
         processes_list = response.json()
         process_id = None
@@ -517,7 +512,7 @@ class TestcontaineridAPI(TestcasesBase):
             process_id = processes_list[random_number]['pid']
 
         self.lg.info('Send get  nodes/{nodeid}/containers/containerid/processes/processid api request.')
-        response = self.containers_api.get_containers_containerid_processes_processid(self.node_id , container_name,
+        response = self.containers_api.get_containers_containerid_processes_processid(self.node_id, container_name,
                                                                                       str(process_id))
         self.assertEqual(response.status_code, 200)
         process = response.json()
@@ -547,13 +542,14 @@ class TestcontaineridAPI(TestcasesBase):
 
         """
         self.lg.info('Choose one random container of list of running nodes')
-        container_id, container_name = self.get_random_container(self.node_id )
+        container_id, container_name = self.get_random_container(self.node_id)
 
         self.lg.info('Choose one random process of list of processes')
-        response = self.containers_api.post_containers_containerid_processes(self.node_id , container_name, self.process_body)
+        response = self.containers_api.post_containers_containerid_processes(self.node_id, container_name,
+                                                                             self.process_body)
         self.assertEqual(response.status_code, 202)
         time.sleep(10)
-        response = self.containers_api.get_containers_containerid_processes(self.node_id , container_name)
+        response = self.containers_api.get_containers_containerid_processes(self.node_id, container_name)
         self.assertEqual(response.status_code, 200)
         processes_list = response.json()
         process_id = None
@@ -561,9 +557,8 @@ class TestcontaineridAPI(TestcasesBase):
             random_number = random.randint(0, len(processes_list)-1)
             process_id = processes_list[random_number]['pid']
 
-
         self.lg.info('Send delete  nodes/{nodeid}/containers/containerid/processes/processid api request.')
-        response = self.containers_api.delete_containers_containerid_processes_processid(self.node_id , container_name,
+        response = self.containers_api.delete_containers_containerid_processes_processid(self.node_id, container_name,
                                                                                          str(process_id))
         self.assertEqual(response.status_code, 204)
 
@@ -597,11 +592,12 @@ class TestcontaineridAPI(TestcasesBase):
         self.lg.info('Choose one random container of list of running nodes')
         container_id, container_name = self.get_random_container(self.node_id)
 
-        response = self.containers_api.post_containers_containerid_processes(self.node_id , container_name, self.process_body)
+        response = self.containers_api.post_containers_containerid_processes(self.node_id, container_name, 
+                                                                             self.process_body)
         self.assertEqual(response.status_code, 202)
 
         self.lg.info('Choose one random process of list of processes')
-        response = self.containers_api.get_containers_containerid_processes(self.node_id , container_name)
+        response = self.containers_api.get_containers_containerid_processes(self.node_id, container_name)
         self.assertEqual(response.status_code, 200)
         processes_list = response.json()
         process_id = None
@@ -610,7 +606,6 @@ class TestcontaineridAPI(TestcasesBase):
             process_id = processes_list[random_number]['pid']
 
         self.lg.info('Send post  nodes/{nodeid}/containers/containerid/processes/processid api request.')
-        response = self.containers_api.post_containers_containerid_processes_processid(self.node_id , container_name,
+        response = self.containers_api.post_containers_containerid_processes_processid(self.node_id, container_name,
                                                                                        str(process_id), body)
         self.assertEqual(response.status_code, 204)
-        # TODO: compare to golden value
