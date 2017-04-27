@@ -241,6 +241,7 @@ class ExtendedNetworking(BaseTest):
 
         for container_client in [client_c1, client_c2]:
             self.lg('Check if each container (C1), (C2) got an ip address, should succeed')
+            time.sleep(20)
             nics = container_client.info.nic()
             nic = [x for x in nics if x['name'] == 'eth0']
             self.assertNotEqual(nic, [])
