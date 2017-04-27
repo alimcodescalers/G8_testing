@@ -270,9 +270,8 @@ class ExtendedNetworking(BaseTest):
         **Test Scenario:**
         #. Create bridge (B1) with nat = False/True, should succeed
         #. Create new container and attach bridge (B1) to it, should succeed
-        #. Remove container's default network interface eth0, should succeed
-        #. Add ip to eth1 and set it up, should succeed
-        #. set network interface eth1 as default route, should succeed
+        #. Add ip to eth0 and set it up, should succeed
+        #. set network interface eth0 as default route, should succeed
         #. Try to ping 8.8.8.8 when NAT is enabled, should succeed
         #. Try to ping 8.8.8.8 when NAT is disabled, should fail
         #. Delete bridge (B2), should succeed
@@ -296,20 +295,15 @@ class ExtendedNetworking(BaseTest):
             container_client = self.client.container.client(cid)
             time.sleep(2)
 
-            self.lg('Remove default network interface eth0, should succeed')
-            response = container_client.bash('ip l s eth0 down').get()
+            self.lg('Add ip to eth0 and set it up')
+            response = container_client.system('ip a a 10.1.0.2/24 dev eth0').get()
             self.assertEqual(response.state, 'SUCCESS', response.stderr)
-            time.sleep(2)
-
-            self.lg('Add ip to eth1 and set it up')
-            response = container_client.system('ip a a 10.1.0.2/24 dev eth1').get()
-            self.assertEqual(response.state, 'SUCCESS', response.stderr)
-            response = container_client.bash('ip l s eth1 up').get()
+            response = container_client.bash('ip l s eth0 up').get()
             self.assertEqual(response.state, 'SUCCESS', response.stderr)
             time.sleep(1)
 
-            self.lg('set network interface eth1 as default route, should succeed')
-            response = container_client.bash('ip route add default dev eth1 via 10.1.0.1').get()
+            self.lg('set network interface eth0 as default route, should succeed')
+            response = container_client.bash('ip route add default dev eth0 via 10.1.0.1').get()
             self.assertEqual(response.state, 'SUCCESS', response.stderr)
             time.sleep(2)
 
@@ -318,6 +312,7 @@ class ExtendedNetworking(BaseTest):
                 response = container_client.bash('ping -w3 8.8.8.8', response.stdout).get()
                 self.assertEqual(response.state, 'SUCCESS', response.stdout)
             else:
+                time.sleep(20)
                 self.lg('Try to ping 8.8.8.8 when NAT is disabled, should fail')
                 response = container_client.bash('ping -w3 8.8.8.8', response.stdout).get()
                 self.assertEqual(response.state, 'ERROR', response.stdout)
