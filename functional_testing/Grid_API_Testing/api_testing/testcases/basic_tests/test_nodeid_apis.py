@@ -1,7 +1,6 @@
 import random
 from api_testing.testcases.testcases_base import TestcasesBase
 from api_testing.grid_apis.apis.nodes_apis import NodesAPI
-from api_testing.utiles.nodes_info import nodes
 from api_testing.python_client.client import Client
 import unittest
 import time
@@ -12,9 +11,14 @@ class TestNodeidAPI(TestcasesBase):
         self.nodes_api = NodesAPI()
 
     def setUp(self):
+
+        self.lg.info('Choose one random node of list of running nodes.')
         self.node_id = self.get_random_node()
+        if self.node_id is None:
+            self.lg.info(' No node found')
+            return
         self.node = {}
-        for node in nodes:
+        for node in self.nodes:
             if node['id'] == self.node_id:
                 self.g8os_ip = node['ip']
                 self.node = node
@@ -30,17 +34,19 @@ class TestNodeidAPI(TestcasesBase):
         #. Send get nodes api request.
         #. Compare results with golden value.
         """
-        self.lg.info('sendo get nodes api request ')
+        self.lg.info('send get nodes api request ')
         response = self.nodes_api.get_nodes()
         self.assertEqual(response.status_code, 200)
 
         self.lg.info('Compare results with golden value.')
         Nodes_result = response.json()
-        self.assertEqual(len(Nodes_result), len(nodes))
-        for i, node in enumerate(Nodes_result):
+        self.assertEqual(len(Nodes_result), len(self.nodes))
+        for node in Nodes_result:
+            node_info = [item for item in self.nodes if item["id"] == node["id"]]
+            self.assertEqual(len(node_info),1)
             for key in node.keys():
-                if key in nodes[i].keys():
-                    self.assertEqual(node[key], nodes[i][key])
+                if key in node_info[0].keys():
+                    self.assertEqual(node[key], node_info[0][key])
 
     def test002_get_nodes_details(self):
         """ GAT-002
@@ -52,7 +58,6 @@ class TestNodeidAPI(TestcasesBase):
         #. Send get nodes/{nodeid} api request.
         #. Compare results with golden value.
         """
-
         self.lg.info(' Send get nodes/{nodeid} api request.')
         response = self.nodes_api.get_nodes_nodeid(node_id=self.node_id)
         self.assertEqual(response.status_code, 200)
@@ -127,7 +132,7 @@ class TestNodeidAPI(TestcasesBase):
 
         self.lg.info('Choose one of these jobs to list its details.')
         jobs_list = response.json()
-        job_id = jobs_list[random.randint(0, len(jobs_list))]['id']
+        job_id = jobs_list[random.randint(0, (len(jobs_list)-1))]['id']
 
         self.lg.info('Send get /nodes/{nodeid}/jobs/{jobid} api request.')
         response = self.nodes_api.get_nodes_nodeid_jobs_jobid(node_id=self.node_id, job_id=job_id)
@@ -172,24 +177,14 @@ class TestNodeidAPI(TestcasesBase):
         **Test Scenario:**
 
         #. Choose one random node of list of running nodes.
-        #. post /nodes/{nodeid}/ping api.
-        #. check response status code.
-        #. check that you can get node, compare result with golden value.
+        #. Post /nodes/{nodeid}/ping api.
+        #. Check response status code.
         """
         self.lg.info('post /nodes/{nodeid}/ping api.')
         response = self.nodes_api.post_nodes_nodeid_ping(node_id=self.node_id)
 
         self.lg.info('check response status code.')
         self.assertEqual(response.status_code, 200)
-
-        self.lg.info('check that you can get node, compare result with golden value. ')
-        response = self.nodes_api.get_nodes_nodeid(node_id=self.node_id)
-        self.assertEqual(response.status_code, 200)
-        self.lg.info('Compare results with golden value.')
-        node_details = response.json()
-        for key in self.node.keys():
-            if key in node_details.keys():
-                self.assertEqual(self.node[key], node_details[key])
 
     def test008_get_node_state(self):
         """ GAT-008
@@ -305,7 +300,7 @@ class TestNodeidAPI(TestcasesBase):
             if key in result.keys():
                 self.assertAlmostEqual(memory_info[key], result[key],
                                        msg="different keys%s"%key,
-                                        delta=500000)
+                                        delta=600000)
 
     def test013_get_nics_details(self):
         """ GAT-013
@@ -322,12 +317,17 @@ class TestNodeidAPI(TestcasesBase):
         self.assertEqual(response.status_code, 200)
 
         self.lg.info('compare response data with the golden values.')
-        result = self.python_client.get_nodes_nics()
+        golden_result = self.python_client.get_nodes_nics()
         nics_info = response.json()
-        for i, nic_info in enumerate(nics_info):
-            for key in nic_info.keys():
-                if key in result[i].keys():
-                    self.assertEqual(nic_info[key], result[i][key],'different value for key %s'%key)
+        self.assertEqual(len(nics_info), len(golden_result))
+        for nic_info in nics_info:
+            for nic_result in golden_result :
+                if nic_result['name']== nic_info['name']:
+                    for key in nic_info.keys():
+                        if key in nic_result.keys():
+                            self.assertEqual(nic_info[key], nic_result[key],
+                                             'different value for key %s'%key)
+                            break
 
     def test014_get_os_info_details(self):
         """ GAT-014
