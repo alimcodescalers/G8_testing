@@ -90,3 +90,19 @@ class Client:
             item['opts'] = line[5][1:-1]
             diskInfo.append(item)
         return diskInfo
+
+    
+    def getFreeDisks(self):
+        cmd = 'lsblk --noheadings --raw -o NAME,TYPE,MOUNTPOINT'
+        freeDisks = []
+        response = self.client.bash(cmd).get().stdout
+        lines = response.splitlines()
+        for line in lines:
+            data = line.split()
+            name = data[0]
+            types = data[1]
+            if types == 'part' and len(data) == 2:
+                freeDisks.append(('/dev/{}'.format(name[:3])))
+
+        return freeDisks
+        
