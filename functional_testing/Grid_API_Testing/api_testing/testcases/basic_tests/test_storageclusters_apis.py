@@ -1,7 +1,6 @@
 from random import randint
 from api_testing.testcases.testcases_base import TestcasesBase
 from api_testing.grid_apis.apis.storageclusters_apis import Storageclusters
-import unittest
 
 class TestStorageclustersAPI(TestcasesBase):
     def __init__(self, *args, **kwargs):
@@ -84,7 +83,6 @@ class TestStorageclustersAPI(TestcasesBase):
         self.assertEqual(response.status_code, 200)
         self.assertIn(label, response.json())
 
-        #bug 96
         self.lg.info('Kill storage cluster (SC1), should succeed with 204')
         response = self.storageclusters_api.delete_storageclusters_label(label)
         self.assertEqual(response.status_code, 204)

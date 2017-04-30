@@ -101,7 +101,7 @@ class Client:
             data = line.split()
             name = data[0]
             types = data[1]
-            if types == 'part' and len(data) == 2:
+            if types in ['disk', 'part'] and len(data) == 2:
                 freeDisks.append(('/dev/{}'.format(name[:3])))
 
         return freeDisks
