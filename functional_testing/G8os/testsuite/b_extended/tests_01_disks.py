@@ -224,7 +224,7 @@ class DisksTests(BaseTest):
         self.destroy_btrfs()
 
         self.lg('{} ENDED'.format(self._testID))
-
+    @unittest.skip('task: https://github.com/gig-projects/org_quality/issues/631')
     def test004_disk_get_info(self):
         """ g8os-020
 
