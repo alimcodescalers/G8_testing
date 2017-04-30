@@ -1,16 +1,29 @@
 import random
 from api_testing.testcases.testcases_base import TestcasesBase
 from api_testing.grid_apis.apis.nodes_apis import NodesAPI
-
+from api_testing.python_client.client import Client
+import unittest
+import time
 
 class TestNodeidAPI(TestcasesBase):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.nodes_api = NodesAPI()
-        self.base_test = TestcasesBase()
 
     def setUp(self):
-        self.g8os_ip = self.config['g8os_ip']
+
+        self.lg.info('Choose one random node of list of running nodes.')
+        self.node_id = self.get_random_node()
+        if self.node_id is None:
+            self.lg.info(' No node found')
+            return
+        self.node = {}
+        for node in self.nodes:
+            if node['id'] == self.node_id:
+                self.g8os_ip = node['ip']
+                self.node = node
+                break
+        self.python_client = Client(self.g8os_ip)
 
     def test001_list_nodes(self):
         """ GAT-001
@@ -21,21 +34,19 @@ class TestNodeidAPI(TestcasesBase):
         #. Send get nodes api request.
         #. Compare results with golden value.
         """
-        self.lg.info('get nodes api request ')
+        self.lg.info('send get nodes api request ')
         response = self.nodes_api.get_nodes()
-
-        self.lg.info('Check the status code')
         self.assertEqual(response.status_code, 200)
 
         self.lg.info('Compare results with golden value.')
-        data = response.json()
-        self.assertEqual(len(data), len(self.utiles.nodes_info))
-        nodes_id = []
-        for node in self.utiles.nodes_info:
-            nodes_id.append(node['id'])
-
-        for node in data:
-            self.assertIn(node['id'], nodes_id)
+        Nodes_result = response.json()
+        self.assertEqual(len(Nodes_result), len(self.nodes))
+        for node in Nodes_result:
+            node_info = [item for item in self.nodes if item["id"] == node["id"]]
+            self.assertEqual(len(node_info),1)
+            for key in node.keys():
+                if key in node_info[0].keys():
+                    self.assertEqual(node[key], node_info[0][key])
 
     def test002_get_nodes_details(self):
         """ GAT-002
@@ -47,13 +58,15 @@ class TestNodeidAPI(TestcasesBase):
         #. Send get nodes/{nodeid} api request.
         #. Compare results with golden value.
         """
-
-        self.lg.info('Choose one random node of list of running nodes.')
-        node_id = self.base_test.get_random_node()
         self.lg.info(' Send get nodes/{nodeid} api request.')
-        response = self.nodes_api.get_nodes_nodeid(node_id=node_id)
+        response = self.nodes_api.get_nodes_nodeid(node_id=self.node_id)
         self.assertEqual(response.status_code, 200)
+
         self.lg.info('Compare results with golden value.')
+        node_details = response.json()
+        for key in self.node.keys():
+            if key in node_details.keys():
+                self.assertEqual(self.node[key], node_details[key])
 
     def test003_list_jobs(self):
         """ GAT-003
@@ -65,14 +78,21 @@ class TestNodeidAPI(TestcasesBase):
         #. Send get /nodes/{nodeid}/jobs api request.
         #. Compare results with golden value.
         """
-        self.lg.info('Choose one random node of list of running nodes.')
-        node_id=self.base_test.get_random_node()
-
         self.lg.info('Send get /nodes/{nodeid}/jobs api request.')
-        response = self.nodes_api.get_nodes_nodeid_jobs(node_id=node_id)
+        response = self.nodes_api.get_nodes_nodeid_jobs(node_id=self.node_id)
         self.assertEqual(response.status_code, 200)
-        self.lg.info('Compare results with golden value.')
 
+        self.lg.info('Compare results with golden value.')
+        jobs = response.json()
+        client_jobs = self.python_client.get_jobs_list()
+        self.assertEqual(len(jobs), len(client_jobs))
+        for job in jobs:
+            for client_job in client_jobs:
+                if job['id'] == client_job['id']:
+                    self.assertEqual(job['startTime'], client_job['starttime'])
+                    break
+
+    @unittest.skip("https://github.com/g8os/core0/issues/102")
     def test004_kill_jobs(self):
         """ GAT-004
         *DELETE:/nodes/{nodeid}/jobs *
@@ -84,13 +104,12 @@ class TestNodeidAPI(TestcasesBase):
         #. Check that all jobs has been killed.
         """
 
-        self.lg.info('Choose one random node of list of running nodes.')
-        node_id = self.base_test.get_random_node()
         self.lg.info(' Send get /nodes/{nodeid}/jobs api request.')
-        status_code = self.nodes_api.delete_nodes_nodeid_jobs(node_id=node_id)
+        status_code = self.nodes_api.delete_nodes_nodeid_jobs(node_id=self.node_id)
         self.assertEqual(status_code, 204)
+
         self.lg.info('Check that all jobs has been killed.')
-        response = response.self.nodes_api.get_nodes_nodeid_jobs(node_id=node_id)
+        response = self.nodes_api.get_nodes_nodeid_jobs(node_id=self.node_id)
         jobs_list = response.json()
         for job in jobs_list:
             self.assertTrue(job['state'], 'KILLED')
@@ -107,27 +126,27 @@ class TestNodeidAPI(TestcasesBase):
         #. Send get /nodes/{nodeid}/jobs/{jobid} api request.
         #. Compare response with the golden values.
         """
-
-        self.lg.info('Choose one random node of list of running nodes.')
-        node_id = self.base_test.get_random_node()
-
         self.lg.info('Get list of jobs of this node .')
-        response = self.nodes_api.get_nodes_nodeid_jobs(node_id=node_id)
+        response = self.nodes_api.get_nodes_nodeid_jobs(node_id=self.node_id)
         self.assertEqual(response.status_code, 200)
 
         self.lg.info('Choose one of these jobs to list its details.')
         jobs_list = response.json()
-        job_id = jobs_list[random.randint(0, len(jobs_list))]['id']
+        job_id = jobs_list[random.randint(0, (len(jobs_list)-1))]['id']
 
         self.lg.info('Send get /nodes/{nodeid}/jobs/{jobid} api request.')
-        response = self.nodes_api.get_nodes_nodeid_jobs_jobid(node_id=node_id, job_id=job_id)
+        response = self.nodes_api.get_nodes_nodeid_jobs_jobid(node_id=self.node_id, job_id=job_id)
         self.assertEqual(response.status_code, 200)
 
         self.lg.info('Compare response with the golden values.')
-        ##result ->from python client should be in form of dectionary
-        # Properties= response.json()
-        # for key in Properties.keys():
-        #     self.assertEqual(Properties['key'],result[key])
+        job_details = response.json()
+        client_jobs = self.python_client.get_jobs_list()
+        for client_job in client_jobs:
+            if client_job['id'] == job_id:
+                for key in job_details.keys():
+                    if key in client_job.keys():
+                        self.assertEqual(job_details[key], client_job[key])
+                break
 
     def test006_kill_specific_job(self):
         """ GAT-006
@@ -135,32 +154,21 @@ class TestNodeidAPI(TestcasesBase):
 
         **Test Scenario:**
 
-        #. Choose one random node of list of running nodes.
-        #. get list of jobs.
-        #. choose one of these jobs to list its details.
+        #. Start new job .
         #. delete /nodes/{nodeid}/jobs/{jobid} api.
         #. verify this job has been killed.
         """
-        self.lg.info('Choose one random node of list of running nodes.')
-        node_id = self.base_test.get_random_node()
-
-        self.lg.info('get list of jobs.')
-        response = self.nodes_api.get_nodes_nodeid_jobs(node_id=node_id)
-        self.assertEqual(response.status_code, 200)
-
-        job_list =response.json()
-
-        self.lg.info('choose one of these jobs to list its details.')
-        job_id = job_list[random.randint(0, len(job_list)-1)]['id']
+        self.lg.info('start new job ')
+        job_id = self.python_client.start_job()
+        self.assertTrue(job_id)
 
         self.lg.info(' delete /nodes/{nodeid}/jobs/{jobid} api.')
-        response = self.nodes_api.get_nodes_nodeid_jobs_jobid(node_id=node_id, job_id=job_id)
+        response = self.nodes_api.delete_nodes_nodeid_jobs_jobid(node_id=self.node_id, job_id=job_id)
         self.assertEqual(response.status_code, 204)
 
-        self.lg.info(' verify this job has been killed.')
-        response = self.nodes_api.get_nodes_nodeid_job_jobid(node_id=node_id,job_id=job_id)
-        content = response.json()
-        self.assertEqual(content['state'],'KILLED')
+        self.lg.info("verify this job has been killed.")
+        jobs = self.python_client.get_jobs_list()
+        self.assertFalse(any(job['id'] == job_id for job in jobs))
 
     def test007_ping_specific_node(self):
         """ GAT-007
@@ -169,15 +177,11 @@ class TestNodeidAPI(TestcasesBase):
         **Test Scenario:**
 
         #. Choose one random node of list of running nodes.
-        #. post /nodes/{nodeid}/ping api.
-        #. check response status code.
+        #. Post /nodes/{nodeid}/ping api.
+        #. Check response status code.
         """
-
-        self.lg.info('Choose one random node of list of running nodes.')
-        node_id = self.base_test.get_random_node()
-
         self.lg.info('post /nodes/{nodeid}/ping api.')
-        response = self.nodes_api.post_nodes_nodeid_ping(node_id=node_id)
+        response = self.nodes_api.post_nodes_nodeid_ping(node_id=self.node_id)
 
         self.lg.info('check response status code.')
         self.assertEqual(response.status_code, 200)
@@ -192,21 +196,24 @@ class TestNodeidAPI(TestcasesBase):
         #. Get /nodes/{nodeid}/state api.
         #. Compare response data with the golden values.
         """
-
-        self.lg.info('Choose one random node from list of running nodes.')
-        node_id = self.base_test.get_random_node()
-
         self.lg.info(' get /nodes/{nodeid}/state api.')
-        response = self.nodes_api.get_nodes_nodeid_state(node_id=node_id)
+        response = self.nodes_api.get_nodes_nodeid_state(node_id=self.node_id)
         self.assertEqual(response.status_code, 200)
 
         self.lg.info('Compare response data with the golden values.')
-        ##result ->from python client should be in form of dectionary of cpu,rss,vms and swap.
-        # Properties=response
-        # for key in Properties.keys():
-        #     self.assertEqual(Properties[key],result[key])
+        client_state = self.python_client.get_node_state()
+        node_state = response.json()
+        for key in node_state.keys():
+            if key in client_state.keys():
+                if key == "rss":
+                    self.assertAlmostEqual(node_state[key],
+                                           client_state[key],
+                                           delta=1000000)
+                else:
+                    self.assertEqual(node_state[key],
+                                     client_state[key])
 
-
+    @unittest.skip("https://github.com/g8os/grid/issues/107")
     def test009_reboot_node(self):
         """ GAT-009
         *POST:/nodes/{nodeid}/reboot *
@@ -216,19 +223,17 @@ class TestNodeidAPI(TestcasesBase):
         #. Choose one random node of list of running nodes.
         #. post /nodes/{nodeid}/reboot api.
         #. verify that this node has been rebooted.
+        #. Ping node should succeed
         """
-        self.lg.info('Choose one random node from list of running nodes.')
-        node_id = self.base_test.get_random_node()
-
         self.lg.info('post /nodes/{nodeid}/reboot api.')
-
-        response = self.nodes_api.post_nodes_nodeid_reboot(node_id=node_id)
+        response = self.nodes_api.post_nodes_nodeid_reboot(node_id=self.node_id)
         self.assertEqual(response.status_code, 204)
 
         self.lg.info('verify that this node has been rebooted.')
         content = response.json()
-        self.assertEqual(content,'Machine reboot signal sent successfully')
+        self.assertEqual(content, 'Machine reboot signal sent successfully')
 
+    @unittest.skip('https://github.com/g8os/core0/issues/168')
     def test010_get_cpus_details(self):
         """ GAT-010
         *GET:/nodes/{nodeid}/cpus *
@@ -239,20 +244,17 @@ class TestNodeidAPI(TestcasesBase):
         #. get /nodes/{nodeid}/cpus api.
         #. compare response data with the golden values.
         """
-        self.lg.info('Choose one random node from list of running nodes.')
-        node_id = self.base_test.get_random_node()
-
         self.lg.info('get /nodes/{nodeid}/cpus api.')
-        response = self.nodes_api.get_nodes_nodeid_cpu(node_id=node_id)
+        response = self.nodes_api.get_nodes_nodeid_cpus(node_id=self.node_id)
         self.assertEqual(response.status_code, 200)
 
         self.lg.info('compare response data with the golden values.')
-        ##result ->from python client .
-        # cpus_info=response
-        # for cpu_info,i in enumerate(cpus_info):
-        #     for key in cpu_info.keys:
-        #         self.assertEqual(cpu_info[key],result[i][key])
-
+        result = self.python_client.get_nodes_cpus()
+        cpus_info = response.json()
+        for i, cpu_info in enumerate(cpus_info):
+            for key in cpu_info.keys():
+                if key != 'cores':
+                    self.assertEqual(cpu_info[key], result[i][key], "different cpu info ")
 
     def test011_get_disks_details(self):
         """ GAT-011
@@ -264,20 +266,18 @@ class TestNodeidAPI(TestcasesBase):
         #. Get /nodes/{nodeid}/disks api.
         #. Compare response data with the golden values.
         """
-        self.lg.info('Choose one random node from list of running nodes.')
-        node_id = self.base_test.get_random_node()
-
         self.lg.info('get /nodes/{nodeid}/disks api.')
-        response = self.nodes_api.get_nodes_nodeid_disk(node_id=node_id)
+        response = self.nodes_api.get_nodes_nodeid_disks(node_id=self.node_id)
         self.assertEqual(response.status_code, 200)
-
+        disks_info=response.json()
         self.lg.info('compare response data with the golden values.')
-        ##result ->from python client .
-        # disks_info=response
-        # for disk_info,i in enumerate(disks_info):
-        #     for key in disk_info.keys:
-        #         self.assertEqual(disk_info[key],result[i][key])
-
+        result = self.python_client.get_nodes_disks()
+        for disk_info in disks_info:
+            for disk in result:
+                if disk['device'] == disk_info['device']:
+                    for key in disk.keys():
+                        self.assertEqual(disk_info[key], disk[key], "different value for key%s"%key)
+                    break
 
     def test012_get_memmory_details(self):
         """ GAT-012
@@ -289,19 +289,18 @@ class TestNodeidAPI(TestcasesBase):
         #. get /nodes/{nodeid}/mem api.
         #. compare response data with the golden values.
         """
-
-        self.lg.info('Choose one random node from list of running nodes.')
-        node_id = self.base_test.get_random_node()
-
         self.lg.info('get /nodes/{nodeid}/mem api.')
-        response = self.nodes_api.get_nodes_nodeid_mem(node_id=node_id)
+        response = self.nodes_api.get_nodes_nodeid_mem(node_id=self.node_id)
         self.assertEqual(response.status_code, 200)
 
         self.lg.info('compare response data with the golden values.')
-        ##result ->from python client in form of dectionary .
-        # memory_info=response
-        # for key in memory_info.keys:
-        #     self.assertEqual(memory_info[key],result[key])
+        result = self.python_client.get_nodes_mem()
+        memory_info = response.json()
+        for key in memory_info.keys():
+            if key in result.keys():
+                self.assertAlmostEqual(memory_info[key], result[key],
+                                       msg="different keys%s"%key,
+                                        delta=600000)
 
     def test013_get_nics_details(self):
         """ GAT-013
@@ -313,21 +312,22 @@ class TestNodeidAPI(TestcasesBase):
         #. Get /nodes/{nodeid}/nics api.
         #. compare response data with the golden values.
         """
-
-        self.lg.info('Choose one random node from list of running nodes.')
-        node_id = self.base_test.get_random_node()
-
         self.lg.info('get /nodes/{nodeid}/nics api.')
-        response = self.nodes_api.get_nodes_nodeid_nic(node_id=node_id)
+        response = self.nodes_api.get_nodes_nodeid_nics(node_id=self.node_id)
         self.assertEqual(response.status_code, 200)
 
         self.lg.info('compare response data with the golden values.')
-        ##result ->from python client in form of array of dectionaries .
-        # nics_info=response
-        # for nic_info,i in enumerate(nics_info):
-        #     for key in nic_info.keys:
-        #         self.assertEqual(nic_info[key],result[i][key])
-
+        golden_result = self.python_client.get_nodes_nics()
+        nics_info = response.json()
+        self.assertEqual(len(nics_info), len(golden_result))
+        for nic_info in nics_info:
+            for nic_result in golden_result :
+                if nic_result['name']== nic_info['name']:
+                    for key in nic_info.keys():
+                        if key in nic_result.keys():
+                            self.assertEqual(nic_info[key], nic_result[key],
+                                             'different value for key %s'%key)
+                            break
 
     def test014_get_os_info_details(self):
         """ GAT-014
@@ -339,18 +339,16 @@ class TestNodeidAPI(TestcasesBase):
         #. Get /nodes/{nodeid}/info api.
         #. ompare response data with the golden values.
         """
-        self.lg.info('Choose one random node from list of running nodes.')
-        node_id = self.base_test.get_random_node()
-
         self.lg.info('Get /nodes/{nodeid}/info api.')
-        response = self.nodes_api.get_nodes_nodeid_info(node_id=node_id)
+        response = self.nodes_api.get_nodes_nodeid_info(node_id=self.node_id)
         self.assertEqual(response.status_code, 200)
 
         self.lg.info('compare response data with the golden values.')
-        ##result ->from python client in form of dectionary .
-        # OS_info=response
-        # for key in OS_info.keys:
-        #     self.assertEqual(OS_info[key],result[key])
+        result = self.python_client.get_nodes_info()
+        node_info = response.json()
+        for key in node_info.keys():
+            if key in result.keys():
+                self.assertEqual(node_info[key],result[key])
 
     def test015_list_processes(self):
         """ GAT-015
@@ -362,24 +360,34 @@ class TestNodeidAPI(TestcasesBase):
         #. get /nodes/{nodeid}/processes api.
         #. compare response data with the golden values.
         """
-
-        self.lg.info('Choose one random node from list of running nodes.')
-        node_id = self.base_test.get_random_node()
-
         self.lg.info('Get /nodes/{nodeid}/process api.')
-        response = self.nodes_api.get_nodes_nodeid_process(node_id=node_id)
+        response = self.nodes_api.get_nodes_nodeid_processes(node_id=self.node_id)
         self.assertEqual(response.status_code, 200)
 
         self.lg.info('compare response data with the golden values.')
-        ##result ->from python client in form of dectionary .
-        # processes=response
-        # for process in processes:
-        #     for process_info ,i in enumerate(process_info.keys()):
-        #         if process_info == 'cmd':
-        #             for key in process_info.keys():
-        #                 self.assertEqual(process_info['key'],result[i][process_info][key])
-        #         else:
-        #             self.assertEqual(process[process_info],result[i][process_info])
+        processes = {}
+        client_processes={}
+        client_result = self.python_client.get_processes_list()
+        for process in client_result:
+            client_processes[process['pid']]=process
+
+        for process in response.json():
+            processes[process['pid']]= process
+
+        for process_id in processes.keys():
+            process_info = processes[process_id]
+            for info in process_info.keys():
+                if info != 'cpu':
+                    if info in client_processes[process_id].keys():
+                        if info == "rss":
+                            self.assertAlmostEqual(process_info[info],
+                                                   client_processes[process_id][info],
+                                                   msg="different value with key%s"%info,
+                                                   delta=1000000)
+                        else:
+                            self.assertEqual(process_info[info],
+                                             client_processes[process_id][info],
+                                             "different value with key%s"%info)
 
     def test016_get_process_details(self):
         """ GAT-016
@@ -394,32 +402,29 @@ class TestNodeidAPI(TestcasesBase):
         #. compare response data with the golden values.
 
         """
-
-        self.lg.info('Choose one random node from list of running nodes.')
-        node_id = self.base_test.get_random_node()
-
         self.lg.info('Get list of running processes')
-        response = self.nodes_api.get_nodes_nodeid_process(node_id=node_id)
+        response = self.nodes_api.get_nodes_nodeid_processes(node_id=self.node_id)
         self.assertEqual(response.status_code, 200)
-        processes_list=response.json()
+        processes_list = response.json()
 
         self.lg.info('Choose one of these processes to list its details.')
         process_id = processes_list[random.randint(0, len(processes_list)-1)]['pid']
 
         self.lg.info('Get /nodes/{nodeid}/process/{processid} api.')
-        response = self.nodes_api.get_nodes_nodeid_process_processid(node_id=node_id,process_id=process_id)
+        response = self.nodes_api.get_nodes_nodeid_processes_processid(node_id=self.node_id, process_id=str(process_id))
         self.assertEqual(response.status_code, 200)
 
         self.lg.info('Compare response data with the golden values.')
-        ##result ->from python client in form of dectionary .
-        # process=response.json()
-        # for process_info in process.keys():
-        #     if process_info == 'cmd':
-        #         for key in process_info.keys():
-        #             self.assertEqual(process_info['key'],result[process_info][key])
-        #     else:
-        #         self.assertEqual(process[process_info],result[process_info])
-
+        process_info = response.json()
+        client_result = self.python_client.get_processes_list()
+        for process in client_result:
+            if process['pid'] == process_info['pid']:
+                for info in process_info.keys():
+                    if info != 'cpu':
+                        if info in process.keys():
+                            self.assertEqual(process_info[info], process[info],
+                                            "different value with key%s"%info)
+                break
 
     def test017_delete_process(self):
         """ GAT-017
@@ -427,132 +432,20 @@ class TestNodeidAPI(TestcasesBase):
 
         **Test Scenario:**
 
-        #. Choose one random node from list of running nodes.
-        #. Get list of running processes
-        #. Choose one of them.
+        #. Start new process.
         #. Delete /nodes/{nodeid}/processes/{processid} api.
         #. Make sure that this process has been killed.
+
         """
-
-        self.lg.info('Choose one random node from list of running nodes.')
-        node_id = self.base_test.get_random_node()
-
-        self.lg.info('Get list of running processes')
-        response = self.nodes_api.get_nodes_nodeid_process(node_id=node_id)
-        self.assertEqual(response.status_code, 200)
-        processes_list=response.json()
-
-        self.lg.info('Choose one of these processes to list its details.')
-        process_id = processes_list[random.randint(0, len(processes_list)-1)]['pid']
+        self.lg.info('Start new process.')
+        process_id = self.python_client.start_process()
+        self.assertTrue(process_id)
 
         self.lg.info('delete /nodes/{nodeid}/processes/{processid} api.')
-        response = self.nodes_api.delete_nodes_nodeid_process_processid(node_id=node_id,process_id=process_id)
+        response = self.nodes_api.delete_nodes_nodeid_process_processid(node_id=self.node_id,
+                                                                        process_id=str(process_id))
         self.assertEqual(response.status_code, 204)
 
         self.lg.info('Make sure that this process has been killed.')
-        #result ->from python client in form of dectionary .
-        # content=response.json()
-        # self.assertEqual(content,'Job killed successfully')
-        # ##check if u kill process will disappear from list or not
-
-    def test018_list_bridges(self):
-        """ GAT-018
-        *GET:/nodes/{nodeid}/bridges *
-
-        **Test Scenario:**
-
-        #. Choose one random node from list of running nodes.
-        #. Get /nodes/{nodeid}/bridges api.
-        #. Compare response data with the golden values.
-
-        """
-        self.lg.info('Choose one random node from list of running nodes.')
-        node_id = self.base_test.get_random_node()
-
-        self.lg.info('Get /nodes/{nodeid}/bridge api.')
-        response = self.nodes_api.get_nodes_nodeid_bridges(node_id=node_id)
-        self.assertEqual(response.status_code, 200)
-
-        self.lg.info('Compare response data with the golden values.')
-        #result ->from python client in form of dectionary .
-        # bridges_list=response.json()
-        # for bridge,i in enumerate(bridges_list):
-        #     for key in bridge.keys():
-        #         self.assertEqual(bridge[key],result[i][key])
-
-    def test019_create_bridge(self):
-        """ GAT-019
-        *POST:/nodes/{nodeid}/bridges *
-
-        **Test Scenario:**
-
-        #. Choose one random node from list of running nodes.
-        #. post /nodes/{nodeid}/bridge api.
-        #. compare response data with the golden values.
-        #. Delete created bridge by Delete /nodes/{nodeid}/bridges/{bridgeid} api.
-
-        """
-        bridge_name = self.base_test.rand_str()
-        hardwareaddress=self.base_test.randomMAC()
-        nat=random.choice([True,False])
-        network_setting = {'none':{},'static':{'cidr':'10.1.1.1/24'},
-                        ' dnsmasq':{'cidr':'10.1.1.1/24','start':'10.1.1.2','end':'10.1.1.5'}}
-
-        networkMode = random.choice(list(network_setting.keys()))
-        settings = network_setting[networkMode]
-
-        body={'name':bridge_name , 'hwaddr':hardwareaddress, 'networkMode':networkMode,
-              'nat':nat, 'settings':settings}
-
-        self.lg.info('Choose one random node from list of running nodes.')
-        node_id = self.base_test.get_random_node()
-
-        self.lg.info('post /nodes/{nodeid}/bridge api.')
-        response = self.nodes_api.post_nodes_nodeid_bridges(node_id=node_id,body=body)
-        self.assertEqual(response.status_code, 201)
-        content = response().json()
-        self.assertEqual(content, "Bridge created successfully")
-        location=response.headers
-
-        self.lg.info('Compare response data with the golden values.')
-
-        self.lg.info('Remove created bridge.')
-        response = self.nodes_api.delete_nodes_nodeid_bridges_bridgeid(node_id=node_id, bridge_id=bridge_name  )
-        self.assertEqual(response.status_code, 204)
-        content = response().json()
-        self.assertEqual(content, "Bridge removed successfully")
-
-    def test020_get_bridge_details(self):
-        """ GAT-020
-        *GET:/nodes/{nodeid}/bridges/{bridgeid} - network interface information*
-
-        **Test Scenario:**
-
-        #. Choose one random node from list of running nodes.
-        #. Get bridges list.
-        #. Choose one randome bridge .
-        #. get /nodes/{nodeid}/bridges/{bridgeid}
-        #. compare response data with the golden values.
-
-        """
-
-        self.lg.info('Choose one random node from list of running nodes.')
-        node_id = self.base_test.get_random_node()
-
-        self.lg.info('Get bridges list.')
-        response = self.nodes_api.get_nodes_nodeid_bridges(node_id=node_id)
-        self.assertEqual(response.status_code, 200)
-        bridges_list = response.json()
-
-        self.lg.info('Choose one of these bridges to list its details.')
-        bridge_id = bridges_list[random.randint(0, len(bridges_list)-1)]['name']
-
-        self.lg.info('get /nodes/{nodeid}/bridges/{bridgeid}.')
-        response = self.nodes_api.get_nodes_nodeid_bridges_bridgeid(node_id=node_id, bridge_id=bridge_id)
-        self.assertEqual(response.status_code, 200)
-        bridge_info = response.json()
-
-        self.lg.info('Compare response data with the golden values.')
-        ##result ->from python client in form dectionary .
-        for key in bridge_info.keys():
-                self.assertEqual(bridge_info[key],result[key])
+        client_processes = self.python_client.get_processes_list()
+        self.assertFalse(any(process['pid']== process_id for process in client_processes))
