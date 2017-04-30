@@ -43,11 +43,11 @@ class SystemTests(BaseTest):
     def getCpuInfo(self, client):
         lines = client.bash('cat /proc/cpuinfo').get().stdout.splitlines()
         cpuInfo = {'vendorId': [], 'family': [], 'stepping': [], 'cpu': [], 'coreId': [], 'model': [],
-                    'mhz': [], 'cores': [], 'flags': [], 'modelName': [], 'physicalId':[]}
+                    'cacheSize': [], 'cores': [], 'flags': [], 'modelName': [], 'physicalId':[]}
 
         mapping = { "vendor_id": "vendorId", "cpu family": "family", "processor": "cpu", "core id": "coreId",
-                    "cpu MHz": "mhz", "cpu cores": "cores", "model name": "modelName",
-                    "physical id": "physicalId", "stepping": "stepping", "flags": "flags", "model": "model"}
+                    "cache size": "cacheSize", "cpu cores": "cores", "model name": "modelName", "physical id": "physicalId",
+                    "stepping": "stepping", "flags": "flags", "model": "model"}
 
         keys = mapping.keys()
         for line in lines:
@@ -57,8 +57,8 @@ class SystemTests(BaseTest):
                     item = line[line.index(':') + 1:].strip()
                     if key in ['processor', 'stepping', 'cpu cores']:
                         item = int(item)
-                    if key == "cpu MHz":
-                        item = float(item)
+                    if key == 'cache size':
+                        item = int(item[:item.index(' KB')])
                     if key == 'flags':
                         item = item.split(' ')
                     cpuInfo[mapping[key]].append(item)
