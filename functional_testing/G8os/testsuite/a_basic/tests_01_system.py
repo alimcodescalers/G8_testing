@@ -453,10 +453,10 @@ class SystemTests(BaseTest):
 
         open_modes = ['r', 'w', 'a', 'w+', 'r+', 'a+', 'x']
         for mode in open_modes:
-
-            txt = 'line1\nline2\nline3'
-            client.bash('echo "{}" > {}'.format(txt, file_name))
-            f = client.filesystem.open(file_name, mode=mode)
+            if mode != 'x':
+                txt = 'line1\nline2\nline3'
+                client.bash('echo "{}" > {}'.format(txt, file_name))
+                f = client.filesystem.open(file_name, mode=mode)
 
             if mode == 'r':
 
@@ -470,6 +470,8 @@ class SystemTests(BaseTest):
                 txt = new_txt = str.encode(self.rand_str())
                 with self.assertRaises(RuntimeError):
                     client.filesystem.write(f, txt)
+                with self.assertRaises(RuntimeError):
+                    client.filesystem.open(self.rand_str(), mode=mode)
 
             if mode  == 'w': #issue
 
@@ -505,13 +507,16 @@ class SystemTests(BaseTest):
 
                 self.lg('Write text to file (F1), should success')
                 new_txt = str.encode(self.rand_str())
+                l = len(new_txt)
                 client.filesystem.write(f, new_txt)
 
                 self.lg('Check file (F1) content, should success')
                 file_text = client.bash('cat {}'.format(file_name)).get().stdout
-                self.assertEqual(file_text, '{}\n{}\n'.format(new_txt.decode('utf-8'), txt))
+                self.assertEqual(file_text, '{}{}\n'.format(new_txt.decode('utf-8'), txt[l:]))
                 file_text = client.filesystem.read(f).decode('utf-8')
-                self.assertEqual(file_text, '{}\n'.format(txt))
+                self.assertEqual(file_text, '{}\n'.format(txt[l:]))
+                with self.assertRaises(RuntimeError):
+                    client.filesystem.open(self.rand_str(), mode=mode)
 
             if mode == 'a':
 
@@ -523,11 +528,9 @@ class SystemTests(BaseTest):
                 file_text = client.bash('cat {}'.format(file_name)).get().stdout
 
                 self.lg('Check file (F1) text , should succeed')
-                self.assertEqual(file_text.decode('utf-8'), '{}\n{}\n'.format(txt, new_txt))
-
+                self.assertEqual(file_text, '{}\n{}\n'.format(txt, new_txt.decode('utf-8')))
 
             if mode == 'x':
-
                 self.lg('Create file (F2) using open in (x) mode, should succeed')
                 file_name_2 = '{}.txt'.format(self.rand_str())
                 client.filesystem.open(file_name_2, mode=mode)
@@ -535,10 +538,6 @@ class SystemTests(BaseTest):
                 self.lg('Check if  file (F2) exists, should succeed')
                 ls = client.bash('ls').get().stdout.splitlines()
                 self.assertIn(file_name_2, ls)
-
-            else:
-                with self.assertRaises(RuntimeError):
-                    client.filesystem.open(self.rand_str(), mode=mode)
 
             client.filesystem.close(f)
 
