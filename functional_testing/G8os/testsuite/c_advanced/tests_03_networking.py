@@ -12,7 +12,7 @@ class AdvancedNetworking(BaseTest):
         containers = self.client.container.find('ovs')
         ovs_exist = [key for key, value in containers.items()]
         if not ovs_exist:
-            ovs = self.client.container.create(self.ovs_flist, host_network=True, storage=self.storage, tags=['ovs'])
+            ovs = self.create_container(self.ovs_flist, host_network=True, storage=self.storage, tags=['ovs'])
             self.ovscl = self.client.container.client(ovs)
             time.sleep(2)
             self.ovscl.json('ovs.bridge-add', {"bridge": "backplane"})
@@ -48,20 +48,20 @@ class AdvancedNetworking(BaseTest):
         vx1_id = str(randint(10000, 20000))
         c1_ip = '192.168.2.1'
         nic = [{'type': 'vxlan', 'id': vx1_id, 'config': {'cidr': '{}/24'.format(c1_ip)}}]
-        c1 = self.client.container.create(root_url=self.root_url, storage=self.storage, nics=nic)
+        c1 = self.create_container(root_url=self.root_url, storage=self.storage, nics=nic)
         c1_client = self.client.container.client(c1)
 
         self.lg('Create container (c2) connected on (vx1) and connect it to default network.')
         c2_ip = '192.168.2.2'
         nic2 = [{'type': 'default'}, {'type': 'vxlan', 'id': vx1_id, 'config': {'cidr': '{}/24'.format(c2_ip)}}]
-        c2 = self.client.container.create(root_url=self.root_url, storage=self.storage, nics=nic2)
+        c2 = self.create_container(root_url=self.root_url, storage=self.storage, nics=nic2)
         c2_client = self.client.container.client(c2)
 
         self.lg('Create conatiner (c3) on a new vxlan bridge (vx2)')
         vx2_id = str(randint(10000, 20000))
         c3_ip = '192.168.2.3'
         nic3 = [{'type': 'vxlan', 'id': vx2_id, 'config': {'cidr': '{}/24'.format(c3_ip)}}]
-        c3 = self.client.container.create(root_url=self.root_url, storage=self.storage, nics=nic3)
+        c3 = self.create_container(root_url=self.root_url, storage=self.storage, nics=nic3)
         c3_client = self.client.container.client(c3)
 
         self.lg('Check that (c2) can reach the internet while (c1) can\'t')
@@ -117,7 +117,7 @@ class AdvancedNetworking(BaseTest):
         dhcp_ip = '192.168.1.1'
         nic = [{'type': 'default'}, {'type': 'vlan', 'id': v1_id, 'config': {'cidr': '{}/24'.format(dhcp_ip)}}]
 
-        dhcp_c = self.client.container.create(root_url=self.root_url, storage=self.storage, nics=nic)
+        dhcp_c = self.create_container(root_url=self.root_url, storage=self.storage, nics=nic)
         dhcp_c_client = self.client.container.client(dhcp_c)
         rs = dhcp_c_client.system('apt-get update').get()
         self.assertEqual(rs.state, 'SUCCESS')
@@ -128,7 +128,7 @@ class AdvancedNetworking(BaseTest):
 
         self.lg('Create container (c1) on a new vlan bridge (v1), should succeed')
         nic1 = [{'type': 'vlan', 'id': v1_id, 'config': {'dhcp': True}}]
-        c1 = self.client.container.create(root_url=self.root_url, storage=self.storage, nics=nic1)
+        c1 = self.create_container(root_url=self.root_url, storage=self.storage, nics=nic1)
         c1_client = self.client.container.client(c1)
         time.sleep(5)
         r = c1_client.system('ip a').get()
@@ -136,7 +136,7 @@ class AdvancedNetworking(BaseTest):
 
         self.lg('Create container (c2) connected on (v1) and connect it to default network.')
         nic2 = [{'type': 'default'}, {'type': 'vlan', 'id': v1_id, 'config': {'dhcp': True}}]
-        c2 = self.client.container.create(root_url=self.root_url, storage=self.storage, nics=nic2)
+        c2 = self.create_container(root_url=self.root_url, storage=self.storage, nics=nic2)
         c2_client = self.client.container.client(c2)
         time.sleep(5)
         r = c2_client.system('ip a').get()
@@ -146,7 +146,7 @@ class AdvancedNetworking(BaseTest):
         v2_id = str(randint(1, 4094))
         c3_ip = '192.168.1.30'
         nic3 = [{'type': 'vlan', 'id': v2_id, 'config': {'cidr': '{}/24'.format(c3_ip)}}]
-        c3 = self.client.container.create(root_url=self.root_url, storage=self.storage, nics=nic3)
+        c3 = self.create_container(root_url=self.root_url, storage=self.storage, nics=nic3)
         c3_client = self.client.container.client(c3)
 
         self.lg('Check that (c2) can reach the internet while (c1) can\'t')
@@ -199,14 +199,14 @@ class AdvancedNetworking(BaseTest):
         vx1_id = str(randint(20000, 30000))
         c1_ip = '192.168.3.1'
         nic = [{'type': 'vxlan', 'id': vx1_id, 'config': {'cidr': '{}/24'.format(c1_ip)}}]
-        c1 = self.client.container.create(root_url=self.root_url, storage=self.storage, nics=nic)
+        c1 = self.create_container(root_url=self.root_url, storage=self.storage, nics=nic)
         c1_client = self.client.container.client(c1)
 
         self.lg('Create container (c2) on a new vlan bridge (v1) on (N1)')
         v2_id = str(randint(1, 4094))
         c2_ip = '192.168.3.2'
         nic2 = [{'type': 'vlan', 'id': v2_id, 'config': {'cidr': '{}/24'.format(c2_ip)}}]
-        c2 = self.client.container.create(root_url=self.root_url, storage=self.storage, nics=nic2)
+        c2 = self.create_container(root_url=self.root_url, storage=self.storage, nics=nic2)
         c2_client = self.client.container.client(c2)
 
         self.lg('Check if (c1) can reach (c2), shouldn\'t be reachable')
