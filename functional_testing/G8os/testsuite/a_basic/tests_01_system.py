@@ -43,10 +43,10 @@ class SystemTests(BaseTest):
     def getCpuInfo(self, client):
         lines = client.bash('cat /proc/cpuinfo').get().stdout.splitlines()
         cpuInfo = {'vendorId': [], 'family': [], 'stepping': [], 'cpu': [], 'coreId': [], 'model': [],
-                    'cacheSize': [], 'mhz': [], 'cores': [], 'flags': [], 'modelName': [], 'physicalId':[]}
+                    'mhz': [], 'cores': [], 'flags': [], 'modelName': [], 'physicalId':[]}
 
         mapping = { "vendor_id": "vendorId", "cpu family": "family", "processor": "cpu", "core id": "coreId",
-                    "cache size": "cacheSize", "cpu MHz": "mhz", "cpu cores": "cores", "model name": "modelName",
+                    "cpu MHz": "mhz", "cpu cores": "cores", "model name": "modelName",
                     "physical id": "physicalId", "stepping": "stepping", "flags": "flags", "model": "model"}
 
         keys = mapping.keys()
@@ -59,8 +59,6 @@ class SystemTests(BaseTest):
                         item = int(item)
                     if key == "cpu MHz":
                         item = float(item)
-                    if key == 'cache size':
-                        item = int(item[:item.index(' KB')])
                     if key == 'flags':
                         item = item.split(' ')
                     cpuInfo[mapping[key]].append(item)
