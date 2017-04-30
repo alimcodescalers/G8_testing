@@ -22,7 +22,7 @@ class Client:
             elif key == 'cache size':
                 cpuInfo[-1]['cacheSize'] = int(value[:value.index(' KB')])
             elif key == 'cpu MHz':
-                cpuInfo[-1]['mhz'] = value
+                cpuInfo[-1]['mhz'] = int(float(value))
             elif key == 'cpu cores':
                 cpuInfo[-1]['cores'] = int(value)
             elif key == 'flags':
@@ -42,7 +42,10 @@ class Client:
             hardwareaddr = self.stdout(self.client.bash('cat /sys/class/net/{}/address'.format(nic)))
             if hardwareaddr == '00:00:00:00:00:00':
                     hardwareaddr = ''
-            tmp = {"name": nic, "hardwareaddr": hardwareaddr, "mtu": mtu, "addrs": [{"addr": x} for x in addrs]}
+            addrs = [ x for x in addrs]
+            if addrs == [] :
+                addrs= None
+            tmp = {"name": nic, "hardwareaddr": hardwareaddr, "mtu": mtu, "addrs": addrs}
             nicInfo.append(tmp)
 
         return nicInfo
@@ -59,8 +62,8 @@ class Client:
 
     def get_node_mem(self):
         lines = self.client.bash('cat /proc/meminfo').get().stdout.splitlines()
-        memInfo = { 'active': 0, 'available': 0, 'buffers': 0, 'cached': 0,
-                    'free': 0,'inactive': 0, 'total': 0}
+        memInfo = {'available': 0, 'buffers': 0, 'cached': 0,
+                    'inactive': 0, 'total': 0}
         for line in lines:
             line = line.replace('\t', '').strip()
             key = line[:line.find(':')].lower()
@@ -68,30 +71,69 @@ class Client:
             if 'mem' == key[:3]:
                 key = key[3:]
             if key in memInfo.keys():
-                memInfo[key] = int(value)
+
+                memInfo[key] = int(value)*1024
         return memInfo
 
     def get_node_info(self):
         hostname = self.client.system('uname -n').get().stdout.strip()
         krn_name = self.client.system('uname -s').get().stdout.strip().lower()
-        return {"hostname":hostname, "kernel":krn_name}
+        return {"hostname":hostname, "os":krn_name}
 
-    def get_node_disks(self):
+    def get_nodes_disks(self):
         diskInfo = []
-        diskInfo_dict = {'mountpoint': [], 'fstype': [], 'device': [], 'opts': []}
-        response = self.client.bash('mount').get().stdout
-        lines = response.splitlines()
-        for line in lines:
-            line = line.split()
-            item = dict(diskInfo_dict)
-            item['mountpoint'] = line[2]
-            item['fstype'] = line[4]
-            item['device'] = line[0]
-            item['opts'] = line[5][1:-1]
+        diskInfo_format = {'mountpoint':"", 'fstype': "", 'device': [], 'size': 0}
+        response = self.client.disk.list()
+        disks = response['blockdevices']
+        for disk in disks:
+            item = dict(diskInfo_format)
+            if disk['mountpoint']:
+                item['mountpoint'] = disk['mountpoint']
+
+            if disk['fstype']!= None:
+                item['fstype'] = disk['fstype']
+
+            item['device'] = '/dev/%s'%disk['name']
+
+            if int(disk['size']) >= 1073741824:
+                item['size'] = int(int(disk['size'])/(1024*1024*1024))
             diskInfo.append(item)
         return diskInfo
 
-    
+    def get_jobs_list(self):
+        jobs = self.client.job.list()
+        gridjobs = []
+        temp = {}
+        for job in jobs:
+            temp['id'] = job['cmd']['id']
+            if job['cmd']['arguments']:
+                if ('name' in job['cmd']['arguments'].keys()):
+                    temp['name'] = job['cmd']['arguments']['name']
+            temp['starttime'] = job['starttime']
+            gridjobs.append(temp)
+        return gridjobs
+
+    def get_node_state(self):
+        state = self.client.json('core.state', {})
+        del state['cpu']
+        return state
+
+    def start_job(self):
+        job_id = self.client.system("tailf /etc/nsswitch.conf").id
+        jobs = self.client.job.list()
+        for job in jobs:
+            if job['cmd']['id'] == job_id:
+                return job_id
+        return False
+
+    def start_process(self):
+        self.client.system("tailf /etc/nsswitch.conf")
+        processes = self.get_processes_list()
+        for process in processes:
+            if process['cmdline'] == "tailf /etc/nsswitch.conf":
+                return process['pid']
+        return False
+      
     def getFreeDisks(self):
         cmd = 'lsblk --noheadings --raw -o NAME,TYPE,MOUNTPOINT'
         freeDisks = []
@@ -105,4 +147,10 @@ class Client:
                 freeDisks.append(('/dev/{}'.format(name[:3])))
 
         return freeDisks
-        
+            
+
+    def get_processes_list(self):
+        processes = self.client.process.list()
+        return processes
+
+    

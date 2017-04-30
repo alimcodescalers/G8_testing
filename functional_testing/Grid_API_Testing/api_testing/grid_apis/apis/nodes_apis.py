@@ -51,28 +51,28 @@ class NodesAPI(GridAPIBase):
 
     def get_nodes_nodeid_state(self, node_id):
         method = 'get'
-        api = ['node', node_id, 'state']
+        api = ['nodes', node_id, 'state']
 
         return self.request_api(api=api,
                                 method=method)
 
     def post_nodes_nodeid_reboot(self, node_id):
         method = 'post'
-        api = ['node', node_id, 'reboot']
+        api = ['nodes', node_id, 'reboot']
 
         return self.request_api(api=api,
                                 method=method)
 
-    def get_nodes_nodeid_cpu(self, node_id):
-        method = 'post'
-        api = ['nodes', node_id, 'cpu']
-
-        return self.request_api(api=api,
-                                method=method)
-
-    def get_nodes_nodeid_disk(self, node_id):
+    def get_nodes_nodeid_cpus(self, node_id):
         method = 'get'
-        api = ['nodes', node_id, 'disk']
+        api = ['nodes', node_id, 'cpus']
+
+        return self.request_api(api=api,
+                                method=method)
+
+    def get_nodes_nodeid_disks(self, node_id):
+        method = 'get'
+        api = ['nodes', node_id, 'disks']
 
         return self.request_api(api=api,
                                 method=method)
@@ -84,9 +84,9 @@ class NodesAPI(GridAPIBase):
         return self.request_api(api=api,
                                 method=method)
 
-    def get_nodes_nodeid_nic(self, node_id):
+    def get_nodes_nodeid_nics(self, node_id):
         method = 'get'
-        api = ['nodes', node_id, 'nic']
+        api = ['nodes', node_id, 'nics']
 
         return self.request_api(api=api,
                                 method=method)
@@ -98,23 +98,22 @@ class NodesAPI(GridAPIBase):
         return self.request_api(api=api,
                                 method=method)
 
-    def get_nodes_nodeid_process(self, node_id):
+    def get_nodes_nodeid_processes(self, node_id):
         method = 'get'
-        api = ['nodes', node_id, 'process']
+        api = ['nodes', node_id, 'processes']
 
         return self.request_api(api=api,
                                 method=method)
 
-    def get_nodes_nodeid_process_processid(self, node_id, process_id):
+    def get_nodes_nodeid_processes_processid(self, node_id, process_id):
         method = 'get'
-        api = ['nodes', node_id, 'process', process_id]
-
+        api = ['nodes', node_id, 'processes', process_id]
         return self.request_api(api=api,
                                 method=method)
 
     def delete_nodes_nodeid_process_processid(self, node_id, process_id):
         method = 'delete'
-        api = ['nodes', node_id, 'process', process_id]
+        api = ['nodes', node_id, 'processes', process_id]
 
         return self.request_api(api=api,
                                 method=method)

@@ -87,14 +87,14 @@ class ExecuteRemoteCommands(RequestEnvAPI):
             self.logging.info(' [-] Failed!')
             print(colored(' [-] Failed!', 'red'))
 
-    def install_g8core_python_client(self):
+    def install_g8core_python_client(self, branch):
         self.logging.info(' [*] Installing g8core python client .... ')
         print(colored(' [*] Installing g8core python client .... ', 'white'))
-        # command = """echo echo 'cd $TMPDIR;\ngit clone https://github.com/g8os/core0/\ncd core0\ngit checkout %s\ncd pyclient\npip install .\n' > g8_python_client.sh""" % branch
-        # self.execute_command(command=command, skip_error=True)
+        command = """echo echo 'cd $TMPDIR;\ngit clone https://github.com/g8os/core0/\ncd core0\ngit checkout %s\ncd pyclient\npip install .\n' > g8_python_client.sh""" % branch
+        self.execute_command(command=command, skip_error=True)
 
-        # command = 'echo %s | sudo -S bash g8_python_client.sh' % self.virtualmachine['password']
-        command = 'echo %s | sudo -S pip3 install g8core' % self.virtualmachine['password']
+        command = 'echo %s | sudo -S bash g8_python_client.sh' % self.virtualmachine['password']
+        # command = 'echo %s | sudo -S pip3 install g8core' % self.virtualmachine['password']
         self.execute_command(command=command)
 
     def start_AYS_server(self):
@@ -119,11 +119,11 @@ class ExecuteRemoteCommands(RequestEnvAPI):
         command = 'echo %s | sudo -S bash clone_ays_template.sh' % self.virtualmachine['password']
         self.execute_command(command=command)
 
-    def discover_g8os_nodes(self):
+    def discover_g8os_nodes(self, auto_discovering=False):
         self.logging.info(' [*] Discover g8os nodes .... ')
         print(colored(' [*] Discover g8os nodes .... ', 'white'))
 
-        discovering_blueprint = self.get_discovering_blueprint()
+        discovering_blueprint = self.get_discovering_blueprint(auto_discovering=auto_discovering)
         command = """echo 'cd /optvar/cockpit_repos/grid/ && printf "%s" > blueprints/discover_nodes && ays blueprint && ays run create --follow' > discover_g8os_nodes.sh""" % discovering_blueprint
         self.execute_command(command=command, skip_error=True)
 
@@ -133,7 +133,9 @@ class ExecuteRemoteCommands(RequestEnvAPI):
     def install_go(self):
         self.logging.info(' [*] Installing go 1.8 lang .... ')
         print(colored(' [*] Installing go 1.8 lang .... ', 'white'))
-        command = """echo 'cd /tmp/ && curl -O https://storage.googleapis.com/golang/go1.8.linux-amd64.tar.gz && tar -xvf go1.8.linux-amd64.tar.gz && mv go /usr/local && echo "export PATH=$PATH:/usr/local/go/bin" >> ~/.profile && chmod 774 ~/.profile &&  ~/.profile && ln -fs /usr/local/go/bin/go /usr/bin/go' > Install_Go_1_8.sh """
+        command = """
+                echo 'cd /tmp/ && curl -O https://storage.googleapis.com/golang/go1.8.linux-amd64.tar.gz && tar -xvf go1.8.linux-amd64.tar.gz && mv go /usr/local && echo "export PATH=$PATH:/usr/local/go/bin" >> ~/.profile && chmod 774 ~/.profile &&  ~/.profile && ln -fs /usr/local/go/bin/go /usr/bin/go' > Install_Go_1_8.sh
+                """
         self.execute_command(command=command, skip_error=True)
         command = 'echo %s | sudo -S bash Install_Go_1_8.sh' % self.virtualmachine['password']
         self.execute_command(command=command)
@@ -141,8 +143,43 @@ class ExecuteRemoteCommands(RequestEnvAPI):
     def start_API_server(self, API_branch, ays_server_ip):
         self.logging.info(' [*] Starting %s G8OS Grid API ..... ' % API_branch)
         print(colored(' [*] Starting %s G8OS Grid API ..... ' % API_branch, 'white'))
-        command = """ echo 'mkdir -p /opt/code/ && cd /opt/code/ && export GOPATH='/opt/code/' && go get github.com/g8os/grid; cd src/github.com/g8os/grid/ && git checkout %s && git pull && cd api && export GOPATH=/opt/code/ && go get && go install && /opt/code/bin/api --bind :8080 --ays-url http://%s:5000 --ays-repo grid&' > start_api_server.sh """ % (
-            API_branch, ays_server_ip)
+        command = """ echo 'mkdir -p /opt/code/ && cd /opt/code/ && export GOPATH="/opt/code/" && go get github.com/g8os/grid; cd src/github.com/g8os/grid/ && git checkout %s && git pull' > start_api_server.sh """ % API_branch
         self.execute_command(command, skip_error=True)
         command = 'echo %s | sudo -S bash start_api_server.sh' % self.virtualmachine['password']
+        self.execute_command(command=command)
+        import ipdb; ipdb.set_trace()
+        command = """cd /opt/code/src/github.com/g8os/grid/api/ && export GOPATH="/opt/code/" && go get && go install && /opt/code/bin/api --bind :8080 --ays-url http://%s:5000 --ays-repo grid& """ % ays_server_ip
+        self.execute_command('echo %s | sudo -S bash -c %s' % (self.virtualmachine['password'], command))
+
+    def install_zerotire(self):
+        self.logging.info(' [*] Installing zerotire ... ')
+        print(colored(' [*] Installing zerotire ... '))
+        command = """
+                echo "curl -s 'https://pgp.mit.edu/pks/lookup?op=get&search=0x1657198823E52A61' | gpg --import && \ if z=$(curl -s 'https://install.zerotier.com/' | gpg); then echo $z | sudo bash; fi" > insatll_zerotire.sh
+                """
+        self.execute_command(command, skip_error=True)
+        command = 'echo %s | sudo -S bash  insatll_zerotire.sh' % self.virtualmachine['password']
+        self.execute_command(command=command)
+
+    def add_node_to_zerotire_nw(self):
+        self.logging.info(' [*] Add node to %s network ... ' % self.values['zerotire_nw'])
+        print(colored(' [*] Add node to %s network ... ' % self.values['zerotire_nw']))
+        command = 'echo %s | sudo -S bash -c " zerotier-cli join %s" ' % (self.virtualmachine['password'],
+                                                                          self.values['zerotire_nw'])
+        self.execute_command(command=command)
+
+    def update_g8os_valuse(self, ip, mac):
+        ip = ip
+        mac = mac.replace(':', '')
+        if self.values['g8os_ip_1']:
+            self.values['g8os_ip_2'] = ip
+            self.values['g8os_mac_2'] = mac
+        else:
+            self.values['g8os_ip_1'] = ip
+            self.values['g8os_mac_1'] = mac
+
+    def install_zerotire_lib(self):
+        self.logging.info(' [*] Installing zerotier ... ')
+        print(colored(' [*] [*] Installing zerotier ... '))
+        command = 'echo %s | sudo -S bash -c "pip install zerotier" ' % self.virtualmachine['password']
         self.execute_command(command=command)
