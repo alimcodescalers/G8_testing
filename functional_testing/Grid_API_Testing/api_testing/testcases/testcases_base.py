@@ -4,8 +4,10 @@ from unittest import TestCase
 from api_testing.utiles.utiles import Utiles
 from api_testing.grid_apis.apis.nodes_apis import NodesAPI
 from api_testing.grid_apis.apis.containers_apis import ContainersAPI
+from api_testing.utiles.nodes_info import *
 import json
 import random
+import requests
 
 
 class TestcasesBase(TestCase):
@@ -17,6 +19,11 @@ class TestcasesBase(TestCase):
         self.containter_api = ContainersAPI()
         self.lg = self.utiles.logging
         self.nodes_api = NodesAPI()
+        self.session = requests.Session()
+        self.zerotier_token = self.config['zerotier_token']
+        self.session.headers['Authorization'] = 'Bearer {}'.format(self.zerotier_token)
+        self.nodes_info = nodes
+
 
     def setUp(self):
         pass
@@ -55,3 +62,17 @@ class TestcasesBase(TestCase):
 
     def random_item(self, array):
         return array[randint(0, len(array)-1)]
+
+    def getZtNetworkID(self):
+        url = 'https://my.zerotier.com/api/network'
+        r = self.session.get(url)
+        if r.status_code == 200:
+            for item in r.json():
+                if item['type'] == 'Network':
+                    return item['id']
+            else:
+                self.lg('can\'t find network id')
+                return False
+        else:
+            self.lg('can\'t connect to zerotier, {}:{}'.format(r.status_code, r.content))
+            return False

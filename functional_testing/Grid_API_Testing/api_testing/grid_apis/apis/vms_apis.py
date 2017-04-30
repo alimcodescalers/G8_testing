@@ -60,7 +60,7 @@ class VmsAPI(GridAPIBase):
         api = ['nodes', nodeid, 'vms', vmid, 'shutdown']
         return self.request_api(method=method, api=api)
 
-    def post_nodes_vms_vmid_migrate(self, nodeid, vmid):
+    def post_nodes_vms_vmid_migrate(self, nodeid, vmid, body):
         method = 'post'
         api = ['nodes', nodeid, 'vms', vmid, 'migrate']
-        return self.request_api(method=method, api=api)
+        return self.request_api(method=method, api=api, body=body)

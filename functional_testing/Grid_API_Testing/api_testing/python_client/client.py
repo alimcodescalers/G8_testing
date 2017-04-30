@@ -7,7 +7,7 @@ class Client:
     def stdout(self, resource):
         return resource.get().stdout.replace('\n', '').lower()
 
-    def get_nodes_cpus(self):
+    def get_node_cpus(self):
         lines = self.client.bash('cat /proc/cpuinfo').get().stdout.splitlines()
         cpuInfo = []
         cpuInfo_format = {'family': "", 'cacheSize': "", 'mhz': "", 'cores': "", 'flags': ""}
@@ -29,7 +29,7 @@ class Client:
                 cpuInfo[-1]['flags'] = value.split(' ')
         return cpuInfo
 
-    def get_nodes_nics(self):
+    def get_node_nics(self):
         r = self.client.bash('ip -br a').get().stdout
         nics = [x.split()[0] for x in r.splitlines()]
         nicInfo = []
@@ -50,17 +50,17 @@ class Client:
 
         return nicInfo
 
-    def get_nodes_bridges(self):
+    def get_node_bridges(self):
         bridgesInfo = []
         nics = self.client.bash('ls /sys/class/net').get().stdout.splitlines()
         for nic in nics:
             status = self.client.bash('cat /sys/class/net/{}/operstate'.format(nic)).get().stdout.strip()
-            bridge = {"name":nic, "status":status, "config":""}
+            bridge = {"name":nic, "status":status}
             bridgesInfo.append(bridge)
 
         return bridgesInfo
 
-    def get_nodes_mem(self):
+    def get_node_mem(self):
         lines = self.client.bash('cat /proc/meminfo').get().stdout.splitlines()
         memInfo = {'available': 0, 'buffers': 0, 'cached': 0,
                     'inactive': 0, 'total': 0}
@@ -75,7 +75,7 @@ class Client:
                 memInfo[key] = int(value)*1024
         return memInfo
 
-    def get_nodes_info(self):
+    def get_node_info(self):
         hostname = self.client.system('uname -n').get().stdout.strip()
         krn_name = self.client.system('uname -s').get().stdout.strip().lower()
         return {"hostname":hostname, "os":krn_name}
@@ -99,10 +99,6 @@ class Client:
                 item['size'] = int(int(disk['size'])/(1024*1024*1024))
             diskInfo.append(item)
         return diskInfo
-
-    def get_processes_list(self):
-        processes = self.client.process.list()
-        return processes
 
     def get_jobs_list(self):
         jobs = self.client.job.list()
@@ -137,3 +133,24 @@ class Client:
             if process['cmdline'] == "tailf /etc/nsswitch.conf":
                 return process['pid']
         return False
+      
+    def getFreeDisks(self):
+        cmd = 'lsblk --noheadings --raw -o NAME,TYPE,MOUNTPOINT'
+        freeDisks = []
+        response = self.client.bash(cmd).get().stdout
+        lines = response.splitlines()
+        for line in lines:
+            data = line.split()
+            name = data[0]
+            types = data[1]
+            if types in ['disk', 'part'] and len(data) == 2:
+                freeDisks.append(('/dev/{}'.format(name[:3])))
+
+        return freeDisks
+            
+
+    def get_processes_list(self):
+        processes = self.client.process.list()
+        return processes
+
+    
