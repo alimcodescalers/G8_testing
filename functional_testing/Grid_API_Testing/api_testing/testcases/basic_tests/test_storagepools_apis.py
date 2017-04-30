@@ -19,8 +19,7 @@ class TestStoragepoolsAPI(TestcasesBase):
 
         self.lg.info('Create storagepool (SP0) on node (N0)')
         self.storagepool_name = self.random_string()
-        # self.levels = ['raid0', 'raid1', 'raid5', 'raid6', 'raid10', 'dup', 'single']
-        self.levels = ['single']
+        self.levels = ['raid0', 'raid1', 'raid5', 'raid6', 'raid10', 'dup', 'single']
         self.metadata = self.random_item(self.levels)
         self.data = self.random_item(self.levels)
         free_devices = self.pyclient.getFreeDisks()
