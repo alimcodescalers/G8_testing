@@ -91,7 +91,8 @@ class Basic(object):
         blueprint = ''
 
         if auto_discovering:
-            blueprint = "bootstrap.g8os__grid1:\\nactions:\\n  - action: install\\n \\n"
+            blueprint = """bootstrap.g8os__grid1:\\n  zerotierNetID: %s\\n  zerotierToken: '"%s"' \\n\\nactions:\\n  - action: install\\n \\n """ % (
+            self.values['zerotire_nw'], self.values['zerotier_token'])
         else:
             for g8os in self.g8os_ip_list:
                 if ':' in g8os[1]:

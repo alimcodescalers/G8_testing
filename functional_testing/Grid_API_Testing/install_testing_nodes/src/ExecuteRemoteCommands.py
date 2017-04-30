@@ -147,9 +147,9 @@ class ExecuteRemoteCommands(RequestEnvAPI):
         self.execute_command(command, skip_error=True)
         command = 'echo %s | sudo -S bash start_api_server.sh' % self.virtualmachine['password']
         self.execute_command(command=command)
-
-        command = """echo "cd /opt/code/src/github.com/g8os/grid/api/ && export GOPATH="/opt/code/" && go get && go install && /opt/code/bin/api --bind :8080 --ays-url http://%s:5000 --ays-repo grid&" """ % ays_server_ip
-        self.execute_command('echo %s | sudo -S bash -c %s' % command)
+        import ipdb; ipdb.set_trace()
+        command = """cd /opt/code/src/github.com/g8os/grid/api/ && export GOPATH="/opt/code/" && go get && go install && /opt/code/bin/api --bind :8080 --ays-url http://%s:5000 --ays-repo grid& """ % ays_server_ip
+        self.execute_command('echo %s | sudo -S bash -c %s' % (self.virtualmachine['password'], command))
 
     def install_zerotire(self):
         self.logging.info(' [*] Installing zerotire ... ')
@@ -177,3 +177,9 @@ class ExecuteRemoteCommands(RequestEnvAPI):
         else:
             self.values['g8os_ip_1'] = ip
             self.values['g8os_mac_1'] = mac
+
+    def install_zerotire_lib(self):
+        self.logging.info(' [*] Installing zerotier ... ')
+        print(colored(' [*] [*] Installing zerotier ... '))
+        command = 'echo %s | sudo -S bash -c "pip install zerotier" ' % self.virtualmachine['password']
+        self.execute_command(command=command)

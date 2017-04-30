@@ -51,6 +51,7 @@ if __name__ == '__main__':
     executer.install_zerotire()
     executer.add_node_to_zerotire_nw()
     executer.install_jumpscale(branch=JUMPSACLE_BRANCH)
+    executer.install_zerotire_lib()
     executer.install_g8core_python_client(branch=G8CORE_CLIENT)
     executer.start_AYS_server()
     executer.clone_ays_templates(branch=AYS_TEMPLATE_BRANCH)
@@ -64,8 +65,6 @@ if __name__ == '__main__':
     executer.create_port_forward(publicPorts={22: 2202, 8080: 8080})
     executer.connect_to_virtual_machine(port=2202)
     executer.update_machine()
-    executer.install_zerotire()
-    executer.add_node_to_zerotire_nw()
     executer.install_go()
     executer.start_API_server(API_branch=GRID_API_BRANCH,
                               ays_server_ip=ays_server_ip)
