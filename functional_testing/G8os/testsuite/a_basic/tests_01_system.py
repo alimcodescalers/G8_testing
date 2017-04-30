@@ -456,6 +456,7 @@ class SystemTests(BaseTest):
             if mode != 'x':
                 txt = 'line1\nline2\nline3'
                 client.bash('echo "{}" > {}'.format(txt, file_name))
+                time.sleep(1)
                 f = client.filesystem.open(file_name, mode=mode)
 
             if mode == 'r':
@@ -473,7 +474,7 @@ class SystemTests(BaseTest):
                 with self.assertRaises(RuntimeError):
                     client.filesystem.open(self.rand_str(), mode=mode)
 
-            if mode  == 'w': #issue
+            if mode == 'w':
 
                 self.lg('Open file (F1) in write only (w) mode')
 
@@ -489,7 +490,7 @@ class SystemTests(BaseTest):
                 with self.assertRaises(RuntimeError):
                     client.filesystem.read(f)
 
-            if mode == 'w+': #issue
+            if mode == 'w+':
 
                 self.lg('Open file (F1) in (w+) mode')
 
@@ -500,7 +501,7 @@ class SystemTests(BaseTest):
                 self.lg('Read text from file (F1), should succeed')
                 client.filesystem.read(f)
 
-            #read/write(at begin)
+            # read/write(at begin)
             if mode == 'r+':
 
                 self.lg('Open file (F1) in (r+) mode')
