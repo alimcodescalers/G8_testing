@@ -470,6 +470,7 @@ class TestcontaineridAPI(TestcasesBase):
         self.assertTrue(self.g8core.wait_on_container_job_update(container_id, job_id, 15, False))
 
         self.lg.info('Check that created process added to process list.')
+        time.sleep(7)
         response = self.containers_api.get_containers_containerid_processes(self.node_id, container_name)
         self.assertEqual(response.status_code, 200)
         processes = [p['cmdline'] for p in response.json()]
