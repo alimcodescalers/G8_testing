@@ -4,7 +4,7 @@ from api_testing.grid_apis.apis.bridges_apis import BridgesAPI
 import unittest
 from api_testing.python_client.client import Client
 
-@unittest.skip('bugs: #113, #104, #105')
+# @unittest.skip('bugs: #113, #104, #105')
 class TestBridgesAPI(TestcasesBase):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -36,7 +36,7 @@ class TestBridgesAPI(TestcasesBase):
         self.bridges_api.delete_nodes_bridges_bridgeid(self.nodeid, self.name)
         super(TestBridgesAPI, self).tearDown()
 
-    @unittest.skip('bug: #105')
+    # @unittest.skip('bug: #105')
     def test001_get_bridges_bridgeid(self):
         """ GAT-001
         *GET:/nodes/{nodeid}/bridges/{bridgeid} *
@@ -50,19 +50,18 @@ class TestBridgesAPI(TestcasesBase):
         """
         self.lg.info('Get bridge (B0), should succeed with 200')
         response = self.bridges_api.get_nodes_bridges_bridgeid(self.nodeid, self.name)
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 200, response.content)
         self.assertEqual(self.name, response.json()['name'])
-        self.assertEqual(self.networkMode, response.json()['settings'])
         self.assertEqual('up', response.json()['status'])
         bridges = self.pyclient.client.bridge.list()
         self.assertIn(self.name, bridges)
 
+        #issue #143
+        # self.lg.info('Get nonexisting bridge, should fail with 404')
+        # response = self.bridges_api.get_nodes_bridges_bridgeid(self.nodeid, 'fake_bridge')
+        # self.assertEqual(response.status_code, 404)
 
-        self.lg.info('Get nonexisting bridge, should fail with 404')
-        response = self.bridges_api.get_nodes_bridges_bridgeid(self.nodeid, 'fake_bridge')
-        self.assertEqual(response.status_code, 404)
-
-    @unittest.skip('bug: #104')
+    # @unittest.skip('bug: #104')
     def test002_list_node_bridges(self):
         """ GAT-002
         *GET:/nodes/{nodeid}/bridges *
@@ -78,7 +77,7 @@ class TestBridgesAPI(TestcasesBase):
         self.assertEqual(response.status_code, 200)
         self.assertIn(self.name, [x['name'] for x in response.json()])
 
-    @unittest.skip('bug: #113')
+    # @unittest.skip('bug: #113')
     def test003_create_bridge(self):
         """ GAT-003
         *POST:/nodes/{nodeid}/bridges *
@@ -97,8 +96,8 @@ class TestBridgesAPI(TestcasesBase):
         networkMode = self.random_item(["none", "static", "dnsmasq"])
         nat = self.random_item([False, True])
         settings = {"none":{},
-                    "static":{"cidr":"10.20.30.1/24"},
-                    "dnsmasq":{"cidr":"10.20.30.1/24", "start":"10.20.30.2", "end":"10.20.30.5"}}
+                    "static":{"cidr":"192.168.1.0/16"},
+                    "dnsmasq":{"cidr":"192.168.2.0/16", "start":"192.168.2.1", "end":"192.168.2.5"}}
 
         body = {"name":name,
                 "hwaddr":hwaddr,
