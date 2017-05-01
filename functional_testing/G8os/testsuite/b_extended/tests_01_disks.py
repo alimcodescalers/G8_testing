@@ -26,7 +26,8 @@ class DisksTests(BaseTest):
 
     def bash_disk_info(self, keys, diskname):
         diskinf = {}
-        info = self.client.bash('lsblk -d dev/{} -O -P -b'.format(diskname))
+        upper_values = ['disc-gran', 'disc-max', 'wsame', 'serial']
+        info = self.client.bash('lsblk -d dev/{} -O -P '.format(diskname))
         info = self.stdout(info)
         lines = info.split()
         for key in keys:
@@ -35,33 +36,24 @@ class DisksTests(BaseTest):
                     value = line[line.find('=')+2:-1]
                     if value == '':
                         value = None
-                    if key == 'vendor':
-                        value = line[line.find('=')+2:].ca
+                    if key in upper_values:
+                        value = value.upper()
                     diskinf[key] = value
                     break
-        diskinf['blocksize'] = self.client.bash(' blockdev --getbsz dev/{} '.format(diskname)).get().stdout
+
+        diskinf['model'] = self.stdout(self.client.bash('cat /sys/block/{}/device/model'.format(diskname))).upper()
+        diskinf['vendor'] = self.stdout(self.client.bash('cat /sys/block/{}/device/vendor'.format(diskname))).upper()
+
+        logical_block_size = int(self.stdout(self.client.bash('cat /sys/block/{}/queue/logical_block_size '.format(diskname))))
+        size = int(self.stdout(self.client.bash('cat /sys/block/{}/size '.format(diskname))))
+        diskinf['size'] = logical_block_size*size
+        diskinf['blocksize'] = logical_block_size
+
         remaininfo = self.client.bash('parted dev/{} print '.format(diskname)).get().stdout
         remaininfo_lines = remaininfo.splitlines()
-        for i, line in enumerate(remaininfo_lines):
+        for line in remaininfo_lines:
             if 'Partition Table' in line:
                 diskinf['table'] = str(line[line.find(':')+2:])
-            if i == 6:
-                lines = line.split()
-                sizes = [lines[1], lines[2]]
-                for n, size in enumerate(sizes):
-                    if 'TB' in size:
-                        sizes[n] = int(float((size[:size.find('TB')]))*1024*1024*1024*1024)
-                    elif 'GB' in size:
-                        sizes[n] = int(float((size[:size.find('GB')]))*1024*1024*1024)
-                    elif 'MB' in size:
-                        sizes[n] = int(float(size[:size.find('MB')])*1024*1024)
-                    elif 'KB' in size:
-                        sizes[n] = int(float(size[:size.find('KB')])*1024)
-                    else:
-                        sizes[n] = int(float(size[:size.find('B')]))
-
-                diskinf['start'] = sizes[0]
-                diskinf['end'] = sizes[1]
         return diskinf
 
     def test001_create_list_delete_btrfs(self):
@@ -256,8 +248,9 @@ class DisksTests(BaseTest):
             bash_disk_info = self.bash_disk_info(keys, disk)
 
             self.lg('compare g8os results to disk{} of the bash results, should be the same '.format(disk))
-            for key in bash_disk_info.keys:
-                self.assertEqual(g8os_disk_info[key], bash_disk_info[key])
+            for key in g8os_disk_info.keys():
+                if key in bash_disk_info.keys():
+                    self.assertEqual(g8os_disk_info[key], bash_disk_info[key],'different in key {} for disk{} '.format(key,disk))
 
         self.lg('{} ENDED'.format(self._testID))
 
