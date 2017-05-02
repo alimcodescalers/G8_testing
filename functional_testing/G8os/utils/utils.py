@@ -179,11 +179,12 @@ class BaseTest(unittest.TestCase):
         if flag:
             img = self.client.filesystem.exists('{}/{}'.format(img_loc, image))
             if not img:
-                self.client.bash('wget {} -P {}'.format(img_dn_path, img_loc))
+                rs = self.client.bash('wget {} -P {}'.format(img_dn_path, img_loc))
+                self.assertEqual(rs.get().state, 'SUCCESS')
         else:
-            rs = self.client.bash('mkdir img_loc')
+            rs = self.client.bash('mkdir -p {}'.format(img_loc))
             self.assertEqual(rs.get().state, 'SUCCESS')
             rs = self.client.bash('wget {} -P {}'.format(img_dn_path, img_loc))
-            result = rs.get()
+            self.assertEqual(rs.get().state, 'SUCCESS')
         result = self.client.kvm.create(name=name, media=[{'url': '{}/{}'.format(img_loc, image)}])
         self.assertEqual(result.state, 'SUCCESS')
