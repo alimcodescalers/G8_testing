@@ -216,7 +216,7 @@ class DisksTests(BaseTest):
         self.destroy_btrfs()
 
         self.lg('{} ENDED'.format(self._testID))
-    @unittest.skip('task: https://github.com/gig-projects/org_quality/issues/631')
+
     def test004_disk_get_info(self):
         """ g8os-020
 
@@ -456,7 +456,6 @@ class DisksTests(BaseTest):
         """
 
         self.lg('{} STARTED'.format(self._testID))
-        self.skipTest('https://github.com/g8os/core0/issues/161')
 
         self.lg('Create Btrfs file system, should succeed')
         self.create_btrfs()
@@ -469,11 +468,12 @@ class DisksTests(BaseTest):
         self.lg('Apply btrfs quota for SV1 with limit (L1), should succeed')
         L1 = '100M'
         self.client.btrfs.subvol_quota(sv1_path, L1)
-        self.client.bash('btrfs gquota show -r ') # then check the limits
-
+        rs = self.client.bash('btrfs qgroup show -r {} | grep 100.00MiB'.format(sv1_path))
+        self.assertEqual(rs.get().state, 'SUCCESS')
         self.lg('Try to write file inside that directory exceeding L1, should fail')
-        with self.assertRaises(RuntimeError):
-            self.client.bash('fallocate -l 200M {}'.format(self.rand_str))
+        rs = self.client.bash('cd {}; fallocate -l 200M {}'.format(sv1_path, self.rand_str()))
+        self.assertEqual(rs.get().state, 'ERROR')
+        self.assertEqual(rs.get().stderr, 'fallocate: fallocate failed: Disk quota exceeded\n')
 
         self.lg('Destroy this btrfs filesystem')
         self.destroy_btrfs()
