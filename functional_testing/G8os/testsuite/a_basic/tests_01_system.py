@@ -287,9 +287,6 @@ class SystemTests(BaseTest):
         """
         self.lg('{} STARTED'.format(self._testID))
 
-        if client_type == 'container':
-            self.skipTest('bug# https://github.com/g8os/core0/issues/145')
-
         if client_type == 'client':
             client = self.client
         else:
