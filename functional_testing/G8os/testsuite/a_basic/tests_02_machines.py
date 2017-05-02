@@ -27,47 +27,35 @@ class Machinetests(BaseTest):
         """
 
         self.lg('{} STARTED'.format(self._testID))
-        VM_name = self.rand_str()
+        vm_name = self.rand_str()
 
         self.lg('- Check that it support hardware virtualization ')
         responce = self.client.info.cpu()
         vmx = ['vmx'or'svm' in dec['flags'] for dec in responce]
         self.assertGreater(len(vmx), 0)
 
-        self.lg('- Make new directory in cash and download machine Image on it')
-        rs = self.client.bash('mkdir /var/cache/Images')
-        result = rs.get()
-        self.assertEqual(result.state, 'SUCCESS')
-        rs = self.client.bash('wget https://stor.jumpscale.org/public/Images/Ubuntu.14.04.x64.qcow2  -P /var/cache/Images')
-        result = rs.get()
-        self.assertEqual(result.state, 'SUCCESS')
+        self.lg('- Create virtual machine {} , should succeed'.format(vm_name))
+        self.create_vm(name=vm_name)
 
-        self.lg('- Create virtual machine {} , should succeed'.format(VM_name))
-        self.client.kvm.create(name=VM_name, media=[{'url': '/var/cache/Images/Ubuntu.14.04.x64.qcow2'}])
-
-        self.lg('- List all virtual machines and check that VM {} is there '.format(VM_name))
+        self.lg('- List all virtual machines and check that VM {} is there '.format(vm_name))
         Vms_list = self.client.kvm.list()
-        self.assertTrue(any(vm['name'] == VM_name for vm in Vms_list))
+        self.assertTrue(any(vm['name'] == vm_name for vm in Vms_list))
 
         self.lg('- create another virtual machine with the same kvm domain ,should fail')
         with self.assertRaises(RuntimeError):
-            self.client.kvm.create(name=VM_name, media=[{'url': '/var/cache/Images/Ubuntu.14.04.x64.qcow2'}])
+            self.create_vm(name=vm_name)
 
-        self.lg('- Destroy VM {}'.format(VM_name))
-        self.client.kvm.destroy(VM_name)
+        self.lg('- Destroy VM {}'.format(vm_name))
+        vm_uuid = self.get_vm_uuid(vm_name)
+        self.client.kvm.destroy(vm_uuid)
 
-        self.lg('- List the virtual machines , VM {} should be gone'.format(VM_name))
+        self.lg('- List the virtual machines , VM {} should be gone'.format(vm_name))
         Vms_list = self.client.kvm.list()
-        self.assertFalse(any(vm['name'] == VM_name for vm in Vms_list))
+        self.assertFalse(any(vm['name'] == vm_name for vm in Vms_list))
 
-        self.lg('- Destroy VM {} again should fail'.format(VM_name))
+        self.lg('- Destroy VM {} again should fail'.format(vm_name))
         with self.assertRaises(RuntimeError):
-            self.client.kvm.destroy(VM_name)
-
-        self.lg('- Delete created directory, should succeed')
-        rs = self.client.bash('rm -r  /var/cache/Images')
-        result = rs.get()
-        self.assertEqual(result.state, 'SUCCESS')
+            self.client.kvm.destroy(vm_uuid)
 
         self.lg('{} ENDED'.format(self._testID))
 
@@ -86,7 +74,7 @@ class Machinetests(BaseTest):
         """
         self.lg('{} STARTED'.format(self._testID))
         self.lg('Create a new container (C1)')
-        C1 = self.client.container.create(root_url=self.root_url, storage=self.storage)
+        C1 = self.create_container(root_url=self.root_url, storage=self.storage)
 
         self.lg('List all containers and check that C1 {}is there'.format(C1))
         containers = self.client.container.list()

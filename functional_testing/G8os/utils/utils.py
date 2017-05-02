@@ -162,3 +162,28 @@ class BaseTest(unittest.TestCase):
             raise RuntimeError('failed to create container %s' % result.data)
         container_id = json.loads(result.data)
         return container_id
+
+    def get_vm_uuid(self, vm_name):
+        vm_list = self.client.kvm.list()
+        for vm in vm_list:
+            if vm['name'] == vm_name:
+                return vm['uuid']
+
+    def create_vm(self, name, image='Ubuntu.14.04.x64.qcow2', source=None):
+        img_loc = '/var/cache/images'
+        if source:
+            img_dn_path = source
+        else:
+            img_dn_path = 'https://stor.jumpscale.org/public/Images/Ubuntu.14.04.x64.qcow2'
+        flag = self.client.filesystem.exists('{}'.format(img_loc))
+        if flag:
+            img = self.client.filesystem.exists('{}/{}'.format(img_loc, image))
+            if not img:
+                self.client.bash('wget {} -P {}'.format(img_dn_path, img_loc))
+        else:
+            rs = self.client.bash('mkdir img_loc')
+            self.assertEqual(rs.get().state, 'SUCCESS')
+            rs = self.client.bash('wget {} -P {}'.format(img_dn_path, img_loc))
+            result = rs.get()
+        result = self.client.kvm.create(name=name, media=[{'url': '{}/{}'.format(img_loc, image)}])
+        self.assertEqual(result.state, 'SUCCESS')
