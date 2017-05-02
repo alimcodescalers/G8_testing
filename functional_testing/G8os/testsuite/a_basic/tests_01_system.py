@@ -43,11 +43,11 @@ class SystemTests(BaseTest):
     def getCpuInfo(self, client):
         lines = client.bash('cat /proc/cpuinfo').get().stdout.splitlines()
         cpuInfo = {'vendorId': [], 'family': [], 'stepping': [], 'cpu': [], 'coreId': [], 'model': [],
-                    'cacheSize': [], 'mhz': [], 'cores': [], 'flags': [], 'modelName': [], 'physicalId':[]}
+                    'cacheSize': [], 'cores': [], 'flags': [], 'modelName': [], 'physicalId':[]}
 
         mapping = { "vendor_id": "vendorId", "cpu family": "family", "processor": "cpu", "core id": "coreId",
-                    "cache size": "cacheSize", "cpu MHz": "mhz", "cpu cores": "cores", "model name": "modelName",
-                    "physical id": "physicalId", "stepping": "stepping", "flags": "flags", "model": "model"}
+                    "cache size": "cacheSize", "cpu cores": "cores", "model name": "modelName", "physical id": "physicalId",
+                    "stepping": "stepping", "flags": "flags", "model": "model"}
 
         keys = mapping.keys()
         for line in lines:
@@ -57,8 +57,6 @@ class SystemTests(BaseTest):
                     item = line[line.index(':') + 1:].strip()
                     if key in ['processor', 'stepping', 'cpu cores']:
                         item = int(item)
-                    if key == "cpu MHz":
-                        item = float(item)
                     if key == 'cache size':
                         item = int(item[:item.index(' KB')])
                     if key == 'flags':
@@ -235,7 +233,7 @@ class SystemTests(BaseTest):
         self.assertEqual(expected_mem_info['total'], g8os_mem_info['total'])
         params_to_check = ['active', 'available', 'buffers', 'cached', 'free', 'inactive']
         for key in params_to_check:
-            threshold = 1024 * 300  # acceptable threshold (300 MB)
+            threshold = 1024 * 1000  # acceptable threshold (1 MB)
             g8os_value = g8os_mem_info[key]
             expected_value = expected_mem_info[key]
             self.assertTrue(expected_value - threshold <= g8os_value <= expected_value + threshold, key)
@@ -453,10 +451,11 @@ class SystemTests(BaseTest):
 
         open_modes = ['r', 'w', 'a', 'w+', 'r+', 'a+', 'x']
         for mode in open_modes:
-
-            txt = 'line1\nline2\nline3'
-            client.bash('echo "{}" > {}'.format(txt, file_name))
-            f = client.filesystem.open(file_name, mode=mode)
+            if mode != 'x':
+                txt = 'line1\nline2\nline3'
+                client.bash('echo "{}" > {}'.format(txt, file_name))
+                time.sleep(1)
+                f = client.filesystem.open(file_name, mode=mode)
 
             if mode == 'r':
 
@@ -470,8 +469,10 @@ class SystemTests(BaseTest):
                 txt = new_txt = str.encode(self.rand_str())
                 with self.assertRaises(RuntimeError):
                     client.filesystem.write(f, txt)
+                with self.assertRaises(RuntimeError):
+                    client.filesystem.open(self.rand_str(), mode=mode)
 
-            if mode  == 'w': #issue
+            if mode == 'w':
 
                 self.lg('Open file (F1) in write only (w) mode')
 
@@ -487,7 +488,7 @@ class SystemTests(BaseTest):
                 with self.assertRaises(RuntimeError):
                     client.filesystem.read(f)
 
-            if mode == 'w+': #issue
+            if mode == 'w+':
 
                 self.lg('Open file (F1) in (w+) mode')
 
@@ -498,20 +499,23 @@ class SystemTests(BaseTest):
                 self.lg('Read text from file (F1), should succeed')
                 client.filesystem.read(f)
 
-            #read/write(at begin)
+            # read/write(at begin)
             if mode == 'r+':
 
                 self.lg('Open file (F1) in (r+) mode')
 
                 self.lg('Write text to file (F1), should success')
                 new_txt = str.encode(self.rand_str())
+                l = len(new_txt)
                 client.filesystem.write(f, new_txt)
 
                 self.lg('Check file (F1) content, should success')
                 file_text = client.bash('cat {}'.format(file_name)).get().stdout
-                self.assertEqual(file_text, '{}\n{}\n'.format(new_txt.decode('utf-8'), txt))
+                self.assertEqual(file_text, '{}{}\n'.format(new_txt.decode('utf-8'), txt[l:]))
                 file_text = client.filesystem.read(f).decode('utf-8')
-                self.assertEqual(file_text, '{}\n'.format(txt))
+                self.assertEqual(file_text, '{}\n'.format(txt[l:]))
+                with self.assertRaises(RuntimeError):
+                    client.filesystem.open(self.rand_str(), mode=mode)
 
             if mode == 'a':
 
@@ -523,11 +527,9 @@ class SystemTests(BaseTest):
                 file_text = client.bash('cat {}'.format(file_name)).get().stdout
 
                 self.lg('Check file (F1) text , should succeed')
-                self.assertEqual(file_text.decode('utf-8'), '{}\n{}\n'.format(txt, new_txt))
-
+                self.assertEqual(file_text, '{}\n{}\n'.format(txt, new_txt.decode('utf-8')))
 
             if mode == 'x':
-
                 self.lg('Create file (F2) using open in (x) mode, should succeed')
                 file_name_2 = '{}.txt'.format(self.rand_str())
                 client.filesystem.open(file_name_2, mode=mode)
@@ -535,10 +537,6 @@ class SystemTests(BaseTest):
                 self.lg('Check if  file (F2) exists, should succeed')
                 ls = client.bash('ls').get().stdout.splitlines()
                 self.assertIn(file_name_2, ls)
-
-            else:
-                with self.assertRaises(RuntimeError):
-                    client.filesystem.open(self.rand_str(), mode=mode)
 
             client.filesystem.close(f)
 

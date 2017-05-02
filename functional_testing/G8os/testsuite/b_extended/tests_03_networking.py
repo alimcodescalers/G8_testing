@@ -14,6 +14,7 @@ class ExtendedNetworking(BaseTest):
         mac_addr = ["{:02X}".format(randint(0, 255)) for x in range(6)]
         return ':'.join(mac_addr)
 
+    @unittest.skip('bug: https://github.com/g8os/core0/issues/194')
     def test001_zerotier(self):
         """ g8os-014
         *Test case for testing zerotier functionally*
@@ -44,8 +45,8 @@ class ExtendedNetworking(BaseTest):
 
         self.lg('Create 2 containers c1, c2 and make them join (N1) && create there clients')
         nic = [{'type': 'zerotier', 'id': networkId}]
-        cid_1 = self.client.container.create(root_url=self.root_url, storage=self.storage, nics=nic)
-        cid_2 = self.client.container.create(root_url=self.root_url, storage=self.storage, nics=nic)
+        cid_1 = self.create_container(root_url=self.root_url, storage=self.storage, nics=nic)
+        cid_2 = self.create_container(root_url=self.root_url, storage=self.storage, nics=nic)
         c1_client = self.client.container.client(cid_1)
         c2_client = self.client.container.client(cid_2)
 
@@ -233,13 +234,14 @@ class ExtendedNetworking(BaseTest):
 
         self.lg('Create 2 containers C1, C2 with bridge (B1), should succeed')
         nic1 = [{'type': 'bridge', 'id': bridge_name, 'config': {'dhcp': True}}]
-        cid_1 = self.client.container.create(self.root_url, storage=self.storage, nics=nic1)
-        cid_2 = self.client.container.create(self.root_url, storage=self.storage, nics=nic1)
+        cid_1 = self.create_container(self.root_url, storage=self.storage, nics=nic1)
+        cid_2 = self.create_container(self.root_url, storage=self.storage, nics=nic1)
         client_c1 = self.client.container.client(cid_1)
         client_c2 = self.client.container.client(cid_2)
 
         for container_client in [client_c1, client_c2]:
             self.lg('Check if each container (C1), (C2) got an ip address, should succeed')
+            time.sleep(20)
             nics = container_client.info.nic()
             nic = [x for x in nics if x['name'] == 'eth0']
             self.assertNotEqual(nic, [])
@@ -269,8 +271,8 @@ class ExtendedNetworking(BaseTest):
         **Test Scenario:**
         #. Create bridge (B1) with nat = False/True, should succeed
         #. Create new container and attach bridge (B1) to it, should succeed
-        #. Remove container's default network interface eth0, should succeed
-        #. set network interface eth1 as default route, should succeed
+        #. Add ip to eth0 and set it up, should succeed
+        #. set network interface eth0 as default route, should succeed
         #. Try to ping 8.8.8.8 when NAT is enabled, should succeed
         #. Try to ping 8.8.8.8 when NAT is disabled, should fail
         #. Delete bridge (B2), should succeed
@@ -289,17 +291,20 @@ class ExtendedNetworking(BaseTest):
             time.sleep(2)
 
             self.lg('Create new container and attach bridge (B1) to it, should succeed')
-            cid = self.client.container.create(self.root_url, storage=self.storage,  bridge=[(bridge_name, '10.1.0.2/24')])
+            nic = [{'type': 'bridge', 'id': bridge_name}]
+            cid = self.create_container(self.root_url, storage=self.storage, nics=nic)
             container_client = self.client.container.client(cid)
             time.sleep(2)
 
-            self.lg('Remove default network interface eth0, should succeed')
-            response = container_client.bash('ip l s eth0 down').get()
+            self.lg('Add ip to eth0 and set it up')
+            response = container_client.system('ip a a 10.1.0.2/24 dev eth0').get()
             self.assertEqual(response.state, 'SUCCESS', response.stderr)
-            time.sleep(2)
+            response = container_client.bash('ip l s eth0 up').get()
+            self.assertEqual(response.state, 'SUCCESS', response.stderr)
+            time.sleep(1)
 
-            self.lg('set network interface eth1 as default route, should succeed')
-            response = container_client.bash('ip route add default dev eth1 via 10.1.0.1').get()
+            self.lg('set network interface eth0 as default route, should succeed')
+            response = container_client.bash('ip route add default dev eth0 via 10.1.0.1').get()
             self.assertEqual(response.state, 'SUCCESS', response.stderr)
             time.sleep(2)
 
@@ -308,6 +313,7 @@ class ExtendedNetworking(BaseTest):
                 response = container_client.bash('ping -w3 8.8.8.8', response.stdout).get()
                 self.assertEqual(response.state, 'SUCCESS', response.stdout)
             else:
+                time.sleep(20)
                 self.lg('Try to ping 8.8.8.8 when NAT is disabled, should fail')
                 response = container_client.bash('ping -w3 8.8.8.8', response.stdout).get()
                 self.assertEqual(response.state, 'ERROR', response.stdout)

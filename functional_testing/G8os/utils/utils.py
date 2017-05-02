@@ -118,10 +118,12 @@ class BaseTest(unittest.TestCase):
     def get_contanier_zt_ip(self, client):
         """
         method to get zerotier ip address of the g8os container
+        Note: to use this method, make sure that zt is defined first in the nic
+        list during creating your container, so it could be attached to etho interface
         """
         nics = client.info.nic()
         for nic in nics:
-            if 'zt' in nic['name']:
+            if 'eth0' in nic['name']:
                 address = nic['addrs'][0]['addr']
                 address = address[:address.find('/')]
                 return address
@@ -153,8 +155,8 @@ class BaseTest(unittest.TestCase):
             self.client.bash('rm -rf {}{}'.format(files_loc, f))
         return loop_devs
 
-    def create_container(self, root_url, storage=None, nics=[]):
-        container = self.client.container.create(root_url=root_url, storage=storage, nics=nics)
+    def create_container(self, root_url, storage=None, nics=[], host_network=False, tags=None):
+        container = self.client.container.create(root_url=root_url, storage=storage, host_network=host_network, nics=nics, tags=tags)
         result = container.get(30)
         if result.state != 'SUCCESS':
             raise RuntimeError('failed to create container %s' % result.data)
