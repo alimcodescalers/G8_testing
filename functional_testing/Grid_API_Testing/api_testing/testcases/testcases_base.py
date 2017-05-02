@@ -47,14 +47,7 @@ class TestcasesBase(TestCase):
         resource = resource.json()
         for _ in range(timeout):
             if resource['status'] == status:
-                if status == 'running':
-                    counter = 10
-                    while resource['containerid'] == 0 or counter != 0:
-                        time.sleep(1)
-                        resource = func(**kwargs)  # get resource
-                        resource = resource.json()
-                        counter -= 1
-                return resource['containerid']
+                return True
             time.sleep(1)
             resource = func(**kwargs)  # get resource
             resource = resource.json()
@@ -69,7 +62,7 @@ class TestcasesBase(TestCase):
         if not len(container_list):
             container_name = self.rand_str()
             hostname = self.rand_str()
-            container_body = {"id": container_name, "hostname": hostname, "flist": self.root_url,
+            container_body = {"name": container_name, "hostname": hostname, "flist": self.root_url,
                               "hostNetworking": False, "initProcesses": [], "filesystems": [],
                               "ports": [], "storage": "ardb://hub.gig.tech:16379",
                               "nics": [{'type': 'default',
@@ -84,16 +77,15 @@ class TestcasesBase(TestCase):
 
         while counter != 0:
             if not container_name:
-                container_name = container_list[random.randint(0, len(container_list)-1)]['id']
-            container_id = self.wait_for_container_status('running', self.containers_api.get_containers_containerid,
-                                                          node_id=node_id, container_id=container_name)
-            if not container_id:
+                container_name = container_list[random.randint(0, len(container_list)-1)]['name']
+            if not self.wait_for_container_status('running', self.containers_api.get_containers_containerid,
+                                                          node_id=node_id, container_id=container_name):
                 container_name = None
                 counter -= counter
             else:
                 counter = 0
 
-        return container_id, container_name
+        return container_name
 
     def rand_str(self):
         return str(uuid.uuid4()).replace('-', '')[1:10]

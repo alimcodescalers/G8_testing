@@ -91,6 +91,7 @@ class Client:
         return diskInfo
 
     def get_container_info(self, container_id):
+        container_id = list(self.client.container.find(container_id).keys())[0]
         container_info = {}
         golden_data = self.client.container.list().get(str(container_id), None)
         if not golden_data:
@@ -104,9 +105,10 @@ class Client:
         container_info['storage'] = golden_value['arguments']['storage']
         return container_info
 
-    def get_container_job_list(self, container_id):
+    def get_container_job_list(self, container_name):
+        container_id = list(self.client.container.find(container_name).keys())[0]
         golden_values = []
-        container = self.client.container.client(container_id)
+        container = self.client.container.client(int(container_id))
         container_data = container.job.list()
         # cannot compare directly as the job.list is considered a job and has a different id everytime is is called
         for i, golden_value in enumerate(container_data[:]):
@@ -116,18 +118,19 @@ class Client:
             golden_values.append((golden_value['cmd']['id'], golden_value['starttime']))
         return set(golden_values)
 
-    def wait_on_container_update(self, container_id, timeout, removed):
+    def wait_on_container_update(self, container_name, timeout, removed):
         for _ in range(timeout):
             if removed:
-                if str(container_id) not in self.client.container.list().keys():
+                if not self.client.container.find(container_name):
                     return True
             else:
-                if str(container_id) in self.client.container.list().keys():
+                if self.client.container.find(container_name):
                     return True
             time.sleep(1)
         return False
 
-    def wait_on_container_job_update(self, container_id, job_id, timeout, removed):
+    def wait_on_container_job_update(self, container_name, job_id, timeout, removed):
+        container_id = int(list(self.client.container.find(container_name).keys())[0])
         container = self.client.container.client(container_id)
         for _ in range(timeout):
             if removed:
@@ -138,4 +141,3 @@ class Client:
                     return True
             time.sleep(1)
         return False
-
