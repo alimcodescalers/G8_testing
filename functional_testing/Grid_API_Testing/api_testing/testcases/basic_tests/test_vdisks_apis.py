@@ -5,23 +5,22 @@ from api_testing.grid_apis.apis.storageclusters_apis import Storageclusters
 from api_testing.python_client.client import Client
 import unittest
 
-@unittest.skip('bug: #112')
 class TestVdisks(TestcasesBase):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.vdisks_apis = VDisksAPIs()
-        self.storageclusters_apis = Storageclusters()
+        self.storageclusters_api = Storageclusters()
 
     def setUp(self):
         super(TestVdisks, self).setUp()
         self.lg.info('Deploy new storage cluster (SC0)')
         sc_label = self.rand_str()
-        sc_servers = 1
+        sc_servers = random.randint(1,100)
         sc_types = ['nvme', 'ssd', 'hdd', 'archive']
-        sc_drivetype = self.random_item(self.types)
+        sc_drivetype = self.random_item(sc_types)
         sc_slaveNodes = self.random_item([True, False])
         sc_nodes = [self.get_random_node()]
-        sc_body = {"label": self.sc_label,
+        sc_body = {"label": sc_label,
                         "servers": sc_servers,
                         "driveType": sc_drivetype,
                         "slaveNodes": sc_slaveNodes,
@@ -42,7 +41,7 @@ class TestVdisks(TestcasesBase):
                      "size": self.size,
                      "blocksize": self.block_size,
                      "type": self.type,
-                     "storagecluster": self.storagecluster
+                     "storagecluster": self.storagecluster,
                      "readOnly":self.readOnly}
 
         self.vdisks_apis.post_vdisks(self.body)
@@ -116,7 +115,7 @@ class TestVdisks(TestcasesBase):
                 "size": size,
                 "blocksize": block_size,
                 "type": vdisk_type,
-                "storagecluster": self.storagecluster
+                "storagecluster": self.storagecluster,
                 "readOnly":readOnly}
 
         response = self.vdisks_apis.post_vdisks(body)
@@ -128,7 +127,7 @@ class TestVdisks(TestcasesBase):
         self.assertIn(vdisk_id, [x['id'] for x in response.json()])
 
         self.lg.info('Delete vdisk (VD0), should succeed with 204')
-        self.vdisks_apis.delete_vdisks_vdiskid(self.vdisk_id)
+        response = self.vdisks_apis.delete_vdisks_vdiskid(self.vdisk_id)
         self.assertEqual(response.status_code, 204)
 
         self.lg.info('Create vdisk with invalid body, should fail with 400')
@@ -149,7 +148,7 @@ class TestVdisks(TestcasesBase):
         #. Delete nonexisting vdisk, should fail with 404.
         """
         self.lg.info('Delete vdisk (VD0), should succeed with 204')
-        self.vdisks_apis.delete_vdisks_vdiskid(self.vdisk_id)
+        response = self.vdisks_apis.delete_vdisks_vdiskid(self.vdisk_id)
         self.assertEqual(response.status_code, 204)
 
         self.lg.info('List vdisks, (VD0) should be gone')
@@ -158,10 +157,10 @@ class TestVdisks(TestcasesBase):
         self.assertNotIn(self.vdisk_id, [x['id'] for x in response.json()])
 
         self.lg.info('Delete nonexisting vdisk, should fail with 404')
-        self.vdisks_apis.delete_vdisks_vdiskid('fake_vdisk')
+        response = self.vdisks_apis.delete_vdisks_vdiskid('fake_vdisk')
         self.assertEqual(response.status_code, 404)
 
-
+    @unittest.skip('bug: #150')
     def test005_resize_vdisk(self):
         """ GAT-003
         *POST:/vdisks/{vdiskid}/resize*
