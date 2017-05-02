@@ -50,6 +50,7 @@ if __name__ == '__main__':
     executer.update_machine()
     executer.install_zerotire()
     executer.add_node_to_zerotire_nw()
+    executer.authorize_zerotire_member(member=executer.get_zerotire_info())
     executer.install_jumpscale(branch=JUMPSACLE_BRANCH)
     executer.install_zerotire_lib()
     executer.install_g8core_python_client(branch=G8CORE_CLIENT)

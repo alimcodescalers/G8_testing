@@ -2,6 +2,7 @@ import time, requests, os, uuid, logging, configparser
 from subprocess import Popen, PIPE
 from install_testing_nodes.src.client import Client
 from random import randint
+from termcolor import colored
 
 
 class Basic(object):
@@ -102,4 +103,17 @@ class Basic(object):
         return blueprint
 
     def build_discovering_blueprint(self):
+        pass
+
+    def authorize_zerotire_member(self, member):
+        self.logging.info(' [*] Authorized zerotire %s member ... ' % member)
+        print(colored(' [*] Authorized zerotire %s member ... ' % member))
+        session = requests.Session()
+        session.headers['Authorization'] = 'Bearer %s' % self.values['zerotier_token']
+        url = 'https://my.zerotier.com/api/network/%s/member/%s' % (self.values['zerotire_nw'], member)
+        data = {'config': {'authorized': True}}
+        response = session.post(url=url, json=data)
+        response.raise_for_status()
+
+    def create_zerotire_nw(self):
         pass

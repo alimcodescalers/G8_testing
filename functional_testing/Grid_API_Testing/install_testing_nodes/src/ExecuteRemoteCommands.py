@@ -100,7 +100,7 @@ class ExecuteRemoteCommands(RequestEnvAPI):
     def start_AYS_server(self):
         self.logging.info(' [*] Starting AYS .... ')
         print(colored(' [*] Starting AYS .... ', 'white'))
-        command = 'echo %s | sudo -S bash -c "ays start --bind 0.0.0.0 --debug" ' % self.virtualmachine['password']
+        command = 'echo %s | sudo -S bash -c "ays start --bind 0.0.0.0  --log debug" ' % self.virtualmachine['password']
         self.execute_command(command=command, skip_error=True)
 
         time.sleep(10)
@@ -124,7 +124,7 @@ class ExecuteRemoteCommands(RequestEnvAPI):
         print(colored(' [*] Discover g8os nodes .... ', 'white'))
 
         discovering_blueprint = self.get_discovering_blueprint(auto_discovering=auto_discovering)
-        command = """echo 'cd /optvar/cockpit_repos/grid/ && printf "%s" > blueprints/discover_nodes && ays blueprint && ays run create --follow' > discover_g8os_nodes.sh""" % discovering_blueprint
+        command = """echo 'cd /optvar/cockpit_repos/grid/ && printf "%s" > blueprints/discover_nodes && ays blueprint && ays run create -y' > discover_g8os_nodes.sh""" % discovering_blueprint
         self.execute_command(command=command, skip_error=True)
 
         command = 'echo %s | sudo -S bash discover_g8os_nodes.sh' % self.virtualmachine['password']
@@ -143,17 +143,21 @@ class ExecuteRemoteCommands(RequestEnvAPI):
     def start_API_server(self, API_branch, ays_server_ip):
         self.logging.info(' [*] Starting %s G8OS Grid API ..... ' % API_branch)
         print(colored(' [*] Starting %s G8OS Grid API ..... ' % API_branch, 'white'))
-        command = """ echo 'mkdir -p /opt/code/ && cd /opt/code/ && export GOPATH="/opt/code/" && go get github.com/g8os/grid; cd src/github.com/g8os/grid/ && git checkout %s && git pull' > start_api_server.sh """ % API_branch
+        command = """ echo 'mkdir -p /opt/code/ && cd /opt/code/ && export GOPATH="/opt/code/" && go get github.com/g8os/grid; cd src/github.com/g8os/grid/ && git checkout %s && git pull' > start_api_server_1.sh """ % API_branch
         self.execute_command(command, skip_error=True)
-        command = 'echo %s | sudo -S bash start_api_server.sh' % self.virtualmachine['password']
+        command = 'echo %s | sudo -S bash start_api_server_1.sh' % self.virtualmachine['password']
         self.execute_command(command=command)
-        import ipdb; ipdb.set_trace()
-        command = """cd /opt/code/src/github.com/g8os/grid/api/ && export GOPATH="/opt/code/" && go get && go install && /opt/code/bin/api --bind :8080 --ays-url http://%s:5000 --ays-repo grid& """ % ays_server_ip
-        self.execute_command('echo %s | sudo -S bash -c %s' % (self.virtualmachine['password'], command))
+        command = """ echo 'cd /opt/code/src/github.com/g8os/grid/api/ && export GOPATH="/opt/code/" && go get && go install && /opt/code/bin/api --bind :8080 --ays-url http://%s:5000 --ays-repo grid&' > start_api_server_2.sh """ % ays_server_ip
+        self.execute_command(command, skip_error=True)
+        command = """echo %s | sudo -S bash -c "tmux new-session -d -s start_api 'bash start_api_server_2.sh; bash -i'" """ % self.virtualmachine['password']
+        self.execute_command(command=command, skip_error=True)
+        self.execute_command('netstat -anp | grep 8080')
+
+        #self.execute_command('echo %s | sudo -S bash -c %s' % (self.virtualmachine['password'], command))
 
     def install_zerotire(self):
         self.logging.info(' [*] Installing zerotire ... ')
-        print(colored(' [*] Installing zerotire ... '))
+        print(colored(' [*] Installing zerotire ... ', 'white'))
         command = """
                 echo "curl -s 'https://pgp.mit.edu/pks/lookup?op=get&search=0x1657198823E52A61' | gpg --import && \ if z=$(curl -s 'https://install.zerotier.com/' | gpg); then echo $z | sudo bash; fi" > insatll_zerotire.sh
                 """
@@ -180,6 +184,13 @@ class ExecuteRemoteCommands(RequestEnvAPI):
 
     def install_zerotire_lib(self):
         self.logging.info(' [*] Installing zerotier ... ')
-        print(colored(' [*] [*] Installing zerotier ... '))
+        print(colored('[*] Installing zerotier ... ', 'white'))
         command = 'echo %s | sudo -S bash -c "pip install zerotier" ' % self.virtualmachine['password']
         self.execute_command(command=command)
+
+    def get_zerotire_info(self):
+        self.logging.info('     [*] Getting zerotier info ... ')
+        print(colored('     [*] Getting zerotier info ...'))
+        command = 'echo %s | sudo -S bash -c "zerotier-cli info" ' % self.virtualmachine['password']
+        info = self.execute_command(command=command)[0].split()
+        return info[2]
