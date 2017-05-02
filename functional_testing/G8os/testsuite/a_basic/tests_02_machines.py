@@ -9,7 +9,6 @@ class Machinetests(BaseTest):
         super(Machinetests, self).setUp()
         self.check_g8os_connection(Machinetests)
 
-    @unittest.skip('https://github.com/g8os/core0/issues/180')
     def test001_create_destroy_list_kvm(self):
         """ g8os-009
 
@@ -59,7 +58,6 @@ class Machinetests(BaseTest):
 
         self.lg('{} ENDED'.format(self._testID))
 
-    @unittest.skip('bug# https://github.com/g8os/core0/issues/123')
     def test002_create_list_delete_containers(self):
         """ g8os-010
         *Test case for testing creating, listing and deleting containers*
