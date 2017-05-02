@@ -5,3 +5,5 @@ configparser
 packet
 g8core
 pyvirtualdisplay
+nose-testconfig
+nose
