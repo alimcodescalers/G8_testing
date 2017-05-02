@@ -2,7 +2,7 @@ termcolor
 requests
 paramiko
 configparser
-packet
+packet-python
 g8core
 pyvirtualdisplay
 nose-testconfig
