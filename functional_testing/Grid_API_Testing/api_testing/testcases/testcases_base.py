@@ -8,6 +8,7 @@ from api_testing.utiles.nodes_info import *
 import json
 import random
 import requests
+import time
 
 
 class TestcasesBase(TestCase):
@@ -16,14 +17,14 @@ class TestcasesBase(TestCase):
         self.utiles = Utiles()
         self.config = self.utiles.get_config_values()
         self.nodes = self.utiles.nodes
-        self.containter_api = ContainersAPI()
+        self.containers_api = ContainersAPI()
         self.lg = self.utiles.logging
         self.nodes_api = NodesAPI()
         self.session = requests.Session()
         self.zerotier_token = self.config['zerotier_token']
         self.session.headers['Authorization'] = 'Bearer {}'.format(self.zerotier_token)
         self.nodes_info = nodes
-
+        self.createdcontainer=[]
 
     def setUp(self):
         pass
@@ -34,7 +35,7 @@ class TestcasesBase(TestCase):
         return mac_address
 
     def get_random_container(self, node_id):
-        response = self.containter_api.get_containers(node_id)
+        response = self.containers_api.get_containers(node_id)
         self.assertEqual(response.status_code, 200)
         container_list = response.json()
         container_id = container_list[random.randint(0, len(container_list)-1)]['id']
@@ -76,3 +77,50 @@ class TestcasesBase(TestCase):
         else:
             self.lg('can\'t connect to zerotier, {}:{}'.format(r.status_code, r.content))
             return False
+
+    def wait_for_container_status(self, status, func, timeout=100, **kwargs):
+        resource = func(**kwargs)
+        if resource.status_code != 200:
+            return False
+        resource = resource.json()
+        for _ in range(timeout):
+            if resource['status'] == status:
+                return True
+            time.sleep(1)
+            resource = func(**kwargs)  # get resource
+            resource = resource.json()
+        return False
+
+    def get_random_container(self, node_id):
+        response = self.containers_api.get_containers(node_id)
+        self.assertEqual(response.status_code, 200)
+        container_list = response.json()
+        counter = len(container_list)
+        container_name = None
+        if not len(container_list):
+            container_name = self.rand_str()
+            hostname = self.rand_str()
+            container_body = {"name": container_name, "hostname": hostname, "flist": self.root_url,
+                              "hostNetworking": False, "initProcesses": [], "filesystems": [],
+                              "ports": [], "storage": "ardb://hub.gig.tech:16379",
+                              "nics": [{'type': 'default',
+                                        'id': '', 'config': {'dhcp': False,
+                                                             'gateway': '',
+                                                             'cidr': '',
+                                                             'dns': None}}]}
+            response = self.containers_api.post_containers(node_id=node_id, body=container_body)
+            self.assertEqual(response.status_code, 201)
+            self.createdcontainer.append({"node": node_id, "container": container_name})
+            counter = 1
+
+        while counter != 0:
+            if not container_name:
+                container_name = container_list[random.randint(0, len(container_list)-1)]['name']
+            if not self.wait_for_container_status('running', self.containers_api.get_containers_containerid,
+                                                          node_id=node_id, container_id=container_name):
+                container_name = None
+                counter -= counter
+            else:
+                counter = 0
+
+        return container_name

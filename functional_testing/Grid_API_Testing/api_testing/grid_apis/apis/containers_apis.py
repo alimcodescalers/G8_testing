@@ -70,8 +70,8 @@ class ContainersAPI(GridAPIBase):
         return self.request_api(method=method,
                                 api=api)
 
-    def post_containers_containerid_jobs(self, node_id, container_id):
-        method = 'post'
+    def delete_containers_containerid_jobs(self, node_id, container_id):
+        method = 'delete'
         api = ['nodes', node_id, 'containers', container_id, 'jobs']
         return self.request_api(method=method,
                                 api=api)
