@@ -7,8 +7,10 @@ JUMPSACLE_BRANCH = "8.2.0"
 AYS_TEMPLATE_BRANCH = "1.1.0-alpha"
 GRID_API_BRANCH = "1.1.0-alpha"
 G8CORE_CLIENT = "1.1.0-alpha"
-G8OS_IMAGE = 'https://bootstrap.gig.tech/ipxe/1.1.0-alpha/%s/console=ttyS1,115200n8'
-MACHINE_NAME = 'Test-xtremx-0%i' % randint(1, 100)
+#G8OS_IMAGE = 'https://bootstrap.gig.tech/ipxe/1.1.0-alpha/%s/console=ttyS1,115200n8'
+G8OS_IMAGE = 'https://bootstrap.gig.tech/ipxe/1.1.0-alpha-ssh-hotfix/%s/console=ttyS1,115200n8'
+MACHINE_TYPE = 'Type 2'
+MACHINES_NUMBER = 10
 AUTO_DISCOVERING = True
 
 
@@ -16,8 +18,11 @@ if __name__ == '__main__':
     install_g8os_on_packet = InstallG8OSOnPacket()
     print(colored(' [*] STEP 1 : Install g8os in packet, image: %s' % G8OS_IMAGE, 'yellow'))
     install_g8os_on_packet.login()
-    install_g8os_on_packet.ctreate_new_machine(machine_name=MACHINE_NAME,
-                                               image=G8OS_IMAGE)
+    for i in range(MACHINES_NUMBER):
+        MACHINE_NAME = 'Test-xtremx-0%i' % randint(1, 1000)
+        install_g8os_on_packet.ctreate_new_machine(machine_name=MACHINE_NAME,
+                                                   image=G8OS_IMAGE,
+                                                   type=MACHINE_TYPE)
 
     executer = ExecuteRemoteCommands()
     print(colored(' [*] STEP 2 : create account', 'yellow'))
@@ -30,6 +35,7 @@ if __name__ == '__main__':
         MACHINE_MAC = install_g8os_on_packet.get_packet_machine_mac(ip=MACHINE_IP)
         executer.update_g8os_valuse(MACHINE_IP, MACHINE_MAC)
 
+    import ipdb; ipdb.set_trace()
     install_g8os_on_packet.driver_quit()
     # # g8os node
     # print(colored(' [*] STEP 3 : create g8os node', 'yellow'))
@@ -66,8 +72,9 @@ if __name__ == '__main__':
     executer.create_port_forward(publicPorts={22: 2202, 8080: 8080})
     executer.connect_to_virtual_machine(port=2202)
     executer.update_machine()
+    executer.install_zerotire()
+    executer.add_node_to_zerotire_nw()
     executer.install_go()
     executer.start_API_server(API_branch=GRID_API_BRANCH,
                               ays_server_ip=ays_server_ip)
     executer.get_virtualmachine_ip()
-
