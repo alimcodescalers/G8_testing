@@ -23,7 +23,7 @@ class InstallG8OSOnPacket(Basic):
         self.logging.info(' [*] Logged in ')
         print(colored(' [*] Logged in', 'green'))
 
-    def ctreate_new_machine(self, image, machine_name):
+    def ctreate_new_machine(self, image, machine_name, type='Type 0'):
         self.logging.info(' [*] create new machine  .. ')
         print(colored(' [*] create new machine .. ', 'white'))
         image = self.add_zerotire_nw_to_image(image=image)
@@ -33,7 +33,7 @@ class InstallG8OSOnPacket(Basic):
         self.driver.find_element_by_name('hostname').send_keys(machine_name)
 
         select_plan = Select(self.driver.find_element_by_name('rowType'))
-        select_plan.select_by_visible_text('Type 0')
+        select_plan.select_by_visible_text(type)
 
         select_os = Select(self.driver.find_element_by_name('os'))
         select_os.select_by_value('custom_ipxe')
@@ -41,7 +41,7 @@ class InstallG8OSOnPacket(Basic):
 
         select_location = Select(self.driver.find_element_by_xpath(
             '/html/body/app-view/content-offset/ui-view/app-content/div/div[3]/offset/form-offset/form/input-group[1]/offset/offset/grid-table/table-row[2]/table-cell[4]/input-block/sw-drop-down/select'))
-        select_location.select_by_visible_text('Amsterdam, NL')
+        select_location.select_by_visible_text('Sunnyvale, CA')
 
         self.driver.find_element_by_xpath(
             '/html/body/app-view/content-offset/ui-view/app-content/div/div[3]/offset/form-offset/form/input-group[2]/frame-offset/offset[2]/button').click()
@@ -55,6 +55,7 @@ class InstallG8OSOnPacket(Basic):
 
         self.logging.info(' [*] created machine : %s  .. ' % machine_name)
         print(colored(' [*] G8os machine : %s  .. \n' % machine_name, 'green'))
+        self.driver.get('https://app.packet.net/portal')
 
     def get_packt_machine_ip(self, machine_name):
         self.logging.info(' [*] get machine ip .. ')

@@ -189,8 +189,8 @@ class ExecuteRemoteCommands(RequestEnvAPI):
         self.execute_command(command=command)
 
     def get_zerotire_info(self):
-        self.logging.info('     [*] Getting zerotier info ... ')
-        print(colored('     [*] Getting zerotier info ...'))
+        self.logging.info(' [*] Getting zerotier info ... ')
+        print(colored(' [*] Getting zerotier info ...'))
         command = 'echo %s | sudo -S bash -c "zerotier-cli info" ' % self.virtualmachine['password']
         info = self.execute_command(command=command)[0].split()
         return info[2]
