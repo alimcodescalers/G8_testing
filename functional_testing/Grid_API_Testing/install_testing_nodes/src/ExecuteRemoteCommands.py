@@ -151,9 +151,7 @@ class ExecuteRemoteCommands(RequestEnvAPI):
         self.execute_command(command, skip_error=True)
         command = """echo %s | sudo -S bash -c "tmux new-session -d -s start_api 'bash start_api_server_2.sh; bash -i'" """ % self.virtualmachine['password']
         self.execute_command(command=command, skip_error=True)
-        self.execute_command('netstat -anp | grep 8080')
-
-        #self.execute_command('echo %s | sudo -S bash -c %s' % (self.virtualmachine['password'], command))
+        # self.execute_command('netstat -anp | grep 8080')
 
     def install_zerotire(self):
         self.logging.info(' [*] Installing zerotire ... ')

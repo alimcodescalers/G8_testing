@@ -13,7 +13,6 @@ MACHINES_NUMBER = 1
 MACHINES = []
 AUTO_DISCOVERING = True
 
-
 if __name__ == '__main__':
     install_g8os_on_packet = InstallG8OSOnPacket()
     print(colored(' [*] STEP 1 : Install g8os in packet, image: %s' % IPXE_SCRIPT, 'yellow'))
@@ -59,6 +58,7 @@ if __name__ == '__main__':
     executer.update_machine()
     executer.install_zerotire()
     executer.add_node_to_zerotire_nw()
+    executer.authorize_zerotire_member(member=executer.get_zerotire_info())
     executer.install_go()
     executer.start_API_server(API_branch=GRID_API_BRANCH,
                               ays_server_ip=ays_server_ip)
