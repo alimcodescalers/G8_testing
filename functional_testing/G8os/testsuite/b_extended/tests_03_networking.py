@@ -14,7 +14,6 @@ class ExtendedNetworking(BaseTest):
         mac_addr = ["{:02X}".format(randint(0, 255)) for x in range(6)]
         return ':'.join(mac_addr)
 
-    @unittest.skip('bug: https://github.com/g8os/core0/issues/194')
     def test001_zerotier(self):
         """ g8os-014
         *Test case for testing zerotier functionally*
@@ -44,7 +43,7 @@ class ExtendedNetworking(BaseTest):
         self.client.zerotier.join(networkId)
 
         self.lg('Create 2 containers c1, c2 and make them join (N1) && create there clients')
-        nic = [{'type': 'zerotier', 'id': networkId}]
+        nic = [{'type': 'default'}, {'type': 'zerotier', 'id': networkId}]
         cid_1 = self.create_container(root_url=self.root_url, storage=self.storage, nics=nic)
         cid_2 = self.create_container(root_url=self.root_url, storage=self.storage, nics=nic)
         c1_client = self.client.container.client(cid_1)
