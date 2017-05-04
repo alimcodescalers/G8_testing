@@ -233,8 +233,8 @@ class ExtendedNetworking(BaseTest):
 
         self.lg('Create bridge (B1) with dnsmasq network and cidr (CIDR1), should succeed')
         bridge_name = self.rand_str()
-        cidr = "10.20.30.1/24"
-        ip_range = ["10.20.30.2", "10.20.30.3"]
+        cidr = "20.20.30.1/24"
+        ip_range = ["20.20.30.2", "20.20.30.3"]
         start = ip_range[0]
         end = ip_range[1]
         settings = {"cidr":cidr, "start":start, "end":end}
