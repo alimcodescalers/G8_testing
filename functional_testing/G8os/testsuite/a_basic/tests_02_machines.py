@@ -18,6 +18,7 @@ class Machinetests(BaseTest):
 
         #. Check that system support hardware virtualization
         #. Create virtual machine (VM1), should succeed
+        #. Create another vm with the same name, should fail
         #. List all virtual machines and check that VM1 is there
         #. Create another virtual machine with the same kvm domain, should fail
         #. Destroy VM1, should succeed
@@ -35,6 +36,10 @@ class Machinetests(BaseTest):
 
         self.lg('- Create virtual machine {} , should succeed'.format(vm_name))
         self.create_vm(name=vm_name)
+
+        self.lg('Create another vm with the same name, should fail')
+        with self.assertRaises(RuntimeError):
+            self.create_vm(name=vm_name)
 
         self.lg('- List all virtual machines and check that VM {} is there '.format(vm_name))
         Vms_list = self.client.kvm.list()
