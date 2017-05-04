@@ -34,13 +34,6 @@ class TestcasesBase(TestCase):
         mac_address = ':'.join(map(lambda x: "%02x" % x, random_mac))
         return mac_address
 
-    def get_random_container(self, node_id):
-        response = self.containers_api.get_containers(node_id)
-        self.assertEqual(response.status_code, 200)
-        container_list = response.json()
-        container_id = container_list[random.randint(0, len(container_list)-1)]['id']
-        return container_id
-
     def rand_str(self):
         return str(uuid.uuid4()).replace('-', '')[1:10]
 
@@ -108,6 +101,7 @@ class TestcasesBase(TestCase):
                                                              'gateway': '',
                                                              'cidr': '',
                                                              'dns': None}}]}
+
             response = self.containers_api.post_containers(node_id=node_id, body=container_body)
             self.assertEqual(response.status_code, 201)
             self.createdcontainer.append({"node": node_id, "container": container_name})
@@ -118,7 +112,7 @@ class TestcasesBase(TestCase):
                 container_name = container_list[random.randint(0, len(container_list)-1)]['name']
             if not self.wait_for_container_status('running', self.containers_api.get_containers_containerid,
                                                           node_id=node_id, container_id=container_name):
-                container_name = None
+                return False
                 counter -= counter
             else:
                 counter = 0
