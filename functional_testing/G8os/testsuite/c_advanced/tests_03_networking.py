@@ -2,6 +2,7 @@ from utils.utils import BaseTest
 import time
 import re
 from random import randint
+import unittest
 
 
 class AdvancedNetworking(BaseTest):
@@ -231,7 +232,7 @@ class AdvancedNetworking(BaseTest):
 
     @unittest.skip('bug: https://github.com/g8os/core0/issues/206 207')
     def test004_create_multiple_vlans_vxlan(self):
-        """ g8os-031
+        """ g8os-032
         *Test case for creating multiple vlans and vxlans*
 
         **Test Scenario:**
