@@ -106,14 +106,14 @@ class ExecuteRemoteCommands(RequestEnvAPI):
         time.sleep(10)
         self.logging.info(' [*] Create grid repo .... ')
         print(colored(' [*] Create grid repo .... ', 'white'))
-        command = 'echo %s | sudo -S bash -c "ays repo create --name grid --git http://github.com/user/repo" ' % \
+        command = 'echo %s | sudo -S bash -c "ays repo create --name resourcepool --git http://github.com/user/repo" ' % \
                   self.virtualmachine['password']
         self.execute_command(command=command)
 
     def clone_ays_templates(self, branch):
         self.logging.info(' [*] Clone ays templates .... ')
         print(colored(' [*] Clone ays templates .... ', 'white'))
-        command = """echo 'cd /opt/code && git clone https://github.com/g8os/grid/ && cd grid && git checkout %s && ays reload' > clone_ays_template.sh""" % branch
+        command = """echo 'cd /opt/code && git clone https://github.com/g8os/resourcepool/ && cd resourcepool && git checkout %s && ays reload' > clone_ays_template.sh""" % branch
         self.execute_command(command=command, skip_error=True)
 
         command = 'echo %s | sudo -S bash clone_ays_template.sh' % self.virtualmachine['password']
@@ -124,7 +124,7 @@ class ExecuteRemoteCommands(RequestEnvAPI):
         print(colored(' [*] Discover g8os nodes .... ', 'white'))
 
         discovering_blueprint = self.get_discovering_blueprint(auto_discovering=auto_discovering)
-        command = """echo 'cd /optvar/cockpit_repos/grid/ && printf "%s" > blueprints/discover_nodes && ays blueprint && ays run create -y' > discover_g8os_nodes.sh""" % discovering_blueprint
+        command = """echo 'cd /optvar/cockpit_repos/resourcepool/ && printf "%s" > blueprints/discover_nodes && ays blueprint && ays run create -y' > discover_g8os_nodes.sh""" % discovering_blueprint
         self.execute_command(command=command, skip_error=True)
 
         command = 'echo %s | sudo -S bash discover_g8os_nodes.sh' % self.virtualmachine['password']
@@ -143,11 +143,11 @@ class ExecuteRemoteCommands(RequestEnvAPI):
     def start_API_server(self, API_branch, ays_server_ip):
         self.logging.info(' [*] Starting %s G8OS Grid API ..... ' % API_branch)
         print(colored(' [*] Starting %s G8OS Grid API ..... ' % API_branch, 'white'))
-        command = """ echo 'mkdir -p /opt/code/ && cd /opt/code/ && export GOPATH="/opt/code/" && go get github.com/g8os/grid; cd src/github.com/g8os/grid/ && git checkout %s && git pull' > start_api_server_1.sh """ % API_branch
+        command = """ echo 'mkdir -p /opt/code/ && cd /opt/code/ && export GOPATH="/opt/code/" && go get github.com/g8os/resourcepool; cd src/github.com/g8os/resourcepool/ && git checkout %s && git pull' > start_api_server_1.sh """ % API_branch
         self.execute_command(command, skip_error=True)
         command = 'echo %s | sudo -S bash start_api_server_1.sh' % self.virtualmachine['password']
         self.execute_command(command=command)
-        command = """ echo 'cd /opt/code/src/github.com/g8os/grid/api/ && export GOPATH="/opt/code/" && go get && go install && /opt/code/bin/api --bind :8080 --ays-url http://%s:5000 --ays-repo grid&' > start_api_server_2.sh """ % ays_server_ip
+        command = """ echo 'cd /opt/code/src/github.com/g8os/resourcepool/api/ && export GOPATH="/opt/code/" && go get && go install && /opt/code/bin/api --bind :8080 --ays-url http://%s:5000 --ays-repo resourcepool&' > start_api_server_2.sh """ % ays_server_ip
         self.execute_command(command, skip_error=True)
         command = """echo %s | sudo -S bash -c "tmux new-session -d -s start_api 'bash start_api_server_2.sh; bash -i'" """ % self.virtualmachine['password']
         self.execute_command(command=command, skip_error=True)
