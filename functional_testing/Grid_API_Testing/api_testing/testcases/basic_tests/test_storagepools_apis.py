@@ -14,7 +14,7 @@ class TestStoragepoolsAPI(TestcasesBase):
 
         self.lg.info('Get random nodid (N0)')
         self.nodeid = self.get_random_node()
-        pyclient_ip = [x['pyclient'] for x in self.nodes_info if x['id'] == self.nodeid][0]
+        pyclient_ip = [x['ip'] for x in self.nodes_info if x['id'] == self.nodeid][0]
         self.pyclient = Client(pyclient_ip)
 
         self.lg.info('Create storagepool (SP0) on node (N0)')
@@ -49,6 +49,7 @@ class TestStoragepoolsAPI(TestcasesBase):
     def tearDown(self):
         self.lg.info('Delete Storagepool (SP0)')
         self.storagepool_api.delete_storagepools_storagepoolname(self.nodeid, self.storagepool_name)
+        time.sleep(30)
         super(TestStoragepoolsAPI, self).tearDown()
 
     def test001_get_storagepool(self):
@@ -73,7 +74,7 @@ class TestStoragepoolsAPI(TestcasesBase):
         storagepools = self.pyclient.client.btrfs.list()
         storagepool_SP0 = [x for x in storagepools if x['label'] == 'sp_{}'.format(self.storagepool_name)]
         self.assertNotEqual(storagepool_SP0, [])
-        self.assertIn(self.devices, [x['path'][:-1] for x in storagepool_SP0[0]['devices']])
+        self.assertIn(self.devices[0], [x['path'][:-1] for x in storagepool_SP0[0]['devices']])
 
         self.lg.info('Get nonexisting storagepool, should fail with 404')
         response = self.storagepool_api.get_storagepools_storagepoolname(self.nodeid, 'fake_storagepool')
@@ -121,6 +122,7 @@ class TestStoragepoolsAPI(TestcasesBase):
 
         response = self.storagepool_api.post_storagepools(nodeid, body)
         self.assertEqual(response.status_code, 201)
+        time.sleep(30)
         
         self.lg.info('Get Storagepool (SP1), should succeed with 200')
         response = self.storagepool_api.get_storagepools_storagepoolname(nodeid, name)
