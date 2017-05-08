@@ -135,18 +135,21 @@ class Client:
         return False
 
     def getFreeDisks(self):
-        cmd = 'lsblk --noheadings --raw -o NAME,TYPE,MOUNTPOINT'
         freeDisks = []
-        response = self.client.bash(cmd).get().stdout
-        lines = response.splitlines()
-        for line in lines:
-            data = line.split()
-            name = data[0]
-            types = data[1]
-            if types in ['disk', 'part'] and len(data) == 2 and name[:3] != 'sda':
-                freeDisks.append(('/dev/{}'.format(name[:3])))
+        disks = self.client.disk.list()['blockdevices']
+        for disk in disks:
+            if not disk['mountpoint'] and disk['kname'] != 'sda':
+                if 'children' not in disk.keys():
+                    freeDisks.append('/dev/{}'.format(disk['kname']))
+                else:
+                    for children in disk['children']:
+                        if children['mountpoint']:
+                            break
+                    else:
+                        freeDisks.append('/dev/{}'.format(disk['kname']))
 
         return freeDisks
+
 
 
     def get_processes_list(self):

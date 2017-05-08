@@ -1,7 +1,7 @@
 from random import randint
 from api_testing.testcases.testcases_base import TestcasesBase
 from api_testing.grid_apis.apis.bridges_apis import BridgesAPI
-import unittest
+import unittest, time
 from api_testing.python_client.client import Client
 
 # @unittest.skip('bugs: #113, #104, #105')
@@ -15,7 +15,7 @@ class TestBridgesAPI(TestcasesBase):
 
         self.lg.info('Get random nodid (N0)')
         self.nodeid = self.get_random_node()
-        pyclient_ip = [x['ip'] for x in self.nodes_info if x['id'] == self.nodeid][0]
+        pyclient_ip = [x['ip'] for x in self.nodes if x['id'] == self.nodeid][0]
         self.pyclient = Client(pyclient_ip)
 
         self.lg.info('Create bridge (B0) on node (N0)')
@@ -30,6 +30,7 @@ class TestBridgesAPI(TestcasesBase):
                 	"nat":self.nat,
                 	"setting":self.settings}
         self.bridges_api.post_nodes_bridges(self.nodeid, self.body)
+        time.sleep(3)
 
     def tearDown(self):
         self.lg.info('Delete bridge (B0)')
@@ -107,6 +108,7 @@ class TestBridgesAPI(TestcasesBase):
 
         response = self.bridges_api.post_nodes_bridges(self.nodeid, body)
         self.assertEqual(response.status_code, 201, response.content)
+        time.sleep(3)
 
         bridges = self.pyclient.client.bridge.list()
         self.assertIn(name, bridges)

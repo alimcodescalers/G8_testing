@@ -1,7 +1,9 @@
 from random import randint
 from api_testing.testcases.testcases_base import TestcasesBase
 from api_testing.grid_apis.apis.storageclusters_apis import Storageclusters
+import unittest
 
+@unittest.skip('https://github.com/g8os/resourcepool/issues/175')
 class TestStorageclustersAPI(TestcasesBase):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -14,13 +16,17 @@ class TestStorageclustersAPI(TestcasesBase):
         self.servers = randint(1,1000)
         self.types = ['nvme', 'ssd', 'hdd', 'archive']
         self.drivetype = self.random_item(self.types)
-        self.slaveNodes = self.random_item([True, False])
-        self.nodes = [self.get_random_node()]
+        if len(self.nodes) < 2:
+            self.slaveNodes = False
+        else:
+            self.slaveNodes = self.random_item([True, False])
+
+        nodes = [x['id'] for x in self.nodes]
         self.body = {"label": self.label,
                      "servers": self.servers,
                      "driveType": self.drivetype,
                      "slaveNodes": self.slaveNodes,
-                     "nodes":self.nodes}
+                     "nodes":nodes}
         self.storageclusters_api.post_storageclusters(self.body)
 
     def tearDown(self):
