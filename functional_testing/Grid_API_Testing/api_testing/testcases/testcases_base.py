@@ -13,11 +13,11 @@ class TestcasesBase(TestCase):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.utiles = Utiles()
+        self.nodes_api = NodesAPI()
         self.config = self.utiles.get_config_values()
         self.nodes = self.update_nodes_info()
-        self.containters_api = ContainersAPI()
+        self.containers_api = ContainersAPI()
         self.lg = self.utiles.logging
-        self.nodes_api = NodesAPI()
         self.session = requests.Session()
         self.zerotier_token = self.config['zerotier_token']
         self.session.headers['Authorization'] = 'Bearer {}'.format(self.zerotier_token)
@@ -40,15 +40,11 @@ class TestcasesBase(TestCase):
     def get_random_node(self, except_node=None):
         response = self.nodes_api.get_nodes()
         self.assertEqual(response.status_code, 200)
-        nodes_list = [x['id'] for x in response.json()]
-        if except_node is not None and except_node in nodes_list:
-            nodes_list = nodes_list.remove(except_node)
+        nodes_list = [x['id'] for x in response.json() if x['status']=='running']
+        if nodes_list:
+            if except_node is not None and except_node in nodes_list:
+                nodes_list = nodes_list.remove(except_node)
 
-        tmp = []
-        for node in nodes_list:
-            if node['status'] == 'running':
-                tmp.append(node)
-        nodes_list = list(tmp)
         if len(nodes_list) > 0:
             node_id = nodes_list[randint(0, len(nodes_list)-1)]
             return node_id
@@ -118,15 +114,16 @@ class TestcasesBase(TestCase):
               
               
     def get_node_physical_ip(self, node_id):
-            resonse = self.nodes_api.get_nodes_nodeid_nics(node_id)
-            self.assertEqual(resonse.status_code, 200)
+            response = self.nodes_api.get_nodes_nodeid_nics(node_id)
+            self.assertEqual(response.status_code, 200)
 
             nic = {}
-            for data in resonse.json():
-                if data['name'] == "enp0s20f0":
-                    nic['ip'] = data['addrs'][0].split('/')[0]
-                    nic['id'] = data['hardwareaddr'].replace(':', '')
-                    return nic
+            for data in response.json():
+                if data['addrs']:
+                    if "147." in data['addrs'][0]:
+                        nic['ip'] = data['addrs'][0].split('/')[0]
+                        nic['id'] = data['hardwareaddr'].replace(':', '')
+                        return nic
 
     def update_nodes_info(self):
         nodes_info = []
