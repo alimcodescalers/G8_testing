@@ -8,7 +8,7 @@ class DisksTests(BaseTest):
         super(DisksTests, self).setUp()
         self.check_g8os_connection(DisksTests)
 
-    def create_btrfs(self):
+    def create_btrfs(self, second_btrfs=False):
         self.lg('Create Btrfs file system (Bfs1), should succeed')
         self.label = self.rand_str()
         self.loop_dev_list = self.setup_loop_devices(['bd0', 'bd1'], '500M', deattach=True)
@@ -17,6 +17,14 @@ class DisksTests(BaseTest):
         self.mount_point = '/mnt/{}'.format(self.rand_str())
         self.client.bash('mkdir -p {}'.format(self.mount_point))
         self.client.disk.mount(self.loop_dev_list[0], self.mount_point, [""])
+        if second_btrfs:
+            self.label2 = self.rand_str()
+            self.loop_dev_list2 = self.setup_loop_devices(['bd2', 'bd3'], '500M', deattach=False)
+            self.lg('Mount the btrfs filesystem (Bfs2)')
+            self.client.btrfs.create(self.label2, self.loop_dev_list2)
+            self.mount_point2 = '/mnt/{}'.format(self.rand_str())
+            self.client.bash('mkdir -p {}'.format(self.mount_point2))
+            self.client.disk.mount(self.loop_dev_list2[0], self.mount_point2, [""])
 
     def destroy_btrfs(self):
         self.lg('Remove all loop devices')
@@ -476,6 +484,70 @@ class DisksTests(BaseTest):
         self.assertEqual(rs.get().stderr, 'fallocate: fallocate failed: Disk quota exceeded\n')
 
         self.lg('Destroy this btrfs filesystem')
+        self.destroy_btrfs()
+
+        self.lg('{} ENDED'.format(self._testID))
+
+    @unittest.skip('bug: https://github.com/g8os/core0/issues/213')
+    def test009_btrfs_add_remove_devices(self):
+        """ g8os-033
+        *Test case for adding and removing devices for btrfs *
+
+        **Test Scenario:**
+        #. Create Btrfs file system (Bfs1), should succeed
+        #. Create Btrfs file system (Bfs2), should succeed
+        #. Add device (D1) to the (Bfs1) using fake mount point, should fail
+        #. Add device (D1) to the (Bfs1) mount point, should succeed
+        #. Add (D1) again to the (Bfs1) mount point, should fail
+        #. Remove device (D1) using (Bfs2) mount point, should fail
+        #. Remove device (D1) using any fake device, should fail
+        #. Remove device (D1) using fake mount point, should fail
+        #. Remove device (D1) using (Bfs1) mount point, should succeed
+        """
+
+        self.lg('{} STARTED'.format(self._testID))
+
+        self.lg('Create Btrfs file system, should succeed')
+        self.create_btrfs()
+
+        self.lg('Create Btrfs file system (Bfs1), should succeed')
+        self.lg('Create Btrfs file system (Bfs2), should succeed')
+        self.create_btrfs(second_btrfs=True)
+
+        self.lg('Add device (D1) to the (Bfs1) using fake mount point, should fail')
+        d1 = self.setup_loop_devices(['bd4'], '500M', deattach=False)
+        with self.assertRaises(RuntimeError):
+            self.client.btrfs.device_add('/mnt/'.format(self.rand_str()), d1)
+
+        self.lg('Add device (D1) to the (Bfs1) mount point, should succeed')
+        self.client.btrfs.device_add(self.mount_point, d1)
+        rs = self.client.bash('btrfs filesystem show | grep -o "loop0"')
+        self.assertEqual(rs.get().stdout, 'loop0\n')
+        self.assertEqual(rs.get().state, 'SUCCESS')
+
+        self.lg('Add (D1) again to the (Bfs1) mount point, should fail')
+        with self.assertRaises(RuntimeError):
+            self.client.btrfs.device_add(self.mount_point, d1)
+
+        self.lg('Remove device (D1) using (Bfs2) mount point, should fail')
+        with self.assertRaises(RuntimeError):
+            self.client.btrfs.device_remove(self.mount_point2, d1)
+
+        self.lg('Remove device (D1) using any fake device, should fail')
+        with self.assertRaises(RuntimeError):
+            self.client.btrfs.device_remove(self.mount_point, self.rand_str())
+
+        self.lg('Remove device (D1) using fake mount point, should fail')
+        with self.assertRaises(RuntimeError):
+            self.client.btrfs.device_remove('/mnt/'.format(self.rand_str()), d1)
+
+        self.lg('Remove device (D1) using (Bfs1) mount point, should succeed')
+        self.client.btrfs.device_remove(self.mount_point, d1)
+        rs = self.client.bash('btrfs filesystem show | grep -o "loop0"')
+        self.assertEqual(rs.get().stdout, '')
+        self.assertEqual(rs.get().state, 'SUCCESS')
+
+        self.lg('Destroy both (Bfs1) and (Bfs2)')
         self.destroy_btrfs()
 
         self.lg('{} ENDED'.format(self._testID))

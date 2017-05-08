@@ -14,7 +14,6 @@ class ExtendedNetworking(BaseTest):
         mac_addr = ["{:02X}".format(randint(0, 255)) for x in range(6)]
         return ':'.join(mac_addr)
 
-    @unittest.skip('bug: https://github.com/g8os/core0/issues/194')
     def test001_zerotier(self):
         """ g8os-014
         *Test case for testing zerotier functionally*
@@ -44,7 +43,7 @@ class ExtendedNetworking(BaseTest):
         self.client.zerotier.join(networkId)
 
         self.lg('Create 2 containers c1, c2 and make them join (N1) && create there clients')
-        nic = [{'type': 'zerotier', 'id': networkId}]
+        nic = [{'type': 'default'}, {'type': 'zerotier', 'id': networkId}]
         cid_1 = self.create_container(root_url=self.root_url, storage=self.storage, nics=nic)
         cid_2 = self.create_container(root_url=self.root_url, storage=self.storage, nics=nic)
         c1_client = self.client.container.client(cid_1)
@@ -152,6 +151,7 @@ class ExtendedNetworking(BaseTest):
         **Test Scenario:**
         #. Create bridge (B1) with static network and cidr (C1), should succeed
         #. Check the created bridge addresses contains cidr (C1), should succeed
+        #. Create another bridge with static network and cidr (C1), should fail
         #. Delete bridge (B1), should succeed
         #. Create bridge with invalid cidr, should fail
         #. Create bridge (B2) with dnsmasq network and cidr (C2), should succeed
@@ -173,6 +173,10 @@ class ExtendedNetworking(BaseTest):
         self.assertNotEqual(nic, [])
         addrs = [x['addr'] for x in nic[0]['addrs']]
         self.assertIn(cidr, addrs)
+
+        self.lg('Create another bridge with static network and cidr (C1), should fail')
+        with self.assertRaises(RuntimeError):
+            self.client.bridge.create(self.rand_str(), network='static', settings=settings)
 
         self.lg('Delete bridge (B1), should succeed')
         self.client.bridge.delete(bridge_name)
@@ -208,6 +212,7 @@ class ExtendedNetworking(BaseTest):
 
         self.lg('{} ENDED'.format(self._testID))
 
+    @unittest.skip('bug: https://github.com/g8os/core0/issues/195')
     def test004_attach_bridge_to_container(self):
         """ g8os-027
         *Test case for testing creating, listing, deleting bridges*
@@ -219,14 +224,16 @@ class ExtendedNetworking(BaseTest):
         #. Check if each container can reach the other one, should succeed
         #. Delete bridge (B1), should succeed
         #. Check if host can reach remote server (google.com) using dns
+        #. Create another bridge (B2) with same cidr, should succeed
+        #. Create container (C3) and check if it got ip address, should succeed
         """
 
         self.lg('{} STARTED'.format(self._testID))
 
         self.lg('Create bridge (B1) with dnsmasq network and cidr (CIDR1), should succeed')
         bridge_name = self.rand_str()
-        cidr = "10.20.30.1/24"
-        ip_range = ["10.20.30.2", "10.20.30.3"]
+        cidr = "20.20.30.1/24"
+        ip_range = ["20.20.30.2", "20.20.30.3"]
         start = ip_range[0]
         end = ip_range[1]
         settings = {"cidr":cidr, "start":start, "end":end}
@@ -261,6 +268,21 @@ class ExtendedNetworking(BaseTest):
         self.lg('Check if host can reach remote server (google.com) using dns')
         response = self.client.bash('ping -w10 google.com').get()
         self.assertEqual(response.state, 'SUCCESS', response.stderr)
+
+        self.lg('Create another bridge (B2) with same cidr, should succeed')
+        b2_name = self.rand_str()
+        self.client.bridge.create(b2_name, network='dnsmasq', settings=settings)
+
+        self.lg('Create container (C3) and check if it got ip address, should succeed')
+        nic2 = [{'type': 'bridge', 'id': b2_name, 'config': {'dhcp': True}}]
+        cid_3 = self.create_container(self.root_url, storage=self.storage, nics=nic2)
+        client_c3 = self.client.container.client(cid_3)
+        time.sleep(20)
+        nics = client_c3.info.nic()
+        nic = [x for x in nics if x['name'] == 'eth0']
+        self.assertNotEqual(nic, [])
+        current_container_addr = [x['addr'] for x in nic[0]['addrs'] if x['addr'][:x['addr'].find('/')] in ip_range][0]
+        self.assertNotEqual(current_container_addr, [])
 
         self.lg('{} ENDED'.format(self._testID))
 

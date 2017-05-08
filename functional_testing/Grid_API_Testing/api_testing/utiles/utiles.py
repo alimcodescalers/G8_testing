@@ -1,12 +1,10 @@
 import os, configparser, logging
-from api_testing.utiles.nodes_info import nodes
 
 
 class Utiles:
     def __init__(self):
         self.config = {}
         self.logging = logging
-        self.nodes = nodes
         self.log('api_testing/api_testing.log')
 
     def get_config_values(self):

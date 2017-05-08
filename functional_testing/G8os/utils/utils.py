@@ -123,7 +123,7 @@ class BaseTest(unittest.TestCase):
         """
         nics = client.info.nic()
         for nic in nics:
-            if 'eth0' in nic['name']:
+            if 'zt' in nic['name']:
                 address = nic['addrs'][0]['addr']
                 address = address[:address.find('/')]
                 return address
@@ -188,3 +188,10 @@ class BaseTest(unittest.TestCase):
             self.assertEqual(rs.get().state, 'SUCCESS')
         result = self.client.kvm.create(name=name, media=[{'url': '{}/{}'.format(img_loc, image)}])
         self.assertEqual(result.state, 'SUCCESS')
+
+    def check_nic_exist(self, name):
+        nic_lst = [True for nic in self.client.info.nic() if nic['name'] == name]
+        if nic_lst:
+            return len(nic_lst) # should be always one
+        else:
+            return False
