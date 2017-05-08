@@ -4,8 +4,6 @@ from unittest import TestCase
 from api_testing.utiles.utiles import Utiles
 from api_testing.grid_apis.apis.nodes_apis import NodesAPI
 from api_testing.grid_apis.apis.containers_apis import ContainersAPI
-from api_testing.utiles.nodes_info import *
-import json
 import random
 import requests
 
@@ -15,15 +13,13 @@ class TestcasesBase(TestCase):
         super().__init__(*args, **kwargs)
         self.utiles = Utiles()
         self.config = self.utiles.get_config_values()
-        self.nodes = self.utiles.nodes
+        self.nodes = self.update_nodes_info()
         self.containter_api = ContainersAPI()
         self.lg = self.utiles.logging
         self.nodes_api = NodesAPI()
         self.session = requests.Session()
         self.zerotier_token = self.config['zerotier_token']
         self.session.headers['Authorization'] = 'Bearer {}'.format(self.zerotier_token)
-        self.nodes_info = nodes
-
 
     def setUp(self):
         pass
@@ -53,6 +49,11 @@ class TestcasesBase(TestCase):
         if except_node is not None and except_node in nodes_list:
             nodes_list = nodes_list.remove(except_node)
 
+        tmp = []
+        for node in nodes_list:
+            if node['status'] == 'running':
+                tmp.append(node)
+        nodes_list = list(tmp)
         if len(nodes_list) > 0:
             node_id = nodes_list[randint(0, len(nodes_list)-1)]
             return node_id
@@ -76,3 +77,25 @@ class TestcasesBase(TestCase):
         else:
             self.lg('can\'t connect to zerotier, {}:{}'.format(r.status_code, r.content))
             return False
+
+    def get_node_physical_ip(self, node_id):
+        resonse = self.nodes_api.get_nodes_nodeid_nics(node_id)
+        self.assertEqual(resonse.status_code, 200)
+
+        nic = {}
+        for data in resonse.json():
+            if data['name'] == "enp0s20f0":
+                nic['ip'] = data['addrs'][0].split('/')[0]
+                nic['id'] = data['hardwareaddr'].replace(':', '')
+                return nic
+
+    def update_nodes_info(self):
+        nodes_info = []
+        response = self.nodes_api.get_nodes()
+        self.assertEqual(response.status_code, 200)
+        for node in response.json():
+            if node['status'] == 'running':
+                nodes_info.append(self.get_node_physical_ip(node['id']))
+
+        return nodes_info
+
