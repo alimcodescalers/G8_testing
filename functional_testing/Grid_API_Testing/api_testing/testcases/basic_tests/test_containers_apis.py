@@ -5,7 +5,7 @@ from api_testing.testcases.testcases_base import TestcasesBase
 from api_testing.python_client.client import Client
 from api_testing.grid_apis.apis.nodes_apis import NodesAPI
 from api_testing.grid_apis.apis.containers_apis import ContainersAPI
-
+import json
 
 class TestcontaineridAPI(TestcasesBase):
     def __init__(self, *args, **kwargs):
@@ -26,19 +26,15 @@ class TestcontaineridAPI(TestcasesBase):
                 break
         self.g8core = Client(self.g8os_ip)
 
-        self.root_url = 'https://hub.gig.tech/deboeckj/flist-lede-17.01.0-r3205-59508e3-x86-64-generic-rootfs.flist' # until the timeout issue is fixes 'https://hub.gig.tech/maxux/ubuntu1604.flist'
-        self.storage = 'ardb://hub.gig.tech:16379'
+        self.root_url = "https://hub.gig.tech/deboeckj/flist-lede-17.01.0-r3205-59508e3-x86-64-generic-rootfs.flist"
+        self.storage = "ardb://hub.gig.tech:16379"
         self.container_name = self.rand_str()
         self.hostname = self.rand_str()
         self.process_body = {'name': 'yes'}
         self.container_body = {"name": self.container_name, "hostname": self.hostname, "flist": self.root_url,
                                "hostNetworking": False, "initProcesses": [], "filesystems": [],
-                               "ports": [], "storage": self.storage,
-                               "nics": [{'type': 'default',
-                                         'id': '', 'config': {'dhcp': False,
-                                                              'gateway': '',
-                                                              'cidr': '',
-                                                              'dns': None}}]}
+                               "ports": [], "storage": self.storage
+                               }
 
     def tearDown(self):
         self.lg.info('TearDown:delete all created container ')
@@ -633,3 +629,102 @@ class TestcontaineridAPI(TestcasesBase):
         response = self.containers_api.post_containers_containerid_processes_processid(self.node_id, container_name,
                                                                                        str(process_id), body)
         self.assertEqual(response.status_code, 204)
+
+    @unittest.skip('https://github.com/g8os/resourcepool/issues/179')
+    def test018_upload_file_to_container(self):
+        """ GAT-0018
+        *post:/node/{nodeid}/containers/containerid/filesystem  *
+
+        **Test Scenario:**
+
+        #. Choose one random node of list of running nodes.
+        #. Create new container .
+        #. post /node/{nodeid}/containers/containerid/filesystem api request should succeed.
+        #. Check that file exist in container .
+        #. Delete  file from g8os node.
+        #. Delete  file from container.
+        #. Check that file doesn\'t exist in container.
+
+        """
+        self.lg.info('create container ')
+        response = self.containers_api.post_containers(node_id=self.node_id, body=self.container_body)
+        self.assertEqual(response.status_code, 201)
+        self.assertTrue(self.wait_for_container_status('running', self.containers_api.get_containers_containerid,
+                                                          node_id=self.node_id, container_id=self.container_name))
+        self.createdcontainer.append({"node": self.node_id, "container": self.container_name})
+
+        self.lg.info('create file in g8os node ')
+        file_name = self.rand_str()
+        self.g8core.client.bash('touch %s.text'%file_name)
+        body = {"file": '/%s.text'%file_name}
+        params = {"path": "/%s.text"%file_name}
+        response = self.containers_api.post_containers_containerid_filesystem(node_id=self.node_id,
+                                                                            container_id=self.container_name,
+                                                                            body=body,
+                                                                            params=params)
+        self.assertTrue(response.status_code,201)
+
+        self.lg.info('Check that file exist in container ')
+        container_id = int(list(self.g8core.client.container.find(self.container_name).keys())[0])
+        container = self.g8core.client.container.client(container_id)
+        output = container.bash('ls | grep %s.text'%file_name).get().state
+        self.assertEqual(output, "SUCCESS")
+
+        self.lg.info('delete  file from g8os node ')
+        self.g8core.client.bash('rm %s.text'%file_name)
+
+        self.lg.info('delete  file from container ')
+        body = {"path": "/%s.text"%file_name}
+        response = self.containers_api.delete_containers_containerid_filesystem(node_id=self.node_id,
+                                                                              container_id=self.container_name,
+                                                                              body=body,
+                                                                              )
+        self.assertTrue(response.status_code,201)
+
+        self.lg.info('Check that file doesn\'t exist in container ')
+        container_id = int(list(self.g8core.client.container.find(self.container_name).keys())[0])
+        container = self.g8core.client.container.client(container_id)
+        output = container.bash('ls | grep %s.text'%file_name).get().state
+        self.assertNotEqual(output, "SUCCESS")
+
+    def test019_download_file_from_container(self):
+        """ GAT-0017
+        *get:/node/{nodeid}/containers/containerid/filesystem  *
+
+        **Test Scenario:**
+
+        #. Choose one random node of list of running nodes.
+        #. Create new container .
+        #.  Make new file in container .
+        #. Get /node/{nodeid}/containers/containerid/filesystem api request should succeed.
+        #. Check that file downloaded
+        #. Delete  file from container,
+
+        """
+        file_name = self.rand_str()
+        self.lg.info('create container ')
+        response = self.containers_api.post_containers(node_id=self.node_id, body=self.container_body)
+        self.assertEqual(response.status_code, 201)
+        self.assertTrue(self.wait_for_container_status('running', self.containers_api.get_containers_containerid,
+                                                       node_id=self.node_id, container_id=self.container_name))
+        self.createdcontainer.append({"node": self.node_id, "container": self.container_name})
+
+        self.lg.info('create new file in container ')
+        container_id = int(list(self.g8core.client.container.find(self.container_name).keys())[0])
+        container = self.g8core.client.container.client(container_id)
+        output = container.bash('echo "test" >%s.text'%file_name).get().state
+        self.assertEqual(output, "SUCCESS")
+
+        self.lg.info('Get created file from container ')
+        params = {"path": "/%s.text"%file_name}
+        response = self.containers_api.get_containers_containerid_filesystem(node_id=self.node_id,
+                                                                            container_id=self.container_name,
+                                                                            params=params)
+        self.assertTrue(response.status_code, 201)
+
+        self.lg.info('Check that file downloaded')
+        self.assertTrue(response.text, "test")
+
+        self.lg.info('delete  file from container ')
+        output = container.bash('rm %s.text'%file_name).get().state
+        self.assertEqual(output, "SUCCESS")

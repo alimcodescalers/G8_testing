@@ -34,13 +34,6 @@ class TestcasesBase(TestCase):
         mac_address = ':'.join(map(lambda x: "%02x" % x, random_mac))
         return mac_address
 
-    def get_random_container(self, node_id):
-        response = self.containers_api.get_containers(node_id)
-        self.assertEqual(response.status_code, 200)
-        container_list = response.json()
-        container_id = container_list[random.randint(0, len(container_list)-1)]['id']
-        return container_id
-
     def rand_str(self):
         return str(uuid.uuid4()).replace('-', '')[1:10]
 
@@ -92,35 +85,31 @@ class TestcasesBase(TestCase):
         return False
 
     def get_random_container(self, node_id):
+        container_name = self.rand_str()
+        hostname = self.rand_str()
+        container_body = {"name": container_name, "hostname": hostname, "flist": self.root_url,
+                          "hostNetworking": False, "initProcesses": [], "filesystems": [],
+                          "ports": [], "storage": "ardb://hub.gig.tech:16379"
+                          }
         response = self.containers_api.get_containers(node_id)
         self.assertEqual(response.status_code, 200)
         container_list = response.json()
         counter = len(container_list)
-        container_name = None
-        if not len(container_list):
-            container_name = self.rand_str()
-            hostname = self.rand_str()
-            container_body = {"name": container_name, "hostname": hostname, "flist": self.root_url,
-                              "hostNetworking": False, "initProcesses": [], "filesystems": [],
-                              "ports": [], "storage": "ardb://hub.gig.tech:16379",
-                              "nics": [{'type': 'default',
-                                        'id': '', 'config': {'dhcp': False,
-                                                             'gateway': '',
-                                                             'cidr': '',
-                                                             'dns': None}}]}
+        while (counter != 0) and (len(container_list) != 0):
+            container_name = container_list[random.randint(0, len(container_list)-1)]['name']
+            response = self.containers_api.get_containers_containerid(node_id=node_id,container_id=container_name)
+            container=response.json()
+            if container['status']=='running':
+                return container_name
+
+            else:
+                counter = counter-1
+        else:
             response = self.containers_api.post_containers(node_id=node_id, body=container_body)
             self.assertEqual(response.status_code, 201)
-            self.createdcontainer.append({"node": node_id, "container": container_name})
-            counter = 1
-
-        while counter != 0:
-            if not container_name:
-                container_name = container_list[random.randint(0, len(container_list)-1)]['name']
             if not self.wait_for_container_status('running', self.containers_api.get_containers_containerid,
                                                           node_id=node_id, container_id=container_name):
-                container_name = None
-                counter -= counter
+                return False
             else:
-                counter = 0
-
-        return container_name
+                self.createdcontainer.append({"node": node_id, "container": container_name})
+                return container_name
