@@ -190,7 +190,7 @@ class BaseTest(unittest.TestCase):
         self.assertEqual(result.state, 'SUCCESS')
 
     def check_nic_exist(self, name):
-        nic_lst = [True for nic in client.info.nic() if nic['name'] == name]
+        nic_lst = [True for nic in self.client.info.nic() if nic['name'] == name]
         if nic_lst:
             return len(nic_lst) # should be always one
         else:

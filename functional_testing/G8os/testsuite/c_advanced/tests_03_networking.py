@@ -230,7 +230,6 @@ class AdvancedNetworking(BaseTest):
 
         self.lg('{} ENDED'.format(self._testID))
 
-    @unittest.skip('bug: https://github.com/g8os/core0/issues/206 207')
     def test004_create_multiple_vlans_vxlan(self):
         """ g8os-032
         *Test case for creating multiple vlans and vxlans*
@@ -247,7 +246,7 @@ class AdvancedNetworking(BaseTest):
         self.lg('{} STARTED'.format(self._testID))
 
         self.lg('Create vlan (V1) with tag (T1) and bridge name (bn1), should succeed')
-        t1 = str(randint(1, 4094))
+        t1 = randint(1, 4094)
         bn1 = self.rand_str()
         self.ovscl.json('ovs.vlan-ensure', {'master': 'backplane', 'vlan': t1, 'name': bn1})
         self.assertEqual(self.check_nic_exist(bn1), 1)
@@ -260,22 +259,22 @@ class AdvancedNetworking(BaseTest):
                 self.assertEqual(self.check_nic_exist(bn2), False)
 
         self.lg('Create vlan with tag (T2) and bridge name (bn1), should fail')
-        t2 = str(randint(1, 4094))
+        t2 = randint(1, 4094)
         with self.assertRaises(RuntimeError):
             self.ovscl.json('ovs.vlan-ensure', {'master': 'backplane', 'vlan': t2, 'name': bn1})
         self.assertEqual(self.check_nic_exist(bn1), 1)
 
         self.lg('Delete bridge (bn1), should succeed')
-        self.client.bridge.delete(bn1)
+        self.ovscl.json('ovs.bridge-del', {"bridge": bn1})
 
         self.lg('Create vxlan (Vx1) with id (I1), should succeed')
-        vx1_id = str(randint(20000, 30000))
-        vxbridge = 'vxlbr' + vx1_id
+        vx1_id = randint(20000, 30000)
+        vxbridge = 'vxlbr' + str(vx1_id)
         self.ovscl.json('ovs.vxlan-ensure', {'master': 'vxbackend', 'vxlan': vx1_id})
         self.assertEqual(self.check_nic_exist(vxbridge), 1)
 
         self.lg('Create another vxlan using same id (I1), should fail')
-        with self.assertRaises(RuntimeError):
-            self.ovscl.json('ovs.vxlan-ensure', {'master': 'vxbackend', 'vxlan': vx1_id})
+        self.ovscl.json('ovs.vxlan-ensure', {'master': 'vxbackend', 'vxlan': vx1_id})
+        self.assertEqual(self.check_nic_exist(vxbridge), 1)
 
         self.lg('{} ENDED'.format(self._testID))
