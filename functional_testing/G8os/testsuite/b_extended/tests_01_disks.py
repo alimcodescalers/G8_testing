@@ -28,8 +28,6 @@ class DisksTests(BaseTest):
 
     def destroy_btrfs(self):
         self.lg('Remove all loop devices')
-        for dev in self.loop_dev_list:
-            self.client.btrfs.device_remove(self.mount_point, dev)
         self.deattach_all_loop_devices()
 
     def bash_disk_info(self, keys, diskname):
@@ -488,9 +486,8 @@ class DisksTests(BaseTest):
 
         self.lg('{} ENDED'.format(self._testID))
 
-    @unittest.skip('bug: https://github.com/g8os/core0/issues/213')
     def test009_btrfs_add_remove_devices(self):
-        """ g8os-033
+        """ g8os-034
         *Test case for adding and removing devices for btrfs *
 
         **Test Scenario:**
@@ -515,7 +512,7 @@ class DisksTests(BaseTest):
         self.create_btrfs(second_btrfs=True)
 
         self.lg('Add device (D1) to the (Bfs1) using fake mount point, should fail')
-        d1 = self.setup_loop_devices(['bd4'], '500M', deattach=False)
+        d1 = self.setup_loop_devices(['bd4'], '500M', deattach=False)[0]
         with self.assertRaises(RuntimeError):
             self.client.btrfs.device_add('/mnt/'.format(self.rand_str()), d1)
 
@@ -543,9 +540,9 @@ class DisksTests(BaseTest):
 
         self.lg('Remove device (D1) using (Bfs1) mount point, should succeed')
         self.client.btrfs.device_remove(self.mount_point, d1)
-        rs = self.client.bash('btrfs filesystem show | grep -o "loop0"')
+        rs = self.client.bash('btrfs filesystem show | grep -o {}'.format(d1))
         self.assertEqual(rs.get().stdout, '')
-        self.assertEqual(rs.get().state, 'SUCCESS')
+        self.assertEqual(rs.get().state, 'ERROR')
 
         self.lg('Destroy both (Bfs1) and (Bfs2)')
         self.destroy_btrfs()
