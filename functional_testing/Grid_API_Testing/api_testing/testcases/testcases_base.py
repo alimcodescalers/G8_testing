@@ -38,7 +38,6 @@ class TestcasesBase(TestCase):
         pass
 
     def get_random_node(self, except_node=None):
-        return "0cc47a205c6e"
         response = self.nodes_api.get_nodes()
         self.assertEqual(response.status_code, 200)
         nodes_list = [x['id'] for x in response.json() if x['status']=='running']

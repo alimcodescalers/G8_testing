@@ -644,6 +644,7 @@ class TestcontaineridAPI(TestcasesBase):
                                                                                        str(process_id), body)
         self.assertEqual(response.status_code, 204)
 
+    @unittest.skip('https://github.com/g8os/resourcepool/issues/179')
     def test018_upload_file_to_container(self):
         """ GAT-0018
         *post:/node/{nodeid}/containers/containerid/filesystem  *
@@ -693,7 +694,7 @@ class TestcontaineridAPI(TestcasesBase):
                                                                               body=body,
                                                                               )
         self.assertTrue(response.status_code,201)
-        import ipdb;ipdb.set_trace()
+
         self.lg.info('Check that file doesn\'t exist in container ')
         container_id = int(list(self.g8core.client.container.find(self.container_name).keys())[0])
         container = self.g8core.client.container.client(container_id)
