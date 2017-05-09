@@ -4,7 +4,6 @@ from api_testing.grid_apis.apis.zerotiers_apis import ZerotiersAPI
 import unittest, time
 from api_testing.python_client.client import Client
 
-@unittest.skip('https://github.com/g8os/grid/issues/165')
 class TestZerotiersAPI(TestcasesBase):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -22,7 +21,7 @@ class TestZerotiersAPI(TestcasesBase):
         self.nwid = self.getZtNetworkID()
         self.body = {"nwid":self.nwid}
         self.zerotier_api.post_nodes_zerotiers(self.nodeid, self.body)
-        time.sleep(5)
+        time.sleep(15)
 
     def tearDown(self):
         self.lg.info('Exit zerotier network (ZT0)')
@@ -95,7 +94,7 @@ class TestZerotiersAPI(TestcasesBase):
         body = {"nwid":nwid}
         response = self.zerotier_api.post_nodes_zerotiers(nodeid, body)
         self.assertEqual(response.status_code, 201)
-        time.sleep(5)
+        time.sleep(15)
 
         self.lg.info('List node (N0) zerotier networks, (ZT1) should be listed')
         response = self.zerotier_api.get_nodes_zerotiers(self.nodeid)

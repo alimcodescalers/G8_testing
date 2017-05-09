@@ -97,8 +97,8 @@ class TestBridgesAPI(TestcasesBase):
         networkMode = self.random_item(["none", "static", "dnsmasq"])
         nat = self.random_item([False, True])
         settings = {"none":{},
-                    "static":{"cidr":"192.168.1.0/16"},
-                    "dnsmasq":{"cidr":"192.168.2.0/16", "start":"192.168.2.1", "end":"192.168.2.5"}}
+                    "static":{"cidr":"192.100.1.0/16"},
+                    "dnsmasq":{"cidr":"192.100.2.0/16", "start":"192.100.2.1", "end":"192.100.2.5"}}
 
         body = {"name":name,
                 "hwaddr":hwaddr,
