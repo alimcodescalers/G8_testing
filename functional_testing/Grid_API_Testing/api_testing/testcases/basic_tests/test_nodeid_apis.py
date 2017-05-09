@@ -39,9 +39,13 @@ class TestNodeidAPI(TestcasesBase):
         self.assertEqual(response.status_code, 200)
 
         self.lg.info('Compare results with golden value.')
+        Running_nodes=[]
         Nodes_result = response.json()
-        self.assertEqual(len(Nodes_result), len(self.nodes))
         for node in Nodes_result:
+            if node['status'] == 'running':
+                Running_nodes.append(node)
+        self.assertEqual(len(Running_nodes), len(self.nodes))
+        for node in Running_nodes:
             node_info = [item for item in self.nodes if item["id"] == node["id"]]
             self.assertEqual(len(node_info),1)
             for key in node.keys():
@@ -300,7 +304,7 @@ class TestNodeidAPI(TestcasesBase):
             if key in result.keys():
                 self.assertAlmostEqual(memory_info[key], result[key],
                                        msg="different keys%s"%key,
-                                        delta=600000)
+                                        delta=1000000)
 
     def test013_get_nics_details(self):
         """ GAT-013
