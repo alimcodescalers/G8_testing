@@ -379,11 +379,17 @@ class TestNodeidAPI(TestcasesBase):
             for info in process_info.keys():
                 if info != 'cpu':
                     if info in client_processes[process_id].keys():
-                        if info == "rss" or info == "keyvms":
+                        if info == 'rss':
                             self.assertAlmostEqual(process_info[info],
                                                    client_processes[process_id][info],
                                                    msg="different value with key%s"%info,
-                                                   delta=2000000)
+                                                   delta=7000000)
+                        elif info == 'keyvms':
+                            self.assertAlmostEqual(process_info[info],
+                                                   client_processes[process_id][info],
+                                                   msg="different value with key%s"%info,
+                                                   delta=5000000)
+
                         else:
                             self.assertEqual(process_info[info],
                                              client_processes[process_id][info],

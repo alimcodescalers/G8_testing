@@ -197,6 +197,7 @@ class TestcontaineridAPI(TestcasesBase):
         """
         self.lg.info('Choose random container of list of running nodes')
         container_name = self.get_random_container(self.node_id)
+        self.assertTrue(container_name)
 
         self.lg.info('Send get nodes/{nodeid}/containers/containerid/jobs api request.')
         response = self.containers_api.get_containers_containerid_jobs(self.node_id, container_name)
@@ -224,6 +225,7 @@ class TestcontaineridAPI(TestcasesBase):
         """
         self.lg.info('Choose random container of list of running nodes')
         container_name = self.get_random_container(self.node_id)
+        self.assertTrue(container_name)
 
         self.lg.info('Spawn multiple jobs.')
         for i in range(0, 3):
@@ -262,6 +264,7 @@ class TestcontaineridAPI(TestcasesBase):
         """
         self.lg.info('Choose one random container of list of running nodes')
         container_name = self.get_random_container(self.node_id)
+        self.assertTrue(container_name)
 
         self.lg.info(' spawn job in container ')
         response = self.containers_api.post_containers_containerid_processes(self.node_id, container_name,
@@ -303,6 +306,7 @@ class TestcontaineridAPI(TestcasesBase):
         body = {'signal': signal}
         self.lg.info('Choose one random container of list of running nodes')
         container_name = self.get_random_container(self.node_id)
+        self.assertTrue(container_name)
 
         self.lg.info(' spawn job in container ')
         response = self.containers_api.post_containers_containerid_processes(self.node_id, container_name,
@@ -331,6 +335,7 @@ class TestcontaineridAPI(TestcasesBase):
         """
         self.lg.info('Choose one random container of list of running nodes')
         container_name = self.get_random_container(self.node_id)
+        self.assertTrue(container_name)
 
         self.lg.info(' spawn job in container ')
         response = self.containers_api.post_containers_containerid_processes(self.node_id, container_name,
@@ -368,6 +373,8 @@ class TestcontaineridAPI(TestcasesBase):
         """
         self.lg.info('Choose one random container of list of running nodes')
         container_name = self.get_random_container(self.node_id)
+        self.assertTrue(container_name)
+
         self.lg.info('Send post  nodes/{nodeid}/containers/containerid/ping api request.')
         response = self.containers_api.post_containers_containerid_ping(self.node_id, container_name)
         self.assertEqual(response.status_code, 200)
@@ -386,6 +393,7 @@ class TestcontaineridAPI(TestcasesBase):
         """
         self.lg.info('Choose one random container of list of running nodes')
         container_name = self.get_random_container(self.node_id)
+        self.assertTrue(container_name)
 
         self.lg.info('Send GET  nodes/{nodeid}/containers/containerid/state api request.')
         response = self.containers_api.get_containers_containerid_state(self.node_id, container_name)
@@ -413,6 +421,7 @@ class TestcontaineridAPI(TestcasesBase):
         """
         self.lg.info('Choose one random container of list of running nodes')
         container_name = self.get_random_container(self.node_id)
+        self.assertTrue(container_name)
 
         self.lg.info('Send post  nodes/{nodeid}/containers/containerid/state api request.')
         response = self.containers_api.get_containers_containerid_info(self.node_id, container_name)
@@ -442,6 +451,7 @@ class TestcontaineridAPI(TestcasesBase):
         """
         self.lg.info('Choose one random container of list of running nodes')
         container_name = self.get_random_container(self.node_id)
+        self.assertTrue(container_name)
 
         self.lg.info('Send post  nodes/{nodeid}/containers/containerid/state api request.')
         response = self.containers_api.get_containers_containerid_processes(self.node_id, container_name)
@@ -477,6 +487,7 @@ class TestcontaineridAPI(TestcasesBase):
         process_name = self.process_body['name']
         self.lg.info('Choose one random container of list of running nodes')
         container_name = self.get_random_container(self.node_id)
+        self.assertTrue(container_name)
 
         self.lg.info('Send post  nodes/{nodeid}/containers/containerid/processes api request.')
         response = self.containers_api.post_containers_containerid_processes(self.node_id, container_name,
@@ -513,6 +524,7 @@ class TestcontaineridAPI(TestcasesBase):
         """
         self.lg.info('Choose one random container of list of running nodes')
         container_name = self.get_random_container(self.node_id)
+        self.assertTrue(container_name)
 
         self.lg.info('Choose one random process of list of processes')
         response = self.containers_api.post_containers_containerid_processes(self.node_id, container_name,
@@ -563,6 +575,7 @@ class TestcontaineridAPI(TestcasesBase):
         """
         self.lg.info('Choose one random container of list of running nodes')
         container_name = self.get_random_container(self.node_id)
+        self.assertTrue(container_name)
 
         self.lg.info('Choose one random process of list of processes')
         response = self.containers_api.post_containers_containerid_processes(self.node_id, container_name,
@@ -612,6 +625,7 @@ class TestcontaineridAPI(TestcasesBase):
         body = {'signal': signal}
         self.lg.info('Choose one random container of list of running nodes')
         container_name = self.get_random_container(self.node_id)
+        self.assertTrue(container_name)
         response = self.containers_api.post_containers_containerid_processes(self.node_id, container_name,
                                                                              self.process_body)
         self.assertEqual(response.status_code, 202)
@@ -630,7 +644,6 @@ class TestcontaineridAPI(TestcasesBase):
                                                                                        str(process_id), body)
         self.assertEqual(response.status_code, 204)
 
-    @unittest.skip('https://github.com/g8os/resourcepool/issues/179')
     def test018_upload_file_to_container(self):
         """ GAT-0018
         *post:/node/{nodeid}/containers/containerid/filesystem  *
@@ -680,7 +693,7 @@ class TestcontaineridAPI(TestcasesBase):
                                                                               body=body,
                                                                               )
         self.assertTrue(response.status_code,201)
-
+        import ipdb;ipdb.set_trace()
         self.lg.info('Check that file doesn\'t exist in container ')
         container_id = int(list(self.g8core.client.container.find(self.container_name).keys())[0])
         container = self.g8core.client.container.client(container_id)

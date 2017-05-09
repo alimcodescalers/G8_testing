@@ -38,6 +38,7 @@ class TestcasesBase(TestCase):
         pass
 
     def get_random_node(self, except_node=None):
+        return "0cc47a205c6e"
         response = self.nodes_api.get_nodes()
         self.assertEqual(response.status_code, 200)
         nodes_list = [x['id'] for x in response.json() if x['status']=='running']
@@ -103,16 +104,18 @@ class TestcasesBase(TestCase):
             else:
                 counter = counter-1
         else:
+            container_name = container_body["name"]
             response = self.containers_api.post_containers(node_id=node_id, body=container_body)
             self.assertEqual(response.status_code, 201)
+
             if not self.wait_for_container_status('running', self.containers_api.get_containers_containerid,
                                                           node_id=node_id, container_id=container_name):
                 return False
             else:
                 self.createdcontainer.append({"node": node_id, "container": container_name})
                 return container_name
-              
-              
+
+
     def get_node_physical_ip(self, node_id):
             response = self.nodes_api.get_nodes_nodeid_nics(node_id)
             self.assertEqual(response.status_code, 200)
