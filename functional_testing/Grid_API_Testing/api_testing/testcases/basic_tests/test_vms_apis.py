@@ -5,7 +5,6 @@ import unittest
 from api_testing.python_client.client import Client
 import time
 
-# @unittest.skip('bug: #101')
 class TestVmsAPI(TestcasesBase):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -16,7 +15,7 @@ class TestVmsAPI(TestcasesBase):
 
         self.lg.info('Get random nodid (N0)')
         self.nodeid = self.get_random_node()
-        pyclient_ip = [x['pyclient'] for x in self.nodes_info if x['id'] == self.nodeid][0]
+        pyclient_ip = [x['ip'] for x in self.nodes if x['id'] == self.nodeid][0]
         self.pyclient = Client(pyclient_ip)
 
         self.lg.info('Create virtual machine (VM0) on node (N0)')
@@ -37,6 +36,7 @@ class TestVmsAPI(TestcasesBase):
                     "systemCloudInit":self.vm_systemCloudInit}
 
         response = self.vms_api.post_nodes_vms(self.nodeid, self.body)
+        time.sleep(10)
 
     def tearDown(self):
         self.lg.info('Delete virtual machine (VM0)')

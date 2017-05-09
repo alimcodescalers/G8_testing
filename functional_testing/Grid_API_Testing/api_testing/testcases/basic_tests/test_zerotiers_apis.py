@@ -14,14 +14,14 @@ class TestZerotiersAPI(TestcasesBase):
 
         self.lg.info('Get random nodid (N0)')
         self.nodeid = self.get_random_node()
-        pyclient_ip = [x['pyclient'] for x in self.nodes_info if x['id'] == self.nodeid][0]
+        pyclient_ip = [x['ip'] for x in self.nodes if x['id'] == self.nodeid][0]
         self.pyclient = Client(pyclient_ip)
 
         self.lg.info('Join zerotier network (ZT0)')
         self.nwid = self.getZtNetworkID()
         self.body = {"nwid":self.nwid}
         self.zerotier_api.post_nodes_zerotiers(self.nodeid, self.body)
-        time.sleep(5)
+        time.sleep(15)
 
     def tearDown(self):
         self.lg.info('Exit zerotier network (ZT0)')
@@ -94,7 +94,7 @@ class TestZerotiersAPI(TestcasesBase):
         body = {"nwid":nwid}
         response = self.zerotier_api.post_nodes_zerotiers(nodeid, body)
         self.assertEqual(response.status_code, 201)
-        time.sleep(5)
+        time.sleep(15)
 
         self.lg.info('List node (N0) zerotier networks, (ZT1) should be listed')
         response = self.zerotier_api.get_nodes_zerotiers(self.nodeid)

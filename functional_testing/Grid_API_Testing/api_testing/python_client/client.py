@@ -29,7 +29,7 @@ class Client:
                 cpuInfo[-1]['flags'] = value.split(' ')
         return cpuInfo
 
-    def get_node_nics(self):
+    def get_nodes_nics(self):
         r = self.client.bash('ip -br a').get().stdout
         nics = [x.split()[0] for x in r.splitlines()]
         nicInfo = []
@@ -60,7 +60,7 @@ class Client:
 
         return bridgesInfo
 
-    def get_node_mem(self):
+    def get_nodes_mem(self):
         lines = self.client.bash('cat /proc/meminfo').get().stdout.splitlines()
         memInfo = {'available': 0, 'buffers': 0, 'cached': 0,
                     'inactive': 0, 'total': 0}
@@ -75,7 +75,7 @@ class Client:
                 memInfo[key] = int(value)*1024
         return memInfo
 
-    def get_node_info(self):
+    def get_nodes_info(self):
         hostname = self.client.system('uname -n').get().stdout.strip()
         krn_name = self.client.system('uname -s').get().stdout.strip().lower()
         return {"hostname":hostname, "os":krn_name}
@@ -133,24 +133,77 @@ class Client:
             if process['cmdline'] == "tailf /etc/nsswitch.conf":
                 return process['pid']
         return False
-      
+
     def getFreeDisks(self):
-        cmd = 'lsblk --noheadings --raw -o NAME,TYPE,MOUNTPOINT'
         freeDisks = []
-        response = self.client.bash(cmd).get().stdout
-        lines = response.splitlines()
-        for line in lines:
-            data = line.split()
-            name = data[0]
-            types = data[1]
-            if types in ['disk', 'part'] and len(data) == 2:
-                freeDisks.append(('/dev/{}'.format(name[:3])))
+        disks = self.client.disk.list()['blockdevices']
+        for disk in disks:
+            if not disk['mountpoint'] and disk['kname'] != 'sda':
+                if 'children' not in disk.keys():
+                    freeDisks.append('/dev/{}'.format(disk['kname']))
+                else:
+                    for children in disk['children']:
+                        if children['mountpoint']:
+                            break
+                    else:
+                        freeDisks.append('/dev/{}'.format(disk['kname']))
 
         return freeDisks
-            
+
+
 
     def get_processes_list(self):
         processes = self.client.process.list()
         return processes
 
-    
+    def get_container_info(self, container_id):
+        container_id = list(self.client.container.find(container_id).keys())[0]
+        container_info = {}
+        golden_data = self.client.container.list().get(str(container_id), None)
+        if not golden_data:
+            return False
+        golden_value = golden_data['container']
+        container_info['nics'] = ([{i: nic[i] for i in nic if i != 'hwaddr'} for nic in golden_value['arguments']['nics']])
+        container_info['ports'] = (['%s:%s' % (key, value) for key, value in golden_value['arguments']['port'].items()])
+        container_info['hostNetworking'] = golden_value['arguments']['host_network']
+        container_info['hostname'] = golden_value['arguments']['hostname']
+        container_info['flist'] = golden_value['arguments']['root']
+        container_info['storage'] = golden_value['arguments']['storage']
+        return container_info
+
+    def get_container_job_list(self, container_name):
+        container_id = list(self.client.container.find(container_name).keys())[0]
+        golden_values = []
+        container = self.client.container.client(int(container_id))
+        container_data = container.job.list()
+        # cannot compare directly as the job.list is considered a job and has a different id everytime is is called
+        for i, golden_value in enumerate(container_data[:]):
+            if golden_value.get('command', "") == 'job.list':
+                container_data.pop(i)
+                continue
+            golden_values.append((golden_value['cmd']['id'], golden_value['starttime']))
+        return set(golden_values)
+
+    def wait_on_container_update(self, container_name, timeout, removed):
+        for _ in range(timeout):
+            if removed:
+                if not self.client.container.find(container_name):
+                    return True
+            else:
+                if self.client.container.find(container_name):
+                    return True
+            time.sleep(1)
+        return False
+
+    def wait_on_container_job_update(self, container_name, job_id, timeout, removed):
+        container_id = int(list(self.client.container.find(container_name).keys())[0])
+        container = self.client.container.client(container_id)
+        for _ in range(timeout):
+            if removed:
+                if job_id not in [item['cmd']['id']for item in container.job.list()]:
+                    return True
+            else:
+                if job_id in [item['cmd']['id']for item in container.job.list()]:
+                    return True
+            time.sleep(1)
+        return False
