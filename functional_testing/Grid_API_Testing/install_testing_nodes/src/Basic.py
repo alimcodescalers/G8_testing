@@ -6,6 +6,8 @@ from termcolor import colored
 
 
 class Basic(object):
+    ZEROTIER_NW_ID = None
+
     def __init__(self):
         self.clone = False
         self.account = ''
@@ -93,7 +95,7 @@ class Basic(object):
 
         if auto_discovering:
             blueprint = """bootstrap.g8os__grid1:\\n  zerotierNetID: %s\\n  zerotierToken: '"%s"' \\n\\nactions:\\n  - action: install\\n \\n """ % (
-            self.values['zerotire_nw'], self.values['zerotier_token'])
+                self.ZEROTIER_NW_ID, self.values['zerotier_token'])
         else:
             for g8os in self.g8os_ip_list:
                 if ':' in g8os[1]:
@@ -110,10 +112,26 @@ class Basic(object):
         print(colored(' [*] Authorized zerotire %s member ... ' % member))
         session = requests.Session()
         session.headers['Authorization'] = 'Bearer %s' % self.values['zerotier_token']
-        url = 'https://my.zerotier.com/api/network/%s/member/%s' % (self.values['zerotire_nw'], member)
+        url = 'https://my.zerotier.com/api/network/%s/member/%s' % (self.ZEROTIER_NW_ID, member)
         data = {'config': {'authorized': True}}
         response = session.post(url=url, json=data)
         response.raise_for_status()
 
-    def create_zerotire_nw(self):
-        pass
+    def create_zerotire_nw(self, use_this_nw):
+        if use_this_nw:
+            self.ZEROTIER_NW_ID = use_this_nw
+        else:
+            self.logging.info(' [*] Create new zerotier network ... ')
+            print(colored(' [*] Create new zerotier network ... ', 'white'))
+            session = requests.Session()
+            session.headers['Authorization'] = 'Bearer %s' % self.values['zerotier_token']
+            url = 'https://my.zerotier.com/api/network'
+            data = {'config': {'private': 'true',
+                               'routes': [{'target': '10.147.17.0/24', 'via': None}],
+                               'v4AssignMode': {'zt': 'true'}}}
+
+            response = session.post(url=url, json=data)
+            response.raise_for_status()
+            Basic.ZEROTIER_NW_ID = response.json()['id']
+            self.logging.info(' [*] %s zerotier nw has been created... ' % self.ZEROTIER_NW_ID)
+            print(colored(' [*] %s zerotier nw has been created... ' % self.ZEROTIER_NW_ID, 'green'))

@@ -8,20 +8,22 @@ AYS_TEMPLATE_BRANCH = "1.1.0-alpha"
 GRID_API_BRANCH = "1.1.0-alpha"
 G8CORE_CLIENT = "1.1.0-alpha"
 IPXE_SCRIPT = 'https://bootstrap.gig.tech/ipxe/1.1.0-alpha-ssh/%s/console=ttyS1,115200n8'
-MACHINE_PLAN = 'baremetal_1' #Type 1
-MACHINES_NUMBER = 1
+MACHINE_PLAN = 'baremetal_1'  # Type 1
+ZEROTIER_NW_ID = None
+MACHINES_NUMBER = 2
 MACHINES = []
 AUTO_DISCOVERING = True
 
 if __name__ == '__main__':
     install_g8os_on_packet = InstallG8OSOnPacket()
+    executer = ExecuteRemoteCommands()
+    executer.create_zerotire_nw(use_this_nw=ZEROTIER_NW_ID)
     print(colored(' [*] STEP 1 : Install g8os in packet, image: %s' % IPXE_SCRIPT, 'yellow'))
     for i in range(MACHINES_NUMBER):
         MACHINE_NAME = 'Test-xtremx-0%i' % randint(1, 1000)
         MACHINES.append(install_g8os_on_packet.create_new_device(hostname=MACHINE_NAME,
-                                                 plan=MACHINE_PLAN,
-                                                 ipxe_script_url=IPXE_SCRIPT))
-    executer = ExecuteRemoteCommands()
+                                                                 plan=MACHINE_PLAN,
+                                                                 ipxe_script_url=IPXE_SCRIPT))
     print(colored(' [*] STEP 2 : create account', 'yellow'))
     executer.create_account()
     print(colored(' [*] STEP 3 : create cloud space', 'yellow'))
