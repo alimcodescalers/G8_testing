@@ -212,7 +212,6 @@ class ExtendedNetworking(BaseTest):
 
         self.lg('{} ENDED'.format(self._testID))
 
-    @unittest.skip('bug: https://github.com/g8os/core0/issues/195')
     def test004_attach_bridge_to_container(self):
         """ g8os-027
         *Test case for testing creating, listing, deleting bridges*
