@@ -3,10 +3,9 @@ from random import randint
 from install_testing_nodes.src.ExecuteRemoteCommands import ExecuteRemoteCommands
 from install_testing_nodes.src.install_g8os_on_packet import InstallG8OSOnPacket
 
-MACHINE_PLAN = 'baremetal_2'  # Type 1
+MACHINE_PLAN = 'baremetal_0'  # Type 1
 ZEROTIER_NW_ID = None
-MACHINES_NUMBER = 2
-MACHINES = []
+MACHINES_NUMBER = 1
 AUTO_DISCOVERING = True
 
 JUMPSACLE_BRANCH = "8.2.0"
@@ -16,6 +15,7 @@ GRID_API_BRANCH = RELEASE_VERSION
 G8CORE_CLIENT = RELEASE_VERSION
 IPXE_SCRIPT = 'https://bootstrap.gig.tech/ipxe/{}/{}/console=ttyS1,115200n8'.format(RELEASE_VERSION, {})
 
+MACHINES = []
 
 if __name__ == '__main__':
     install_g8os_on_packet = InstallG8OSOnPacket()

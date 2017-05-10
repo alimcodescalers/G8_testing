@@ -16,14 +16,14 @@ class GridAPIBase(object):
         api = self.build_api(api)
 
         if method == 'get':
-            response = self.requests.get(url=api, headers=self.headers,params=params)
+            response = self.requests.get(url=api, headers=self.headers, params=params)
         elif method == 'post':
-            response = self.requests.post(url=api, headers=self.headers, json=body,params=params)
+            response = self.requests.post(url=api, headers=self.headers, json=body, params=params)
 
         elif method == 'put':
-            response = self.requests.put(url=api, headers=self.headers, json=body, params =params)
+            response = self.requests.put(url=api, headers=self.headers, json=body, params=params)
         elif method == 'delete':
-            response = self.requests.delete(url=api, headers=self.headers,params = params)
+            response = self.requests.delete(url=api, headers=self.headers, params=params)
 
         return response
 
