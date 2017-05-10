@@ -96,7 +96,7 @@ class TestNodeidAPI(TestcasesBase):
                     self.assertEqual(job['startTime'], client_job['starttime'])
                     break
 
-    @unittest.skip("https://github.com/g8os/core0/issues/102")
+    #@unittest.skip("https://github.com/g8os/core0/issues/102")
     def test004_kill_jobs(self):
         """ GAT-004
         *DELETE:/nodes/{nodeid}/jobs *
@@ -107,7 +107,7 @@ class TestNodeidAPI(TestcasesBase):
         #. Send get /nodes/{nodeid}/jobs api request.
         #. Check that all jobs has been killed.
         """
-
+        import ipdb; ipdb.set_trace()
         self.lg.info(' Send get /nodes/{nodeid}/jobs api request.')
         status_code = self.nodes_api.delete_nodes_nodeid_jobs(node_id=self.node_id)
         self.assertEqual(status_code, 204)
