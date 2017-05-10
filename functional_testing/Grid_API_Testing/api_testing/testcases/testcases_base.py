@@ -54,7 +54,7 @@ class TestcasesBase(TestCase):
     def random_item(self, array):
         return array[randint(0, len(array)-1)]
 
-    def CreateZtNetwork(self):
+    def create_zerotier_network(self):
         url = 'https://my.zerotier.com/api/network'
         data = {'config': {'ipAssignmentPools': [{'ipRangeEnd': '10.147.17.254',
                                                     'ipRangeStart': '10.147.17.1'}],
@@ -67,7 +67,7 @@ class TestcasesBase(TestCase):
         nwid = response.json()['id']
         return nwid
 
-    def DeleteZtNetwork(self, nwid):
+    def delete_zerotier_network(self, nwid):
         url = 'https://my.zerotier.com/api/network/{}'.format(nwid)
         self.session.delete(url=url)
        

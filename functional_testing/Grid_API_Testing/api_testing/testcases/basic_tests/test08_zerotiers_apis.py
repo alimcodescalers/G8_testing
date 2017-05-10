@@ -19,7 +19,7 @@ class TestZerotiersAPI(TestcasesBase):
         self.pyclient = Client(pyclient_ip)
 
         self.lg.info('Join zerotier network (ZT0)')
-        self.nwid = self.CreateZtNetwork()
+        self.nwid = self.create_zerotier_network()
         self.body = {"nwid":self.nwid}
         self.zerotier_api.post_nodes_zerotiers(self.nodeid, self.body)
 
@@ -40,7 +40,7 @@ class TestZerotiersAPI(TestcasesBase):
     def tearDown(self):
         self.lg.info('Exit zerotier network (ZT0)')
         self.zerotier_api.delete_nodes_zerotiers_zerotierid(self.nodeid, self.nwid)
-        self.DeleteZtNetwork(self.nwid)
+        self.delete_zerotier_network(self.nwid)
         super(TestZerotiersAPI, self).tearDown()
 
 
@@ -105,7 +105,7 @@ class TestZerotiersAPI(TestcasesBase):
         nodeid = self.get_random_node()
 
         self.lg.info('Join zerotier network (ZT1)')
-        nwid = self.CreateZtNetwork()
+        nwid = self.create_zerotier_network()
         body = {"nwid":nwid}
         response = self.zerotier_api.post_nodes_zerotiers(nodeid, body)
         self.assertEqual(response.status_code, 201)
@@ -135,7 +135,7 @@ class TestZerotiersAPI(TestcasesBase):
         response = self.zerotier_api.delete_nodes_zerotiers_zerotierid(self.nodeid, self.nwid)
         self.assertEqual(response.status_code, 204)
 
-        self.DeleteZtNetwork(nwid)
+        self.delete_zerotier_network(nwid)
 
         self.lg.info('Join zerotier with invalid body, should fail with 400')
         body = {"worngparameter":self.rand_str()}
