@@ -36,6 +36,7 @@ class ExtendedMachines(BaseTest):
         #. create vxlan (vx1) with specific name
         #. Create bridge with certain name
         #. Connect the vm to all these nics types, should succeed
+        #. Connect the vm to all these nics types again, should fail
         #. Deattach all these nics, should succeed
         #. Delete (vm1)
         """
@@ -68,6 +69,14 @@ class ExtendedMachines(BaseTest):
         self.assertEqual(len(self.client.kvm.info(vm_uuid)['Net']), 2)
         self.client.kvm.add_nic(vm_uuid, 'bridge', id=bn2)
         self.assertEqual(len(self.client.kvm.info(vm_uuid)['Net']), 3)
+
+        self.lg('Connect the vm to all these nics types again, should fail')
+        with self.assertRaises(RuntimeError):
+            self.client.kvm.add_nic(vm_uuid, 'vlan', id=str(t1))
+        with self.assertRaises(RuntimeError):
+            self.client.kvm.add_nic(vm_uuid, 'vxlan', id=str(vx1_id))
+        with self.assertRaises(RuntimeError):
+            self.client.kvm.add_nic(vm_uuid, 'bridge', id=bn2)
 
         self.lg('Deattach all these nics, should succeed')
         self.client.kvm.remove_nic(vm_uuid, 'vlan', id=str(t1))
