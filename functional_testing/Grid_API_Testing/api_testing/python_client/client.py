@@ -1,4 +1,5 @@
 import g8core
+import time
 
 class Client:
     def __init__(self, ip):
