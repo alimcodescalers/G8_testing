@@ -1,7 +1,22 @@
-from testsuite.c_advanced.tests_03_networking import AdvancedNetworking
+from utils.utils import BaseTest
 # import uuid
 
-class ExtendedMachines(AdvancedNetworking):
+class ExtendedMachines(BaseTest):
+
+    def __init__(self, *args, **kwargs):
+        super(AdvancedNetworking, self).__init__(*args, **kwargs)
+        self.check_g8os_connection(AdvancedNetworking)
+        containers = self.client.container.find('ovs')
+        ovs_exist = [key for key, value in containers.items()]
+        if not ovs_exist:
+            ovs = self.create_container(self.ovs_flist, host_network=True, storage=self.storage, tags=['ovs'])
+            self.ovscl = self.client.container.client(ovs)
+            time.sleep(2)
+            self.ovscl.json('ovs.bridge-add', {"bridge": "backplane"})
+            self.ovscl.json('ovs.vlan-ensure', {'master': 'backplane', 'vlan': 2000, 'name': 'vxbackend'})
+        else:
+            ovs = int(ovs_exist[0])
+            self.ovscl = self.client.container.client(ovs)
 
     def setUp(self):
         super(ExtendedMachine, self).setUp()
@@ -63,44 +78,44 @@ class ExtendedMachines(AdvancedNetworking):
 
         self.lg('{} ENDED'.format(self._testID))
 
-     def test001_kvm_attach_deattach_disks(self):
-         """ g8os-036
+    def test001_kvm_attach_deattach_disks(self):
+        """ g8os-036
 
-         *Test case for testing attaching and deattaching disks for vms*
+        *Test case for testing attaching and deattaching disks for vms*
 
-         **Test Scenario:**
+        **Test Scenario:**
 
-         #. Create Virtual machine (vm1)
-         #. Create loop device (L1)
-         #. Attach L1 to vm1, should succeed
-         #. Attach L1 to vm1 again, vm1 should still see L1 as one vdisk
-         #. Deattach L1 from vm1, should succeed
-         #. Delete (vm1)
-         """
+        #. Create Virtual machine (vm1)
+        #. Create loop device (L1)
+        #. Attach L1 to vm1, should succeed
+        #. Attach L1 to vm1 again, vm1 should still see L1 as one vdisk
+        #. Deattach L1 from vm1, should succeed
+        #. Delete (vm1)
+        """
 
-         self.lg('{} STARTED'.format(self._testID))
-         self.lg('Create Virtual machine (vm1)')
-         vm_name = self.rand_str()
-         self.create_vm(name=vm_name)
+        self.lg('{} STARTED'.format(self._testID))
+        self.lg('Create Virtual machine (vm1)')
+        vm_name = self.rand_str()
+        self.create_vm(name=vm_name)
 
-         self.lg('Create loop device (L1)')
-         loop_dev = self.setup_loop_devices(['bd0'], '500M', deattach=True)[0]
+        self.lg('Create loop device (L1)')
+        loop_dev = self.setup_loop_devices(['bd0'], '500M', deattach=True)[0]
 
-         self.lg('Attach L1 to vm1, should succeed')
-         l = len(self.client.kvm.info(vm_uuid)['Block'])
-         vm_uuid = self.get_vm_uuid(vm_name)
-         self.client.kvm.attach_disk(vm_uuid, {'url': loop_dev})
-         self.assertEqual(len(self.client.kvm.info(vm_uuid)['Block']), l+1)
+        self.lg('Attach L1 to vm1, should succeed')
+        l = len(self.client.kvm.info(vm_uuid)['Block'])
+        vm_uuid = self.get_vm_uuid(vm_name)
+        self.client.kvm.attach_disk(vm_uuid, {'url': loop_dev})
+        self.assertEqual(len(self.client.kvm.info(vm_uuid)['Block']), l+1)
 
-         self.lg('Attach L1 to vm1 again, vm1 should still see L1 as one vdisk')
-         self.client.kvm.attach_disk(vm_uuid, {'url': loop_dev})
-         self.assertEqual(len(self.client.kvm.info(vm_uuid)['Block']), l+1)
+        self.lg('Attach L1 to vm1 again, vm1 should still see L1 as one vdisk')
+        self.client.kvm.attach_disk(vm_uuid, {'url': loop_dev})
+        self.assertEqual(len(self.client.kvm.info(vm_uuid)['Block']), l+1)
 
-         self.lg('Deattach L1 from vm1, should succeed')
-         self.client.kvm.detach_disk(vm_uuid, {'url': loop_dev})
-         self.assertEqual(len(self.client.kvm.info(vm_uuid)['Block']), l)
+        self.lg('Deattach L1 from vm1, should succeed')
+        self.client.kvm.detach_disk(vm_uuid, {'url': loop_dev})
+        self.assertEqual(len(self.client.kvm.info(vm_uuid)['Block']), l)
 
-         self.lg('Delete (vm1)')
-         self.client.kvm.destroy(vm_uuid)
+        self.lg('Delete (vm1)')
+        self.client.kvm.destroy(vm_uuid)
 
-         self.lg('{} ENDED'.format(self._testID))
+        self.lg('{} ENDED'.format(self._testID))
