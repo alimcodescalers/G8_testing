@@ -129,8 +129,7 @@ class TestVmsAPI(TestcasesBase):
             body['memory'] = 1024
             body['cpu'] = 1
             response = self.vms_api.post_nodes_vms(self.nodeid, body)
-
-        self.assertEqual(response.status_code, 201)
+            self.assertEqual(response.status_code, 201)
 
         self.lg.info('Get virtual machine (VM1), should succeed with 200')
         response = self.vms_api.get_nodes_vms_vmid(self.nodeid, vm_id)
@@ -199,7 +198,7 @@ class TestVmsAPI(TestcasesBase):
         response = self.vms_api.put_nodes_vms_vmid(self.nodeid, body)
         self.assertEqual(response.status_code, 400)
 
-    @unittest.skip('bug: #131')
+
     def test005_get_nodes_vms_vmid_info(self):
         """ GAT-071
         **Test Scenario:**
