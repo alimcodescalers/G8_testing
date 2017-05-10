@@ -119,7 +119,7 @@ class Basic(object):
 
     def create_zerotire_nw(self, use_this_nw):
         if use_this_nw:
-            self.ZEROTIER_NW_ID = use_this_nw
+            Basic.ZEROTIER_NW_ID = use_this_nw
         else:
             self.logging.info(' [*] Create new zerotier network ... ')
             session = requests.Session()
