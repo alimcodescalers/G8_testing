@@ -7,7 +7,7 @@ class Client:
     def stdout(self, resource):
         return resource.get().stdout.replace('\n', '').lower()
 
-    def get_node_cpus(self):
+    def get_nodes_cpus(self):
         lines = self.client.bash('cat /proc/cpuinfo').get().stdout.splitlines()
         cpuInfo = []
         cpuInfo_format = {'family': "", 'cacheSize': "", 'mhz': "", 'cores': "", 'flags': ""}

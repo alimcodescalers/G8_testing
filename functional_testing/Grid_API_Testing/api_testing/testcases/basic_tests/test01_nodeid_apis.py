@@ -96,7 +96,7 @@ class TestNodeidAPI(TestcasesBase):
                     self.assertEqual(job['startTime'], client_job['starttime'])
                     break
 
-    #@unittest.skip("https://github.com/g8os/core0/issues/102")
+    @unittest.skip("https://github.com/g8os/resourcepool/issues/197")
     def test004_kill_jobs(self):
         """ GAT-004
         *DELETE:/nodes/{nodeid}/jobs *
@@ -237,7 +237,6 @@ class TestNodeidAPI(TestcasesBase):
         content = response.json()
         self.assertEqual(content, 'Machine reboot signal sent successfully')
 
-    @unittest.skip('https://github.com/g8os/core0/issues/168')
     def test010_get_cpus_details(self):
         """ GAT-010
         *GET:/nodes/{nodeid}/cpus *
@@ -257,8 +256,8 @@ class TestNodeidAPI(TestcasesBase):
         cpus_info = response.json()
         for i, cpu_info in enumerate(cpus_info):
             for key in cpu_info.keys():
-                if key != 'cores':
-                    self.assertEqual(cpu_info[key], result[i][key], "different cpu info ")
+                if key != 'cores' and key != 'mhz':
+                    self.assertEqual(cpu_info[key], result[i][key], "different cpu info for key %s"%key)
 
     def test011_get_disks_details(self):
         """ GAT-011
