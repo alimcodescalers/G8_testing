@@ -53,7 +53,7 @@ class TestVdisks(TestcasesBase):
         super(TestVdisks, self).tearDown()
 
     def test001_get_vdisk_details(self):
-        """ GAT-002
+        """ GAT-061
         *GET:/vdisks/{vdiskid}*
 
         **Test Scenario:**
@@ -77,7 +77,7 @@ class TestVdisks(TestcasesBase):
         self.assertEqual(response.status_code, 404)
 
     def test002_list_vdisks(self):
-        """ GAT-002
+        """ GAT-062
         *GET:/vdisks*
 
         **Test Scenario:**
@@ -95,7 +95,7 @@ class TestVdisks(TestcasesBase):
         self.assertIn(vd0_data, response.json())
 
     def test003_create_vdisk(self):
-        """ GAT-001
+        """ GAT-063
         *POST:/vdisks*
 
         **Test Scenario:**
@@ -138,7 +138,7 @@ class TestVdisks(TestcasesBase):
 
 
     def test004_delete_vdisk(self):
-        """ GAT-001
+        """ GAT-064
         *Delete:/vdisks/{vdiskid}*
 
         **Test Scenario:**
@@ -163,7 +163,7 @@ class TestVdisks(TestcasesBase):
 
     @unittest.skip('bug: #150')
     def test005_resize_vdisk(self):
-        """ GAT-003
+        """ GAT-065
         *POST:/vdisks/{vdiskid}/resize*
 
         **Test Scenario:**
@@ -200,7 +200,7 @@ class TestVdisks(TestcasesBase):
 
     @unittest.skip('Not implemented')
     def test006_Rollback_volume(self):
-        """ GAT-004
+        """ GAT-066
         *POST:/vdisks/{vdiskid}/rollback*
 
         **Test Scenario:**

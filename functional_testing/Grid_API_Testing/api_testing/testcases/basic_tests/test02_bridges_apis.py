@@ -39,7 +39,7 @@ class TestBridgesAPI(TestcasesBase):
 
     # @unittest.skip('bug: #105')
     def test001_get_bridges_bridgeid(self):
-        """ GAT-001
+        """ GAT-018
         *GET:/nodes/{nodeid}/bridges/{bridgeid} *
 
         **Test Scenario:**
@@ -62,9 +62,8 @@ class TestBridgesAPI(TestcasesBase):
         # response = self.bridges_api.get_nodes_bridges_bridgeid(self.nodeid, 'fake_bridge')
         # self.assertEqual(response.status_code, 404)
 
-    # @unittest.skip('bug: #104')
     def test002_list_node_bridges(self):
-        """ GAT-002
+        """ GAT-019
         *GET:/nodes/{nodeid}/bridges *
 
         **Test Scenario:**
@@ -78,9 +77,8 @@ class TestBridgesAPI(TestcasesBase):
         self.assertEqual(response.status_code, 200)
         self.assertIn(self.name, [x['name'] for x in response.json()])
 
-    # @unittest.skip('bug: #113')
     def test003_create_bridge(self):
-        """ GAT-003
+        """ GAT-020
         *POST:/nodes/{nodeid}/bridges *
 
         **Test Scenario:**
@@ -115,7 +113,7 @@ class TestBridgesAPI(TestcasesBase):
 
         nics = self.pyclient.client.info.nic()
         self.assertEqual(hwaddr, [x['hardwareaddr'] for x in nics if x['name'] == name ][0])
-        
+
         #bug #104
         self.lg.info('Get bridge (B0), should succeed with 200')
         response = self.bridges_api.get_nodes_bridges(self.nodeid)
@@ -127,7 +125,7 @@ class TestBridgesAPI(TestcasesBase):
         self.assertEqual(response.status_code, 204)
 
     def test004_delete_nodes_brigde_bridgeid(self):
-        """ GAT-004
+        """ GAT-021
         *Delete:/nodes/{nodeid}/bridges/{bridgeid}*
 
         **Test Scenario:**
