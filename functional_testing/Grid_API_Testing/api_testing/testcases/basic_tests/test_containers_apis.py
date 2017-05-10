@@ -603,7 +603,9 @@ class TestcontaineridAPI(TestcasesBase):
             self.assertNotEqual(process['pid'], process_id)
 
         self.lg.info(' Compare results with golden value.')
-        container_id = int(list(self.g8core.client.container.find(container_name).keys())[0])
+        container=self.g8core.client.container.find(container_name)
+        self.assertTrue(container)
+        container_id = int(list(container.keys())[0])
         container = self.g8core.client.container.client(container_id)
         golden_value = container.process.list()
         for process in golden_value:
@@ -679,7 +681,9 @@ class TestcontaineridAPI(TestcasesBase):
         self.assertTrue(response.status_code,201)
 
         self.lg.info('Check that file exist in container ')
-        container_id = int(list(self.g8core.client.container.find(self.container_name).keys())[0])
+        container=self.g8core.client.container.find(container_name)
+        self.assertTrue(container)
+        container_id = int(list(container.keys())[0])
         container = self.g8core.client.container.client(container_id)
         output = container.bash('ls | grep %s.text'%file_name).get().state
         self.assertEqual(output, "SUCCESS")
@@ -696,7 +700,9 @@ class TestcontaineridAPI(TestcasesBase):
         self.assertTrue(response.status_code,201)
 
         self.lg.info('Check that file doesn\'t exist in container ')
-        container_id = int(list(self.g8core.client.container.find(self.container_name).keys())[0])
+        container=self.g8core.client.container.find(container_name)
+        self.assertTrue(container)
+        container_id = int(list(container.keys())[0])
         container = self.g8core.client.container.client(container_id)
         output = container.bash('ls | grep %s.text'%file_name).get().state
         self.assertNotEqual(output, "SUCCESS")
@@ -724,7 +730,9 @@ class TestcontaineridAPI(TestcasesBase):
         self.createdcontainer.append({"node": self.node_id, "container": self.container_name})
 
         self.lg.info('create new file in container ')
-        container_id = int(list(self.g8core.client.container.find(self.container_name).keys())[0])
+        container=self.g8core.client.container.find(self.container_name)
+        self.assertTrue(container)
+        container_id = int(list(container.keys())[0])
         container = self.g8core.client.container.client(container_id)
         output = container.bash('echo "test" >%s.text'%file_name).get().state
         self.assertEqual(output, "SUCCESS")
