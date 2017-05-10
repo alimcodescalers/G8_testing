@@ -1,11 +1,12 @@
 from utils.utils import BaseTest
-# import uuid
+from random import randint
+import unittest
 
 class ExtendedMachines(BaseTest):
 
     def __init__(self, *args, **kwargs):
-        super(AdvancedNetworking, self).__init__(*args, **kwargs)
-        self.check_g8os_connection(AdvancedNetworking)
+        super(ExtendedMachines, self).__init__(*args, **kwargs)
+        self.check_g8os_connection(ExtendedMachines)
         containers = self.client.container.find('ovs')
         ovs_exist = [key for key, value in containers.items()]
         if not ovs_exist:
@@ -19,9 +20,10 @@ class ExtendedMachines(BaseTest):
             self.ovscl = self.client.container.client(ovs)
 
     def setUp(self):
-        super(ExtendedMachine, self).setUp()
-        self.check_g8os_connection(ExtendedMachine)
+        super(ExtendedMachines, self).setUp()
+        self.check_g8os_connection(ExtendedMachines)
 
+    @unittest.skip('bug: https://github.com/g8os/core0/issues/223')
     def test001_kvm_add_remove_nics(self):
         """ g8os-035
 
@@ -47,7 +49,7 @@ class ExtendedMachines(BaseTest):
         self.lg('Create vlan (v1) and specific name')
         t1 = randint(1, 4094)
         bn1 = self.rand_str()
-        elf.ovscl.json('ovs.vlan-ensure', {'master': 'backplane', 'vlan': t1, 'name': bn1})
+        self.ovscl.json('ovs.vlan-ensure', {'master': 'backplane', 'vlan': t1, 'name': bn1})
 
         self.lg('create vxlan (vx1) with specific name')
         vx1_id = randint(20000, 30000)
@@ -78,7 +80,8 @@ class ExtendedMachines(BaseTest):
 
         self.lg('{} ENDED'.format(self._testID))
 
-    def test001_kvm_attach_deattach_disks(self):
+    @unittest.skip('bug: https://github.com/g8os/core0/issues/221')
+    def test002_kvm_attach_deattach_disks(self):
         """ g8os-036
 
         *Test case for testing attaching and deattaching disks for vms*
@@ -102,8 +105,8 @@ class ExtendedMachines(BaseTest):
         loop_dev = self.setup_loop_devices(['bd0'], '500M', deattach=True)[0]
 
         self.lg('Attach L1 to vm1, should succeed')
-        l = len(self.client.kvm.info(vm_uuid)['Block'])
         vm_uuid = self.get_vm_uuid(vm_name)
+        l = len(self.client.kvm.info(vm_uuid)['Block'])
         self.client.kvm.attach_disk(vm_uuid, {'url': loop_dev})
         self.assertEqual(len(self.client.kvm.info(vm_uuid)['Block']), l+1)
 
