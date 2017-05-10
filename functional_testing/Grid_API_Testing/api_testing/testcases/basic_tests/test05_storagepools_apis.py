@@ -33,10 +33,10 @@ class TestStoragepoolsAPI(TestcasesBase):
             self.metadata = self.random_item(self.levels)
             self.data = self.random_item(self.levels)
             self.devices = free_devices[:4]
-        
-        self.body = {"name":self.storagepool_name, 
-                     "metadataProfile":self.metadata, 
-                     "dataProfile":self.data, 
+
+        self.body = {"name":self.storagepool_name,
+                     "metadataProfile":self.metadata,
+                     "dataProfile":self.data,
                      "devices":self.devices}
         self.storagepool_api.post_storagepools(self.nodeid, self.body)
 
@@ -62,7 +62,7 @@ class TestStoragepoolsAPI(TestcasesBase):
         super(TestStoragepoolsAPI, self).tearDown()
 
     def test001_get_storagepool(self):
-        """ GAT-001
+        """ GAT-045
         **Test Scenario:**
 
         #. Get random nodid (N0), should succeed.
@@ -90,7 +90,7 @@ class TestStoragepoolsAPI(TestcasesBase):
         self.assertEqual(response.status_code, 404)
 
     def test002_list_storagepool(self):
-        """ GAT-002
+        """ GAT-046
         **Test Scenario:**
 
         #. Get random nodid (N0).
@@ -103,7 +103,7 @@ class TestStoragepoolsAPI(TestcasesBase):
         self.assertIn(self.storagepool_name, [x['name'] for x in response.json()])
 
     def test003_post_storagepool(self):
-        """ GAT-003
+        """ GAT-047
         **Test Scenario:**
 
         #. Get random nodid (N0).
@@ -130,16 +130,16 @@ class TestStoragepoolsAPI(TestcasesBase):
             metadata = self.random_item( self.levels)
             data = self.random_item( self.levels)
             devices = free_devices[:4]
-        
-        body = {"name":name, 
-                "metadataProfile":metadata, 
-                "dataProfile":data, 
+
+        body = {"name":name,
+                "metadataProfile":metadata,
+                "dataProfile":data,
                 "devices":devices}
 
         response = self.storagepool_api.post_storagepools(nodeid, body)
         self.assertEqual(response.status_code, 201)
         time.sleep(30)
-        
+
         self.lg.info('Get Storagepool (SP1), should succeed with 200')
         response = self.storagepool_api.get_storagepools_storagepoolname(nodeid, name)
         self.assertEqual(response.status_code, 200)
@@ -164,7 +164,7 @@ class TestStoragepoolsAPI(TestcasesBase):
         self.assertEqual(response.status_code, 400)
 
     def test004_delete_storagepool(self):
-        """ GAT-004
+        """ GAT-048
         **Test Scenario:**
 
         #. Get random nodid (N0).
@@ -188,7 +188,7 @@ class TestStoragepoolsAPI(TestcasesBase):
 
     @unittest.skip('https://github.com/g8os/resourcepool/issues/93')
     def test005_get_storagepool_device(self):
-        """ GAT-005
+        """ GAT-049
         **Test Scenario:**
 
         #. Get random nodid (N0).
@@ -212,7 +212,7 @@ class TestStoragepoolsAPI(TestcasesBase):
 
     @unittest.skip('https://github.com/g8os/resourcepool/issues/93')
     def test006_list_storagepool_devices(self):
-        """ GAT-006
+        """ GAT-050
         **Test Scenario:**
 
         #. Get random nodid (N0).
@@ -226,7 +226,7 @@ class TestStoragepoolsAPI(TestcasesBase):
         self.assertEqual(response.json()[0]['status'], 'healthy')
 
     def test007_post_storagepool_device(self):
-        """ GAT-007
+        """ GAT-051
         **Test Scenario:**
 
         #. Get random nodid (N0).
@@ -237,7 +237,7 @@ class TestStoragepoolsAPI(TestcasesBase):
         """
         self.lg.info('Create device (DV1) on storagepool (SP0), should succeed with 201')
 
-        free_devices = self.pyclient.getFreeDisks() 
+        free_devices = self.pyclient.getFreeDisks()
         if free_devices == []:
             self.skipTest('no free disks on node {}'.format(self.nodeid))
 
@@ -258,7 +258,7 @@ class TestStoragepoolsAPI(TestcasesBase):
         # self.assertEqual(response.status_code, 404)
 
     def test008_delete_storagepool_device(self):
-        """ GAT-008
+        """ GAT-052
         **Test Scenario:**
 
         #. Get random nodid, should succeed.
@@ -295,7 +295,7 @@ class TestStoragepoolsAPI(TestcasesBase):
         # self.assertEqual(response.status_code, 404)
 
     def test009_get_storagepool_filessystem(self):
-        """ GAT-009
+        """ GAT-053
         **Test Scenario:**
 
         #. Get random nodid (N0), should succeed.
@@ -315,7 +315,7 @@ class TestStoragepoolsAPI(TestcasesBase):
         self.assertEqual(response.status_code, 404)
 
     def test010_list_storagepool_filesystems(self):
-        """ GAT-010
+        """ GAT-054
         **Test Scenario:**
 
         #. Get random nodid (N0).
@@ -329,7 +329,7 @@ class TestStoragepoolsAPI(TestcasesBase):
         self.assertIn(self.fs_name, response.json())
 
     def test011_post_storagepool_filesystem(self):
-        """ GAT-011
+        """ GAT-055
         **Test Scenario:**
 
         #. Get random nodid (N0).
@@ -363,7 +363,7 @@ class TestStoragepoolsAPI(TestcasesBase):
         self.assertEqual(response.status_code, 400)
 
     def test012_delete_storagepool_filesystem(self):
-        """ GAT-012
+        """ GAT-056
         **Test Scenario:**
 
         #. Get random nodid (N0).
@@ -388,7 +388,7 @@ class TestStoragepoolsAPI(TestcasesBase):
 
 
     def test013_get_storagepool_filessystem_snapshot(self):
-        """ GAT-013
+        """ GAT-057
         **Test Scenario:**
 
         #. Get random nodid (N0), should succeed.
@@ -414,7 +414,7 @@ class TestStoragepoolsAPI(TestcasesBase):
 
 
     def test014_list_storagepool_filesystems_snapshots(self):
-        """ GAT-014
+        """ GAT-058
         **Test Scenario:**
 
         #. Get random nodid (N0), should succeed.
@@ -430,7 +430,7 @@ class TestStoragepoolsAPI(TestcasesBase):
 
 
     def test015_post_storagepool_filesystem_snapshot(self):
-        """ GAT-015
+        """ GAT-059
         **Test Scenario:**
 
         #. Get random nodid (N0), should succeed.
@@ -468,7 +468,7 @@ class TestStoragepoolsAPI(TestcasesBase):
 
 
     def test016_delete_storagepool_filesystem_snapshot(self):
-        """ GAT-016
+        """ GAT-060
         **Test Scenario:**
 
         #. Get random nodid (N0), should succeed.

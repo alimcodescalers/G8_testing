@@ -45,7 +45,7 @@ class TestVmsAPI(TestcasesBase):
         super(TestVmsAPI, self).tearDown()
 
     def test001_get_nodes_vms_vmid(self):
-        """ GAT-001
+        """ GAT-067
         **Test Scenario:**
 
         #. Get random nodid (N0).
@@ -75,7 +75,7 @@ class TestVmsAPI(TestcasesBase):
         self.assertEqual(response.status_code, 404)
 
     def test002_get_node_vms(self):
-        """ GAT-002
+        """ GAT-068
         **Test Scenario:**
 
         #. Get random nodid (N0).
@@ -86,10 +86,10 @@ class TestVmsAPI(TestcasesBase):
         response = self.vms_api.get_nodes_vms(self.nodeid)
         self.assertEqual(response.status_code, 200)
         self.assertIn(self.vm_id, [x['id'] for x in response.json()])
-        
+
 
     def test003_post_node_vms(self):
-        """ GAT-003
+        """ GAT-069
         **Test Scenario:**
 
         #. Get random nodid (N0).
@@ -129,8 +129,8 @@ class TestVmsAPI(TestcasesBase):
             body['memory'] = 1024
             body['cpu'] = 1
             response = self.vms_api.post_nodes_vms(self.nodeid, body)
-            self.assertEqual(response.status_code, 201)
-            time.sleep(20)
+
+        self.assertEqual(response.status_code, 201)
 
         self.lg.info('Get virtual machine (VM1), should succeed with 200')
         response = self.vms_api.get_nodes_vms_vmid(self.nodeid, vm_id)
@@ -155,7 +155,7 @@ class TestVmsAPI(TestcasesBase):
 
     @unittest.skip('https://github.com/g8os/resourcepool/issues/126')
     def test004_put_nodes_vms_vmid(self):
-        """ GAT-004
+        """ GAT-070
         **Test Scenario:**
 
         #. Get random nodid (N0).
@@ -199,9 +199,9 @@ class TestVmsAPI(TestcasesBase):
         response = self.vms_api.put_nodes_vms_vmid(self.nodeid, body)
         self.assertEqual(response.status_code, 400)
 
-
+    @unittest.skip('bug: #131')
     def test005_get_nodes_vms_vmid_info(self):
-        """ GAT-005
+        """ GAT-071
         **Test Scenario:**
 
         #. Get random nodid (N0).
@@ -220,7 +220,7 @@ class TestVmsAPI(TestcasesBase):
 
 
     def test006_delete_nodes_vms_vmid(self):
-        """ GAT-006
+        """ GAT-072
         **Test Scenario:**
 
         #. Get random nodid (N0).
@@ -243,7 +243,7 @@ class TestVmsAPI(TestcasesBase):
 
 
     def test007_post_nodes_vms_vmid_start(self):
-        """ GAT-007
+        """ GAT-073
         **Test Scenario:**
 
         #. Get random nodid (N0).
@@ -255,7 +255,7 @@ class TestVmsAPI(TestcasesBase):
         self.lg.info('Stop virtual machine (VM0), should succeed with 204')
         response = self.vms_api.post_nodes_vms_vmid_stop(self.nodeid, self.vm_id)
         self.assertEqual(response.status_code, 204)
-        for _ in range(15):   
+        for _ in range(15):
             response = self.vms_api.get_nodes_vms_vmid(self.nodeid, self.vm_id)
             self.assertEqual(response.status_code, 200)
             status = response.json()['status']
@@ -273,7 +273,7 @@ class TestVmsAPI(TestcasesBase):
         self.lg.info('Start virtual machine (VM0), should succeed with 204')
         response = self.vms_api.post_nodes_vms_vmid_start(self.nodeid, self.vm_id)
         self.assertEqual(response.status_code, 204)
-        for _ in range(15):   
+        for _ in range(15):
             response = self.vms_api.get_nodes_vms_vmid(self.nodeid, self.vm_id)
             self.assertEqual(response.status_code, 200)
             status = response.json()['status']
@@ -291,7 +291,7 @@ class TestVmsAPI(TestcasesBase):
 
 
     def test008_post_nodes_vms_vmid_stop(self):
-        """ GAT-008
+        """ GAT-074
         **Test Scenario:**
 
         #. Get random nodid (N0).
@@ -304,7 +304,7 @@ class TestVmsAPI(TestcasesBase):
         self.assertEqual(response.status_code, 204)
 
         self.lg.info('Get virtual machine (VM0), virtual machine (VM0) status should be halting')
-        for _ in range(15):   
+        for _ in range(15):
             response = self.vms_api.get_nodes_vms_vmid(self.nodeid, self.vm_id)
             self.assertEqual(response.status_code, 200)
             status = response.json()['status']
@@ -322,7 +322,7 @@ class TestVmsAPI(TestcasesBase):
 
 
     def test009_post_nodes_vms_vmid_pause_resume(self):
-        """ GAT-009
+        """ GAT-075
         **Test Scenario:**
 
         #. Get random nodid (N0).
@@ -337,7 +337,7 @@ class TestVmsAPI(TestcasesBase):
         self.assertEqual(response.status_code, 204)
 
         self.lg.info('Get virtual machine (VM0), virtual machine (VM0) status should be halting')
-        for _ in range(15):   
+        for _ in range(15):
             response = self.vms_api.get_nodes_vms_vmid(self.nodeid, self.vm_id)
             self.assertEqual(response.status_code, 200)
             status = response.json()['status']
@@ -358,7 +358,7 @@ class TestVmsAPI(TestcasesBase):
         self.assertEqual(response.status_code, 204)
 
         self.lg.info('Get virtual machine (VM0), virtual machine (VM0) status should be running')
-        for _ in range(15):   
+        for _ in range(15):
             response = self.vms_api.get_nodes_vms_vmid(self.nodeid, self.vm_id)
             self.assertEqual(response.status_code, 200)
             status = response.json()['status']
@@ -377,7 +377,7 @@ class TestVmsAPI(TestcasesBase):
 
     @unittest.skip('https://github.com/g8os/resourcepool/issues/128')
     def test010_post_nodes_vms_vmid_shutdown(self):
-        """ GAT-010
+        """ GAT-076
         **Test Scenario:**
 
         #. Get random nodid (N0).
@@ -388,7 +388,7 @@ class TestVmsAPI(TestcasesBase):
         self.lg.info('Shutdown virtual machine (VM0), should succeed with 204')
         response = self.vms_api.post_nodes_vms_vmid_shutdown(self.nodeid, self.vm_id)
         self.assertEqual(response.status_code, 204)
-        for _ in range(15):   
+        for _ in range(15):
             response = self.vms_api.get_nodes_vms_vmid(self.nodeid, self.vm_id)
             self.assertEqual(response.status_code, 200)
             status = response.json()['status']
@@ -402,11 +402,11 @@ class TestVmsAPI(TestcasesBase):
         vms = self.pyclient.client.kvm.list()
         vm0 = [x for x in vms if x['name'] == self.vm_id]
         self.assertEqual(vm0, [])
-    
+
 
     @unittest.skip('need at least 2 nodes')
     def test011_post_nodes_vms_vmid_migrate(self):
-        """ GAT-011
+        """ GAT-077
         **Test Scenario:**
 
         #. Get random nodid (N0).
@@ -420,7 +420,7 @@ class TestVmsAPI(TestcasesBase):
         response = self.vms_api.post_nodes_vms_vmid_migrate(self.nodeid, self.vm_id, body)
         self.assertEqual(response.status_code, 204)
 
-        for _ in range(15):   
+        for _ in range(15):
             response = self.vms_api.get_nodes_vms_vmid(self.nodeid, self.vm_id)
             self.assertEqual(response.status_code, 200)
             status = response.json()['status']

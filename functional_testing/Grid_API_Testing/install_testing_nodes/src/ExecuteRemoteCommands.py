@@ -164,10 +164,10 @@ class ExecuteRemoteCommands(RequestEnvAPI):
         self.execute_command(command=command)
 
     def add_node_to_zerotire_nw(self):
-        self.logging.info(' [*] Add node to %s network ... ' % self.values['zerotire_nw'])
-        print(colored(' [*] Add node to %s network ... ' % self.values['zerotire_nw']))
+        self.logging.info(' [*] Add node to %s network ... ' % self.ZEROTIER_NW_ID)
+        print(colored(' [*] Add node to %s network ... ' % self.ZEROTIER_NW_ID))
         command = 'echo %s | sudo -S bash -c " zerotier-cli join %s" ' % (self.virtualmachine['password'],
-                                                                          self.values['zerotire_nw'])
+                                                                          self.ZEROTIER_NW_ID)
         self.execute_command(command=command)
 
     def update_g8os_valuse(self, ip, mac):
@@ -182,7 +182,7 @@ class ExecuteRemoteCommands(RequestEnvAPI):
 
     def install_zerotire_lib(self):
         self.logging.info(' [*] Installing zerotier ... ')
-        print(colored('[*] Installing zerotier ... ', 'white'))
+        print(colored(' [*] Installing zerotier ... ', 'white'))
         command = 'echo %s | sudo -S bash -c "pip install zerotier" ' % self.virtualmachine['password']
         self.execute_command(command=command)
 

@@ -43,7 +43,7 @@ class TestcontaineridAPI(TestcasesBase):
                                                               container['container'])
 
     def test001_list_containers(self):
-        """ GAT-001
+        """ GAT-022
         *GET:/node/{nodeid}/containers Expected: List of all running containers *
 
         **Test Scenario:**
@@ -69,7 +69,7 @@ class TestcontaineridAPI(TestcasesBase):
                 self.assertTrue(self.g8core.client.container.find(container['name']),'container %s not in golden value '%container['name'])
 
     def test002_create_containers(self):
-        """ GAT-002
+        """ GAT-023
         *post:/node/{nodeid}/containers Expected: create container then delete it *
 
         **Test Scenario:**
@@ -113,7 +113,7 @@ class TestcontaineridAPI(TestcasesBase):
 
 
     def test003_get_container_details(self):
-        """ GAT-003
+        """ GAT-024
         *get:/node/{nodeid}/containers/containerid Expected: get container details *
 
         **Test Scenario:**
@@ -141,7 +141,7 @@ class TestcontaineridAPI(TestcasesBase):
                 self.assertEqual(data[key], golden_value[key])
 
     def test004_stop_and_start_container(self):
-        """ GAT-004
+        """ GAT-025
         *post:/node/{nodeid}/containers/containerid/start Expected: get container details *
 
         **Test Scenario:**
@@ -184,7 +184,7 @@ class TestcontaineridAPI(TestcasesBase):
         self.assertTrue(self.g8core.wait_on_container_update(self.container_name, 60, False))
 
     def test005_get_running_jobs(self):
-        """ GAT-005
+        """ GAT-026
         *get:/node/{nodeid}/containers/containerid/jobs Expected: get container details *
 
         **Test Scenario:**
@@ -211,7 +211,7 @@ class TestcontaineridAPI(TestcasesBase):
         self.assertEqual(len(golden_values.difference(api_jobs)), 1)
 
     def test006_kill_all_running_jobs(self):
-        """ GAT-006
+        """ GAT-027
         *get:/node/{nodeid}/containers/containerid/jobs Expected: get container details*
 
         **Test Scenario:**
@@ -250,7 +250,7 @@ class TestcontaineridAPI(TestcasesBase):
         self.lg.info('Compare results with golden value.')
 
     def test007_get_job_in_container_details(self):
-        """ GAT-007
+        """ GAT-028
         *get:/node/{nodeid}/containers/containerid/jobs/jobid Expected: get container details *
 
         **Test Scenario:**
@@ -291,7 +291,7 @@ class TestcontaineridAPI(TestcasesBase):
         self.assertTrue(self.g8core.wait_on_container_job_update(container_name, job_id, 15, True))
 
     def test008_post_signal_job_in_container_details(self):
-        """ GAT-008
+        """ GAT-029
         *get:/node/{nodeid}/containers/containerid/jobs/jobid Expected: get container details *
 
         **Test Scenario:**
@@ -321,7 +321,7 @@ class TestcontaineridAPI(TestcasesBase):
 
 
     def test009_kill_specific_job(self):
-        """ GAT-009
+        """ GAT-030
         *get:/node/{nodeid}/containers/containerid/jobs/jobid Expected: get container details *
 
         **Test Scenario:**
@@ -361,7 +361,7 @@ class TestcontaineridAPI(TestcasesBase):
                                                              job_id, 60, True))
 
     def test010_post_ping_to_container(self):
-        """ GAT-010
+        """ GAT-031
         *get:/node/{nodeid}/containers/containerid/ping *
 
         **Test Scenario:**
@@ -380,7 +380,7 @@ class TestcontaineridAPI(TestcasesBase):
         self.assertEqual(response.status_code, 200)
 
     def test011_get_state_of_container(self):
-        """ GAT-011
+        """ GAT-032
         *get:/node/{nodeid}/containers/containerid/state *
 
         **Test Scenario:**
@@ -408,7 +408,7 @@ class TestcontaineridAPI(TestcasesBase):
         self.assertAlmostEqual(golden_value['vms'], container_state['vms'], delta=10000000)
 
     def test012_get_info_of_container_os(self):
-        """ GAT-012
+        """ GAT-033
         *get:/node/{nodeid}/containers/containerid/info *
 
         **Test Scenario:**
@@ -438,7 +438,7 @@ class TestcontaineridAPI(TestcasesBase):
                 self.assertEqual(golden_value[key], container_info[key])
 
     def test013_get_running_processes_in_container(self):
-        """ GAT-013
+        """ GAT-034
         *get:/node/{nodeid}/containers/containerid/processes *
 
         **Test Scenario:**
@@ -472,7 +472,7 @@ class TestcontaineridAPI(TestcasesBase):
             self.assertAlmostEqual(p['vms'], golden_values[i]['vms'], delta=10000000)
 
     def test014_post_create_new_processes_in_container(self):
-        """ GAT-014
+        """ GAT-035
         *post:/node/{nodeid}/containers/containerid/processes *
 
         **Test Scenario:**
@@ -510,7 +510,7 @@ class TestcontaineridAPI(TestcasesBase):
         self.assertIn(process_name, golden_values)
 
     def test015_get_process_details_in_container(self):
-        """ GAT-015
+        """ GAT-036
         *post:/node/{nodeid}/containers/containerid/processes/processid *
 
         **Test Scenario:**
@@ -560,7 +560,7 @@ class TestcontaineridAPI(TestcasesBase):
                 self.assertEqual(golden_value[key], process[key])
 
     def test016_delete_process_in_container(self):
-        """ GAT-0016
+        """ GAT-037
         *post:/node/{nodeid}/containers/containerid/processes/processid *
 
         **Test Scenario:**
@@ -612,7 +612,7 @@ class TestcontaineridAPI(TestcasesBase):
             self.assertNotEqual(process['pid'], process_id)
 
     def test017_post_signal_to_process_in_container(self):
-        """ GAT-0017
+        """ GAT-038
         *get:/node/{nodeid}/containers/containerid/processes/processid Expected: get container details *
 
         **Test Scenario:**
@@ -648,7 +648,7 @@ class TestcontaineridAPI(TestcasesBase):
 
     @unittest.skip('https://github.com/g8os/resourcepool/issues/179')
     def test018_upload_file_to_container(self):
-        """ GAT-0018
+        """ GAT-039
         *post:/node/{nodeid}/containers/containerid/filesystem  *
 
         **Test Scenario:**
@@ -708,7 +708,7 @@ class TestcontaineridAPI(TestcasesBase):
         self.assertNotEqual(output, "SUCCESS")
 
     def test019_download_file_from_container(self):
-        """ GAT-0017
+        """ GAT-040
         *get:/node/{nodeid}/containers/containerid/filesystem  *
 
         **Test Scenario:**

@@ -23,4 +23,4 @@ class InstallG8OSOnPacket(Basic):
         return device
 
     def add_zerotire_nw_to_image(self, image):
-        return image % self.values['zerotire_nw']
+        return image.format(self.ZEROTIER_NW_ID)

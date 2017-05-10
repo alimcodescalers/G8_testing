@@ -43,9 +43,9 @@ class TestZerotiersAPI(TestcasesBase):
         self.DeleteZtNetwork(self.nwid)
         super(TestZerotiersAPI, self).tearDown()
 
-    
+
     def test001_get_nodes_zerotiers_zerotierid(self):
-        """ GAT-001
+        """ GAT-078
         **Test Scenario:**
 
         #. Get random nodid (N0), should succeed.
@@ -55,7 +55,7 @@ class TestZerotiersAPI(TestcasesBase):
         """
         self.lg.info('Get zerotier (ZT0) details and compare it with results from python client, should succeed with 200')
         response = self.zerotier_api.get_nodes_zerotiers_zerotierid(self.nodeid, self.nwid)
-        self.assertEqual(response.status_code, 200)    
+        self.assertEqual(response.status_code, 200)
         zerotiers = self.pyclient.client.zerotier.list()
         zerotier_ZT0 = [x for x in zerotiers if x['nwid'] == self.nwid]
         self.assertNotEqual(zerotier_ZT0, [])
@@ -73,7 +73,7 @@ class TestZerotiersAPI(TestcasesBase):
 
 
     def test002_list_node_zerotiers(self):
-        """ GAT-002
+        """ GAT-079
         **Test Scenario:**
 
         #. Get random nodid (N0), should succeed.
@@ -85,13 +85,13 @@ class TestZerotiersAPI(TestcasesBase):
         response = self.zerotier_api.get_nodes_zerotiers(self.nodeid)
         self.assertEqual(response.status_code, 200)
         self.assertIn(self.nwid, [x['nwid'] for x in response.json()])
-        
+
         self.lg.info('List zerotier networks using python client, (ZT0) should be listed')
         zerotiers = self.pyclient.client.zerotier.list()
         self.assertIn(self.nwid, [x['nwid'] for x in zerotiers])
 
     def test003_post_zerotier(self):
-        """ GAT-003
+        """ GAT-080
         **Test Scenario:**
 
         #. Get random nodid (N0).
@@ -143,7 +143,7 @@ class TestZerotiersAPI(TestcasesBase):
         self.assertEqual(response.status_code, 400)
 
     def test004_leave_zerotier(self):
-        """ GAT-004
+        """ GAT-081
         **Test Scenario:**
 
         #. Get random nodid (N0), should succeed.

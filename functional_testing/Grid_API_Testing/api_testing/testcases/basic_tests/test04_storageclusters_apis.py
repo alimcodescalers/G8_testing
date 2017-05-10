@@ -35,7 +35,7 @@ class TestStorageclustersAPI(TestcasesBase):
         super(TestStorageclustersAPI, self).tearDown()
 
     def test001_get_storageclusters_label(self):
-        """ GAT-001
+        """ GAT-041
         **Test Scenario:**
         #. Deploy new storage cluster (SC0)
         #. Get storage cluster (SC0), should succeed with 200
@@ -53,7 +53,7 @@ class TestStorageclustersAPI(TestcasesBase):
         self.assertEqual(response.status_code, 404)
 
     def test002_list_storageclusters(self):
-        """ GAT-002
+        """ GAT-042
         **Test Scenario:**
         #. Deploy new storage cluster (SC0)
         #. List storage clusters, should succeed with 200
@@ -64,7 +64,7 @@ class TestStorageclustersAPI(TestcasesBase):
         self.assertIn(self.label, response.json())
 
     def test003_deploy_new_storagecluster(self):
-        """ GAT-003
+        """ GAT-043
         **Test Scenario:**
         #. Deploy new storage cluster (SC1), should succeed with 201
         #. List storage clusters, (SC1) should be listed
@@ -95,7 +95,7 @@ class TestStorageclustersAPI(TestcasesBase):
 
     # @unittest.skip('bug: #96')
     def test004_kill_storagecluster_label(self):
-        """ GAT-004
+        """ GAT-044
         **Test Scenario:**
         #. #. Deploy new storage cluster (SC0)
         #. Kill storage cluster (SC0), should succeed with 204
