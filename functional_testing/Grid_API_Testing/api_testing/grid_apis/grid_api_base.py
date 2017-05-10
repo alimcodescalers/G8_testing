@@ -23,7 +23,7 @@ class GridAPIBase(object):
         elif method == 'put':
             response = self.requests.put(url=api, headers=self.headers, json=body, params=params)
         elif method == 'delete':
-            response = self.requests.delete(url=api, headers=self.headers, params=params)
+            response = self.requests.delete(url=api, json=body, headers=self.headers,params = params)
 
         return response
 
