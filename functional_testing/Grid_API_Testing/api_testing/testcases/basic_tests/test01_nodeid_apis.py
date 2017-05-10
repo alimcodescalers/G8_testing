@@ -387,7 +387,7 @@ class TestNodeidAPI(TestcasesBase):
                                                    client_processes[process_id][info],
                                                    msg="different value with key%s"%info,
                                                    delta=7000000)
-                        elif info == 'keyvms':
+                        elif info == 'vms':
                             self.assertAlmostEqual(process_info[info],
                                                    client_processes[process_id][info],
                                                    msg="different value with key%s"%info,
