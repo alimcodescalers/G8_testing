@@ -1,6 +1,7 @@
 from utils.utils import BaseTest
 from random import randint
 import unittest
+import time
 
 class ExtendedMachines(BaseTest):
 
