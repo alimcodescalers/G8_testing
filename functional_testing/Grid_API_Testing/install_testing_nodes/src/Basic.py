@@ -122,11 +122,12 @@ class Basic(object):
             self.ZEROTIER_NW_ID = use_this_nw
         else:
             self.logging.info(' [*] Create new zerotier network ... ')
-            print(colored(' [*] Create new zerotier network ... ', 'white'))
             session = requests.Session()
             session.headers['Authorization'] = 'Bearer %s' % self.values['zerotier_token']
             url = 'https://my.zerotier.com/api/network'
-            data = {'config': {'private': 'true',
+            data = {'config': {'ipAssignmentPools': [{'ipRangeEnd': '10.147.17.254',
+                                                      'ipRangeStart': '10.147.17.1'}],
+                               'private': 'true',
                                'routes': [{'target': '10.147.17.0/24', 'via': None}],
                                'v4AssignMode': {'zt': 'true'}}}
 
@@ -134,4 +135,4 @@ class Basic(object):
             response.raise_for_status()
             Basic.ZEROTIER_NW_ID = response.json()['id']
             self.logging.info(' [*] %s zerotier nw has been created... ' % self.ZEROTIER_NW_ID)
-            print(colored(' [*] %s zerotier nw has been created... ' % self.ZEROTIER_NW_ID, 'green'))
+            print(colored(' [*] %s zerotier nw has been created... \n' % self.ZEROTIER_NW_ID, 'green'))

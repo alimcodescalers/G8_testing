@@ -3,30 +3,34 @@ from random import randint
 from install_testing_nodes.src.ExecuteRemoteCommands import ExecuteRemoteCommands
 from install_testing_nodes.src.install_g8os_on_packet import InstallG8OSOnPacket
 
-JUMPSACLE_BRANCH = "8.2.0"
-AYS_TEMPLATE_BRANCH = "1.1.0-alpha"
-GRID_API_BRANCH = "1.1.0-alpha"
-G8CORE_CLIENT = "1.1.0-alpha"
-IPXE_SCRIPT = 'https://bootstrap.gig.tech/ipxe/1.1.0-alpha-ssh/%s/console=ttyS1,115200n8'
-MACHINE_PLAN = 'baremetal_1'  # Type 1
+MACHINE_PLAN = 'baremetal_2'  # Type 1
 ZEROTIER_NW_ID = None
 MACHINES_NUMBER = 2
 MACHINES = []
 AUTO_DISCOVERING = True
 
+JUMPSACLE_BRANCH = "8.2.0"
+RELEASE_VERSION = "1.1.0-alpha"
+AYS_TEMPLATE_BRANCH = RELEASE_VERSION
+GRID_API_BRANCH = RELEASE_VERSION
+G8CORE_CLIENT = RELEASE_VERSION
+IPXE_SCRIPT = 'https://bootstrap.gig.tech/ipxe/{}/{}/console=ttyS1,115200n8'.format(RELEASE_VERSION, {})
+
+
 if __name__ == '__main__':
     install_g8os_on_packet = InstallG8OSOnPacket()
     executer = ExecuteRemoteCommands()
+    print(colored(' [*] STEP 1 : Create new zerotier network ... ', 'white'))
     executer.create_zerotire_nw(use_this_nw=ZEROTIER_NW_ID)
-    print(colored(' [*] STEP 1 : Install g8os in packet, image: %s' % IPXE_SCRIPT, 'yellow'))
+    print(colored(' [*] STEP 2 : Install g8os in packet, image: %s' % IPXE_SCRIPT, 'yellow'))
     for i in range(MACHINES_NUMBER):
         MACHINE_NAME = 'Test-xtremx-0%i' % randint(1, 1000)
         MACHINES.append(install_g8os_on_packet.create_new_device(hostname=MACHINE_NAME,
                                                                  plan=MACHINE_PLAN,
                                                                  ipxe_script_url=IPXE_SCRIPT))
-    print(colored(' [*] STEP 2 : create account', 'yellow'))
+    print(colored(' [*] STEP 3 : create account', 'yellow'))
     executer.create_account()
-    print(colored(' [*] STEP 3 : create cloud space', 'yellow'))
+    print(colored(' [*] STEP 4 : create cloud space', 'yellow'))
     executer.create_cloudspace()
 
     if not AUTO_DISCOVERING:
@@ -35,7 +39,7 @@ if __name__ == '__main__':
         executer.update_g8os_valuse(MACHINE_IP, MACHINE_MAC)
 
     # AYS server vm
-    print(colored(' [*] STEP 4 : create AYS server node', 'yellow'))
+    print(colored(' [*] STEP 5 : create AYS server node', 'yellow'))
     executer.create_virtualmachine()
     executer.create_port_forward(publicPorts={22: 2201, 5000: 5000})
     executer.connect_to_virtual_machine(port=2201)
@@ -53,7 +57,7 @@ if __name__ == '__main__':
     ays_server_ip = executer.virtualmachine['ip']
 
     # grid API node
-    print(colored(' [*] STEP 5 : create grid API server', 'yellow'))
+    print(colored(' [*] STEP 6 : create grid API server', 'yellow'))
     executer.create_virtualmachine()
     executer.create_port_forward(publicPorts={22: 2202, 8080: 8080})
     executer.connect_to_virtual_machine(port=2202)
@@ -65,3 +69,5 @@ if __name__ == '__main__':
     executer.start_API_server(API_branch=GRID_API_BRANCH,
                               ays_server_ip=ays_server_ip)
     executer.get_virtualmachine_ip()
+    print('\n')
+    print(colored(' [*] http://%s:8080' % executer.cloudspace['ip'], 'cyan'))

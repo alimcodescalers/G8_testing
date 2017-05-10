@@ -182,7 +182,7 @@ class ExecuteRemoteCommands(RequestEnvAPI):
 
     def install_zerotire_lib(self):
         self.logging.info(' [*] Installing zerotier ... ')
-        print(colored('[*] Installing zerotier ... ', 'white'))
+        print(colored(' [*] Installing zerotier ... ', 'white'))
         command = 'echo %s | sudo -S bash -c "pip install zerotier" ' % self.virtualmachine['password']
         self.execute_command(command=command)
 
