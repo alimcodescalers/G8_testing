@@ -5,7 +5,7 @@ from api_testing.grid_apis.apis.storageclusters_apis import Storageclusters
 from api_testing.python_client.client import Client
 import unittest
 
-@unittest.skip(' ')
+@unittest.skip('https://github.com/g8os/resourcepool/issues/175')
 class TestVdisks(TestcasesBase):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

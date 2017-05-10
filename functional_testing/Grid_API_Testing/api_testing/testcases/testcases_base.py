@@ -8,7 +8,6 @@ import random
 import requests
 import time
 
-
 class TestcasesBase(TestCase):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -55,19 +54,23 @@ class TestcasesBase(TestCase):
     def random_item(self, array):
         return array[randint(0, len(array)-1)]
 
-    def getZtNetworkID(self):
+    def create_zerotier_network(self):
         url = 'https://my.zerotier.com/api/network'
-        r = self.session.get(url)
-        if r.status_code == 200:
-            for item in r.json():
-                if item['type'] == 'Network':
-                    return item['id']
-            else:
-                self.lg('can\'t find network id')
-                return False
-        else:
-            self.lg('can\'t connect to zerotier, {}:{}'.format(r.status_code, r.content))
-            return False
+        data = {'config': {'ipAssignmentPools': [{'ipRangeEnd': '10.147.17.254',
+                                                    'ipRangeStart': '10.147.17.1'}],
+                            'private': False,
+                            'routes': [{'target': '10.147.17.0/24', 'via': None}],
+                            'v4AssignMode': {'zt': True}}}
+
+        response = self.session.post(url=url, json=data)
+        response.raise_for_status()
+        nwid = response.json()['id']
+        return nwid
+
+    def delete_zerotier_network(self, nwid):
+        url = 'https://my.zerotier.com/api/network/{}'.format(nwid)
+        self.session.delete(url=url)
+       
 
     def wait_for_container_status(self, status, func, timeout=100, **kwargs):
         resource = func(**kwargs)

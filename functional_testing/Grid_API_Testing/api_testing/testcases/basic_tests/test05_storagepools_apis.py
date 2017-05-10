@@ -49,8 +49,10 @@ class TestStoragepoolsAPI(TestcasesBase):
         self.storagepool_api.post_storagepools_storagepoolname_filesystems(self.nodeid, self.storagepool_name, self.fs_body)
         time.sleep(10)
 
-        # self.lg.info('Create snapshot (SS0) on filesystem (FS0)')
-        # self.storagepool_api.post_filesystems_snapshots(self.nodeid, self.storagepool_name, self.fs_name)
+        self.lg.info('Create snapshot (SS0) on filesystem (FS0)')
+        self.ss_name = self.rand_str()
+        self.ss_body = {"name":self.ss_name}
+        self.storagepool_api.post_filesystems_snapshots(self.nodeid, self.storagepool_name, self.fs_name, self.ss_body)
 
 
     def tearDown(self):
@@ -184,7 +186,7 @@ class TestStoragepoolsAPI(TestcasesBase):
         response = self.storagepool_api.delete_storagepools_storagepoolname(self.nodeid, 'fake_storagepool')
         self.assertEqual(response.status_code, 404)
 
-    @unittest.skip('bug: #93')
+    @unittest.skip('https://github.com/g8os/resourcepool/issues/93')
     def test005_get_storagepool_device(self):
         """ GAT-049
         **Test Scenario:**
@@ -208,7 +210,7 @@ class TestStoragepoolsAPI(TestcasesBase):
         response = self.storagepool_api.get_storagepools_storagepoolname_devices_deviceid(self.nodeid, self.storagepool_name, 'fake_device')
         self.assertEqual(response.status_code, 404)
 
-    @unittest.skip('bug: #93')
+    @unittest.skip('https://github.com/g8os/resourcepool/issues/93')
     def test006_list_storagepool_devices(self):
         """ GAT-050
         **Test Scenario:**
@@ -384,7 +386,7 @@ class TestStoragepoolsAPI(TestcasesBase):
         response = self.storagepool_api.delete_storagepools_storagepoolname_filesystems_filesystemname(self.nodeid, self.storagepool_name, 'fake_filesystem')
         self.assertEqual(response.status_code, 404)
 
-    @unittest.skip('issue: #141')
+
     def test013_get_storagepool_filessystem_snapshot(self):
         """ GAT-057
         **Test Scenario:**
@@ -410,7 +412,7 @@ class TestStoragepoolsAPI(TestcasesBase):
                                                                                            'fake_snapshot')
         self.assertEqual(response.status_code, 404)
 
-    @unittest.skip('issue: #141')
+
     def test014_list_storagepool_filesystems_snapshots(self):
         """ GAT-058
         **Test Scenario:**
@@ -426,7 +428,7 @@ class TestStoragepoolsAPI(TestcasesBase):
         self.assertEqual(response.status_code, 200)
         self.assertIn(self.ss_name, response.json())
 
-    @unittest.skip('issue: #141')
+
     def test015_post_storagepool_filesystem_snapshot(self):
         """ GAT-059
         **Test Scenario:**
@@ -464,7 +466,7 @@ class TestStoragepoolsAPI(TestcasesBase):
         response = self.storagepool_api.post_filesystems_snapshots(self.nodeid, self.storagepool_name, self.fs_name, body)
         self.assertEqual(response.status_code, 400)
 
-    @unittest.skip('issue: #141')
+
     def test016_delete_storagepool_filesystem_snapshot(self):
         """ GAT-060
         **Test Scenario:**
@@ -484,7 +486,7 @@ class TestStoragepoolsAPI(TestcasesBase):
         self.assertEqual(response.status_code, 204)
 
         self.lg.info('list filesystem (FS0) snapshots, snapshot (SS0) should be gone')
-        response = self.storagepool_api.delete_filesystem_snapshots_snapshotname(self.nodeid, self.storagepool_name, self.fs_name)
+        response = self.storagepool_api.get_filesystem_snapshots(self.nodeid, self.storagepool_name, self.fs_name)
         self.assertEqual(response.status_code, 200)
         self.assertNotIn(self.ss_name, response.json())
 

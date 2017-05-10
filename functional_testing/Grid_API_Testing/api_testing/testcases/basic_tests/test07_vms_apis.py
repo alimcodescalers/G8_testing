@@ -88,7 +88,6 @@ class TestVmsAPI(TestcasesBase):
         self.assertIn(self.vm_id, [x['id'] for x in response.json()])
 
 
-    @unittest.skip('bug: #132')
     def test003_post_node_vms(self):
         """ GAT-069
         **Test Scenario:**
@@ -118,12 +117,19 @@ class TestVmsAPI(TestcasesBase):
                 "systemCloudInit":vm_systemCloudInit}
 
         response = self.vms_api.post_nodes_vms(self.nodeid, body)
-        if response.status_code == 400:
+        self.assertEqual(response.status_code, 201)
+        time.sleep(20)
+
+        response = self.vms_api.get_nodes_vms_vmid(self.nodeid, vm_id)
+        self.assertEqual(response.status_code, 200)
+
+        if response.json()['status'] == 'error':
+            vm_id = self.rand_str()
+            body['id'] = vm_id
             body['memory'] = 1024
             body['cpu'] = 1
             response = self.vms_api.post_nodes_vms(self.nodeid, body)
-
-        self.assertEqual(response.status_code, 201)
+            self.assertEqual(response.status_code, 201)
 
         self.lg.info('Get virtual machine (VM1), should succeed with 200')
         response = self.vms_api.get_nodes_vms_vmid(self.nodeid, vm_id)
@@ -146,7 +152,7 @@ class TestVmsAPI(TestcasesBase):
         response = self.vms_api.post_nodes_vms(self.nodeid, body)
         self.assertEqual(response.status_code, 400)
 
-    @unittest.skip('bug: #126')
+    @unittest.skip('https://github.com/g8os/resourcepool/issues/126')
     def test004_put_nodes_vms_vmid(self):
         """ GAT-070
         **Test Scenario:**
@@ -192,7 +198,7 @@ class TestVmsAPI(TestcasesBase):
         response = self.vms_api.put_nodes_vms_vmid(self.nodeid, body)
         self.assertEqual(response.status_code, 400)
 
-    @unittest.skip('bug: #131')
+
     def test005_get_nodes_vms_vmid_info(self):
         """ GAT-071
         **Test Scenario:**
@@ -211,7 +217,7 @@ class TestVmsAPI(TestcasesBase):
         self.lg.info('Get nonexisting virtual machine info, should fail with 404')
         response = self.vms_api.get_nodes_vms_vmid_info(self.nodeid, 'fake_vm')
 
-    # @unittest.skip('bug: #91')
+
     def test006_delete_nodes_vms_vmid(self):
         """ GAT-072
         **Test Scenario:**
@@ -230,10 +236,10 @@ class TestVmsAPI(TestcasesBase):
         vms = self.pyclient.client.kvm.list()
         self.assertNotIn(self.vm_id, [x['name'] for x in vms])
 
-        # bug #129
-        # self.lg.info('Delete nonexisting virtual machine, should fail with 404')
-        # response = self.vms_api.delete_nodes_vms_vmid(self.nodeid, 'fake_vm_id')
-        # self.assertEqual(response.status_code, 404)
+        self.lg.info('Delete nonexisting virtual machine, should fail with 404')
+        response = self.vms_api.delete_nodes_vms_vmid(self.nodeid, 'fake_vm_id')
+        self.assertEqual(response.status_code, 404)
+
 
     def test007_post_nodes_vms_vmid_start(self):
         """ GAT-073
@@ -313,7 +319,7 @@ class TestVmsAPI(TestcasesBase):
         self.assertEqual(vm0, [])
 
 
-    @unittest.skip('bug: #127')
+
     def test009_post_nodes_vms_vmid_pause_resume(self):
         """ GAT-075
         **Test Scenario:**
@@ -368,7 +374,7 @@ class TestVmsAPI(TestcasesBase):
         self.assertEquals(vm0[0]['state'], 'running')
 
 
-    @unittest.skip('bug: #128')
+    @unittest.skip('https://github.com/g8os/resourcepool/issues/128')
     def test010_post_nodes_vms_vmid_shutdown(self):
         """ GAT-076
         **Test Scenario:**
