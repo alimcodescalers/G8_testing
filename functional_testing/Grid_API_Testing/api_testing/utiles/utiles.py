@@ -21,7 +21,10 @@ class Utiles:
         return self.config
 
     def log(self, log_file_name='log.log'):
-        self.logging.basicConfig(filename=log_file_name, filemode='w', level=logging.INFO,
+        log = self.logging.getLogger()
+        fileHandler = self.logging.FileHandler(log_file_name)
+        log.addHandler(fileHandler)
+        self.logging.basicConfig(filename=log_file_name, filemode='rw', level=logging.INFO,
                                  format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
         '''
         How to use:
