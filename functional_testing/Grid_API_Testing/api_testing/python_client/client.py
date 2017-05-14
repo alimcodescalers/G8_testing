@@ -1,6 +1,7 @@
 import g8core
 import time
 
+
 class Client:
     def __init__(self, ip):
         self.client = g8core.Client(ip)
@@ -9,25 +10,10 @@ class Client:
         return resource.get().stdout.replace('\n', '').lower()
 
     def get_nodes_cpus(self):
-        lines = self.client.bash('cat /proc/cpuinfo').get().stdout.splitlines()
+        info = self.client.info.cpu()
         cpuInfo = []
-        cpuInfo_format = {'family': "", 'cacheSize': "", 'mhz': "", 'cores': "", 'flags': ""}
-        for line in lines:
-            line = line.replace('\t', '').strip()
-            key = line[:line.find(':')]
-            value = line[line.find(':')+2:]
-            if key == 'processor':
-                cpuInfo.append(dict(cpuInfo_format))
-            if key == 'cpu family':
-                cpuInfo[-1]['family'] = value
-            elif key == 'cache size':
-                cpuInfo[-1]['cacheSize'] = int(value[:value.index(' KB')])
-            elif key == 'cpu MHz':
-                cpuInfo[-1]['mhz'] = int(float(value))
-            elif key == 'cpu cores':
-                cpuInfo[-1]['cores'] = int(value)
-            elif key == 'flags':
-                cpuInfo[-1]['flags'] = value.split(' ')
+        for processor in info:
+            cpuInfo.append(processor)
         return cpuInfo
 
     def get_nodes_nics(self):
@@ -151,14 +137,16 @@ class Client:
 
         return freeDisks
 
-
-
     def get_processes_list(self):
         processes = self.client.process.list()
         return processes
 
     def get_container_info(self, container_id):
-        container_id = list(self.client.container.find(container_id).keys())[0]
+        container = (self.client.container.find(container_id))
+        if not container:
+            return False
+        container_id=list(container.keys())[0]
+
         container_info = {}
         golden_data = self.client.container.list().get(str(container_id), None)
         if not golden_data:
