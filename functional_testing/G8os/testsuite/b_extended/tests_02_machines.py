@@ -90,7 +90,6 @@ class ExtendedMachines(BaseTest):
 
         self.lg('{} ENDED'.format(self._testID))
 
-    @unittest.skip('bug: https://github.com/g8os/core0/issues/221')
     def test002_kvm_attach_deattach_disks(self):
         """ g8os-036
 
@@ -121,7 +120,8 @@ class ExtendedMachines(BaseTest):
         self.assertEqual(len(self.client.kvm.info(vm_uuid)['Block']), l+1)
 
         self.lg('Attach L1 to vm1 again, vm1 should still see L1 as one vdisk')
-        self.client.kvm.attach_disk(vm_uuid, {'url': loop_dev})
+        with self.assertRaises(RuntimeError):
+            self.client.kvm.attach_disk(vm_uuid, {'url': loop_dev})
         self.assertEqual(len(self.client.kvm.info(vm_uuid)['Block']), l+1)
 
         self.lg('Deattach L1 from vm1, should succeed')
