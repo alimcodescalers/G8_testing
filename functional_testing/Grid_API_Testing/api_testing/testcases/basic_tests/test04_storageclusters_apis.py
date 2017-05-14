@@ -1,9 +1,10 @@
 from random import randint
 from api_testing.testcases.testcases_base import TestcasesBase
 from api_testing.grid_apis.apis.storageclusters_apis import Storageclusters
-import unittest
+from api_testing.python_client.client import Client
+import unittest, time
 
-@unittest.skip('https://github.com/g8os/resourcepool/issues/175')
+# @unittest.skip('https://github.com/g8os/resourcepool/issues/175')
 class TestStorageclustersAPI(TestcasesBase):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -11,27 +12,48 @@ class TestStorageclustersAPI(TestcasesBase):
 
     def setUp(self):
         super(TestStorageclustersAPI, self).setUp()
-        self.lg.info('Deploy new storage cluster (SC0)')
-        self.label = self.rand_str()
-        self.servers = randint(1,1000)
-        self.types = ['nvme', 'ssd', 'hdd', 'archive']
-        self.drivetype = self.random_item(self.types)
-        if len(self.nodes) < 2:
-            self.slaveNodes = False
-        else:
-            self.slaveNodes = self.random_item([True, False])
 
-        nodes = [x['id'] for x in self.nodes]
-        self.body = {"label": self.label,
-                     "servers": self.servers,
-                     "driveType": self.drivetype,
-                     "slaveNodes": self.slaveNodes,
-                     "nodes":nodes}
-        self.storageclusters_api.post_storageclusters(self.body)
+        self.nodeid = self.get_random_node()
+        pyclient_ip = [x['ip'] for x in self.nodes if x['id'] == self.nodeid][0]
+        self.pyclient = Client(pyclient_ip)
+
+        if self._testMethodName != 'test003_deploy_new_storagecluster':
+            
+            self.lg.info('Deploy new storage cluster (SC0)')
+            free_disks = self.pyclient.getFreeDisks()
+            if free_disks == []:
+                self.skipTest('no free disks to create storagecluster')
+
+            self.label = self.rand_str()
+            self.servers = randint(1,len(free_disks))
+            self.drivetype = 'ssd'
+            self.slaveNodes = False
+
+            self.body = {"label": self.label,
+                        "servers": self.servers,
+                        "driveType": self.drivetype,
+                        "slaveNodes": self.slaveNodes,
+                        "nodes":[self.nodeid]}
+
+            self.storageclusters_api.post_storageclusters(self.body)
+            
+            for _ in range(60):
+                response = self.storageclusters_api.get_storageclusters_label(self.label)
+                if response.status_code == 200:
+                    if response.json()['status'] == 'ready':
+                        break
+                    else:
+                        time.sleep(3)
+                else:
+                    time.sleep(10)
+            else:
+                self.lg.error('storagecluster status is not ready after 180 sec')
+            
 
     def tearDown(self):
         self.lg.info('Kill storage cluster (SC0)')
-        self.storageclusters_api.delete_storageclusters_label(self.label)
+        if self._testMethodName != 'test003_deploy_new_storagecluster':
+            self.storageclusters_api.delete_storageclusters_label(self.label)
         super(TestStorageclustersAPI, self).tearDown()
 
     def test001_get_storageclusters_label(self):
@@ -71,18 +93,35 @@ class TestStorageclustersAPI(TestcasesBase):
         #. Kill storage cluster (SC0), should succeed with 204
         """
         self.lg.info('Deploy new storage cluster (SC1), should succeed with 201')
+        
+        free_disks = self.pyclient.getFreeDisks()
+        if free_disks == []:
+            self.skipTest('no free disks to create storagecluster')
+        
         label = self.rand_str()
-        servers = randint(1,1000)
-        drivetype = self.random_item(self.types)
-        slaveNodes = self.random_item([True, False])
-        nodes = [self.get_random_node()]
+        servers = randint(1, len(free_disks))
+        drivetype = 'ssd'
+        slaveNodes = False
         body = {"label": label,
                 "servers": servers,
                 "driveType": drivetype,
                 "slaveNodes":slaveNodes,
-                "nodes":nodes}
+                "nodes":[self.nodeid]}
+
         response = self.storageclusters_api.post_storageclusters(body)
         self.assertEqual(response.status_code, 201)
+
+        for _ in range(60):
+            response = self.storageclusters_api.get_storageclusters_label(label)
+            if response.status_code == 200:
+                if response.json()['status'] == 'ready':
+                    break
+                else:
+                    time.sleep(3)
+            else:
+                time.sleep(10)
+        else:
+            self.lg.error('storagecluster status is not ready after 180 sec')
 
         self.lg.info('List storage clusters, (SC1) should be listed')
         response = self.storageclusters_api.get_storageclusters()
