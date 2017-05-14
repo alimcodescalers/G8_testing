@@ -402,8 +402,7 @@ class TestVmsAPI(TestcasesBase):
         vm0 = [x for x in vms if x['name'] == self.vm_id]
         self.assertEqual(vm0, [])
 
-
-    @unittest.skip('need at least 2 nodes')
+    @unittest.skip('https://github.com/g8os/resourcepool/issues/215')
     def test011_post_nodes_vms_vmid_migrate(self):
         """ GAT-077
         **Test Scenario:**
@@ -413,6 +412,9 @@ class TestVmsAPI(TestcasesBase):
         #. Migrate virtual machine (VM0) to another node, should succeed with 204.
         #. Get virtual machine (VM0), virtual machine (VM0) status should be migrating.
         """
+        if len(self.nodes) < 2:
+            self.skipTest('need at least 2 nodes')
+
         self.lg.info('Migrate virtual machine (VM0) to another node, should succeed with 204')
         node_2 = self.get_random_node(except_node=self.nodeid)
         body = {"nodeid": node_2}
@@ -423,9 +425,18 @@ class TestVmsAPI(TestcasesBase):
             response = self.vms_api.get_nodes_vms_vmid(self.nodeid, self.vm_id)
             self.assertEqual(response.status_code, 200)
             status = response.json()['status']
-            if status == 'migrating':
+            if status == 'running':
                 break
             else:
                 time.sleep(1)
-        else:
-            raise AssertionError('{} is not {}'.format(status, 'migrating'))
+        
+        response = self.vms_api.get_nodes_vms_vmid(node_2, self.vm_id)
+        self.assertEqual(response.status_code, 200)
+
+        pyclient_ip = [x['ip'] for x in self.nodes if x['id'] == node_2]
+        self.assertNotEqual(pyclient_ip, [])
+        pyclient = Client(pyclient_ip)
+        vms = pyclient.client.kvm.list()
+        self.assertIn(self.vm_id, [x['name'] for x in vms])
+
+

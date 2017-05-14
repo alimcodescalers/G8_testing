@@ -4,7 +4,6 @@ from api_testing.grid_apis.apis.zerotiers_apis import ZerotiersAPI
 import unittest, time
 from api_testing.python_client.client import Client
 
-@unittest.skip('https://github.com/g8os/resourcepool/issues/199')
 class TestZerotiersAPI(TestcasesBase):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -132,7 +131,7 @@ class TestZerotiersAPI(TestcasesBase):
         self.assertIn(nwid, [x['id'] for x in zerotiers])
 
         self.lg.info('Leave zerotier network (ZT1), should succeed with 204')
-        response = self.zerotier_api.delete_nodes_zerotiers_zerotierid(self.nodeid, self.nwid)
+        response = self.zerotier_api.delete_nodes_zerotiers_zerotierid(self.nodeid, nwid)
         self.assertEqual(response.status_code, 204)
 
         self.delete_zerotier_network(nwid)
