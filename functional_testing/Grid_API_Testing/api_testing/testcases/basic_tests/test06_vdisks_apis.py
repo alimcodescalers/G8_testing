@@ -5,7 +5,7 @@ from api_testing.grid_apis.apis.storageclusters_apis import Storageclusters
 from api_testing.python_client.client import Client
 import unittest
 
-@unittest.skip('https://github.com/g8os/resourcepool/issues/175')
+# @unittest.skip('https://github.com/g8os/resourcepool/issues/175')
 class TestVdisks(TestcasesBase):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -14,19 +14,45 @@ class TestVdisks(TestcasesBase):
 
     def setUp(self):
         super(TestVdisks, self).setUp()
-        self.lg.info('Deploy new storage cluster (SC0)')
-        sc_label = self.rand_str()
-        sc_servers = random.randint(1,100)
-        sc_types = ['nvme', 'ssd', 'hdd', 'archive']
-        sc_drivetype = self.random_item(sc_types)
-        sc_slaveNodes = self.random_item([True, False])
-        sc_nodes = [self.get_random_node()]
-        sc_body = {"label": sc_label,
+
+        node = self.get_random_node()
+        pyclient_ip = [x['ip'] for x in self.nodes if x['id'] == node][0]
+        self.pyclient = Client(pyclient_ip)
+
+        free_disks = self.pyclient.getFreeDisks()
+        if free_disks == []:
+            self.skipTest('no free disks to create storagecluster')
+
+        storageclusters = self.storageclusters_api.get_storageclusters()
+        if storageclusters.json() == []:
+            self.lg.info('Deploy new storage cluster (SC0)')
+            sc_label = self.rand_str()
+            sc_servers = random.randint(1, len(free_disks))
+            sc_drivetype = 'ssd'
+            sc_slaveNodes = False
+            sc_nodes = [self.get_random_node()]
+            sc_body = {"label": sc_label,
                         "servers": sc_servers,
                         "driveType": sc_drivetype,
                         "slaveNodes": sc_slaveNodes,
                         "nodes":sc_nodes}
-        self.storageclusters_api.post_storageclusters(sc_body)
+
+            self.storageclusters_api.post_storageclusters(sc_body)
+
+            for _ in range(60):
+                response = self.storageclusters_api.get_storageclusters_label(sc_label)
+                if response.status_code == 200:
+                    if response.json()['status'] == 'ready':
+                        break
+                    else:
+                        time.sleep(3)
+                else:
+                    time.sleep(10)
+            else:
+                self.lg.error('storagecluster status is not ready after 180 sec')
+
+        else:
+            sc_label = storageclusters.json()[0]
 
         self.lg.info('Create vdisk (VD0)')
         self.vd_creation_time = time.time()
@@ -161,7 +187,7 @@ class TestVdisks(TestcasesBase):
         response = self.vdisks_apis.delete_vdisks_vdiskid('fake_vdisk')
         self.assertEqual(response.status_code, 404)
 
-    @unittest.skip('bug: #150')
+    @unittest.skip('https://github.com/g8os/resourcepool/issues/224')
     def test005_resize_vdisk(self):
         """ GAT-065
         *POST:/vdisks/{vdiskid}/resize*
@@ -177,7 +203,9 @@ class TestVdisks(TestcasesBase):
         """
         self.lg.info('Resize vdisk (VD0), should succeed with 204')
         new_size = self.size + random.randint(1,10)
-        body = {"newSize": new_size}
+        print(self.size)
+        print(new_size)
+        body = {"NewSize": new_size}
         response = self.vdisks_apis.post_vdisks_vdiskid_resize(self.vdisk_id, body)
         self.assertEqual(response.status_code, 204)
 
