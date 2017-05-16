@@ -13,7 +13,6 @@ class TestcontaineridAPI(TestcasesBase):
         super().__init__(*args, **kwargs)
 
     def setUp(self):
-
         self.lg.info('Choose one random node of list of running nodes.')
         self.node_id = self.get_random_node()
         if self.node_id is None:
@@ -26,7 +25,6 @@ class TestcontaineridAPI(TestcasesBase):
                 self.node = node
                 break
         self.g8core = Client(self.g8os_ip)
-
         self.root_url = "https://hub.gig.tech/deboeckj/flist-lede-17.01.0-r3205-59508e3-x86-64-generic-rootfs.flist"
         self.storage = "ardb://hub.gig.tech:16379"
         self.container_name = self.rand_str()
@@ -44,7 +42,7 @@ class TestcontaineridAPI(TestcasesBase):
                                                               container['container'])
 
     def test001_check_coonection_with_False_hostNetworking(self):
-        """ GAT-01
+        """ GAT-082
         *Check container internet connection with false hostNetworking options *
 
         **Test Scenario:**
@@ -66,11 +64,11 @@ class TestcontaineridAPI(TestcasesBase):
         self.lg.info("Try to connect to internet from created container ,Should fail.")
         container = self.g8core.get_container_client(self.container_name)
         self.assertTrue(container)
-        response = container.bash('ping -c 5 google.be').get()
+        response = container.bash('ping -c 5 google.com').get()
         self.assertEqual(response.state, 'ERROR')
 
     def test002_check_coonection_with_True_hostNetworking(self):
-        """ GAT-02
+        """ GAT-083
         *Check container internet connection with true hostNetworking options *
 
         **Test Scenario:**
@@ -100,7 +98,7 @@ class TestcontaineridAPI(TestcasesBase):
         self.assertNotIn("unreachable", response.stdout)
 
     def test003_create_container_with_init_process(self):
-        """ GAT-03
+        """ GAT-084
         *Check that container created with init process *
 
         **Test Scenario:**
@@ -139,7 +137,7 @@ class TestcontaineridAPI(TestcasesBase):
         self.assertEqual(response.state, "SUCCESS", "init processes didn't get Env varaible  correctly")
 
     def test004_create_containers_with_different_flists(self):
-        """ GAT-04
+        """ GAT-085
         *create contaner with different flists *
 
         **Test Scenario:**
@@ -181,7 +179,7 @@ class TestcontaineridAPI(TestcasesBase):
 
     @unittest.skip("https://github.com/g8os/core0/issues/228")
     def test005_Check_container_access_to_host_dev(self):
-        """ GAT-05
+        """ GAT-086
         *Make sure that container doesn't have access to host dev files *
 
         **Test Scenario:**
