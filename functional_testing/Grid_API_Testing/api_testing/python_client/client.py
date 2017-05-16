@@ -157,8 +157,19 @@ class Client:
         processes = self.client.process.list()
         return processes
 
+    def get_container_client(self,container_name):
+        container = self.client.container.find(container_name)
+        if not container:
+            return False
+        container_id = list(container.keys())[0]
+        container_client = self.client.container.client(int(container_id))
+        return container_client
+
     def get_container_info(self, container_id):
-        container_id = list(self.client.container.find(container_id).keys())[0]
+        container=self.client.container.find(container_id)
+        if not container:
+            return False
+        container_id = list(container.keys())[0]
         container_info = {}
         golden_data = self.client.container.list().get(str(container_id), None)
         if not golden_data:
