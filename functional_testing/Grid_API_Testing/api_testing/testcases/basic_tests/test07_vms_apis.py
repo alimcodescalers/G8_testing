@@ -99,7 +99,10 @@ class TestVmsAPI(TestcasesBase):
         mem = 1024
         cpu = 1
         nics = []
-        disks = []
+        disks = [{
+                    "vdiskid": "ubuntu-test-vdisk",
+                    "maxIOps": 2000
+		        }]
         userCloudInit = {}
         systemCloudInit = {}
 
@@ -253,7 +256,7 @@ class TestVmsAPI(TestcasesBase):
         response = self.vms_api.post_nodes_vms(self.nodeid, body)
         self.assertEqual(response.status_code, 400)
 
-    @unittest.skip('https://github.com/g8os/resourcepool/issues/126')
+    # @unittest.skip('https://github.com/g8os/resourcepool/issues/126')
     def test004_put_nodes_vms_vmid(self):
         """ GAT-070
         **Test Scenario:**
@@ -271,7 +274,10 @@ class TestVmsAPI(TestcasesBase):
         vm_mem = 2*1024
         vm_cpu = 2
         vm_nics = []
-        vm_disks = []
+        vm_disks = [{
+                        "vdiskid": "ubuntu-test-vdisk",
+                        "maxIOps": 2000
+		            }]
         body = {"memory":vm_mem,
                 "cpu":vm_cpu,
                 "nics":vm_nics,
@@ -322,7 +328,7 @@ class TestVmsAPI(TestcasesBase):
 
         self.lg.info('Update virtual machine with missing parameters, should fail with 400')
         body = {"id":self.random_string()}
-        response = self.vms_api.put_nodes_vms_vmid(self.nodeid, body)
+        response = self.vms_api.put_nodes_vms_vmid(self.nodeid, vm['id'], body)
         self.assertEqual(response.status_code, 400)
 
 
@@ -341,8 +347,6 @@ class TestVmsAPI(TestcasesBase):
         self.lg.info('Get virtual machine (VM0) info, should succeed with 200')
         response = self.vms_api.get_nodes_vms_vmid_info(self.nodeid, vm['id'])
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json()['nics'], vm['nics'])
-        self.assertEqual(response.json()['disks'], vm['disks'])
 
         self.lg.info('Get nonexisting virtual machine info, should fail with 404')
         response = self.vms_api.get_nodes_vms_vmid_info(self.nodeid, 'fake_vm')
