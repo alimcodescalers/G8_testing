@@ -4,7 +4,6 @@ from api_testing.grid_apis.apis.storageclusters_apis import Storageclusters
 from api_testing.python_client.client import Client
 import unittest, time
 
-# @unittest.skip('https://github.com/g8os/resourcepool/issues/175')
 class TestStorageclustersAPI(TestcasesBase):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -132,7 +131,6 @@ class TestStorageclustersAPI(TestcasesBase):
         response = self.storageclusters_api.delete_storageclusters_label(label)
         self.assertEqual(response.status_code, 204)
 
-    # @unittest.skip('bug: #96')
     def test004_kill_storagecluster_label(self):
         """ GAT-044
         **Test Scenario:**
@@ -150,7 +148,6 @@ class TestStorageclustersAPI(TestcasesBase):
         self.assertEqual(response.status_code, 200)
         self.assertNotIn(self.label, response.json())
 
-        #bug 135
-        # self.lg.info('Kill nonexisting storage cluster, should fail with 404')
-        # response = self.storageclusters_api.delete_storageclusters_label('fake_label')
-        # self.assertEqual(response.status_code, 404)
+        self.lg.info('Kill nonexisting storage cluster, should fail with 404')
+        response = self.storageclusters_api.delete_storageclusters_label('fake_label')
+        self.assertEqual(response.status_code, 404)
