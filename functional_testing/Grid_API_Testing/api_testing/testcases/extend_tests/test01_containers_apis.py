@@ -93,7 +93,7 @@ class TestcontaineridAPI(TestcasesBase):
         self.lg.info("Try to connect to internet from created container ,Should succeed.")
         container = self.g8core.get_container_client(self.container_name)
         self.assertTrue(container)
-        response = container.bash('ping -c 5 google.be').get()
+        response = container.bash('ping -c 5 google.com').get()
         self.assertEqual(response.state, 'SUCCESS')
         self.assertNotIn("unreachable", response.stdout)
 
