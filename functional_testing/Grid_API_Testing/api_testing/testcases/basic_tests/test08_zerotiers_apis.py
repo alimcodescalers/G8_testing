@@ -1,7 +1,7 @@
 from random import randint
-from api_testing.testcases.testcases_base import TestcasesBase
-from api_testing.grid_apis.apis.zerotiers_apis import ZerotiersAPI
 import unittest, time
+from api_testing.testcases.testcases_base import TestcasesBase
+from api_testing.grid_apis.pyclient.zerotiers_apis import ZerotiersAPI
 from api_testing.python_client.client import Client
 
 class TestZerotiersAPI(TestcasesBase):

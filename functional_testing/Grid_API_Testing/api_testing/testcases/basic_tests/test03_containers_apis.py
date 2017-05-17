@@ -3,8 +3,8 @@ import time
 import unittest
 from api_testing.testcases.testcases_base import TestcasesBase
 from api_testing.python_client.client import Client
-from api_testing.grid_apis.apis.nodes_apis import NodesAPI
-from api_testing.grid_apis.apis.containers_apis import ContainersAPI
+from api_testing.grid_apis.pyclient.nodes_apis import NodesAPI
+from api_testing.grid_apis.pyclient.containers_apis import ContainersAPI
 import json
 
 class TestcontaineridAPI(TestcasesBase):
@@ -82,14 +82,14 @@ class TestcontaineridAPI(TestcasesBase):
         """
 
         self.lg.info('Send post nodes/{nodeid}/containers api request.')
-        response = self.containers_api.post_containers(node_id=self.node_id, body=self.container_body)
+        response = self.containers_api.post_containers(nodeid=self.node_id, data=self.container_body)
         self.assertEqual(response.status_code, 201)
 
         self.lg.info('Make sure it created with required values, should succeed.')
         self.assertEqual(response.headers['Location'], "/nodes/%s/containers/%s" % (self.node_id, self.container_name))
         self.assertTrue(self.wait_for_container_status("running", self.containers_api.get_containers_containerid,
-                                                       node_id=self.node_id,
-                                                       container_id=self.container_name))
+                                                       nodeid=self.node_id,
+                                                       containername=self.container_name))
 
         response = self.containers_api.get_containers_containerid(self.node_id, self.container_name)
         self.assertEqual(response.status_code, 200)
@@ -158,8 +158,8 @@ class TestcontaineridAPI(TestcasesBase):
         self.assertEqual(response.status_code, 201)
         self.createdcontainer.append({"node": self.node_id, "container": self.container_name})
         container_id = self.wait_for_container_status("running", self.containers_api.get_containers_containerid,
-                                                      node_id=self.node_id,
-                                                      container_id=self.container_name)
+                                                      nodeid=self.node_id,
+                                                      containername=self.container_name)
         self.assertTrue(container_id)
         self.lg.info('post:/node/{nodeid}/containers/containerid/stop.')
 
@@ -168,8 +168,8 @@ class TestcontaineridAPI(TestcasesBase):
 
         self.lg.info('Check that container stoped.')
         self.assertTrue(self.wait_for_container_status("halted", self.containers_api.get_containers_containerid,
-                                                        node_id=self.node_id,
-                                                        container_id=self.container_name))
+                                                        nodeid=self.node_id,
+                                                        containername=self.container_name))
 
         self.assertTrue(self.g8core.wait_on_container_update(container_id, 60, True))
 
@@ -179,8 +179,8 @@ class TestcontaineridAPI(TestcasesBase):
 
         self.lg.info('Check that container running.')
         self.assertTrue(self.wait_for_container_status("running", self.containers_api.get_containers_containerid,
-                                                      node_id=self.node_id,
-                                                      container_id=self.container_name))
+                                                      nodeid=self.node_id,
+                                                      containername=self.container_name))
         self.assertTrue(self.g8core.wait_on_container_update(self.container_name, 60, False))
 
     def test005_get_running_jobs(self):
@@ -646,6 +646,7 @@ class TestcontaineridAPI(TestcasesBase):
                                                                                        str(process_id), body)
         self.assertEqual(response.status_code, 204)
 
+    @unittest.skip('https://github.com/Jumpscale/go-raml/issues/280')
     def test018_upload_file_to_container(self):
         """ GAT-039
         *post:/node/{nodeid}/containers/containerid/filesystem  *
@@ -662,10 +663,10 @@ class TestcontaineridAPI(TestcasesBase):
 
         """
         self.lg.info('create container ')
-        response = self.containers_api.post_containers(node_id=self.node_id, body=self.container_body)
+        response = self.containers_api.post_containers(nodeid=self.node_id, data=self.container_body)
         self.assertEqual(response.status_code, 201)
         self.assertTrue(self.wait_for_container_status('running', self.containers_api.get_containers_containerid,
-                                                          node_id=self.node_id, container_id=self.container_name))
+                                                          nodeid=self.node_id, containername=self.container_name))
         self.createdcontainer.append({"node": self.node_id, "container": self.container_name})
 
         self.lg.info('create file in g8os node ')
@@ -673,9 +674,9 @@ class TestcontaineridAPI(TestcasesBase):
         self.g8core.client.bash('touch %s.text'%file_name)
         body = {"file": '/%s.text'%file_name}
         params = {"path": "/%s.text"%file_name}
-        response = self.containers_api.post_containers_containerid_filesystem(node_id=self.node_id,
-                                                                            container_id=self.container_name,
-                                                                            body=body,
+        response = self.containers_api.post_containers_containerid_filesystem(nodeid=self.node_id,
+                                                                            containername=self.container_name,
+                                                                            data=body,
                                                                             params=params)
         self.assertTrue(response.status_code,201)
 
@@ -692,10 +693,9 @@ class TestcontaineridAPI(TestcasesBase):
 
         self.lg.info('delete  file from container ')
         body = {"path": "/%s.text"%file_name}
-        response = self.containers_api.delete_containers_containerid_filesystem(node_id=self.node_id,
-                                                                              container_id=self.container_name,
-                                                                              body=body,
-                                                                              )
+        response = self.containers_api.delete_containers_containerid_filesystem(nodeid=self.node_id,
+                                                                              containername=self.container_name,
+                                                                              data=body)
         self.assertEqual(response.status_code,204)
 
         self.lg.info('Check that file doesn\'t exist in container ')
@@ -722,10 +722,10 @@ class TestcontaineridAPI(TestcasesBase):
         """
         file_name = self.rand_str()
         self.lg.info('create container ')
-        response = self.containers_api.post_containers(node_id=self.node_id, body=self.container_body)
+        response = self.containers_api.post_containers(nodeid=self.node_id, data=self.container_body)
         self.assertEqual(response.status_code, 201)
         self.assertTrue(self.wait_for_container_status('running', self.containers_api.get_containers_containerid,
-                                                       node_id=self.node_id, container_id=self.container_name))
+                                                       nodeid=self.node_id, containername=self.container_name))
         self.createdcontainer.append({"node": self.node_id, "container": self.container_name})
 
         self.lg.info('create new file in container ')
@@ -738,8 +738,8 @@ class TestcontaineridAPI(TestcasesBase):
 
         self.lg.info('Get created file from container ')
         params = {"path": "/%s.text"%file_name}
-        response = self.containers_api.get_containers_containerid_filesystem(node_id=self.node_id,
-                                                                            container_id=self.container_name,
+        response = self.containers_api.get_containers_containerid_filesystem(nodeid=self.node_id,
+                                                                            containername=self.container_name,
                                                                             params=params)
         self.assertTrue(response.status_code, 201)
 

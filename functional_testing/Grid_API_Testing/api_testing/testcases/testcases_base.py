@@ -2,8 +2,8 @@ from random import randint
 import uuid
 from unittest import TestCase
 from api_testing.utiles.utiles import Utiles
-from api_testing.grid_apis.apis.nodes_apis import NodesAPI
-from api_testing.grid_apis.apis.containers_apis import ContainersAPI
+from api_testing.grid_apis.pyclient.nodes_apis import NodesAPI
+from api_testing.grid_apis.pyclient.containers_apis import ContainersAPI
 import random
 import requests
 import time
@@ -98,7 +98,7 @@ class TestcasesBase(TestCase):
         counter = len(container_list)
         while (counter != 0) and (len(container_list) != 0):
             container_name = container_list[random.randint(0, len(container_list)-1)]['name']
-            response = self.containers_api.get_containers_containerid(node_id=node_id,container_id=container_name)
+            response = self.containers_api.get_containers_containerid(nodeid=node_id,containername=container_name)
             container=response.json()
             if container['status']=='running':
                 return container_name
@@ -107,11 +107,11 @@ class TestcasesBase(TestCase):
                 counter = counter-1
         else:
             container_name = container_body["name"]
-            response = self.containers_api.post_containers(node_id=node_id, body=container_body)
+            response = self.containers_api.post_containers(nodeid=node_id, data=container_body)
             self.assertEqual(response.status_code, 201)
 
             if not self.wait_for_container_status('running', self.containers_api.get_containers_containerid,
-                                                          node_id=node_id, container_id=container_name):
+                                                          nodeid=node_id, containername=container_name):
                 return False
             else:
                 self.createdcontainer.append({"node": node_id, "container": container_name})

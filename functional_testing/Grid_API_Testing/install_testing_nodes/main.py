@@ -3,13 +3,13 @@ from random import randint
 from install_testing_nodes.src.ExecuteRemoteCommands import ExecuteRemoteCommands
 from install_testing_nodes.src.install_g8os_on_packet import InstallG8OSOnPacket
 
-MACHINE_PLAN = 'baremetal_0'  # Type 1
+MACHINE_PLAN = 'baremetal_2'  # Type 1
 ZEROTIER_NW_ID = None
 MACHINES_NUMBER = 1
 AUTO_DISCOVERING = True
 
 JUMPSACLE_BRANCH = "8.2.0"
-RELEASE_VERSION = "1.1.0-alpha"
+RELEASE_VERSION = "master"
 AYS_TEMPLATE_BRANCH = RELEASE_VERSION
 GRID_API_BRANCH = RELEASE_VERSION
 G8CORE_CLIENT = RELEASE_VERSION
@@ -22,12 +22,12 @@ if __name__ == '__main__':
     executer = ExecuteRemoteCommands()
     print(colored(' [*] STEP 1 : Create new zerotier network ... ', 'white'))
     executer.create_zerotire_nw(use_this_nw=ZEROTIER_NW_ID)
-    print(colored(' [*] STEP 2 : Install g8os in packet, image: %s' % IPXE_SCRIPT, 'yellow'))
-    for i in range(MACHINES_NUMBER):
-        MACHINE_NAME = 'Test-xtremx-0%i' % randint(1, 1000)
-        MACHINES.append(install_g8os_on_packet.create_new_device(hostname=MACHINE_NAME,
-                                                                 plan=MACHINE_PLAN,
-                                                                 ipxe_script_url=IPXE_SCRIPT))
+    # print(colored(' [*] STEP 2 : Install g8os in packet, image: %s' % IPXE_SCRIPT, 'yellow'))
+    # for i in range(MACHINES_NUMBER):
+    #     MACHINE_NAME = 'env5' 
+    #     MACHINES.append(install_g8os_on_packet.create_new_device(hostname=MACHINE_NAME,
+    #                                                              plan=MACHINE_PLAN,
+    #                                                              ipxe_script_url=IPXE_SCRIPT))
     print(colored(' [*] STEP 3 : create account', 'yellow'))
     executer.create_account()
     print(colored(' [*] STEP 4 : create cloud space', 'yellow'))

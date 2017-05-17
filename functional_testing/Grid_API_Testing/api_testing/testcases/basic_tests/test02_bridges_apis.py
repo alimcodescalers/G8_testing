@@ -1,7 +1,7 @@
 from random import randint
-from api_testing.testcases.testcases_base import TestcasesBase
-from api_testing.grid_apis.apis.bridges_apis import BridgesAPI
 import unittest, time
+from api_testing.testcases.testcases_base import TestcasesBase
+from api_testing.grid_apis.pyclient.bridges_apis import BridgesAPI
 from api_testing.python_client.client import Client
 
 # @unittest.skip('bugs: #113, #104, #105')
