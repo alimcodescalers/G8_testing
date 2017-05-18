@@ -133,7 +133,7 @@ class BasicTests(BasicACLTest):
 
         self.lg('2- Resize the machine with all possible combinations, should succeed')
         basic_sizes=[512,1024,4096,8192,16384,2048]
-        
+
         sizesMaxValue = len(basic_sizes)
 
         self.lg('sizesMaxValue%s'%sizesMaxValue)
@@ -195,7 +195,7 @@ class BasicTests(BasicACLTest):
         #sizesMaxValue = len(self.api.cloudapi.sizes.list(self.cloudspace_id))
         sizesMaxValue = len(basic_sizes)
 
-        self.lg('sizesMaxValue%s'%sizesMaxValue)        
+        self.lg('sizesMaxValue%s'%sizesMaxValue)
         #sizesMaxValue=6
         for sizes in xrange(0, sizesMaxValue):
             sizes_list= self.api.cloudapi.sizes.list(cloudspaceId=self.cloudspace_id)
@@ -203,16 +203,16 @@ class BasicTests(BasicACLTest):
             for i, item in enumerate(y):
                 if item:
                     resizeId=sizes_list[i]['id']
-                
+
 
 
             self.account_owner_api.cloudapi.machines.resize(machineId=self.machine_id,
                                                             sizeId=resizeId)
             for i in xrange(0, 60):
-                if self.api.cloudapi.machines.get(machineId=self.machine_id)['sizeid'] == resizeId:   
+                if self.api.cloudapi.machines.get(machineId=self.machine_id)['sizeid'] == resizeId:
                    time.sleep(1)
-                   break 
-           
+                   break
+
             self.assertEqual(self.api.cloudapi.machines.get(machineId=self.machine_id)['sizeid'],
                              resizeId)
 
@@ -447,43 +447,47 @@ class BasicTests(BasicACLTest):
                                                        % NetId_hexa, nodeID)
         self.assertEqual(output.split('\n')[0], 'space_%s' % NetId_hexa)
 
-        self.lg('3- stop the virtual machine')
-        self.account_owner_api.cloudapi.machines.stop(machineId=machineId)
-        self.wait_for_status('HALTED', self.account_owner_api.cloudapi.machines.get,
-                             machineId=machineId)
-
-        self.lg('4- check that vxlan and space bridge are deleted')
-        output = self.execute_command_on_physical_node('if [ ! -d "/sys/class/net/vx-%s" ]; '
-                                                       'then echo notfound;fi' % NetId_hexa, nodeID)
-        self.assertEqual(output.split('\n')[0], 'notfound')
-        output = self.execute_command_on_physical_node('if [ ! -d "/sys/class/net/space_%s" ]; '
-                                                       'then echo notfound;fi' % NetId_hexa, nodeID)
-        self.assertEqual(output.split('\n')[0], 'notfound')
-
-        self.lg('5- start the virtual machine')
-        self.account_owner_api.cloudapi.machines.start(machineId=machineId)
-        self.wait_for_status('RUNNING', self.account_owner_api.cloudapi.machines.get,
-                             machineId=machineId)
-
-        self.lg('6- check again on vxlan and space bridge, should be found')
-        nodeID = self.get_machine_nodeID(machineId)
-        output = self.execute_command_on_physical_node('cd /sys/class/net; ls | grep vx-%s'
+        self.lg('check if the routeros on the same node')
+        output = self.execute_command_on_physical_node('virsh list --all | grep -o -F routeros_%s'
                                                        % NetId_hexa, nodeID)
-        self.assertEqual(output.split('\n')[0], 'vx-%s' % NetId_hexa)
-        output = self.execute_command_on_physical_node('cd /sys/class/net; ls | grep space_%s'
-                                                       % NetId_hexa, nodeID)
-        self.assertEqual(output.split('\n')[0], 'space_%s' % NetId_hexa)
+        if not output:
+            self.lg('3- stop the virtual machine')
+            self.account_owner_api.cloudapi.machines.stop(machineId=machineId)
+            self.wait_for_status('HALTED', self.account_owner_api.cloudapi.machines.get,
+                                 machineId=machineId)
 
-        self.lg('7- delete the virtual machine')
-        self.api.cloudapi.machines.delete(machineId=machineId)
+            self.lg('4- check that vxlan and space bridge are deleted')
+            output = self.execute_command_on_physical_node('if [ ! -d "/sys/class/net/vx-%s" ]; '
+                                                           'then echo notfound;fi' % NetId_hexa, nodeID)
+            self.assertEqual(output.split('\n')[0], 'notfound')
+            output = self.execute_command_on_physical_node('if [ ! -d "/sys/class/net/space_%s" ]; '
+                                                           'then echo notfound;fi' % NetId_hexa, nodeID)
+            self.assertEqual(output.split('\n')[0], 'notfound')
 
-        self.lg('8- check once more on vxlan and space bridge, shouldn\'t be found')
-        output = self.execute_command_on_physical_node('if [ ! -d "/sys/class/net/vx-%s" ]; '
-                                                       'then echo notfound;fi' % NetId_hexa, nodeID)
-        self.assertEqual(output.split('\n')[0], 'notfound')
-        output = self.execute_command_on_physical_node('if [ ! -d "/sys/class/net/space_%s" ]; '
-                                                       'then echo notfound;fi' % NetId_hexa, nodeID)
-        self.assertEqual(output.split('\n')[0], 'notfound')
+            self.lg('5- start the virtual machine')
+            self.account_owner_api.cloudapi.machines.start(machineId=machineId)
+            self.wait_for_status('RUNNING', self.account_owner_api.cloudapi.machines.get,
+                                 machineId=machineId)
+
+            self.lg('6- check again on vxlan and space bridge, should be found')
+            nodeID = self.get_machine_nodeID(machineId)
+            output = self.execute_command_on_physical_node('cd /sys/class/net; ls | grep vx-%s'
+                                                           % NetId_hexa, nodeID)
+            self.assertEqual(output.split('\n')[0], 'vx-%s' % NetId_hexa)
+            output = self.execute_command_on_physical_node('cd /sys/class/net; ls | grep space_%s'
+                                                           % NetId_hexa, nodeID)
+            self.assertEqual(output.split('\n')[0], 'space_%s' % NetId_hexa)
+
+            self.lg('7- delete the virtual machine')
+            self.api.cloudapi.machines.delete(machineId=machineId)
+
+            self.lg('8- check once more on vxlan and space bridge, shouldn\'t be found')
+            output = self.execute_command_on_physical_node('if [ ! -d "/sys/class/net/vx-%s" ]; '
+                                                           'then echo notfound;fi' % NetId_hexa, nodeID)
+            self.assertEqual(output.split('\n')[0], 'notfound')
+            output = self.execute_command_on_physical_node('if [ ! -d "/sys/class/net/space_%s" ]; '
+                                                           'then echo notfound;fi' % NetId_hexa, nodeID)
+            self.assertEqual(output.split('\n')[0], 'notfound')
 
         self.lg('%s ENDED' % self._testID)
 
@@ -636,7 +640,7 @@ class BasicTests(BasicACLTest):
             flag = self.execute_command_on_physical_node('cd; python machine_script.py %s %s %s 3000 2000'
                                                          %(account['login'], account['password'],
                                                            cs_publicip), nodeID)
-            self.lg('flag%s'%flag) 
+            self.lg('flag%s'%flag)
             self.assertEqual('True', flag[len(flag)-5:len(flag)-1])
         finally:
             self.execute_command_on_physical_node('cd; rm machine_script.py', nodeID)
