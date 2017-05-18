@@ -18,7 +18,7 @@ class InstallG8OSOnPacket(Basic):
                                             plan=plan,
                                             operating_system='custem_ipxe',
                                             ipxe_script_url=ipxe_script_url,
-                                            facility='ams1')
+                                            facility='ewr1')
         print(colored(' [*] G8os machine : %s  .. \n' % hostname, 'green'))
         return device
 
