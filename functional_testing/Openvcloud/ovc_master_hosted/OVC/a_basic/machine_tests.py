@@ -195,7 +195,7 @@ class BasicTests(BasicACLTest):
         #sizesMaxValue = len(self.api.cloudapi.sizes.list(self.cloudspace_id))
         sizesMaxValue = len(basic_sizes)
 
-        self.lg('sizesMaxValue%s'%sizesMaxValue)        
+        self.lg('sizesMaxValue%s'%sizesMaxValue)
         #sizesMaxValue=6
         for sizes in xrange(0, sizesMaxValue):
             sizes_list= self.api.cloudapi.sizes.list(cloudspaceId=self.cloudspace_id)
@@ -203,16 +203,16 @@ class BasicTests(BasicACLTest):
             for i, item in enumerate(y):
                 if item:
                     resizeId=sizes_list[i]['id']
-                
+
 
 
             self.account_owner_api.cloudapi.machines.resize(machineId=self.machine_id,
                                                             sizeId=resizeId)
             for i in xrange(0, 60):
-                if self.api.cloudapi.machines.get(machineId=self.machine_id)['sizeid'] == resizeId:   
+                if self.api.cloudapi.machines.get(machineId=self.machine_id)['sizeid'] == resizeId:
                    time.sleep(1)
-                   break 
-           
+                   break
+
             self.assertEqual(self.api.cloudapi.machines.get(machineId=self.machine_id)['sizeid'],
                              resizeId)
 
@@ -447,6 +447,7 @@ class BasicTests(BasicACLTest):
                                                        % NetId_hexa, nodeID)
         self.assertEqual(output.split('\n')[0], 'space_%s' % NetId_hexa)
 
+        import nose.tools; nose.tools.set_trace()
         self.lg('check if the routeros on the same node')
         output = self.execute_command_on_physical_node('virsh list --all | grep -o -F routeros_%s'
                                                        % NetId_hexa)
