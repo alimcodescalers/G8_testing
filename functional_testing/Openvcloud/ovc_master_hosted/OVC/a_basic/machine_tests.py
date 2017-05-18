@@ -447,10 +447,9 @@ class BasicTests(BasicACLTest):
                                                        % NetId_hexa, nodeID)
         self.assertEqual(output.split('\n')[0], 'space_%s' % NetId_hexa)
 
-        import nose.tools; nose.tools.set_trace()
         self.lg('check if the routeros on the same node')
         output = self.execute_command_on_physical_node('virsh list --all | grep -o -F routeros_%s'
-                                                       % NetId_hexa)
+                                                       % NetId_hexa, nodeID)
         if not output:
             self.lg('3- stop the virtual machine')
             self.account_owner_api.cloudapi.machines.stop(machineId=machineId)
