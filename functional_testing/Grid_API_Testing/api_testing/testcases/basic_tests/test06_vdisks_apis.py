@@ -29,7 +29,7 @@ class TestVdisks(TestcasesBase):
             sc_servers = random.randint(1, len(free_disks))
             sc_drivetype = 'ssd'
             sc_slaveNodes = False
-            sc_nodes = [self.get_random_node()]
+            sc_nodes = [node]
             sc_body = {"label": sc_label,
                         "servers": sc_servers,
                         "driveType": sc_drivetype,

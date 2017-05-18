@@ -245,7 +245,7 @@ class TestStoragepoolsAPI(TestcasesBase):
         response = self.storagepool_api.delete_storagepools_storagepoolname(self.nodeid, 'fake_storagepool')
         self.assertEqual(response.status_code, 404)
 
-    # @unittest.skip('https://github.com/g8os/resourcepool/issues/93')
+    @unittest.skip('https://github.com/g8os/resourcepool/issues/93')
     def test005_get_storagepool_device(self):
         """ GAT-049
         **Test Scenario:**
@@ -274,7 +274,7 @@ class TestStoragepoolsAPI(TestcasesBase):
         response = self.storagepool_api.get_storagepools_storagepoolname_devices_deviceid(self.nodeid, storagepool['name'], 'fake_device')
         self.assertEqual(response.status_code, 404)
 
-    # @unittest.skip('https://github.com/g8os/resourcepool/issues/93')
+    @unittest.skip('https://github.com/g8os/resourcepool/issues/93')
     def test006_list_storagepool_devices(self):
         """ GAT-050
         **Test Scenario:**
@@ -292,7 +292,7 @@ class TestStoragepoolsAPI(TestcasesBase):
         self.assertEqual(len(response.json()), len(storagepool['devices']))
         self.assertEqual(response.json()[0]['status'], 'healthy')
 
-    # @unittest.skip('https://github.com/g8os/resourcepool/issues/93')
+    @unittest.skip('https://github.com/g8os/resourcepool/issues/93')
     def test007_post_storagepool_device(self):
         """ GAT-051
         **Test Scenario:**
@@ -327,7 +327,7 @@ class TestStoragepoolsAPI(TestcasesBase):
         # response = self.storagepool_api.post_storagepools_storagepoolname_devices(self.nodeid, storagepool['name'], body)
         # self.assertEqual(response.status_code, 404)
 
-    # @unittest.skip('https://github.com/g8os/resourcepool/issues/93')
+    @unittest.skip('https://github.com/g8os/resourcepool/issues/93')
     def test008_delete_storagepool_device(self):
         """ GAT-052
         **Test Scenario:**
