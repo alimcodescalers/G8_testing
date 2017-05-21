@@ -624,6 +624,7 @@ class SystemTests(BaseTest):
 
         self.lg('{} ENDED'.format(self._testID))
 
+    @unittest.skip('bug: https://github.com/g8os/core0/issues/255')
     def test011_kill_list_jobs(self):
 
         """ g8os-032
