@@ -2,7 +2,6 @@ termcolor
 requests
 paramiko
 configparser
-g8core
 nose-testconfig
 nose
 git+https://github.com/gigforks/packet-python.git
