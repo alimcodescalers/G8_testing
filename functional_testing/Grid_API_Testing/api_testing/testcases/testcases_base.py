@@ -8,13 +8,15 @@ from  api_testing.testcases import NODES_INFO
 import random
 import requests
 import time
+from testconfig import config
+
 
 class TestcasesBase(TestCase):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.utiles = Utiles()
         self.nodes_api = NodesAPI()
-        self.config = self.utiles.get_config_values()
+        self.config = config['main']
         self.nodes = NODES_INFO
         self.containers_api = ContainersAPI()
         self.lg = self.utiles.logging

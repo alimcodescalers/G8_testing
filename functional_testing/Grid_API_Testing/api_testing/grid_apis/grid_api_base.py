@@ -1,10 +1,10 @@
-import requests, time
-from api_testing.utiles.utiles import Utiles
+import requests
+from testconfig import config
 
 
 class GridAPIBase(object):
     def __init__(self):
-        self.config = Utiles().get_config_values()
+        self.config = config['main']
         self.api_base_url = self.config['api_base_url']
         self.headers = {'content-type': 'application/json'}
         self.requests = requests

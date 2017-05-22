@@ -140,6 +140,7 @@ class SystemTests(BaseTest):
 
         self.lg('{} ENDED'.format(self._testID))
 
+    @unittest.skip('bug: https://github.com/g8os/core0/issues/254')
     def test002_kill_list_processes(self):
 
         """ g8os-002
@@ -623,6 +624,7 @@ class SystemTests(BaseTest):
 
         self.lg('{} ENDED'.format(self._testID))
 
+    @unittest.skip('bug: https://github.com/g8os/core0/issues/255')
     def test011_kill_list_jobs(self):
 
         """ g8os-032
