@@ -126,6 +126,7 @@ class ExtendedMachines(BaseTest):
 
         self.lg('Deattach L1 from vm1, should succeed')
         self.client.kvm.detach_disk(vm_uuid, {'url': loop_dev})
+        time.sleep(1)
         self.assertEqual(len(self.client.kvm.info(vm_uuid)['Block']), l)
 
         self.lg('Delete (vm1)')
