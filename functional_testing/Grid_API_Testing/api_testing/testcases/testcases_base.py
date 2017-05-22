@@ -7,13 +7,15 @@ from api_testing.grid_apis.apis.containers_apis import ContainersAPI
 import random
 import requests
 import time
+from testconfig import config
+
 
 class TestcasesBase(TestCase):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.utiles = Utiles()
         self.nodes_api = NodesAPI()
-        self.config = self.utiles.get_config_values()
+        self.config = config['main']
         self.nodes = self.update_nodes_info()
         self.containers_api = ContainersAPI()
         self.lg = self.utiles.logging
