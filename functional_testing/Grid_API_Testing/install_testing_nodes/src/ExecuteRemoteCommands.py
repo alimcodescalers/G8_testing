@@ -69,7 +69,7 @@ class ExecuteRemoteCommands(RequestEnvAPI):
     def install_jumpscale(self, branch):
         self.logging.info(' [*] Installing jumpscale .... ')
         print(colored(' [*] Installing jumpscale .... ', 'white'))
-        command = """echo 'cd /tmp && export JSBRANCH="%s" && curl -k https://raw.githubusercontent.com/Jumpscale/jumpscale_core8/$JSBRANCH/install/install.sh?$RANDOM > install.sh && bash install.sh' > jsInstaller.sh""" % branch
+        command = """echo 'pip3 install git+https://github.com/gigforks/PyInotify && cd /tmp && export JSBRANCH="%s" && curl -k https://raw.githubusercontent.com/Jumpscale/jumpscale_core8/$JSBRANCH/install/install.sh?$RANDOM > install.sh && bash install.sh' > jsInstaller.sh""" % branch
         self.execute_command(command=command, skip_error=True)
         # command = 'echo %s | sudo -S bash jsInstaller.sh' % self.virtualmachine['password']
         command = """ echo %s | sudo -S bash -c "tmux new-session -d -s installJS 'bash jsInstaller.sh; bash -i'" """ % \
