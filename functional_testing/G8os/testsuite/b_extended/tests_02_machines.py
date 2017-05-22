@@ -106,6 +106,10 @@ class ExtendedMachines(BaseTest):
         """
 
         self.lg('{} STARTED'.format(self._testID))
+
+        self.lg('Destroy any vm on the system')
+        self.client.bash('virsh list --all --name | xargs -n 1 virsh destroy')
+
         self.lg('Create Virtual machine (vm1)')
         vm_name = self.rand_str()
         self.create_vm(name=vm_name)
